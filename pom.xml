@@ -10,7 +10,7 @@
 	<properties>
         <ibpcommons.version>${project.version}</ibpcommons.version>
 		<spring.version>4.1.6.RELEASE</spring.version>
-		<spring.security.version>3.2.5.RELEASE</spring.security.version>
+		<spring.security.version>5.2.2.RELEASE</spring.security.version>
 		<envConfig>${user.name}</envConfig>
 		<node.version>v14.17.0</node.version>
 		<yarn.version>v1.22.10</yarn.version>
