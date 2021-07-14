@@ -10,7 +10,8 @@
 				'&cropName=' + studyContext.cropName +
 				'&programUUID=' + studyContext.programId +
 				'&searchRequestId=' + searchResultDbId +
-				'&studyId=' + studyContext.studyId;
+				'&studyId=' + studyContext.studyId +
+				'&searchType=ManageStudy';
 			
 			$scope.cancel = function () {
 				$uibModalInstance.close(null);

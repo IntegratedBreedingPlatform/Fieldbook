@@ -380,27 +380,43 @@
 				};
 
 				$scope.openLotCreationModal = function () {
-					if ($scope.size($scope.selectedItems) || $scope.isAllPagesSelected) {
-						lotService.saveSearchRequest({gids: Object.keys($scope.selectedItems)}).then((searchDto) => {
-								$uibModal.open({
-									templateUrl: '/Fieldbook/static/js/trialmanager/inventory/lot-creation/lot-creation-modal.html',
-									controller: 'LotCreationCtrl',
-									windowClass: 'modal-large',
-									resolve: {
-										searchResultDbId: function () {
-											return searchDto.result.searchResultDbId;
-										}
-									}
-								}).result.finally(function () {
-									// Refresh and show the 'Crosses and Selections' tab
-									$rootScope.navigateToTab('germplasmStudySource', {reload: true});
-									$rootScope.$broadcast('inventoryChanged');
-								});
-							});
-					} else {
-						showErrorMessage('', $.fieldbookMessages.crossesAndSelectionsNoGermplasmError);
+					if (!validateSelection()) {
+						return;
 					}
 
+					let request = {};
+					if ($scope.isAllPagesSelected) {
+						request = addFilters({});
+					} else {
+						request.filter = {};
+						request.filter['gidList'] = Object.keys($scope.selectedItems)
+					}
+
+					germplasmStudySourceService.saveSearchRequest(request).then((searchDto) => {
+						$uibModal.open({
+							templateUrl: '/Fieldbook/static/js/trialmanager/inventory/lot-creation/lot-creation-modal.html',
+							controller: 'LotCreationCtrl',
+							windowClass: 'modal-large',
+							resolve: {
+								searchResultDbId: function () {
+									return searchDto.result.searchResultDbId;
+								}
+							}
+						}).result.finally(function () {
+							// Refresh and show the 'Crosses and Selections' tab
+							$rootScope.navigateToTab('germplasmStudySource', {reload: true});
+							$rootScope.$broadcast('inventoryChanged');
+						});
+					});
+
+				}
+
+				function validateSelection(){
+					if (!$scope.size($scope.selectedItems) && !$scope.isAllPagesSelected) {
+						showErrorMessage('', $.fieldbookMessages.crossesAndSelectionsNoGermplasmError);
+						return false;
+					}
+					return true;
 				}
 
 				function getPageItemIds() {
