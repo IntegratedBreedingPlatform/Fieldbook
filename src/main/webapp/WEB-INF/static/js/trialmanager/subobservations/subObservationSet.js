@@ -9,6 +9,8 @@
 	};
 	var changingPlotEntryDeRegister = () => {
 	};
+	var observationsChangedDeRegister = () => {
+	};
 
 	var subObservationModule = angular.module('subObservation', ['visualization', 'germplasmDetailsModule']);
 	var TRIAL_INSTANCE = 8170,
@@ -214,6 +216,11 @@
 
 			sampleListCreatedDeRegister();
 			sampleListCreatedDeRegister = $rootScope.$on('sampleListCreated', function (event) {
+				loadTable();
+			});
+
+			observationsChangedDeRegister();
+			observationsChangedDeRegister = $rootScope.$on('observationsChanged', function (event) {
 				loadTable();
 			});
 
@@ -992,10 +999,6 @@
 				}
 			}
 
-			function getFilePath(rowData, columnData, fileName) {
-				return fileService.getFilePath(rowData.variables['OBS_UNIT_ID'].value, columnData.termId, fileName);
-			}
-
 			/* WARNING Complexity up ahead.
 			 * The following logic is probably one the most complex in the BMS system
 			 * The previous version was even more complex, spanning several files and thousand of lines.
@@ -1026,6 +1029,14 @@
 
 					if (!termId) return;
 
+					if (columnData.dataTypeCode === 'F') {
+						showFiles(subObservationSet.id, rowData.variables['OBS_UNIT_ID'].value, cellData.observationId, termId);
+						adjustColumns();
+
+						// no need for inline edition
+						return;
+					}
+
 					/**
 					 * Remove handler to not interfere with inline editor
 					 * will be restored after fnUpdate
@@ -1050,11 +1061,6 @@
 							},
 							newInlineValue: function (newValue) {
 								return {name: newValue};
-							},
-							showFile: function () {
-								const path = getFilePath(rowData, columnData, this.value)
-									.then((path) => fileService.showFile(path, this.value));
-								return false;
 							}
 						};
 
@@ -1132,34 +1138,7 @@
 								return $q.resolve(cellData);
 							} // doAjaxUpdate
 
-							function doFileUploadIfNeeded() {
-								const file = $inlineScope.observation.file;
-								if (columnData.dataTypeCode === 'F' && file) {
-									let validateFile;
-									if ($inlineScope.observation.value) {
-										var confirmModal = $scope.openConfirmModal("A file already exists. Overwrite?");
-										validateFile = confirmModal.result;
-									} else {
-										validateFile = $q.resolve(true);
-									}
-									return validateFile.then((doContinue) => {
-										if (!doContinue) {
-											return $q.reject();
-										}
-										return getFilePath(rowData, columnData, file.name).then((path) => {
-											return fileService.upload(file, path, rowData.variables['OBS_UNIT_ID'].value)
-												.then((response) => {
-													$inlineScope.observation.value = file.name;
-												});
-										});
-									});
-								}
-								return $q.resolve();
-							} // doFileUploadIfNeeded
-
-							var promise = doFileUploadIfNeeded().then(function (fileName) {
-								return doAjaxUpdate();
-							});
+							var promise = doAjaxUpdate();
 
 							promise.then(function (data) {
 								var valueChanged = false;
@@ -1745,6 +1724,32 @@
 						$td.addClass('out-of-sync-value');
 					}
 				}
+			}
+
+			function showFiles(datasetId, observationUnitUUID, observationId, termId) {
+
+				$uibModal.open({
+					template: '<iframe ng-src="{{url}}"' +
+						' style="width:100%; height: 560px; border: 0" />',
+					size: 'lg',
+					controller: function ($scope, $uibModalInstance) {
+						$scope.url = '/ibpworkbench/controller/jhipster#file-manager'
+							+ '?cropName=' + studyContext.cropName
+							+ '&programUUID=' + studyContext.programId
+							+ '&studyId=' + studyContext.studyId
+							+ '&datasetId=' + datasetId
+							+ '&observationUnitUUID=' + observationUnitUUID
+							+ '&termId=' + termId
+							+ '&observationId=' + observationId;
+
+						window.closeModal = function() {
+							$uibModalInstance.close();
+						}
+					},
+				}).result.finally(() => {
+					// FIXME not working
+					adjustColumns();
+				});
 			}
 
 		}])
