@@ -209,6 +209,8 @@
 				loadTable();
 			}); // getDataset
 
+			fileService.getFileStorageStatus().then((map) => $scope.isFileStorageConfigured = map.status);
+
 			subObsTabSelectedDeRegister();
 			subObsTabSelectedDeRegister = $rootScope.$on('subObsTabSelected', function (event) {
 				adjustColumns();
@@ -955,10 +957,20 @@
 
 			function initCompleteCallback() {
 				table().columns().every(function () {
+					if ($scope.isCheckBoxColumn(this.index())) {
+						$(this.header()).prepend($compile('<span>'
+								+ '<input type="checkbox" title="select current page" ng-checked="isPageSelected()"  ng-click="onSelectPage()">'
+								+ '</span>')($scope));
+						return;
+					}
+					if (this.index() === 1 && $scope.isFileStorageConfigured) {
+						return;
+					}
+
 					$(this.header())
 						.prepend($compile('<span class="glyphicon glyphicon-bookmark" style="margin-right: 10px; color:#1b95b2;"' +
 							' ng-if="isVariableBatchActionSelected(' + this.index() + ')"> </span>')($scope))
-						.append($compile('<span ng-if="!isCheckBoxColumn(' + this.index() + ')" class="glyphicon glyphicon-filter" ' +
+						.append($compile('<span class="glyphicon glyphicon-filter" ' +
 							' style="cursor:pointer; padding-left: 5px;"' +
 							' popover-placement="bottom"' +
 							' ng-class="getFilteringByClass(' + this.index() + ')"' +
@@ -969,9 +981,6 @@
 							' ng-if="isVariableFilter(' + this.index() + ')"' +
 							' ng-click="openColumnFilter(' + this.index() + ')"' +
 							' uib-popover-template="\'columnFilterPopoverTemplate.html\'"></span>')($scope))
-						.prepend($compile('<span ng-if="isCheckBoxColumn(' + this.index() + ')">'
-							+ '<input type="checkbox" title="select current page" ng-checked="isPageSelected()"  ng-click="onSelectPage()">'
-							+ '</span>')($scope));
 				});
 				adjustColumns();
 				tableRenderedResolve();
@@ -1028,14 +1037,6 @@
 					var termId = columnData.termId;
 
 					if (!termId) return;
-
-					if (columnData.dataTypeCode === 'F') {
-						showFiles(subObservationSet.id, rowData.variables['OBS_UNIT_ID'].value, cellData.observationId, termId);
-						adjustColumns();
-
-						// no need for inline edition
-						return;
-					}
 
 					/**
 					 * Remove handler to not interfere with inline editor
@@ -1189,7 +1190,7 @@
 								adjustColumns();
 							}, function (response) {
 								if (!response) {
-									// no ajax, local reject / cancel (e.g overwrite file? -> no)
+									// no ajax, local reject / cancel (e.g await modal confirm)
 									// keeps inline editor open
 									return;
 								}
@@ -1245,7 +1246,7 @@
 							 * This also avoids temporary click handler on body
 							 * FIXME is there a better way?
 							 */
-							$(cell).find('a.ui-select-match, input:not([type="file"])').click().focus();
+							$(cell).find('a.ui-select-match').click().focus();
 						}, 100);
 					});
 				} // clickHandler
@@ -1397,15 +1398,20 @@
 
 			function loadColumns() {
 				return datasetService.getColumns(subObservationSet.id, $scope.isPendingView).then(function (columnsData) {
-					subObservationSet.columnsData = addCheckBoxColumn(columnsData);
+					subObservationSet.columnsData = addViewColumns(columnsData);
 					var columnsObj = $scope.columnsObj = subObservationSet.columnsObj = mapColumns(subObservationSet.columnsData);
 					return columnsObj;
 				});
 			}
 
-			function addCheckBoxColumn(columnsData) {
+			function addViewColumns(columnsData) {
 				// copy array to avoid modifying the parameter (unit test might reuse the same object)
 				var columns = columnsData.slice();
+				columns.unshift({
+					alias: 'FILES',
+					factor: true,
+					name: '',
+				});
 				columns.unshift({
 					alias: "",
 					factor: true,
@@ -1483,6 +1489,21 @@
 							orderable: false,
 							createdCell: function (td, cellData, rowData, rowIndex, colIndex) {
 								$(td).append($compile('<span><input type="checkbox" ng-checked="isSelected(' + rowData.observationUnitId + ')" ng-click="toggleSelect(' + rowData.observationUnitId + ')"></span>')($scope));
+							}
+						});
+					} else if (columnData.index === 1 && $scope.isFileStorageConfigured) {
+						// Files
+						columnsDef.push({
+							targets: columns.length - 1,
+							orderable: false,
+							createdCell: function (td, cellData, rowData, rowIndex, colIndex) {
+								$(td).append($compile(
+									'<div ng-click="showFiles(\'' + rowData.variables['OBS_UNIT_ID'].value  + '\')" '
+									+ (rowData.fileCount ? ' title="# files: ' + rowData.fileCount + '"' : '')
+									+ ' style="cursor: pointer">'
+									+ (rowData.fileCount ? '<i class="glyphicon glyphicon-duplicate" ></i>' : '&nbsp;')
+									+ '</div>'
+								)($scope));
 							}
 						});
 					} else if (columnData.termId === 8240 || columnData.termId === 8250) {
@@ -1726,21 +1747,17 @@
 				}
 			}
 
-			function showFiles(datasetId, observationUnitUUID, observationId, termId) {
+			$scope.showFiles = function (observationUnitUUID) {
 
 				$uibModal.open({
 					template: '<iframe ng-src="{{url}}"' +
-						' style="width:100%; height: 560px; border: 0" />',
+						' style="width:100%; height: 590px; border: 0" />',
 					size: 'lg',
 					controller: function ($scope, $uibModalInstance) {
 						$scope.url = '/ibpworkbench/controller/jhipster#file-manager'
 							+ '?cropName=' + studyContext.cropName
 							+ '&programUUID=' + studyContext.programId
-							+ '&studyId=' + studyContext.studyId
-							+ '&datasetId=' + datasetId
-							+ '&observationUnitUUID=' + observationUnitUUID
-							+ '&termId=' + termId
-							+ '&observationId=' + observationId;
+							+ '&observationUnitUUID=' + observationUnitUUID;
 
 						window.closeModal = function() {
 							$uibModalInstance.close();
