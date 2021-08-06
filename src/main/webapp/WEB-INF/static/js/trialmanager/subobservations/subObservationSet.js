@@ -1498,10 +1498,13 @@
 							orderable: false,
 							createdCell: function (td, cellData, rowData, rowIndex, colIndex) {
 								$(td).append($compile(
-									'<div ng-click="showFiles(\'' + rowData.variables['OBS_UNIT_ID'].value  + '\')" '
-									+ (rowData.fileCount ? ' title="# files: ' + rowData.fileCount + '"' : '')
+									'<div ng-click="showFiles(\'' + rowData.variables['OBS_UNIT_ID'].value + '\')" '
+									+ (rowData.fileCount
+									? ' title="# of files: ' + rowData.fileCount + '"'
+									: ' title="click to open the file manager" class="show-on-hover"')
 									+ ' style="cursor: pointer">'
-									+ (rowData.fileCount ? '<i class="glyphicon glyphicon-duplicate" ></i>' : '&nbsp;')
+									+ '<i class="glyphicon glyphicon-duplicate text-info ' + (rowData.fileCount ? '' : '') + '" '
+									+ 'style="font-size: 1.2em">&nbsp;</i>'
 									+ '</div>'
 								)($scope));
 							}
