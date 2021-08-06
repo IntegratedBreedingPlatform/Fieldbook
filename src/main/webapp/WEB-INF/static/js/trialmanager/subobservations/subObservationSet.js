@@ -184,7 +184,10 @@
 				}
 			});
 
-			datasetService.getDataset(subObservationSet.id).then(function (dataset) {
+			fileService.getFileStorageStatus().then((map) => {
+				$scope.isFileStorageConfigured = map.status
+				return datasetService.getDataset(subObservationSet.id);
+			}).then(function (dataset) {
 				$scope.subObservationSet.dataset = dataset;
 				$scope.traitVariables = $scope.getVariables('TRAIT');
 				$scope.selectionVariables = $scope.getVariables('SELECTION_METHOD');
@@ -208,8 +211,6 @@
 
 				loadTable();
 			}); // getDataset
-
-			fileService.getFileStorageStatus().then((map) => $scope.isFileStorageConfigured = map.status);
 
 			subObsTabSelectedDeRegister();
 			subObsTabSelectedDeRegister = $rootScope.$on('subObsTabSelected', function (event) {
@@ -1579,6 +1580,16 @@
 										value += " (" + existingValue + ")";
 									}
 								}
+								if ($scope.isFileStorageConfigured
+									&& full.fileVariableIds
+									&& full.fileVariableIds.length
+									&& full.fileVariableIds.includes(columnData.termId.toString())) {
+									value +=  '<i onclick="showFiles(\'' + full.variables['OBS_UNIT_ID'].value + '\''
+										+ ', \'' + columnData.name + '\')" '
+										+ ' class="glyphicon glyphicon-duplicate text-info" '
+										+ ' title="click to see associated files"'
+										+ ' style="font-size: 1.2em; margin-left: 10px; cursor: pointer"></i>';
+								}
 
 								return value;
 							}
@@ -1750,7 +1761,7 @@
 				}
 			}
 
-			$scope.showFiles = function (observationUnitUUID) {
+			$scope.showFiles = function (observationUnitUUID, variableName) {
 
 				$uibModal.open({
 					template: '<iframe ng-src="{{url}}"' +
@@ -1760,7 +1771,8 @@
 						$scope.url = '/ibpworkbench/controller/jhipster#file-manager'
 							+ '?cropName=' + studyContext.cropName
 							+ '&programUUID=' + studyContext.programId
-							+ '&observationUnitUUID=' + observationUnitUUID;
+							+ '&observationUnitUUID=' + observationUnitUUID
+							+ '&variableName=' + (variableName || '');
 
 						window.closeModal = function() {
 							$uibModalInstance.close();
@@ -1770,6 +1782,11 @@
 					// FIXME not working
 					adjustColumns();
 				});
+			}
+			// global handle for inline cell html
+			window.showFiles = function (observationUnitUUID, variableName) {
+				event.stopPropagation();
+				$scope.showFiles(observationUnitUUID, variableName);
 			}
 
 		}])
