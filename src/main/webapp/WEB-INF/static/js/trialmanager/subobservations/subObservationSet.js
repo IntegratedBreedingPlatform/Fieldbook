@@ -1583,6 +1583,7 @@
 									}
 								}
 								if ($scope.isFileStorageConfigured
+									&& full
 									&& full.fileVariableIds
 									&& full.fileVariableIds.length
 									&& full.fileVariableIds.includes(columnData.termId.toString())) {
