@@ -276,7 +276,7 @@
 								});
 							} else {
 								showAlertMessage('', 'All instances cannot be regenerated due to internal validations (presence of ' +
-									'samples, inventory transactions, subobservations, means data or advance/cross list).');
+									'samples, files, inventory transactions, subobservations, means data or advance/cross list).');
 							}
 						});
 					};

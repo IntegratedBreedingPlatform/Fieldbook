@@ -2543,3 +2543,10 @@ div.dt-button-collection {
 .modal-window-width{
     width:98%;
 }
+
+.show-on-hover {
+    opacity: 0;
+}
+.show-on-hover:hover {
+    opacity: 0.5;
+}

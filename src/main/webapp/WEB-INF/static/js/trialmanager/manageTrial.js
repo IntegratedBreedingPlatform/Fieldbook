@@ -266,6 +266,8 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 						$rootScope.navigateToTab('germplasmStudySource', {reload: true});
 					}
 
+				} else if (event.data === 'observations-changed') {
+					$rootScope.$broadcast('observationsChanged');
 				}
 			}, false);
 
