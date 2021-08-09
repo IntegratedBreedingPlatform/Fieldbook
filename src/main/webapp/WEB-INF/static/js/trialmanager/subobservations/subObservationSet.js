@@ -1408,11 +1408,13 @@
 			function addViewColumns(columnsData) {
 				// copy array to avoid modifying the parameter (unit test might reuse the same object)
 				var columns = columnsData.slice();
-				columns.unshift({
-					alias: 'FILES',
-					factor: true,
-					name: '',
-				});
+				if ($scope.isFileStorageConfigured) {
+					columns.unshift({
+						alias: 'FILES',
+						factor: true,
+						name: '',
+					});
+				}
 				columns.unshift({
 					alias: "",
 					factor: true,
