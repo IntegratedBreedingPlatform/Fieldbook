@@ -1780,9 +1780,6 @@
 							$uibModalInstance.close();
 						}
 					},
-				}).result.finally(() => {
-					// FIXME not working
-					adjustColumns();
 				});
 			}
 			// global handle for inline cell html
