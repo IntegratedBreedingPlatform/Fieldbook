@@ -14,20 +14,6 @@
 	   ng-model="observation.value"
 	   style="width: 100%" />
 
-<span ng-if="columnData.dataTypeCode === 'F'">
-	<input type="file"
-		   class="form-control"
-		   file-upload="observation.file"
-		   style="width: 100%"/>
-	<button ng-if="columnData.dataTypeCode === 'F'"
-			ng-click="observation.change()"
-			class="btn btn-info">Upload</button>
-	<button ng-click="observation.cancel()"
-			class="btn btn-default">Cancel</button>
-	<br>
-	<a href ng-if="observation.value" ng-click="observation.showFile()">{{observation.value}}</a>
-</span>
-
 <ui-select ng-model="observation.value"
 		   ng-if="columnData.dataTypeCode === 'C'"
 		   uis-open-close="observation.onOpenClose(isOpen)"
