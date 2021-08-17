@@ -1,6 +1,5 @@
 /*global angular*/
 /*global showBaselineTraitDetailsModal */
-/* global openManageLocations*/
 (function() {
 	'use strict';
 

@@ -1,13 +1,12 @@
-/*global angular, openManageLocations,
-environmentModalConfirmationText, environmentConfirmLabel, showAlertMessage, showErrorMessage*/
+/*global angular, environmentModalConfirmationText, environmentConfirmLabel, showAlertMessage, showErrorMessage*/
 (function () {
 	'use strict';
 
 	angular.module('manageTrialApp').controller('EnvironmentCtrl', ['$scope', '$q', 'TrialManagerDataService', '$uibModal', '$stateParams',
 		'$http', 'DTOptionsBuilder', 'LOCATION_ID', 'UNSPECIFIED_LOCATION_ID', '$timeout', 'studyInstanceService', 'studyStateService', 'derivedVariableService', 'studyContext',
-		'datasetService', '$compile',
+		'datasetService', 'locationModalService', '$compile',
 		function ($scope, $q, TrialManagerDataService, $uibModal, $stateParams, $http, DTOptionsBuilder, LOCATION_ID, UNSPECIFIED_LOCATION_ID, $timeout, studyInstanceService,
-				  studyStateService, derivedVariableService, studyContext, datasetService, $compile) {
+				  studyStateService, derivedVariableService, studyContext, datasetService, locationModalService, $compile) {
 
 			var ctrl = this;
 			var tableId = '#environment-table';
@@ -305,7 +304,7 @@ environmentModalConfirmationText, environmentConfirmLabel, showAlertMessage, sho
 			};
 
 			$scope.initiateManageLocationModal = function () {
-				openManageLocations();
+				locationModalService.openManageLocations();
 			};
 
 			ctrl.updateInstanceVariables = function (type, entriesIncreased) {
