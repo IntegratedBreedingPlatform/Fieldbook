@@ -690,6 +690,11 @@
 		  scope="request">
 		<aop:scoped-proxy/>
 	</bean>
+
+	<bean id="advancingController"
+		  class="com.efficio.fieldbook.web.trial.controller.AdvancingController">
+		<property name="advanceLinesThreshold" value="${advancing.lines.warning.threshold}"/>
+	</bean>
     <!-- Nested <beans> elements can only be at the end. -->
 
 

@@ -151,6 +151,8 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 	@Resource
 	private StudyInstanceService studyInstanceService;
 
+	private int advanceLinesThreshold;
+
 	@Override
 	public String getContentName() {
 		return "StudyManager/advanceStudyModal";
@@ -497,6 +499,7 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 
 			model.addAttribute("advanceDataList", dataTableDataList);
 			model.addAttribute(AdvancingController.TABLE_HEADER_LIST, this.getAdvancedStudyTableHeader());
+			model.addAttribute("advanceLinesThreshold", this.advanceLinesThreshold);
 		} catch (final Exception e) {
 			AdvancingController.LOG.error(e.getMessage(), e);
 			form.setErrorInAdvance(e.getMessage());
@@ -762,4 +765,11 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 		}
 	}
 
+	public int getAdvanceLinesThreshold() {
+		return this.advanceLinesThreshold;
+	}
+
+	public void setAdvanceLinesThreshold(final int advanceLinesThreshold) {
+		this.advanceLinesThreshold = advanceLinesThreshold;
+	}
 }
