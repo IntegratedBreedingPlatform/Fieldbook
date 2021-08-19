@@ -1,5 +1,5 @@
 /*globals displayGermplasmListTree, changeBrowseGermplasmButtonBehavior, saveGermplasmReviewError */
-/*globals $,showErrorMessage, showInvalidInputMessage, getDisplayedTreeName,ImportCrosses,listShouldNotBeEmptyError,getJquerySafeId,
+/*globals $,showErrorMessage, showAlertMessage, showInvalidInputMessage, getDisplayedTreeName,ImportCrosses,listShouldNotBeEmptyError,getJquerySafeId,
 validateAllDates, saveListSuccessfullyMessage */
 /*globals listParentFolderRequired, listNameRequired */
 /*globals listDateRequired, listTypeRequired, moveToTopScreen */
@@ -31,9 +31,13 @@ var SaveAdvanceList = {};
 	};
 
 	SaveAdvanceList.openSaveListModal = function(object) {
-		if (parseInt($('#reviewAdvanceStudyModal .total-review-items').html(), 10) < 1) {
+		var numOfLinesToAdvance = parseInt($('#reviewAdvanceStudyModal .total-review-items').html(), 10);
+		var advanceLinesThreshold = parseInt($('#advanceLinesThreshold').val(), 10);
+		if (numOfLinesToAdvance < 1) {
 			showErrorMessage('', saveGermplasmReviewError);
 			return false;
+		} else if (numOfLinesToAdvance > advanceLinesThreshold) {
+			showAlertMessage('page-save-list-message-modal', saveGermplasmReviewWarning.replace('{0}', advanceLinesThreshold).replace('{1}', advanceLinesThreshold), 25000);
 		}
 		$('#reviewAdvanceStudyModal').modal('hide');
 
@@ -117,7 +121,6 @@ var SaveAdvanceList = {};
 						});
 					$('#reviewAdvanceStudyModal').modal({ backdrop: 'static', keyboard: true });
 				}, 300);
-
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				console.log('The following error occured: ' + textStatus, errorThrown);
