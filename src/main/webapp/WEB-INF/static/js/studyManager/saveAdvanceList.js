@@ -33,11 +33,13 @@ var SaveAdvanceList = {};
 	SaveAdvanceList.openSaveListModal = function(object) {
 		var numOfLinesToAdvance = parseInt($('#reviewAdvanceStudyModal .total-review-items').html(), 10);
 		var advanceLinesThreshold = parseInt($('#advanceLinesThreshold').val(), 10);
+		var advanceType = $('#advanceType').val()
 		if (numOfLinesToAdvance < 1) {
 			showErrorMessage('', saveGermplasmReviewError);
 			return false;
-		} else if (numOfLinesToAdvance > advanceLinesThreshold) {
-			showAlertMessage('page-save-list-message-modal', saveGermplasmReviewWarning.replace('{0}', advanceLinesThreshold).replace('{1}', advanceLinesThreshold), 25000);
+		} else if (numOfLinesToAdvance > advanceLinesThreshold && advanceType !== 'sample') {
+			showErrorMessage('page-save-list-message-modal', saveGermplasmReviewWarning.replace('{0}', advanceLinesThreshold).replace('{1}', advanceLinesThreshold));
+			return false;
 		}
 		$('#reviewAdvanceStudyModal').modal('hide');
 

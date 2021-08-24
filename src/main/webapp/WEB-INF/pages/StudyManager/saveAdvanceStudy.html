@@ -78,6 +78,7 @@
 			</div> <!-- Modal Content -->
 		</div>
 		<input type="hidden" id="advanceLinesThreshold" th:value="${advanceLinesThreshold}"/>
+		<input type="hidden" id="advanceType"/>
 	</div>
 	<input type="hidden" id="errorInAdvance" th:value="*{errorInAdvance}" />
 
@@ -86,7 +87,8 @@
 <div layout:fragment="page-script">
     <script type="text/javascript" th:inline="javascript">
 
-		var advanceType = angular.element('#mainApp').injector().get('TrialManagerDataService').applicationData.advanceType;
+		var  advanceType = angular.element('#mainApp').injector().get('TrialManagerDataService').applicationData.advanceType;
+		$("#advanceType").val(advanceType);
 		if (advanceType == 'sample') {
 			$("#reviewSamplesModalHeader").show();
 			$("#reviewAdvanceStudyModalHeader").hide();
