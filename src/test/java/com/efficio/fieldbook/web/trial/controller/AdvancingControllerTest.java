@@ -751,14 +751,14 @@ public class AdvancingControllerTest {
 				generateSeedSource(ArgumentMatchers.any(),
 						ArgumentMatchers.any(),
 						ArgumentMatchers.eq("1"), ArgumentMatchers.eq("2"), ArgumentMatchers.eq(STUDY_NAME),
-					ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.anyMap(), ArgumentMatchers.anyList()))
+					ArgumentMatchers.isNull(), ArgumentMatchers.anyMap(), ArgumentMatchers.anyMap(), ArgumentMatchers.anyList()))
 			.thenReturn(testSeedSource1);
 		final String testSeedSource2 = "MEX-DrySeason-N1-1-2";
 		Mockito.when(this.seedSourceGenerator.
 				generateSeedSource(ArgumentMatchers.any(),
 						ArgumentMatchers.anyList(),
 						ArgumentMatchers.eq("2"), ArgumentMatchers.eq("2"), ArgumentMatchers.eq(STUDY_NAME),
-					ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.anyMap(), ArgumentMatchers.anyList()))
+					ArgumentMatchers.isNull(), ArgumentMatchers.anyMap(), ArgumentMatchers.anyMap(), ArgumentMatchers.anyList()))
 			.thenReturn(testSeedSource2);
 
 		this.prepareMockWorkbook();
