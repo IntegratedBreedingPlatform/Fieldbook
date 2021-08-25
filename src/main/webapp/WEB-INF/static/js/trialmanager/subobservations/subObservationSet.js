@@ -1770,6 +1770,8 @@
 
 			$scope.showFiles = function (observationUnitUUID, variableName) {
 
+				const datasetId = $scope.subObservationSet.id;
+
 				$uibModal.open({
 					template: '<iframe ng-src="{{url}}"' +
 						' style="width:100%; height: 590px; border: 0" />',
@@ -1778,6 +1780,7 @@
 						$scope.url = '/ibpworkbench/controller/jhipster#file-manager'
 							+ '?cropName=' + studyContext.cropName
 							+ '&programUUID=' + studyContext.programId
+							+ '&datasetId=' + datasetId
 							+ '&observationUnitUUID=' + observationUnitUUID
 							+ '&variableName=' + (variableName || '');
 
