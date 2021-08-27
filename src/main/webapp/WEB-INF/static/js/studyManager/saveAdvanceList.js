@@ -293,8 +293,9 @@ var SaveAdvanceList = {};
 			$('#'+getJquerySafeId(sectionContainerDiv) + ' .advance-study-list-table tr').addClass('manual-selected');
             $('input[type="checkbox"]', rows).prop('checked', 'checked').parent('td').parent('tr').addClass('selected').addClass('manual-selected');
 		}
-		$('#' + getJquerySafeId(sectionContainerDiv) + ' .numberOfAdvanceSelected').html($('#' + getJquerySafeId(sectionContainerDiv) +
-			' tr.primaryRow.selected').length);
+		// Display total number of selected entries
+		var selectedRows = $('[type="checkbox"]:checked', $('.advance-study-list-table .advance-germplasm-items').DataTable().rows().nodes()).length;
+		$('#' + getJquerySafeId(sectionContainerDiv) + ' .numberOfAdvanceSelected').html(selectedRows);
 		$('#' + getJquerySafeId(sectionContainerDiv) + ' .review-select-all').prop('checked', isChecked);
 	};
 
