@@ -1,5 +1,5 @@
 /*globals displayGermplasmListTree, changeBrowseGermplasmButtonBehavior, saveGermplasmReviewError */
-/*globals $,showErrorMessage, showInvalidInputMessage, getDisplayedTreeName,ImportCrosses,listShouldNotBeEmptyError,getJquerySafeId,
+/*globals $,showErrorMessage, showAlertMessage, showInvalidInputMessage, getDisplayedTreeName,ImportCrosses,listShouldNotBeEmptyError,getJquerySafeId,
 validateAllDates, saveListSuccessfullyMessage */
 /*globals listParentFolderRequired, listNameRequired */
 /*globals listDateRequired, listTypeRequired, moveToTopScreen */
@@ -31,8 +31,14 @@ var SaveAdvanceList = {};
 	};
 
 	SaveAdvanceList.openSaveListModal = function(object) {
-		if (parseInt($('#reviewAdvanceStudyModal .total-review-items').html(), 10) < 1) {
+		var numOfLinesToAdvance = parseInt($('#reviewAdvanceStudyModal .total-review-items').html(), 10);
+		var advanceLinesThreshold = parseInt($('#advanceLinesThreshold').val(), 10);
+		var advanceType = $('#advanceType').val()
+		if (numOfLinesToAdvance < 1) {
 			showErrorMessage('', saveGermplasmReviewError);
+			return false;
+		} else if (numOfLinesToAdvance > advanceLinesThreshold && advanceType !== 'sample') {
+			showErrorMessage('page-save-list-message-modal', saveGermplasmReviewWarning.replace('{0}', advanceLinesThreshold).replace('{1}', advanceLinesThreshold));
 			return false;
 		}
 		$('#reviewAdvanceStudyModal').modal('hide');
@@ -117,7 +123,6 @@ var SaveAdvanceList = {};
 						});
 					$('#reviewAdvanceStudyModal').modal({ backdrop: 'static', keyboard: true });
 				}, 300);
-
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				console.log('The following error occured: ' + textStatus, errorThrown);
@@ -288,8 +293,9 @@ var SaveAdvanceList = {};
 			$('#'+getJquerySafeId(sectionContainerDiv) + ' .advance-study-list-table tr').addClass('manual-selected');
             $('input[type="checkbox"]', rows).prop('checked', 'checked').parent('td').parent('tr').addClass('selected').addClass('manual-selected');
 		}
-		$('#' + getJquerySafeId(sectionContainerDiv) + ' .numberOfAdvanceSelected').html($('#' + getJquerySafeId(sectionContainerDiv) +
-			' tr.primaryRow.selected').length);
+		// Display total number of selected entries
+		var selectedRows = $('[type="checkbox"]:checked', $('.advance-study-list-table .advance-germplasm-items').DataTable().rows().nodes()).length;
+		$('#' + getJquerySafeId(sectionContainerDiv) + ' .numberOfAdvanceSelected').html(selectedRows);
 		$('#' + getJquerySafeId(sectionContainerDiv) + ' .review-select-all').prop('checked', isChecked);
 	};
 

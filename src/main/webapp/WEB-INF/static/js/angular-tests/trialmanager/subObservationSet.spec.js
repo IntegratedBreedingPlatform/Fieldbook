@@ -876,8 +876,14 @@ describe('SubObservationSetCtrl', function () {
 			'getObservationTableUrl'
 		]),
 		derivedVariableServiceMock = jasmine.createSpyObj('derivedVariableService', ['displayExecuteCalculateVariableMenu', 'showWarningIfDependenciesAreMissing']),
-		fileServiceMock = jasmine.createSpyObj('fileService', ['upload', 'showFile'])
+		fileServiceMock = jasmine.createSpyObj('fileService', ['getFileStorageStatus'])
 	;
+
+	/**
+	 *  - Checkbox
+	 *  - Files
+	 */
+	var fixedColumnsLength = 2;
 
 	// Mock the dependency module
 	angular.module('visualization', []);
@@ -919,6 +925,9 @@ describe('SubObservationSetCtrl', function () {
 
 			$uibModal= jasmine.createSpyObj('$uibModal', ['open']);
 
+			fileServiceMock = $injector.get('fileService');
+			fileServiceMock.getFileStorageStatus.and.returnValue($q.resolve({ status: true }));
+
 			datasetServiceMock = $injector.get('datasetService');
 			datasetServiceMock.getDataset.and.returnValue($q.resolve(serviceDataset));
 			datasetServiceMock.getColumns.and.returnValue($q.resolve(columns));
@@ -931,6 +940,7 @@ describe('SubObservationSetCtrl', function () {
 				$scope: scope,
 				$rootScope: $rootScope,
 				TrialManagerDataService: TrialManagerDataServiceMock,
+				fileService: fileServiceMock,
 				$stateParams: $stateParamsMock,
 				dTOptionsBuilder: dTOptionsBuilderMock,
 				dTColumnBuilder: dTColumnBuilderMock,
@@ -966,20 +976,19 @@ describe('SubObservationSetCtrl', function () {
 				expect(scope.traitVariables.m_keys[2]).toEqual(extractedSettings.m_keys[2]);
 				expect(scope.traitVariables.m_vals["8630"].variable.name).toEqual(extractedSettings.m_vals["8630"].variable.name);
 
-				expect(scope.columnsObj.columns[1].columnData.termId).toEqual(columns[0].termId);
+				const firstColumnIndex = 0 + fixedColumnsLength;
+				expect(scope.columnsObj.columns[firstColumnIndex].columnData.termId).toEqual(columns[0].termId);
 			});
 
 			it('should have datatables functionality', function () {
-				// AleuCol_E_1to5 (+ 1 (checkbox))
-				const AleuCol_E_1to5_index = 10+1;
+				const AleuCol_E_1to5_index = 10 + fixedColumnsLength;
 				expect(scope.columnsObj.columnsDef[AleuCol_E_1to5_index].render({value: scope.columnsObj.columns[AleuCol_E_1to5_index].columnData.possibleValues[1].name}))
 					.toContain(scope.columnsObj.columns[AleuCol_E_1to5_index].columnData.possibleValues[1].displayDescription);
 
 				spyOn($.fn, 'addClass').and.callFake(function () {
 				});
 
-				// nah_expected_range (+ 1 (checkbox))
-				const nah_expected_range_index = 8+1;
+				const nah_expected_range_index = 8 + fixedColumnsLength;
 				scope.columnsObj.columnsDef[nah_expected_range_index].createdCell({}, {value: 60}, {}, scope.columnsObj.columns[nah_expected_range_index].columnData);
 				expect($.fn.addClass).toHaveBeenCalledWith('accepted-value')
 			});

@@ -9,6 +9,8 @@
 	};
 	var changingPlotEntryDeRegister = () => {
 	};
+	var observationsChangedDeRegister = () => {
+	};
 
 	var subObservationModule = angular.module('subObservation', ['visualization', 'germplasmDetailsModule']);
 	var TRIAL_INSTANCE = 8170,
@@ -182,7 +184,10 @@
 				}
 			});
 
-			datasetService.getDataset(subObservationSet.id).then(function (dataset) {
+			fileService.getFileStorageStatus().then((map) => {
+				$scope.isFileStorageConfigured = map.status
+				return datasetService.getDataset(subObservationSet.id);
+			}).then(function (dataset) {
 				$scope.subObservationSet.dataset = dataset;
 				$scope.traitVariables = $scope.getVariables('TRAIT');
 				$scope.selectionVariables = $scope.getVariables('SELECTION_METHOD');
@@ -214,6 +219,11 @@
 
 			sampleListCreatedDeRegister();
 			sampleListCreatedDeRegister = $rootScope.$on('sampleListCreated', function (event) {
+				loadTable();
+			});
+
+			observationsChangedDeRegister();
+			observationsChangedDeRegister = $rootScope.$on('observationsChanged', function (event) {
 				loadTable();
 			});
 
@@ -948,10 +958,20 @@
 
 			function initCompleteCallback() {
 				table().columns().every(function () {
+					if ($scope.isCheckBoxColumn(this.index())) {
+						$(this.header()).prepend($compile('<span>'
+								+ '<input type="checkbox" title="select current page" ng-checked="isPageSelected()"  ng-click="onSelectPage()">'
+								+ '</span>')($scope));
+						return;
+					}
+					if (this.index() === 1 && $scope.isFileStorageConfigured) {
+						return;
+					}
+
 					$(this.header())
 						.prepend($compile('<span class="glyphicon glyphicon-bookmark" style="margin-right: 10px; color:#1b95b2;"' +
 							' ng-if="isVariableBatchActionSelected(' + this.index() + ')"> </span>')($scope))
-						.append($compile('<span ng-if="!isCheckBoxColumn(' + this.index() + ')" class="glyphicon glyphicon-filter" ' +
+						.append($compile('<span class="glyphicon glyphicon-filter" ' +
 							' style="cursor:pointer; padding-left: 5px;"' +
 							' popover-placement="bottom"' +
 							' ng-class="getFilteringByClass(' + this.index() + ')"' +
@@ -962,9 +982,6 @@
 							' ng-if="isVariableFilter(' + this.index() + ')"' +
 							' ng-click="openColumnFilter(' + this.index() + ')"' +
 							' uib-popover-template="\'columnFilterPopoverTemplate.html\'"></span>')($scope))
-						.prepend($compile('<span ng-if="isCheckBoxColumn(' + this.index() + ')">'
-							+ '<input type="checkbox" title="select current page" ng-checked="isPageSelected()"  ng-click="onSelectPage()">'
-							+ '</span>')($scope));
 				});
 				adjustColumns();
 				tableRenderedResolve();
@@ -990,10 +1007,6 @@
 						table().columns.adjust();
 					});
 				}
-			}
-
-			function getFilePath(rowData, columnData, fileName) {
-				return fileService.getFilePath(rowData.variables['OBS_UNIT_ID'].value, columnData.termId, fileName);
 			}
 
 			/* WARNING Complexity up ahead.
@@ -1050,11 +1063,6 @@
 							},
 							newInlineValue: function (newValue) {
 								return {name: newValue};
-							},
-							showFile: function () {
-								const path = getFilePath(rowData, columnData, this.value)
-									.then((path) => fileService.showFile(path, this.value));
-								return false;
 							}
 						};
 
@@ -1132,34 +1140,7 @@
 								return $q.resolve(cellData);
 							} // doAjaxUpdate
 
-							function doFileUploadIfNeeded() {
-								const file = $inlineScope.observation.file;
-								if (columnData.dataTypeCode === 'F' && file) {
-									let validateFile;
-									if ($inlineScope.observation.value) {
-										var confirmModal = $scope.openConfirmModal("A file already exists. Overwrite?");
-										validateFile = confirmModal.result;
-									} else {
-										validateFile = $q.resolve(true);
-									}
-									return validateFile.then((doContinue) => {
-										if (!doContinue) {
-											return $q.reject();
-										}
-										return getFilePath(rowData, columnData, file.name).then((path) => {
-											return fileService.upload(file, path, rowData.variables['OBS_UNIT_ID'].value)
-												.then((response) => {
-													$inlineScope.observation.value = file.name;
-												});
-										});
-									});
-								}
-								return $q.resolve();
-							} // doFileUploadIfNeeded
-
-							var promise = doFileUploadIfNeeded().then(function (fileName) {
-								return doAjaxUpdate();
-							});
+							var promise = doAjaxUpdate();
 
 							promise.then(function (data) {
 								var valueChanged = false;
@@ -1210,7 +1191,7 @@
 								adjustColumns();
 							}, function (response) {
 								if (!response) {
-									// no ajax, local reject / cancel (e.g overwrite file? -> no)
+									// no ajax, local reject / cancel (e.g await modal confirm)
 									// keeps inline editor open
 									return;
 								}
@@ -1266,7 +1247,7 @@
 							 * This also avoids temporary click handler on body
 							 * FIXME is there a better way?
 							 */
-							$(cell).find('a.ui-select-match, input:not([type="file"])').click().focus();
+							$(cell).find('a.ui-select-match').click().focus();
 						}, 100);
 					});
 				} // clickHandler
@@ -1418,15 +1399,22 @@
 
 			function loadColumns() {
 				return datasetService.getColumns(subObservationSet.id, $scope.isPendingView).then(function (columnsData) {
-					subObservationSet.columnsData = addCheckBoxColumn(columnsData);
+					subObservationSet.columnsData = addViewColumns(columnsData);
 					var columnsObj = $scope.columnsObj = subObservationSet.columnsObj = mapColumns(subObservationSet.columnsData);
 					return columnsObj;
 				});
 			}
 
-			function addCheckBoxColumn(columnsData) {
+			function addViewColumns(columnsData) {
 				// copy array to avoid modifying the parameter (unit test might reuse the same object)
 				var columns = columnsData.slice();
+				if ($scope.isFileStorageConfigured) {
+					columns.unshift({
+						alias: 'FILES',
+						factor: true,
+						name: '',
+					});
+				}
 				columns.unshift({
 					alias: "",
 					factor: true,
@@ -1506,6 +1494,24 @@
 								$(td).append($compile('<span><input type="checkbox" ng-checked="isSelected(' + rowData.observationUnitId + ')" ng-click="toggleSelect(' + rowData.observationUnitId + ')"></span>')($scope));
 							}
 						});
+					} else if (columnData.index === 1 && $scope.isFileStorageConfigured) {
+						// Files
+						columnsDef.push({
+							targets: columns.length - 1,
+							orderable: false,
+							createdCell: function (td, cellData, rowData, rowIndex, colIndex) {
+								$(td).append($compile(
+									'<div ng-click="showFiles(\'' + rowData.variables['OBS_UNIT_ID'].value + '\')" '
+									+ (rowData.fileCount
+									? ' title="# of files: ' + rowData.fileCount + '"'
+									: ' title="click to open the file manager" class="show-on-hover"')
+									+ ' style="cursor: pointer">'
+									+ '<i class="glyphicon glyphicon-duplicate text-info ' + (rowData.fileCount ? '' : '') + '" '
+									+ 'style="font-size: 1.2em">&nbsp;</i>'
+									+ '</div>'
+								)($scope));
+							}
+						});
 					} else if (columnData.termId === 8240 || columnData.termId === 8250) {
 						// GID or DESIGNATION
 						columnsDef.push({
@@ -1575,6 +1581,21 @@
 									if (existingValue || existingValue === 0) {
 										value += " (" + existingValue + ")";
 									}
+								}
+								if ($scope.isFileStorageConfigured
+									&& full
+									&& full.fileVariableIds
+									&& full.fileVariableIds.length
+									&& full.fileVariableIds.includes(columnData.termId.toString())) {
+
+									if (value === undefined) {
+										value = '';
+									}
+									value +=  '<i onclick="showFiles(\'' + full.variables['OBS_UNIT_ID'].value + '\''
+										+ ', \'' + columnData.name + '\')" '
+										+ ' class="glyphicon glyphicon-duplicate text-info" '
+										+ ' title="click to see associated files"'
+										+ ' style="font-size: 1.2em; margin-left: 10px; cursor: pointer"></i>';
 								}
 
 								return value;
@@ -1745,6 +1766,34 @@
 						$td.addClass('out-of-sync-value');
 					}
 				}
+			}
+
+			$scope.showFiles = function (observationUnitUUID, variableName) {
+
+				const datasetId = $scope.subObservationSet.id;
+
+				$uibModal.open({
+					template: '<iframe ng-src="{{url}}"' +
+						' style="width:100%; height: 590px; border: 0" />',
+					size: 'lg',
+					controller: function ($scope, $uibModalInstance) {
+						$scope.url = '/ibpworkbench/controller/jhipster#file-manager'
+							+ '?cropName=' + studyContext.cropName
+							+ '&programUUID=' + studyContext.programId
+							+ '&datasetId=' + datasetId
+							+ '&observationUnitUUID=' + observationUnitUUID
+							+ '&variableName=' + (variableName || '');
+
+						window.closeModal = function() {
+							$uibModalInstance.close();
+						}
+					},
+				});
+			}
+			// global handle for inline cell html
+			window.showFiles = function (observationUnitUUID, variableName) {
+				event.stopPropagation();
+				$scope.showFiles(observationUnitUUID, variableName);
 			}
 
 		}])
