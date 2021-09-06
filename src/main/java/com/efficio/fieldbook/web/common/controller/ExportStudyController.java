@@ -5,22 +5,10 @@ import com.efficio.fieldbook.util.FieldbookUtil;
 import com.efficio.fieldbook.web.AbstractBaseFieldbookController;
 import com.efficio.fieldbook.web.common.bean.UserSelection;
 import com.efficio.fieldbook.web.trial.bean.ExportTrialInstanceBean;
-import com.efficio.fieldbook.web.util.SettingsUtil;
-import net.sf.jasperreports.engine.JRException;
-import org.generationcp.commons.constant.ToolSection;
-import org.generationcp.commons.pojo.CustomReportType;
-import org.generationcp.commons.reports.service.JasperReportService;
-import org.generationcp.commons.service.GermplasmExportService;
-import org.generationcp.middleware.domain.etl.StudyDetails;
 import org.generationcp.middleware.domain.fieldbook.FieldMapInfo;
 import org.generationcp.middleware.domain.fieldbook.FieldMapTrialInstanceInfo;
-import org.generationcp.middleware.domain.study.StudyTypeDto;
 import org.generationcp.middleware.manager.api.StudyDataManager;
-import org.generationcp.middleware.pojos.workbench.ToolName;
-import org.generationcp.middleware.reports.BuildReportException;
-import org.generationcp.middleware.reports.Reporter;
 import org.generationcp.middleware.service.api.FieldbookService;
-import org.generationcp.middleware.service.api.ReportService;
 import org.generationcp.middleware.util.CrossExpansionProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,15 +17,18 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.*;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(ExportStudyController.URL)
@@ -62,13 +53,7 @@ public class ExportStudyController extends AbstractBaseFieldbookController {
 	private CrossExpansionProperties crossExpansionProperties;
 
 	@Resource
-	private ReportService reportService;
-
-	@Resource
 	private MessageSource messageSource;
-
-	@Resource
-	private JasperReportService jasperReportService;
 
 	@Resource
 	private StudyDataManager studyDataManager;
@@ -89,42 +74,6 @@ public class ExportStudyController extends AbstractBaseFieldbookController {
 
 		return FieldbookUtil.createResponseEntityForFileDownload(outputFilename, filename);
 
-	}
-
-	@ResponseBody
-	@RequestMapping(value = "/export/custom/report", method = RequestMethod.POST)
-	public String exportCustomReport(@RequestBody final Map<String, String> data, final HttpServletRequest req,
-			final HttpServletResponse response) {
-		final String studyId = this.getStudyId(data);
-		final String reportCode = data.get("customReportCode");
-		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		String fileName = "";
-		String outputFilename = "";
-		final Reporter rep;
-		final Map<String, Object> results = new HashMap<>();
-		try {
-
-			rep = this.reportService.getStreamReport(reportCode, Integer.parseInt(studyId),
-					this.contextUtil.getProjectInContext().getProjectName(), baos);
-
-			fileName = rep.getFileName();
-			outputFilename = this.fieldbookProperties.getUploadDirectory() + File.separator + fileName;
-
-			final File reportFile = new File(outputFilename);
-			baos.writeTo(new FileOutputStream(reportFile));
-
-			results.put(ExportStudyController.IS_SUCCESS, true);
-			results.put(ExportStudyController.OUTPUT_FILENAME, outputFilename);
-			results.put(ExportStudyController.FILENAME, SettingsUtil.cleanSheetAndFileName(fileName));
-			results.put(ExportStudyController.CONTENT_TYPE, response.getContentType());
-
-		} catch (final NumberFormatException | JRException | IOException | BuildReportException e) {
-			ExportStudyController.LOG.error(e.getMessage(), e);
-			results.put(ExportStudyController.IS_SUCCESS, false);
-			results.put(ExportStudyController.ERROR_MESSAGE, this.messageSource.getMessage("export.study.error", null, Locale.ENGLISH));
-		}
-
-		return super.convertObjectToJson(results);
 	}
 
 	protected String getStudyId(final Map<String, String> data) {
@@ -162,35 +111,13 @@ public class ExportStudyController extends AbstractBaseFieldbookController {
 		return super.showAjaxPage(model, ExportStudyController.EXPORT_TRIAL_INSTANCE);
 	}
 
-	@ResponseBody
-	@RequestMapping(value = "/custom/{studyId}/reports", method = RequestMethod.GET)
-	public List<CustomReportType> getCustomReports(@PathVariable final int studyId) {
-		final StudyDetails studyDetails = this.studyDataManager.getStudyDetails(studyId);
-		// DO NOT remove this condition. Reports are organized based on the study type
-		// It needs to be discussed with IBP whenever they want to bring custom reports back
-		if (StudyTypeDto.NURSERY_NAME.equalsIgnoreCase(studyDetails.getStudyType().getName())) {
-			return this.getCustomReportTypes(ToolSection.FB_NURSE_MGR_CUSTOM_REPORT.name());
-		} else if (StudyTypeDto.TRIAL_NAME.equalsIgnoreCase(studyDetails.getStudyType().getName())) {
-			return this.getCustomReportTypes(ToolSection.FB_TRIAL_MGR_CUSTOM_REPORT.name());
-		}
-
-		return new ArrayList<>();
-	}
-
-	private List<CustomReportType> getCustomReportTypes(final String name) {
-		return this.jasperReportService.getCustomReportTypes(name, ToolName.FIELDBOOK_WEB.getName());
-	}
-
 	protected void setUserSelection(final UserSelection userSelection) {
 		this.studySelection = userSelection;
 	}
 
-
-
 	protected void setFieldbookMiddlewareService(final FieldbookService fieldbookMiddlewareService) {
 		this.fieldbookMiddlewareService = fieldbookMiddlewareService;
 	}
-
 
 	public void setCrossExpansionProperties(final CrossExpansionProperties crossExpansionProperties) {
 		this.crossExpansionProperties = crossExpansionProperties;

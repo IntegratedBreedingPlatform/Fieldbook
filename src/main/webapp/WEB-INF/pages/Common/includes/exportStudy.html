@@ -146,12 +146,7 @@
 			$('#singleFile').prop('checked', true);
 			$('#exportStudyModal select').select2({width: 'copy', minimumResultsForSearch: 20});
 			$('#exportType').on('change', function () {
-				if (StudyCustomExportReports.isCustomReport()) {
-					$('.data-collection-section').hide();
-					$('.all-instances-in-one-file').hide();
-					$('.exportTrialInstanceSection').addClass('fbk-hide');
-					$('.exportRSection').css('display', 'none');
-				} else if ($(this).val() === 'xls') {
+				if ($(this).val() === 'xls') {
 					$('.data-collection-section').show();
 					$('.all-instances-in-one-file').hide();
 					$('.exportRSection').css('display', 'block');
@@ -228,8 +223,6 @@ function showExportOptions() {
 	var mode = ($('.review-trial-page-identifier').length) ?  '.active .review-trial-page-identifier' : '#createTrialMainForm' ;
 	var studyId = $(mode + ' #studyId').val();
 
-	StudyCustomExportReports.showReports(studyId);
-
 	$('#exportStudyModal').modal({backdrop: 'static', keyboard: true});
 
 	$.ajax({
@@ -238,11 +231,7 @@ function showExportOptions() {
 		cache: false,
 		success: function (data) {
 			$('.exportTrialInstanceSection .trial-instance').html(data);
-			if (StudyCustomExportReports.isCustomReport()) {
-				$('.exportTrialInstanceSection').addClass('fbk-hide');
-			} else {
-				$('.exportTrialInstanceSection').removeClass('fbk-hide');
-			}
+			$('.exportTrialInstanceSection').removeClass('fbk-hide');
 		}
 	});
 
