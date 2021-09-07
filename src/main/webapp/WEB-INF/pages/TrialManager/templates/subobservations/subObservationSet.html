@@ -177,7 +177,7 @@
 							<div class="form-group" ng-if="nested.selectedVariableFilter.dataTypeCode === 'N' || nested.selectedVariableFilter.dataTypeCode === 'T'">
 								<input class="form-control inline-select" ng-model='nested.newValueBatchUpdate'/>
 							</div>
-							<div class="form-group" ng-if="nested.selectedVariableFilter.dataTypeCode === 'C'">
+							<div class="form-group" ng-if="nested.selectedVariableFilter.dataTypeCode === 'C' &amp;&amp; nested.selectedVariableFilter.dataType !== 'Breeding Method'">
 								<ui-select ng-model="nested.newValueBatchUpdate"
 										   class="input-sm form-control inline-select"
 										   search-enabled="true"
@@ -187,6 +187,9 @@
 										<div title="{{value.description}}">{{isCategoricalDescriptionView ? value.displayDescription : value.displayValue}}</div>
 									</ui-select-choices>
 								</ui-select>
+							</div>
+							<div class="form-group" ng-if="nested.selectedVariableFilter.dataType === 'Breeding Method'" style="width:300px">
+								<methods-select enable-dropdown="true" hide-types="true" hide-favorites="true" valuecontainer="valuecontainer" targetkey="targetkey" on-method-select="batchUpdateMethodChanged"></methods-select>
 							</div>
 							<div class="input-group uib-datepicker-style-trasformer" ng-if="nested.selectedVariableFilter.dataTypeCode === 'D'">
 								<input class="form-control inline-select"

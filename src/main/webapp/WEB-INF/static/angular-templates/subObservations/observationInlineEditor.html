@@ -15,7 +15,7 @@
 	   style="width: 100%" />
 
 <ui-select ng-model="observation.value"
-		   ng-if="columnData.dataTypeCode === 'C'"
+		   ng-if="columnData.dataTypeCode === 'C' && !isBreedingMethod"
 		   uis-open-close="observation.onOpenClose(isOpen)"
 		   tagging="observation.newInlineValue"
 		   tagging-label="false"

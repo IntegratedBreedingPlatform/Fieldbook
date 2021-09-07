@@ -62,6 +62,8 @@
 			$scope.nested.newValueBatchUpdate = null;
 			$scope.enableActions = false;
 			$scope.isCategoricalDescriptionView = window.isCategoricalDescriptionView;
+			$scope.targetkey = 'newValueBatchUpdate';
+			$scope.valuecontainer = {newValueBatchUpdate : $scope.nested.newValueBatchUpdate};
 
 			var subObservationTab = $scope.subObservationTab;
 			var tableId = '#subobservation-table-' + subObservationTab.id + '-' + subObservationSet.id;
@@ -640,6 +642,10 @@
 			$scope.disableApply = function () {
 				return $scope.nested.selectedBatchAction.id === 1 && ($scope.nested.newValueBatchUpdate === null || $scope.nested.newValueBatchUpdate === '')
 			};
+
+			$scope.batchUpdateMethodChanged = function (item, model) {
+				$scope.nested.newValueBatchUpdate = $scope.valuecontainer.newValueBatchUpdate;
+			}
 
 			$scope.applyBatchAction = function () {
 
