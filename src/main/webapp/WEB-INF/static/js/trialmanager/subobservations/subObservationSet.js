@@ -1510,7 +1510,7 @@
 									'<div ng-click="showFiles(\'' + rowData.variables['OBS_UNIT_ID'].value + '\')" '
 									+ (rowData.fileCount
 									? ' title="# of files: ' + rowData.fileCount + '"'
-									: ' title="click to open the file manager" class="show-on-hover"')
+									: ' title="click to open the file manager" class="show-on-hover" ng-show="hasAnyAuthority(PERMISSIONS.MS_MANAGE_FILES_PERMISSION)"')
 									+ ' style="cursor: pointer">'
 									+ '<i class="glyphicon glyphicon-duplicate text-info ' + (rowData.fileCount ? '' : '') + '" '
 									+ 'style="font-size: 1.2em">&nbsp;</i>'
