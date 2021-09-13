@@ -507,11 +507,6 @@
     <bean id="breedersCrossIDGenerator" class="org.generationcp.commons.ruleengine.generator.BreedersCrossIDGenerator">
 	</bean>
 
-	<bean id="jasperReportService" class="org.generationcp.commons.reports.service.impl.JasperReportServiceImpl"
-		scope="request">
-		<aop:scoped-proxy />
-	</bean>
-
 	<bean id="pedigreeService" factory-bean="managerFactory"
 		factory-method="getPedigreeService" scope="request">
 		<aop:scoped-proxy />
@@ -519,10 +514,6 @@
 
 	<bean id="pedigreeDataManager" factory-bean="managerFactory"
 		factory-method="getPedigreeDataManager" scope="request">
-		<aop:scoped-proxy />
-	</bean>
-	<bean id="reportService" factory-bean="managerFactory"
-		factory-method="getReportService" scope="request">
 		<aop:scoped-proxy />
 	</bean>
 
