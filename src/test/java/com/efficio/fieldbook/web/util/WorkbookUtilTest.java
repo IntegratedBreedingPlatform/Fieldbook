@@ -63,7 +63,7 @@ public class WorkbookUtilTest {
 				.thenReturn(new Property(new Term(TermId.BREEDING_METHOD_PROP.getId(), TermId.BREEDING_METHOD_PROP.name(), "definition")));
 		this.breedingMethods = Arrays.asList(new ValueReference(123, RandomStringUtils.randomAlphabetic(20)),
 				new ValueReference(125, RandomStringUtils.randomAlphabetic(20)));
-		Mockito.when(this.fieldbookService.getAllBreedingMethods(true, WorkbookUtilTest.PROGRAM_UUID)).thenReturn(this.breedingMethods);
+		Mockito.when(this.fieldbookService.getAllBreedingMethods(true)).thenReturn(this.breedingMethods);
 	}
 
 	@Test

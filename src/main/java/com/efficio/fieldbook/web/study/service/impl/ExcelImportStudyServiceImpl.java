@@ -293,8 +293,7 @@ public class ExcelImportStudyServiceImpl extends AbstractExcelImportStudyService
 				final MeasurementVariable tempVarCode = tempObjCode != null ? (MeasurementVariable) tempObjCode : null;
 				final MeasurementVariable tempVarName = tempObjName != null ? (MeasurementVariable) tempObjName : null;
 				if (tempVarCode != null && !"".equalsIgnoreCase(tempVarCode.getValue())) {
-					final Method method = this.fieldbookMiddlewareService
-							.getMethodByCode(tempVarCode.getValue(), this.contextUtil.getCurrentProgramUUID());
+					final Method method = this.fieldbookMiddlewareService.getMethodByCode(tempVarCode.getValue());
 					if (tempVarName != null) {
 						tempVarName.setValue(method != null ? method.getMname() : "");
 					}
