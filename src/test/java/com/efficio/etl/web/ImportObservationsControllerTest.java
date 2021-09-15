@@ -126,7 +126,8 @@ public class ImportObservationsControllerTest {
 		Mockito.verify(this.etlService).createWorkbookFromUserSelection(ArgumentMatchers.eq(this.userSelection), ArgumentMatchers.anyBoolean());
 		Mockito.verify(this.dataImportService, Mockito.never()).removeLocationNameVariableIfExists(importData);
 		Mockito.verify(this.dataImportService, Mockito.never()).assignLocationIdVariableToEnvironmentDetailSection(importData);
-		Mockito.verify(this.dataImportService).checkForInvalidGids(ArgumentMatchers.eq(importData), ArgumentMatchers.<Message>anyList());
+		Mockito.verify(this.dataImportService).checkForInvalidGids(ArgumentMatchers.eq(importData), ArgumentMatchers.<Message>anyList(),
+			ArgumentMatchers.eq(ImportObservationsControllerTest.PROGRAM_UUID));
 		Mockito.verify(this.etlService).convertMessageList(ArgumentMatchers.<List<Message>>any());
 	}
 
@@ -166,7 +167,8 @@ public class ImportObservationsControllerTest {
 		Mockito.verify(this.etlService).createWorkbookFromUserSelection(ArgumentMatchers.eq(this.userSelection), ArgumentMatchers.anyBoolean());
 		Mockito.verify(this.dataImportService).removeLocationNameVariableIfExists(importData);
 		Mockito.verify(this.dataImportService).assignLocationIdVariableToEnvironmentDetailSection(importData);
-		Mockito.verify(this.dataImportService).checkForInvalidGids(ArgumentMatchers.eq(importData), ArgumentMatchers.<Message>anyList());
+		Mockito.verify(this.dataImportService).checkForInvalidGids(ArgumentMatchers.eq(importData), ArgumentMatchers.<Message>anyList(),
+			ArgumentMatchers.eq(ImportObservationsControllerTest.PROGRAM_UUID));
 		Mockito.verify(this.etlService).extractExcelFileData(workbook, this.userSelection, importData, true);
 		Mockito.verify(this.etlService, Mockito.times(2)).convertMessageList(ArgumentMatchers.<List<Message>>any());
 	}
@@ -209,7 +211,8 @@ public class ImportObservationsControllerTest {
 		Mockito.verify(this.etlService).createWorkbookFromUserSelection(ArgumentMatchers.eq(this.userSelection), ArgumentMatchers.anyBoolean());
 		Mockito.verify(this.dataImportService, Mockito.never()).removeLocationNameVariableIfExists(importData);
 		Mockito.verify(this.dataImportService, Mockito.never()).assignLocationIdVariableToEnvironmentDetailSection(importData);
-		Mockito.verify(this.dataImportService).checkForInvalidGids(ArgumentMatchers.eq(importData), ArgumentMatchers.<Message>anyList());
+		Mockito.verify(this.dataImportService).checkForInvalidGids(ArgumentMatchers.eq(importData), ArgumentMatchers.<Message>anyList(),
+			ArgumentMatchers.eq(ImportObservationsControllerTest.PROGRAM_UUID));
 		Mockito.verify(this.etlService, Mockito.times(2)).convertMessageList(ArgumentMatchers.<List<Message>>any());
 	}
 
