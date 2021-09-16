@@ -1253,7 +1253,7 @@
 							 * This also avoids temporary click handler on body
 							 * FIXME is there a better way?
 							 */
-							$(cell).find('a.ui-select-match').click().focus();
+							$(cell).find('a.ui-select-match, input').click().focus();
 						}, 100);
 					});
 				} // clickHandler
