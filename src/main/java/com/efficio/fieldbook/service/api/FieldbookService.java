@@ -52,7 +52,7 @@ public interface FieldbookService {
 	 * Gets the all possible values favorite.
 	 *
 	 * @param id the id
-	 * @param projectId the project id
+	 * @param programUUID the project id
 	 * @return the all possible values favorite
 	 */
 	public List<ValueReference> getAllPossibleValuesFavorite(final int id, final String programUUID, Boolean filtered);
@@ -70,11 +70,10 @@ public interface FieldbookService {
 	/**
 	 * Gets the all breeding methods.
 	 *
-	 * @param programUUID - unique id of the current program
 	 * @param isFilterOutGenerative the is filter out generative
 	 * @return the all breeding methods
 	 */
-	List<ValueReference> getAllBreedingMethods(boolean isFilterOutGenerative, String programUUID);
+	List<ValueReference> getAllBreedingMethods(boolean isFilterOutGenerative);
 
 	/**
 	 * Sets the all possible values in workbook.

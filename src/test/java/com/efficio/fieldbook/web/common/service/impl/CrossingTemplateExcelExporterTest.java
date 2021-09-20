@@ -199,7 +199,7 @@ public class CrossingTemplateExcelExporterTest {
 		final Method mockMethod = Mockito.mock(Method.class);
 		methods.add(mockMethod);
 		Mockito.when(mockMethod.getMcode()).thenReturn(mCode);
-		Mockito.when(this.germplasmDataManager.getMethodsByType(Matchers.anyString(), ArgumentMatchers.<String>isNull())).thenReturn(methods);
+		Mockito.when(this.germplasmDataManager.getMethodsByType(Matchers.anyString())).thenReturn(methods);
 
 		final Sheet sheet = this.workbook.getSheetAt(2);
 		this.exporter.updateCodesSection(sheet);

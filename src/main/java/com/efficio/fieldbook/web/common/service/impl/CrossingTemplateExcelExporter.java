@@ -246,7 +246,7 @@ public class CrossingTemplateExcelExporter {
 
 		// Methods
 
-		final List<Method> methods = this.germplasmDataManager.getMethodsByType("GEN", this.contextUtil.getCurrentProgramUUID());
+		final List<Method> methods = this.germplasmDataManager.getMethodsByType("GEN");
 
 		final CellStyle methodCellStyle = codesSheet.getWorkbook().createCellStyle();
 		methodCellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
