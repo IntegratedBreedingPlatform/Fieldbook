@@ -729,7 +729,7 @@ public class AdvancingControllerTest {
 
 		final Method breedingMethod =
 				new Method(40, "DER", "G", "SLF", "Self and Bulk", "Selfing a Single Plant or population and bulk seed", 0, -1, 1, 0,
-						TermId.NON_BULKING_BREEDING_METHOD_CLASS.getId(), 1, 0, 19980708, "");
+						TermId.NON_BULKING_BREEDING_METHOD_CLASS.getId(), 1, 0, 19980708);
 		breedingMethod.setSnametype(5);
 		breedingMethod.setSeparator("-");
 		breedingMethod.setPrefix("B");
@@ -838,7 +838,7 @@ public class AdvancingControllerTest {
 
 			final Method breedingMethod =
 					new Method(40, "DER", "G", "SLF", "Self and Bulk", "Selfing a Single Plant or population and bulk seed", 0, -1, 1, 0,
-							TermId.NON_BULKING_BREEDING_METHOD_CLASS.getId(), 1, 0, 19980708, "");
+							TermId.NON_BULKING_BREEDING_METHOD_CLASS.getId(), 1, 0, 19980708);
 			breedingMethod.setSnametype(5);
 			breedingMethod.setSeparator("-");
 			breedingMethod.setPrefix("B");

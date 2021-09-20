@@ -227,12 +227,12 @@ public class FieldbookServiceImpl implements FieldbookService {
 
 
 	@Override
-	public List<ValueReference> getAllBreedingMethods(final boolean isFilterOutGenerative, final String programUUID) {
+	public List<ValueReference> getAllBreedingMethods(final boolean isFilterOutGenerative) {
 		final List<ValueReference> list = new ArrayList<>();
 		final List<Method> methods = this.fieldbookMiddlewareService.getAllBreedingMethods(isFilterOutGenerative);
 		if (methods != null && !methods.isEmpty()) {
 			for (final Method method : methods) {
-				if (method != null && (method.getUniqueID() == null || method.getUniqueID().equals(programUUID))) {
+				if (method != null) {
 					final ValueReference valueReference = new ValueReference(method.getMid(), method.getMdesc(),
 						method.getMname() + " - " + method.getMcode());
 					valueReference.setKey(method.getMcode());
@@ -343,9 +343,7 @@ public class FieldbookServiceImpl implements FieldbookService {
 	}
 
 	protected String getBreedingMethodByCode(final String code) {
-		final Method method = this.fieldbookMiddlewareService.getMethodByCode(
-			code,
-			this.contextUtil.getCurrentProgramUUID());
+		final Method method = this.fieldbookMiddlewareService.getMethodByCode(code);
 		if (method != null) {
 			return method.getMname() + " - " + method.getMcode();
 		}
@@ -518,8 +516,7 @@ public class FieldbookServiceImpl implements FieldbookService {
 								Double.valueOf(studyConditionMap.get(idTermId).getValue()).intValue());
 						} else {
 							method = studyConditionMap.get(codeTermId).getValue().isEmpty() ? null
-								: this.fieldbookMiddlewareService.getMethodByCode(
-									studyConditionMap.get(codeTermId).getValue(), this.contextUtil.getCurrentProgramUUID());
+								: this.fieldbookMiddlewareService.getMethodByCode(studyConditionMap.get(codeTermId).getValue());
 						}
 
 						// add name variable if it is not yet in the list

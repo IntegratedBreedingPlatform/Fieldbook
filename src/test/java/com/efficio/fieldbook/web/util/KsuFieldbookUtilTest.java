@@ -252,7 +252,7 @@ public class KsuFieldbookUtilTest {
 	private List<MeasurementVariable> initializeTraitTest() {
 		final List<MeasurementVariable> traits = this.initializeListOfTraits();
 		final Method breedingMethod = new Method(40, "DER", "G", "SLF", "Self and Bulk",
-				"Selfing a Single Plant or population and bulk seed", 0, -1, 1, 0, 1490, 1, 0, 19980708, "");
+				"Selfing a Single Plant or population and bulk seed", 0, -1, 1, 0, 1490, 1, 0, 19980708);
 
 		final List<Method> methodList = Lists.newArrayList();
 		methodList.add(breedingMethod);

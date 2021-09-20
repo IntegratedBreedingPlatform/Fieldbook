@@ -221,39 +221,18 @@ public class FieldbookServiceTest {
 		final ContextUtil contextUtil = Mockito.mock(ContextUtil.class);
 		fieldbookService.setContextUtil(contextUtil);
 		final String code = "AGB1";
-		final String programUUID = null;
-		final Method method = this.createMethod(programUUID);
-		Mockito.doReturn(method).when(fieldbookMiddlewareService).getMethodByCode(code, programUUID);
-		Mockito.doReturn(programUUID).when(contextUtil).getCurrentProgramUUID();
+		final Method method = this.createMethod();
+		Mockito.doReturn(method).when(fieldbookMiddlewareService).getMethodByCode(code);
 		final String actualValue = fieldbookService.getBreedingMethodByCode(code);
 		final String expected = method.getMname() + " - " + method.getMcode();
 		Assert.assertEquals("Expecting to return " + expected + " but returned " + actualValue, expected, actualValue);
 
 	}
 
-	@Test
-	public void testGetBreedingMethodByCode_NullMethod() throws MiddlewareQueryException {
-		final FieldbookServiceImpl fieldbookService = new FieldbookServiceImpl();
-		final FieldbookService fieldbookMiddlewareService = Mockito.mock(FieldbookService.class);
-		fieldbookService.setFieldbookMiddlewareService(fieldbookMiddlewareService);
-		fieldbookService.setContextUtil(Mockito.mock(ContextUtil.class));
-		final ContextUtil contextUtil = Mockito.mock(ContextUtil.class);
-		fieldbookService.setContextUtil(contextUtil);
-		final String code = "TESTCODE";
-		final String programUUID = "6c87aaae-9e0f-428b-a364-44fab9fa7fd1";
-		Mockito.doReturn(null).when(fieldbookMiddlewareService).getMethodByCode(code, programUUID);
-		Mockito.doReturn(programUUID).when(contextUtil).getCurrentProgramUUID();
-		final String actualValue = fieldbookService.getBreedingMethodByCode(code);
-		final String expected = "";
-		Assert.assertEquals("Expecting to return " + expected + " but returned " + actualValue, expected, actualValue);
-
-	}
-
-	private Method createMethod(final String uniqueID) {
+	private Method createMethod() {
 		final Method method = new Method();
 		method.setMname("Accession into genebank");
 		method.setMcode("AGB1");
-		method.setUniqueID(uniqueID);
 		return method;
 	}
 
@@ -508,9 +487,9 @@ public class FieldbookServiceTest {
 		breedingMethodName.setPhenotypicType(PhenotypicType.STUDY);
 
 		final Method breedingMethod = new Method(40, "DER", "G", "SLF", "Self and Bulk",
-			"Selfing a Single Plant or population and bulk seed", 0, -1, 1, 0, 1490, 1, 0, 19980708, "");
+			"Selfing a Single Plant or population and bulk seed", 0, -1, 1, 0, 1490, 1, 0, 19980708);
 
-		Mockito.when(this.fieldbookMiddlewareService.getMethodByCode(Mockito.anyString(), Mockito.anyString())).thenReturn(breedingMethod);
+		Mockito.when(this.fieldbookMiddlewareService.getMethodByCode(Mockito.anyString())).thenReturn(breedingMethod);
 
 		Mockito.when(this.fieldbookMiddlewareService.getStandardVariable(
 			TermId.BREEDING_METHOD.getId(), this.contextUtil.getCurrentProgramUUID())).thenReturn(breedingMethodName);
@@ -536,9 +515,9 @@ public class FieldbookServiceTest {
 		breedingMethodName.setPhenotypicType(PhenotypicType.STUDY);
 
 		final Method breedingMethod = new Method(40, "DER", "G", "SLF", "Self and Bulk",
-			"Selfing a Single Plant or population and bulk seed", 0, -1, 1, 0, 1490, 1, 0, 19980708, "");
+			"Selfing a Single Plant or population and bulk seed", 0, -1, 1, 0, 1490, 1, 0, 19980708);
 
-		Mockito.when(this.fieldbookMiddlewareService.getMethodByCode(Mockito.anyString(), Mockito.anyString())).thenReturn(breedingMethod);
+		Mockito.when(this.fieldbookMiddlewareService.getMethodByCode(Mockito.anyString())).thenReturn(breedingMethod);
 
 		this.fieldbookServiceImpl.createIdCodeNameVariablePairs(userSelection.getWorkbook(),
 			AppConstants.ID_CODE_NAME_COMBINATION_STUDY.getString());
@@ -561,9 +540,9 @@ public class FieldbookServiceTest {
 		breedingMethodName.setPhenotypicType(PhenotypicType.STUDY);
 
 		final Method breedingMethod = new Method(40, "DER", "G", "SLF", "Self and Bulk",
-			"Selfing a Single Plant or population and bulk seed", 0, -1, 1, 0, 1490, 1, 0, 19980708, "");
+			"Selfing a Single Plant or population and bulk seed", 0, -1, 1, 0, 1490, 1, 0, 19980708);
 
-		Mockito.when(this.fieldbookMiddlewareService.getMethodByCode(Mockito.anyString(), Mockito.anyString())).thenReturn(breedingMethod);
+		Mockito.when(this.fieldbookMiddlewareService.getMethodByCode(Mockito.anyString())).thenReturn(breedingMethod);
 
 		this.fieldbookServiceImpl.createIdCodeNameVariablePairs(userSelection.getWorkbook(),
 			AppConstants.ID_CODE_NAME_COMBINATION_STUDY.getString());
