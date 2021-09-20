@@ -459,7 +459,6 @@ public abstract class SettingsController extends AbstractBaseFieldbookController
 					}
 				}
 			}
-			final String programUUID = this.contextUtil.getCurrentProgramUUID();
 			final StringTokenizer tokenizer = new StringTokenizer(idCodeNamePairs, ",");
 			if (tokenizer.hasMoreTokens()) {
 				// we iterate it
@@ -470,7 +469,7 @@ public abstract class SettingsController extends AbstractBaseFieldbookController
 					final String codeTermId = tokenizerPair.nextToken();
 					final String nameTermId = tokenizerPair.nextToken();
 
-					final Method method = this.getMethod(studyConditionMap, idTermId, codeTermId, programUUID);
+					final Method method = this.getMethod(studyConditionMap, idTermId, codeTermId);
 
 					// add code to the removed conditions if code is not yet in the list
 					if (studyConditionMap.get(idTermId) != null && studyConditionMap.get(codeTermId) != null
@@ -491,15 +490,14 @@ public abstract class SettingsController extends AbstractBaseFieldbookController
 	}
 
 	//TODO TRIAL
-	protected Method getMethod(final Map<String, MeasurementVariable> studyConditionMap, final String idTermId, final String codeTermId,
-		final String programUUID) {
+	protected Method getMethod(final Map<String, MeasurementVariable> studyConditionMap, final String idTermId, final String codeTermId) {
 		Method method = null;
 		if (studyConditionMap.get(idTermId) != null) {
 			method = studyConditionMap.get(idTermId).getValue().isEmpty() ? null
 				: this.fieldbookMiddlewareService.getMethodById(Double.valueOf(studyConditionMap.get(idTermId).getValue()).intValue());
 		} else if (studyConditionMap.get(codeTermId) != null) {
 			method = studyConditionMap.get(codeTermId).getValue().isEmpty() ? null
-				: this.fieldbookMiddlewareService.getMethodByCode(studyConditionMap.get(codeTermId).getValue(), programUUID);
+				: this.fieldbookMiddlewareService.getMethodByCode(studyConditionMap.get(codeTermId).getValue());
 		}
 		return method;
 	}

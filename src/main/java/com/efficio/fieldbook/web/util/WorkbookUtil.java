@@ -251,7 +251,7 @@ public class WorkbookUtil {
 			final StandardVariable stdVariable) {
 		final String property = HtmlUtils.htmlUnescape(variable.getProperty());
 		if (ontologyService.getProperty(property).getTerm().getId() == TermId.BREEDING_METHOD_PROP.getId() && isVariate) {
-			variable.setPossibleValues(fieldbookService.getAllBreedingMethods(true, programUUID));
+			variable.setPossibleValues(fieldbookService.getAllBreedingMethods(true));
 		} else {
 			variable.setPossibleValues(WorkbookUtil.transformPossibleValues(stdVariable.getEnumerations()));
 		}
