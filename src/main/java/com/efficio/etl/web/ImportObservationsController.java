@@ -134,7 +134,7 @@ public class ImportObservationsController extends AbstractBaseETLController {
 			}
 
 			final List<Message> messages = new ArrayList<>();
-			this.dataImportService.checkForInvalidGids(importData, messages);
+			this.dataImportService.checkForInvalidGids(importData, messages, programUUID);
 			errors.addAll(this.etlService.convertMessageList(messages));
 
 		} catch (final Exception e) {
