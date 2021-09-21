@@ -386,24 +386,43 @@
 				});
 			};
 
-			$scope.onRemoveVariable = function (variableIds, settings) {
-
-				$scope.checkVariableIsUsedInCalculatedVariable(variableIds).then(function (isVariableUsedInOtherCalculatedVariable) {
-					return $scope.checkVariableHasMeasurementData(isVariableUsedInOtherCalculatedVariable, variableIds);
-				}).then(function (doContinue) {
-					if (doContinue) {
-						datasetService.removeVariables($scope.subObservationSet.dataset.datasetId, variableIds).then(function () {
-							reloadDataset();
-							derivedVariableService.displayExecuteCalculateVariableMenu();
-						}, function (response) {
-							if (response.errors && response.errors.length) {
-								showErrorMessage('', response.errors[0].message);
-							} else {
-								showErrorMessage('', ajaxGenericErrorMsg);
-							}
-						});
+			$scope.onRemoveVariable = async function (variableIds, settings) {
+				try {
+					const isVariableUsedInOtherCalculatedVariable = await $scope.checkVariableIsUsedInCalculatedVariable(variableIds)
+					let doContinue = await $scope.checkVariableHasMeasurementData(isVariableUsedInOtherCalculatedVariable, variableIds);
+					if (!doContinue) {
+						return;
 					}
-				});
+
+					const fileCountResp = await fileService.getFileCount(variableIds, $scope.subObservationSet.id);
+					const fileCount = parseInt(fileCountResp.headers('X-Total-Count'));
+
+					if (fileCount > 0) {
+						const modalInstance = $scope.showFileDeletionOptions(fileCount);
+						let doRemoveFiles;
+						try {
+							doRemoveFiles = await modalInstance.result;
+						} catch (e) {
+							return;
+						}
+						if (doRemoveFiles) {
+							await fileService.removeFiles(variableIds, $scope.subObservationSet.id);
+						} else {
+							await fileService.detachFiles(variableIds, $scope.subObservationSet.id);
+						}
+					}
+
+					await datasetService.removeVariables($scope.subObservationSet.dataset.datasetId, variableIds)
+					reloadDataset();
+					derivedVariableService.displayExecuteCalculateVariableMenu();
+				} catch (response) {
+					if (response.errors && response.errors.length) {
+						showErrorMessage('', response.errors[0].message);
+					} else {
+						showErrorMessage('', ajaxGenericErrorMsg);
+						console.error(response);
+					}
+				}
 			};
 
 			$scope.checkVariableHasMeasurementData = function (isVariableUsedInOtherCalculatedVariable, deleteVariables) {
@@ -440,6 +459,28 @@
 
 				});
 				return deferred.promise;
+			};
+
+			$scope.showFileDeletionOptions = function (fileCount) {
+				return $uibModal.open({
+					animation: true,
+					templateUrl: '/Fieldbook/static/js/trialmanager/file/fileDeletionOptions.html',
+					windowClass: 'force-zindex',
+					controller: function ($scope, $uibModalInstance) {
+						$scope.fileCount = fileCount;
+						$scope.removeFiles = function () {
+							$uibModalInstance.close(true);
+						};
+
+						$scope.detachFiles = function () {
+							$uibModalInstance.close(false);
+						};
+
+						$scope.cancel = function () {
+							$uibModalInstance.dismiss();
+						};
+					}
+				});
 			};
 
 			$scope.validateApplyBatchAction = function (messages) {
@@ -1510,7 +1551,7 @@
 									'<div ng-click="showFiles(\'' + rowData.variables['OBS_UNIT_ID'].value + '\')" '
 									+ (rowData.fileCount
 									? ' title="# of files: ' + rowData.fileCount + '"'
-									: ' title="click to open the file manager" class="show-on-hover"')
+									: ' title="click to open the file manager" class="show-on-hover" ng-show="hasAnyAuthority(PERMISSIONS.MS_MANAGE_FILES_PERMISSION)"')
 									+ ' style="cursor: pointer">'
 									+ '<i class="glyphicon glyphicon-duplicate text-info ' + (rowData.fileCount ? '' : '') + '" '
 									+ 'style="font-size: 1.2em">&nbsp;</i>'
