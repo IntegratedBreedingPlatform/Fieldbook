@@ -540,6 +540,11 @@
 						dtCell.data($scope.renderDisplayValue(variableSettings.vals()[variableId], valueContainer[variableId]));
 						// Restore handler
 						addCellClickHandler();
+						if ($table.length !== 0 && $table.dataTable()) {
+							$timeout(function () {
+								$table.dataTable().fnAdjustColumnSizing();
+							});
+						}
 					}
 
 					$timeout(function () {

@@ -20,18 +20,18 @@
 		</div>
 	</div>
 	<div ng-switch-when="NTEXT">
-		<input type="text" valid-decimal="" class="form-control numeric-input" ng-model="valuecontainer[targetkey]" ng-blur="instance.change()"/>
+		<input type="text" valid-decimal="" class="form-control numeric-input" style="width: 100%;" ng-model="valuecontainer[targetkey]" ng-blur="instance.change()"/>
 	</div>
 	<div ng-switch-when="SLIDER">
-		<input type="text" valid-decimal="" class="form-control numeric-input" ng-model="valuecontainer[targetkey]" ng-blur="instance.change()"/>
+		<input type="text" valid-decimal="" class="form-control numeric-input" style="width: 100%;" ng-model="valuecontainer[targetkey]" ng-blur="instance.change()"/>
 	</div>
 	<div ng-switch-when="CTEXT">
-		<input type="text" class="form-control character-input" ng-model="valuecontainer[targetkey]" ng-blur="instance.change()"/>
+		<input type="text" class="form-control character-input" style="width: 100%;" ng-model="valuecontainer[targetkey]" ng-blur="instance.change()"/>
 	</div>
 	<div ng-switch-when="TEXTAREA">
-		<textarea class="form-control character-input" rows="3" ng-model="valuecontainer[targetkey]" ng-blur="instance.change()"/>
+		<textarea class="form-control character-input" rows="3" style="width: 100%;" ng-model="valuecontainer[targetkey]" ng-blur="instance.change()"/>
 	</div>
 	<div ng-switch-when="DATE">
-		<input type="text" placeholder="yyyymmdd" class="form-control date-input" ng-model="valuecontainer[targetkey]" instance="instance" instance-datepicker="true"/>
+		<input type="text" placeholder="yyyymmdd" class="form-control date-input" style="width: 100%;" ng-model="valuecontainer[targetkey]" instance="instance" instance-datepicker="true"/>
 	</div>
 </div>
