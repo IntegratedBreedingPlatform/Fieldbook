@@ -319,14 +319,6 @@ public class CrossingServiceImpl implements CrossingService {
 		final Integer plotCodeVariableId = this.germplasmService.getPlotCodeField().getId();
 		for (final ImportedCross cross : importedCrossesList.getImportedCrosses()) {
 
-			// this will do the merging and using the gid and cross from the
-			// initial duplicate
-			if (FieldbookUtil
-				.isContinueCrossingMerge(importedCrossesList.hasPlotDuplicate(), crossSetting.isPreservePlotDuplicates(), cross)) {
-				FieldbookUtil.mergeCrossesPlotDuplicateData(cross, importedCrossesList.getImportedCrosses());
-				continue;
-			}
-
 			final Integer newGid = germplasmIdIterator.next();
 			cross.setGid(newGid.toString());
 
@@ -513,10 +505,6 @@ public class CrossingServiceImpl implements CrossingService {
 		}
 
 		for (final ImportedCross cross : importedCrosses) {
-
-			if (FieldbookUtil.isContinueCrossingMerge(hasPlotDuplicate, crossSetting.isPreservePlotDuplicates(), cross)) {
-				continue;
-			}
 
 			final Germplasm germplasm = this.createGermplasm(cross, harvestLocationId, additionalDetailsSetting.getHarvestDate());
 			final Name name = this.createName(germplasm, cross, harvestLocationId);

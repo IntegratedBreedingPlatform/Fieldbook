@@ -811,34 +811,11 @@ public class CrossingServiceImplTest {
 	}
 
 	@Test
-	public void testSaveAttributesWhenMergingPlotDuplicates() {
+	public void testSaveAttributesWithPlotDuplicates() {
 		final ImportedCross secondCross = this.importedCrossesList.getImportedCrosses().get(1);
 		// Set 2nd cross as plot duplicate of first cross
 		secondCross.setDuplicateEntries(new HashSet<>(Collections.singletonList(1)));
 		secondCross.setDuplicatePrefix(ImportedCross.PLOT_DUPE_PREFIX);
-		this.crossSetting.setPreservePlotDuplicates(false);
-
-		final List<Integer> germplasmIds = Arrays.asList(101, 102);
-		this.crossingService.saveAttributes(this.crossSetting, this.importedCrossesList, germplasmIds);
-		Mockito.verify(this.germplasmDataManager).addAttributes(this.attributesListCaptor.capture());
-		final List<Attribute> attributesList = this.attributesListCaptor.getValue();
-		assertEquals("Attribute will be saved only for first entry", 1, attributesList.size());
-		final ImportedCross firstCross = this.importedCrossesList.getImportedCrosses().get(0);
-		this.verifyPlotCodeAttributeValues(attributesList.get(0), germplasmIds.get(0),
-			firstCross);
-		// Verify that gid, cross and designation from 1st cross was copied to 2nd cross
-		assertEquals(firstCross.getGid(), secondCross.getGid());
-		assertEquals(firstCross.getCross(), secondCross.getCross());
-		assertEquals(firstCross.getDesig(), secondCross.getDesig());
-	}
-
-	@Test
-	public void testSaveAttributesWhenPreservingPlotDuplicates() {
-		final ImportedCross secondCross = this.importedCrossesList.getImportedCrosses().get(1);
-		// Set 2nd cross as plot duplicate of first cross
-		secondCross.setDuplicateEntries(new HashSet<>(Collections.singletonList(1)));
-		secondCross.setDuplicatePrefix(ImportedCross.PLOT_DUPE_PREFIX);
-		this.crossSetting.setPreservePlotDuplicates(true);
 
 		final List<Integer> germplasmIds = Arrays.asList(101, 102);
 		this.crossingService.saveAttributes(this.crossSetting, this.importedCrossesList, germplasmIds);

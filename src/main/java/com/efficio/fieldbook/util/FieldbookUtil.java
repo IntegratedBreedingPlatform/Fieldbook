@@ -92,27 +92,6 @@ public class FieldbookUtil {
 		return false;
 	}
 
-	public static void mergeCrossesPlotDuplicateData(final ImportedCross crosses, final List<ImportedCross> importedGermplasmList) {
-		if (FieldbookUtil.isPlotDuplicateNonFirstInstance(crosses)) {
-			// get the 1st instance of duplicate from the list
-			final Integer firstInstanceDuplicate = crosses.getDuplicateEntries().iterator().next();
-			// needed to minus 1 since a list is 0 based
-			final ImportedCross firstInstanceCrossGermplasm = importedGermplasmList.get(firstInstanceDuplicate - 1);
-			crosses.setGid(firstInstanceCrossGermplasm.getGid());
-			crosses.setCross(firstInstanceCrossGermplasm.getCross());
-			crosses.setDesig(firstInstanceCrossGermplasm.getDesig());
-		}
-	}
-
-	public static boolean isContinueCrossingMerge(
-		final boolean hasPlotDuplicate, final boolean isPreservePlotDuplicate, final ImportedCross cross) {
-		if (hasPlotDuplicate && !isPreservePlotDuplicate && FieldbookUtil.isPlotDuplicateNonFirstInstance(cross)) {
-			return true;
-		}
-		return false;
-	}
-
-
 	public static List<Integer> getFilterForMeansAndStatisticalVars() {
 
 		final List<Integer> isAIds = new ArrayList<>();
