@@ -18,6 +18,7 @@ import com.efficio.fieldbook.web.common.bean.SettingVariable;
 import com.efficio.fieldbook.web.trial.bean.PossibleValuesCache;
 import com.efficio.fieldbook.web.util.SettingsUtil;
 import com.efficio.fieldbook.web.util.WorkbookUtil;
+import liquibase.util.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.generationcp.commons.constant.AppConstants;
 import org.generationcp.commons.spring.util.ContextUtil;
@@ -511,11 +512,11 @@ public class FieldbookServiceImpl implements FieldbookService {
 					} else {
 						final Method method;
 						if (studyConditionMap.get(idTermId) != null) {
-							method = studyConditionMap.get(idTermId).getValue().isEmpty() ? null
+							method = StringUtils.isEmpty(studyConditionMap.get(idTermId).getValue()) ? null
 								: this.fieldbookMiddlewareService.getMethodById(
 								Double.valueOf(studyConditionMap.get(idTermId).getValue()).intValue());
 						} else {
-							method = studyConditionMap.get(codeTermId).getValue().isEmpty() ? null
+							method =  StringUtils.isEmpty(studyConditionMap.get(codeTermId).getValue()) ? null
 								: this.fieldbookMiddlewareService.getMethodByCode(studyConditionMap.get(codeTermId).getValue());
 						}
 
