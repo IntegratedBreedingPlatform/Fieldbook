@@ -32,7 +32,7 @@
 				startNumber: null,
 				saveParentageDesignationAsAString: false
 			},
-			preservePlotDuplicate: true,
+			preservePlotDuplicates: true,
 			applyNewGroupToPreviousCrosses: false,
 			isUseManualSettingsForNaming: false,
 			additionalDetailsSetting: {
