@@ -411,8 +411,8 @@
 							controller: 'LotCreationCtrl',
 							windowClass: 'modal-large',
 							resolve: {
-								searchResultDbId: function () {
-									return searchDto.result.searchResultDbId;
+								searchResultsDbId: function () {
+									return searchDto.result.searchResultsDbId;
 								}
 							}
 						}).result.finally(function () {

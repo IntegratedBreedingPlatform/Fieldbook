@@ -3,13 +3,13 @@
 
 	const module = angular.module('manageTrialApp');
 
-	module.controller('LotCreationCtrl', ['$scope', '$q', 'studyContext', '$uibModalInstance', 'searchResultDbId',
-		function ($scope, $q, studyContext, $uibModalInstance, searchResultDbId) {
+	module.controller('LotCreationCtrl', ['$scope', '$q', 'studyContext', '$uibModalInstance', 'searchResultsDbId',
+		function ($scope, $q, studyContext, $uibModalInstance, searchResultsDbId) {
 
 			$scope.url = '/ibpworkbench/controller/jhipster#/lot-creation-dialog?restartApplication' +
 				'&cropName=' + studyContext.cropName +
 				'&programUUID=' + studyContext.programId +
-				'&searchRequestId=' + searchResultDbId +
+				'&searchRequestId=' + searchResultsDbId +
 				'&studyId=' + studyContext.studyId +
 				'&searchOrigin=MANAGE_STUDY';
 			
