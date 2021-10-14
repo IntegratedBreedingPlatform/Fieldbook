@@ -25,11 +25,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
 
 /**
  * This controller handles the 2nd step in the study manager process.
@@ -41,18 +44,6 @@ import java.util.*;
 		ImportGermplasmListController.URL_1, ImportGermplasmListController.URL_2 })
 @Transactional
 public class ImportGermplasmListController extends SettingsController {
-
-	protected static final String ENTRY_CODE = "entryCode";
-
-	protected static final String SOURCE = "source";
-
-	protected static final String CROSS = "cross";
-
-	protected static final String CHECK = "check";
-
-	protected static final String GID = "gid";
-
-	protected static final String DESIG = "desig";
 
 	/** The Constant URL. */
 	public static final String URL = "/StudyManager/importGermplasmList";
@@ -104,7 +95,7 @@ public class ImportGermplasmListController extends SettingsController {
 		this.userSelection.getWorkbook().setOriginalObservations(null);
 		this.userSelection.getWorkbook().setObservations(new ArrayList<>());
 
-		for(MeasurementVariable mv: userSelection.getWorkbook().getFactors()) {
+		for (final MeasurementVariable mv : userSelection.getWorkbook().getFactors()) {
 			//Set Factor's Operation to null since it's autosaved
 			mv.setOperation(null);
 		}
