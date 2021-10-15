@@ -485,7 +485,7 @@ public class FieldbookServiceImpl implements FieldbookService {
 						// variable saved
 						if (studyConditionMap.get(idTermId) != null) {
 							final MeasurementVariable measurementVar = studyConditionMap.get(idTermId);
-							final Method method = studyConditionMap.get(idTermId).getValue().isEmpty() ? null
+							final Method method = StringUtils.isEmpty(studyConditionMap.get(idTermId).getValue()) ? null
 								: this.fieldbookMiddlewareService.getMethodById(
 								Double.valueOf(studyConditionMap.get(idTermId).getValue()).intValue());
 
