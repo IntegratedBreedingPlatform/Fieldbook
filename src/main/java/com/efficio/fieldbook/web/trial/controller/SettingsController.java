@@ -493,10 +493,10 @@ public abstract class SettingsController extends AbstractBaseFieldbookController
 	protected Method getMethod(final Map<String, MeasurementVariable> studyConditionMap, final String idTermId, final String codeTermId) {
 		Method method = null;
 		if (studyConditionMap.get(idTermId) != null) {
-			method = studyConditionMap.get(idTermId).getValue().isEmpty() ? null
+			method = StringUtils.isEmpty(studyConditionMap.get(idTermId).getValue()) ? null
 				: this.fieldbookMiddlewareService.getMethodById(Double.valueOf(studyConditionMap.get(idTermId).getValue()).intValue());
 		} else if (studyConditionMap.get(codeTermId) != null) {
-			method = studyConditionMap.get(codeTermId).getValue().isEmpty() ? null
+			method = StringUtils.isEmpty(studyConditionMap.get(codeTermId).getValue()) ? null
 				: this.fieldbookMiddlewareService.getMethodByCode(studyConditionMap.get(codeTermId).getValue());
 		}
 		return method;
