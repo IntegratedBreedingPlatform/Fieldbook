@@ -122,44 +122,6 @@ public class WorkbookUtilTest {
 	}
 
 	@Test
-	public void testAddFactorsToMeasurementRowDataList() {
-		final MeasurementRow row = MeasurementRowTestDataInitializer.createMeasurementRow();
-		final StandardVariable stdVariable =
-				StandardVariableTestDataInitializer.createStandardVariable(TermId.PLOT_CODE.getId(), TermId.PLOT_CODE.name());
-		final MeasurementVariable variable =
-				MeasurementVariableTestDataInitializer.createMeasurementVariable(TermId.PLOT_CODE.getId(), TermId.PLOT_CODE.name(), null);
-		variable.setDataTypeId(TermId.NUMERIC_VARIABLE.getId());
-		WorkbookUtil.addFactorsToMeasurementRowDataList(row, stdVariable, true, variable, new ArrayList<>());
-		Assert.assertEquals("", row.getDataList().get(4).getValue());
-	}
-
-	@Test
-	public void testAddFactorsToMeasurementRowDataListForGroupGID() {
-		final MeasurementRow row = MeasurementRowTestDataInitializer.createMeasurementRow();
-		final StandardVariable stdVariable =
-				StandardVariableTestDataInitializer.createStandardVariable(TermId.GROUPGID.getId(), TermId.GROUPGID.name());
-		final MeasurementVariable variable =
-				MeasurementVariableTestDataInitializer.createMeasurementVariable(TermId.GROUPGID.getId(), TermId.GROUPGID.name(), null);
-		variable.setDataTypeId(TermId.NUMERIC_VARIABLE.getId());
-		final ImportedGermplasm importedGermplasm = ImportedGermplasmTestDataInitializer.createImportedGermplasm();
-		WorkbookUtil.addFactorsToMeasurementRowDataList(row, stdVariable, true, variable, Collections.singletonList(importedGermplasm));
-		Assert.assertEquals(importedGermplasm.getGroupId().toString(), row.getDataList().get(4).getValue());
-	}
-
-	@Test
-	public void testAddFactorsToMeasurementRowDataListForSEED_SOURCE() {
-		final MeasurementRow row = MeasurementRowTestDataInitializer.createMeasurementRow();
-		final StandardVariable stdVariable =
-				StandardVariableTestDataInitializer.createStandardVariable(TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name());
-		final MeasurementVariable variable = MeasurementVariableTestDataInitializer.createMeasurementVariable(TermId.SEED_SOURCE.getId(),
-				TermId.SEED_SOURCE.name(), null);
-		variable.setDataTypeId(TermId.NUMERIC_VARIABLE.getId());
-		final ImportedGermplasm importedGermplasm = ImportedGermplasmTestDataInitializer.createImportedGermplasm();
-		WorkbookUtil.addFactorsToMeasurementRowDataList(row, stdVariable, true, variable, Collections.singletonList(importedGermplasm));
-		Assert.assertEquals(importedGermplasm.getSource(), row.getDataList().get(4).getValue());
-	}
-
-	@Test
 	public void testAddMeasurementDataToRowsExpForVariableAddOperation() {
 		final MeasurementVariable variable = MeasurementVariableTestDataInitializer.createMeasurementVariableWithOperation(
 				TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name(), TermId.SEED_SOURCE.name(), Operation.ADD);
@@ -374,45 +336,6 @@ public class WorkbookUtilTest {
 		WorkbookUtil.setVariablePossibleValues(false, this.ontologyService, this.fieldbookService, WorkbookUtilTest.PROGRAM_UUID, variable,
 				stdVariable);
 		Assert.assertEquals(WorkbookUtil.transformPossibleValues(stdVariable.getEnumerations()), variable.getPossibleValues());
-	}
-
-	@Test
-	public void testAddFactorsToMeasurementRowDataListForSOURCE() {
-		final MeasurementRow row = MeasurementRowTestDataInitializer.createMeasurementRow();
-		final StandardVariable stdVariable =
-				StandardVariableTestDataInitializer.createStandardVariable(TermId.GERMPLASM_SOURCE.getId(), TermId.GERMPLASM_SOURCE.name());
-		final MeasurementVariable variable = MeasurementVariableTestDataInitializer
-				.createMeasurementVariable(TermId.GERMPLASM_SOURCE.getId(), TermId.GERMPLASM_SOURCE.name(), null);
-		variable.setDataTypeId(TermId.NUMERIC_VARIABLE.getId());
-		final ImportedGermplasm importedGermplasm = ImportedGermplasmTestDataInitializer.createImportedGermplasm();
-		WorkbookUtil.addFactorsToMeasurementRowDataList(row, stdVariable, true, variable, Collections.singletonList(importedGermplasm));
-		Assert.assertEquals(importedGermplasm.getSource(), row.getDataList().get(4).getValue());
-	}
-
-	@Test
-	public void testAddFactorsToMeasurementRowDataListForENTRY_CODE() {
-		final MeasurementRow row = MeasurementRowTestDataInitializer.createMeasurementRow();
-		final StandardVariable stdVariable =
-				StandardVariableTestDataInitializer.createStandardVariable(TermId.ENTRY_CODE.getId(), TermId.ENTRY_CODE.name());
-		final MeasurementVariable variable =
-				MeasurementVariableTestDataInitializer.createMeasurementVariable(TermId.ENTRY_CODE.getId(), TermId.ENTRY_CODE.name(), null);
-		variable.setDataTypeId(TermId.NUMERIC_VARIABLE.getId());
-		final ImportedGermplasm importedGermplasm = ImportedGermplasmTestDataInitializer.createImportedGermplasm();
-		WorkbookUtil.addFactorsToMeasurementRowDataList(row, stdVariable, true, variable, Collections.singletonList(importedGermplasm));
-		Assert.assertEquals(importedGermplasm.getEntryCode(), row.getDataList().get(4).getValue());
-	}
-
-	@Test
-	public void testAddFactorsToMeasurementRowDataListForCROSS() {
-		final MeasurementRow row = MeasurementRowTestDataInitializer.createMeasurementRow();
-		final StandardVariable stdVariable =
-				StandardVariableTestDataInitializer.createStandardVariable(TermId.CROSS.getId(), TermId.CROSS.name());
-		final MeasurementVariable variable =
-				MeasurementVariableTestDataInitializer.createMeasurementVariable(TermId.CROSS.getId(), TermId.CROSS.name(), null);
-		variable.setDataTypeId(TermId.CHARACTER_VARIABLE.getId());
-		final ImportedGermplasm importedGermplasm = ImportedGermplasmTestDataInitializer.createImportedGermplasm();
-		WorkbookUtil.addFactorsToMeasurementRowDataList(row, stdVariable, true, variable, Collections.singletonList(importedGermplasm));
-		Assert.assertEquals(importedGermplasm.getCross(), row.getDataList().get(4).getValue());
 	}
 
 	@Test

@@ -266,14 +266,12 @@ public class WorkbookUtil {
 				final StandardVariable stdVariable = ontologyService.getStandardVariable(variable.getTermId(), programUUID);
 				for (final MeasurementRow row : userSelection.getMeasurementRowList()) {
 
-					if (!isVariate) {
-						WorkbookUtil.addFactorsToMeasurementRowDataList(row, stdVariable, isVariate, variable, importedGermplasmList);
-					} else {
+					if (isVariate) {
 						final MeasurementData measurementData = new MeasurementData(variable.getName(), "", true,
 								WorkbookUtil.getDataType(variable.getDataTypeId()), variable);
 
 						measurementData.setMeasurementDataId(null);
-						final int insertIndex = WorkbookUtil.getInsertIndex(row.getDataList(), isVariate);
+						final int insertIndex = WorkbookUtil.getInsertIndex(row.getDataList(), true);
 						row.getDataList().add(insertIndex, measurementData);
 					}
 
@@ -282,68 +280,6 @@ public class WorkbookUtil {
 				WorkbookUtil.setVariablePossibleValues(isVariate, ontologyService, fieldbookService, programUUID, variable, stdVariable);
 			}
 		}
-	}
-
-	public static void addFactorsToMeasurementRowDataList(final MeasurementRow row, final StandardVariable stdVariable,
-			final boolean isVariate, final MeasurementVariable variable, final List<ImportedGermplasm> importedGermplasmList) {
-
-		MeasurementData measurementData = null;
-		String value = "";
-		ImportedGermplasm importedGermplasm = null;
-		String gid = null;
-
-		for (final MeasurementData measureData : row.getDataList()) {
-			if (measureData.getMeasurementVariable().getTermId() == TermId.GID.getId()) {
-				gid = measureData.getValue();
-				break;
-			}
-		}
-
-		if (!CollectionUtils.isEmpty(importedGermplasmList)) {
-			for (final ImportedGermplasm importedGermplsm : importedGermplasmList) {
-				if (importedGermplsm.getGid().equals(gid)) {
-					importedGermplasm = importedGermplsm;
-					break;
-				}
-			}
-		}
-
-		if (importedGermplasm != null) {
-			if (stdVariable.getId() == TermId.GROUPGID.getId()) {
-				value = importedGermplasm.getGroupId() != null ? importedGermplasm.getGroupId().toString() : "";
-				measurementData =
-						new MeasurementData(variable.getName(), value, false, WorkbookUtil.getDataType(variable.getDataTypeId()), variable);
-			}
-
-			if (stdVariable.getId() == TermId.SEED_SOURCE.getId() || stdVariable.getId() == TermId.GERMPLASM_SOURCE.getId()) {
-				value = importedGermplasm.getSource() != null ? importedGermplasm.getSource() : "";
-				measurementData =
-						new MeasurementData(variable.getName(), value, false, WorkbookUtil.getDataType(variable.getDataTypeId()), variable);
-			}
-
-			if (stdVariable.getId() == TermId.ENTRY_CODE.getId()) {
-				value = importedGermplasm.getEntryCode() != null ? importedGermplasm.getEntryCode() : "";
-				measurementData =
-						new MeasurementData(variable.getName(), value, false, WorkbookUtil.getDataType(variable.getDataTypeId()), variable);
-			}
-
-			if (stdVariable.getId() == TermId.CROSS.getId()) {
-				value = importedGermplasm.getCross() != null ? importedGermplasm.getCross() : "";
-				measurementData =
-						new MeasurementData(variable.getName(), value, false, WorkbookUtil.getDataType(variable.getDataTypeId()), variable);
-			}
-
-		}
-
-		if (measurementData == null) {
-			measurementData =
-					new MeasurementData(variable.getName(), value, true, WorkbookUtil.getDataType(variable.getDataTypeId()), variable);
-		}
-
-		measurementData.setMeasurementDataId(null);
-		final int insertIndex = WorkbookUtil.getInsertIndex(row.getDataList(), isVariate);
-		row.getDataList().add(insertIndex, measurementData);
-
 	}
 
 	public static void addMeasurementDataToRowsIfNecessary(final List<MeasurementVariable> variableList,
