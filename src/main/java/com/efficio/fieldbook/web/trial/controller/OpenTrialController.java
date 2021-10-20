@@ -392,9 +392,9 @@ public class OpenTrialController extends BaseTrialController {
 				final List<StudyEntryDto> studyEntries = this.studyEntryService.getStudyEntries(workbook.getStudyDetails().getId());
 				final List<ImportedGermplasm> list = this.studyEntryTransformer.tranformToImportedGermplasm(studyEntries);
 				WorkbookUtil.addMeasurementDataToRows(workbook.getFactors(), false, this.userSelection, this.ontologyService,
-					this.fieldbookService, this.contextUtil.getCurrentProgramUUID(), list);
+					this.fieldbookService, this.contextUtil.getCurrentProgramUUID());
 				WorkbookUtil.addMeasurementDataToRows(workbook.getVariates(), true, this.userSelection, this.ontologyService,
-					this.fieldbookService, this.contextUtil.getCurrentProgramUUID(), list);
+					this.fieldbookService, this.contextUtil.getCurrentProgramUUID());
 
 				workbook.setMeasurementDatasetVariables(null);
 				workbook.setObservations(this.userSelection.getMeasurementRowList());
