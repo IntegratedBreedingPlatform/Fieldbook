@@ -60,9 +60,10 @@ public class WorkbookUtilTest {
 		MockitoAnnotations.initMocks(this);
 
 		Mockito.when(this.ontologyService.getProperty(Matchers.anyString()))
-				.thenReturn(new Property(new Term(TermId.BREEDING_METHOD_PROP.getId(), TermId.BREEDING_METHOD_PROP.name(), "definition")));
-		this.breedingMethods = Arrays.asList(new ValueReference(123, RandomStringUtils.randomAlphabetic(20)),
-				new ValueReference(125, RandomStringUtils.randomAlphabetic(20)));
+			.thenReturn(new Property(new Term(TermId.BREEDING_METHOD_PROP.getId(), TermId.BREEDING_METHOD_PROP.name(), "definition")));
+		this.breedingMethods = Arrays.asList(
+			new ValueReference(123, RandomStringUtils.randomAlphabetic(20)),
+			new ValueReference(125, RandomStringUtils.randomAlphabetic(20)));
 		Mockito.when(this.fieldbookService.getAllBreedingMethods(true)).thenReturn(this.breedingMethods);
 	}
 
@@ -75,7 +76,7 @@ public class WorkbookUtilTest {
 		WorkbookUtil.updateTrialObservations(currentWorkbook, temporaryWorkbook);
 
 		Assert.assertEquals("Expecting that the study observations of temporary workbook is copied to current workbook. ",
-				currentWorkbook.getTrialObservations(), temporaryWorkbook.getTrialObservations());
+			currentWorkbook.getTrialObservations(), temporaryWorkbook.getTrialObservations());
 	}
 
 	@Test
@@ -122,54 +123,16 @@ public class WorkbookUtilTest {
 	}
 
 	@Test
-	public void testAddFactorsToMeasurementRowDataList() {
-		final MeasurementRow row = MeasurementRowTestDataInitializer.createMeasurementRow();
-		final StandardVariable stdVariable =
-				StandardVariableTestDataInitializer.createStandardVariable(TermId.PLOT_CODE.getId(), TermId.PLOT_CODE.name());
-		final MeasurementVariable variable =
-				MeasurementVariableTestDataInitializer.createMeasurementVariable(TermId.PLOT_CODE.getId(), TermId.PLOT_CODE.name(), null);
-		variable.setDataTypeId(TermId.NUMERIC_VARIABLE.getId());
-		WorkbookUtil.addFactorsToMeasurementRowDataList(row, stdVariable, true, variable, new ArrayList<>());
-		Assert.assertEquals("", row.getDataList().get(4).getValue());
-	}
-
-	@Test
-	public void testAddFactorsToMeasurementRowDataListForGroupGID() {
-		final MeasurementRow row = MeasurementRowTestDataInitializer.createMeasurementRow();
-		final StandardVariable stdVariable =
-				StandardVariableTestDataInitializer.createStandardVariable(TermId.GROUPGID.getId(), TermId.GROUPGID.name());
-		final MeasurementVariable variable =
-				MeasurementVariableTestDataInitializer.createMeasurementVariable(TermId.GROUPGID.getId(), TermId.GROUPGID.name(), null);
-		variable.setDataTypeId(TermId.NUMERIC_VARIABLE.getId());
-		final ImportedGermplasm importedGermplasm = ImportedGermplasmTestDataInitializer.createImportedGermplasm();
-		WorkbookUtil.addFactorsToMeasurementRowDataList(row, stdVariable, true, variable, Collections.singletonList(importedGermplasm));
-		Assert.assertEquals(importedGermplasm.getGroupId().toString(), row.getDataList().get(4).getValue());
-	}
-
-	@Test
-	public void testAddFactorsToMeasurementRowDataListForSEED_SOURCE() {
-		final MeasurementRow row = MeasurementRowTestDataInitializer.createMeasurementRow();
-		final StandardVariable stdVariable =
-				StandardVariableTestDataInitializer.createStandardVariable(TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name());
-		final MeasurementVariable variable = MeasurementVariableTestDataInitializer.createMeasurementVariable(TermId.SEED_SOURCE.getId(),
-				TermId.SEED_SOURCE.name(), null);
-		variable.setDataTypeId(TermId.NUMERIC_VARIABLE.getId());
-		final ImportedGermplasm importedGermplasm = ImportedGermplasmTestDataInitializer.createImportedGermplasm();
-		WorkbookUtil.addFactorsToMeasurementRowDataList(row, stdVariable, true, variable, Collections.singletonList(importedGermplasm));
-		Assert.assertEquals(importedGermplasm.getSource(), row.getDataList().get(4).getValue());
-	}
-
-	@Test
 	public void testAddMeasurementDataToRowsExpForVariableAddOperation() {
 		final MeasurementVariable variable = MeasurementVariableTestDataInitializer.createMeasurementVariableWithOperation(
-				TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name(), TermId.SEED_SOURCE.name(), Operation.ADD);
+			TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name(), TermId.SEED_SOURCE.name(), Operation.ADD);
 		final List<MeasurementVariable> variableList = Arrays.asList(variable);
 		final List<MeasurementRow> observations = Arrays.asList(MeasurementRowTestDataInitializer.createMeasurementRow());
 		final int previousMeasurementDataSize = observations.get(0).getDataList().size();
 
 		final boolean isVariate = true;
 		WorkbookUtil.addMeasurementDataToRowsExp(variableList, observations, isVariate, this.ontologyService, this.fieldbookService,
-				WorkbookUtilTest.PROGRAM_UUID);
+			WorkbookUtilTest.PROGRAM_UUID);
 
 		final int measurementDataSize = observations.get(0).getDataList().size();
 		// The SEED_SOURCE Variable should be added
@@ -184,7 +147,7 @@ public class WorkbookUtilTest {
 		Assert.assertEquals(this.breedingMethods, variable.getPossibleValues());
 
 		WorkbookUtil.addMeasurementDataToRowsExp(variableList, observations, isVariate, this.ontologyService, this.fieldbookService,
-				WorkbookUtilTest.PROGRAM_UUID);
+			WorkbookUtilTest.PROGRAM_UUID);
 		// The SEED_SOURCE Variable should not be added since it's already in the data list
 		Assert.assertEquals(measurementDataSize, observations.get(0).getDataList().size());
 	}
@@ -192,14 +155,14 @@ public class WorkbookUtilTest {
 	@Test
 	public void testAddMeasurementDataToRowsExpForVariableUpdateOperation() {
 		final MeasurementVariable variable = MeasurementVariableTestDataInitializer.createMeasurementVariableWithOperation(
-				TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name(), TermId.SEED_SOURCE.name(), Operation.UPDATE);
+			TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name(), TermId.SEED_SOURCE.name(), Operation.UPDATE);
 		final List<MeasurementVariable> variableList = Arrays.asList(variable);
 		final List<MeasurementRow> observations = Arrays.asList(MeasurementRowTestDataInitializer.createMeasurementRow());
 		final int previousMeasurementDataSize = observations.get(0).getDataList().size();
 
 		final boolean isVariate = true;
 		WorkbookUtil.addMeasurementDataToRowsExp(variableList, observations, isVariate, this.ontologyService, this.fieldbookService,
-				WorkbookUtilTest.PROGRAM_UUID);
+			WorkbookUtilTest.PROGRAM_UUID);
 
 		final int measurementDataSize = observations.get(0).getDataList().size();
 		// The SEED_SOURCE Variable should be added
@@ -217,14 +180,14 @@ public class WorkbookUtilTest {
 	@Test
 	public void testAddMeasurementDataToRowsIfNecessary() {
 		final MeasurementVariable variable = MeasurementVariableTestDataInitializer.createMeasurementVariableWithOperation(
-				TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name(), TermId.SEED_SOURCE.name(), Operation.ADD);
+			TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name(), TermId.SEED_SOURCE.name(), Operation.ADD);
 		final List<MeasurementVariable> variableList = Arrays.asList(variable);
 		final List<MeasurementRow> observations = Arrays.asList(MeasurementRowTestDataInitializer.createMeasurementRow());
 		final int previousMeasurementDataSize = observations.get(0).getDataList().size();
 
 		final boolean isVariate = true;
 		WorkbookUtil.addMeasurementDataToRowsIfNecessary(variableList, observations, isVariate, this.ontologyService, this.fieldbookService,
-				WorkbookUtilTest.PROGRAM_UUID);
+			WorkbookUtilTest.PROGRAM_UUID);
 
 		final int measurementDataSize = observations.get(0).getDataList().size();
 		// The SEED_SOURCE Variable should be added
@@ -239,7 +202,7 @@ public class WorkbookUtilTest {
 		Assert.assertEquals(this.breedingMethods, variable.getPossibleValues());
 
 		WorkbookUtil.addMeasurementDataToRowsExp(variableList, observations, isVariate, this.ontologyService, this.fieldbookService,
-				WorkbookUtilTest.PROGRAM_UUID);
+			WorkbookUtilTest.PROGRAM_UUID);
 		// The SEED_SOURCE Variable should not be added since it's already in the data list
 		Assert.assertEquals(measurementDataSize, observations.get(0).getDataList().size());
 	}
@@ -247,7 +210,7 @@ public class WorkbookUtilTest {
 	@Test
 	public void testAddMeasurementDataToRowsForVariate() {
 		final MeasurementVariable variable = MeasurementVariableTestDataInitializer.createMeasurementVariableWithOperation(
-				TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name(), TermId.SEED_SOURCE.name(), Operation.ADD);
+			TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name(), TermId.SEED_SOURCE.name(), Operation.ADD);
 		final List<MeasurementVariable> variableList = Arrays.asList(variable);
 		final List<MeasurementRow> observations = Arrays.asList(MeasurementRowTestDataInitializer.createMeasurementRow());
 		final int previousMeasurementDataSize = observations.get(0).getDataList().size();
@@ -257,7 +220,7 @@ public class WorkbookUtilTest {
 
 		final boolean isVariate = true;
 		WorkbookUtil.addMeasurementDataToRows(variableList, isVariate, userSelection, this.ontologyService, this.fieldbookService,
-				WorkbookUtilTest.PROGRAM_UUID, Collections.singletonList(importedGermplasm));
+			WorkbookUtilTest.PROGRAM_UUID);
 
 		final int measurementDataSize = observations.get(0).getDataList().size();
 		// The SEED_SOURCE Variable should be added
@@ -275,47 +238,9 @@ public class WorkbookUtilTest {
 	}
 
 	@Test
-	public void testAddMeasurementDataToRowsForFactor() {
-		final MeasurementVariable variable = MeasurementVariableTestDataInitializer.createMeasurementVariableWithOperation(
-				TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name(), TermId.SEED_SOURCE.name(), Operation.ADD);
-		final List<MeasurementVariable> variableList = Arrays.asList(variable);
-		final StandardVariable stdVariable =
-				StandardVariableTestDataInitializer.createStandardVariable(TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name());
-		Mockito.doReturn(stdVariable).when(this.ontologyService).getStandardVariable(TermId.SEED_SOURCE.getId(),
-				WorkbookUtilTest.PROGRAM_UUID);
-		final List<MeasurementRow> observations = Arrays.asList(MeasurementRowTestDataInitializer.createMeasurementRow());
-		for (final MeasurementData data : observations.get(0).getDataList()) {
-			data.getMeasurementVariable().setFactor(true);
-		}
-		final int previousMeasurementDataSize = observations.get(0).getDataList().size();
-
-		final UserSelection userSelection = Mockito.mock(UserSelection.class);
-		final ImportedGermplasm importedGermplasm = ImportedGermplasmTestDataInitializer.createImportedGermplasm();
-		final String factorValue = RandomStringUtils.randomAlphabetic(20);
-		importedGermplasm.setSource(factorValue);
-		Mockito.doReturn(observations).when(userSelection).getMeasurementRowList();
-
-		final boolean isVariate = false;
-		WorkbookUtil.addMeasurementDataToRows(variableList, isVariate, userSelection, this.ontologyService, this.fieldbookService,
-				WorkbookUtilTest.PROGRAM_UUID, Collections.singletonList(importedGermplasm));
-
-		final int measurementDataSize = observations.get(0).getDataList().size();
-		// The SEED_SOURCE Variable should be added
-		Assert.assertEquals(previousMeasurementDataSize + 1, measurementDataSize);
-		final MeasurementData newMeasurementData = observations.get(0).getDataList().get(previousMeasurementDataSize - 1);
-		Assert.assertNotNull(newMeasurementData);
-		Assert.assertEquals(variable.getName(), newMeasurementData.getLabel());
-		Assert.assertFalse(newMeasurementData.isEditable());
-		Assert.assertEquals(factorValue, newMeasurementData.getValue());
-		Assert.assertEquals(variable, newMeasurementData.getMeasurementVariable());
-		Assert.assertNull(newMeasurementData.getMeasurementDataId());
-		Assert.assertEquals(WorkbookUtil.transformPossibleValues(stdVariable.getEnumerations()), variable.getPossibleValues());
-	}
-
-	@Test
 	public void testAddMeasurementDataToRowsForVariableUpdateOperation() {
 		final MeasurementVariable variable = MeasurementVariableTestDataInitializer.createMeasurementVariableWithOperation(
-				TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name(), TermId.SEED_SOURCE.name(), Operation.UPDATE);
+			TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name(), TermId.SEED_SOURCE.name(), Operation.UPDATE);
 		final List<MeasurementVariable> variableList = Arrays.asList(variable);
 		final List<MeasurementRow> observations = Arrays.asList(MeasurementRowTestDataInitializer.createMeasurementRow());
 		final int previousMeasurementDataSize = observations.get(0).getDataList().size();
@@ -324,7 +249,7 @@ public class WorkbookUtilTest {
 
 		final boolean isVariate = true;
 		WorkbookUtil.addMeasurementDataToRows(variableList, isVariate, userSelection, this.ontologyService, this.fieldbookService,
-				WorkbookUtilTest.PROGRAM_UUID, new ArrayList<>());
+			WorkbookUtilTest.PROGRAM_UUID);
 
 		final int measurementDataSize = observations.get(0).getDataList().size();
 		// The SEED_SOURCE Variable should be not added for UPDATE operation
@@ -336,15 +261,14 @@ public class WorkbookUtilTest {
 	@Test
 	public void testSetVariablePossibleValuesForVariateWithBreedingMethodProperty() {
 		final MeasurementVariable variable = MeasurementVariableTestDataInitializer.createMeasurementVariableWithOperation(
-				TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name(), TermId.SEED_SOURCE.name(), Operation.UPDATE);
+			TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name(), TermId.SEED_SOURCE.name(), Operation.UPDATE);
 		final String originalProperty = "Pórtúgêsê Própêrty";
 		// Perform HTML escaping on actual property value
 		variable.setProperty(HtmlUtils.htmlEscape(originalProperty));
 		final StandardVariable stdVariable =
-				StandardVariableTestDataInitializer.createStandardVariable(TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name());
+			StandardVariableTestDataInitializer.createStandardVariable(TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name());
 
-		WorkbookUtil.setVariablePossibleValues(true, this.ontologyService, this.fieldbookService, WorkbookUtilTest.PROGRAM_UUID, variable,
-				stdVariable);
+		WorkbookUtil.setVariablePossibleValues(true, this.ontologyService, this.fieldbookService, variable,	stdVariable);
 		Assert.assertEquals(this.breedingMethods, variable.getPossibleValues());
 		// Verify that HTML unescape was performed on property before querying ontology service
 		Mockito.verify(this.ontologyService).getProperty(originalProperty);
@@ -353,66 +277,25 @@ public class WorkbookUtilTest {
 	@Test
 	public void testSetVariablePossibleValuesForVariateNonBreedingMethodProperty() {
 		final MeasurementVariable variable = MeasurementVariableTestDataInitializer.createMeasurementVariableWithOperation(
-				TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name(), TermId.SEED_SOURCE.name(), Operation.UPDATE);
+			TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name(), TermId.SEED_SOURCE.name(), Operation.UPDATE);
 		final StandardVariable stdVariable =
-				StandardVariableTestDataInitializer.createStandardVariable(TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name());
+			StandardVariableTestDataInitializer.createStandardVariable(TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name());
 		Mockito.when(this.ontologyService.getProperty(Matchers.anyString()))
-				.thenReturn(new Property(new Term(TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name(), "definition")));
+			.thenReturn(new Property(new Term(TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name(), "definition")));
 
-		WorkbookUtil.setVariablePossibleValues(true, this.ontologyService, this.fieldbookService, WorkbookUtilTest.PROGRAM_UUID, variable,
-				stdVariable);
+		WorkbookUtil.setVariablePossibleValues(true, this.ontologyService, this.fieldbookService,variable, stdVariable);
 		Assert.assertEquals(WorkbookUtil.transformPossibleValues(stdVariable.getEnumerations()), variable.getPossibleValues());
 	}
 
 	@Test
 	public void testSetVariablePossibleValuesForFactor() {
 		final MeasurementVariable variable = MeasurementVariableTestDataInitializer.createMeasurementVariableWithOperation(
-				TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name(), TermId.SEED_SOURCE.name(), Operation.UPDATE);
+			TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name(), TermId.SEED_SOURCE.name(), Operation.UPDATE);
 		final StandardVariable stdVariable =
-				StandardVariableTestDataInitializer.createStandardVariable(TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name());
+			StandardVariableTestDataInitializer.createStandardVariable(TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name());
 
-		WorkbookUtil.setVariablePossibleValues(false, this.ontologyService, this.fieldbookService, WorkbookUtilTest.PROGRAM_UUID, variable,
-				stdVariable);
+		WorkbookUtil.setVariablePossibleValues(false, this.ontologyService, this.fieldbookService, variable, stdVariable);
 		Assert.assertEquals(WorkbookUtil.transformPossibleValues(stdVariable.getEnumerations()), variable.getPossibleValues());
-	}
-
-	@Test
-	public void testAddFactorsToMeasurementRowDataListForSOURCE() {
-		final MeasurementRow row = MeasurementRowTestDataInitializer.createMeasurementRow();
-		final StandardVariable stdVariable =
-				StandardVariableTestDataInitializer.createStandardVariable(TermId.GERMPLASM_SOURCE.getId(), TermId.GERMPLASM_SOURCE.name());
-		final MeasurementVariable variable = MeasurementVariableTestDataInitializer
-				.createMeasurementVariable(TermId.GERMPLASM_SOURCE.getId(), TermId.GERMPLASM_SOURCE.name(), null);
-		variable.setDataTypeId(TermId.NUMERIC_VARIABLE.getId());
-		final ImportedGermplasm importedGermplasm = ImportedGermplasmTestDataInitializer.createImportedGermplasm();
-		WorkbookUtil.addFactorsToMeasurementRowDataList(row, stdVariable, true, variable, Collections.singletonList(importedGermplasm));
-		Assert.assertEquals(importedGermplasm.getSource(), row.getDataList().get(4).getValue());
-	}
-
-	@Test
-	public void testAddFactorsToMeasurementRowDataListForENTRY_CODE() {
-		final MeasurementRow row = MeasurementRowTestDataInitializer.createMeasurementRow();
-		final StandardVariable stdVariable =
-				StandardVariableTestDataInitializer.createStandardVariable(TermId.ENTRY_CODE.getId(), TermId.ENTRY_CODE.name());
-		final MeasurementVariable variable =
-				MeasurementVariableTestDataInitializer.createMeasurementVariable(TermId.ENTRY_CODE.getId(), TermId.ENTRY_CODE.name(), null);
-		variable.setDataTypeId(TermId.NUMERIC_VARIABLE.getId());
-		final ImportedGermplasm importedGermplasm = ImportedGermplasmTestDataInitializer.createImportedGermplasm();
-		WorkbookUtil.addFactorsToMeasurementRowDataList(row, stdVariable, true, variable, Collections.singletonList(importedGermplasm));
-		Assert.assertEquals(importedGermplasm.getEntryCode(), row.getDataList().get(4).getValue());
-	}
-
-	@Test
-	public void testAddFactorsToMeasurementRowDataListForCROSS() {
-		final MeasurementRow row = MeasurementRowTestDataInitializer.createMeasurementRow();
-		final StandardVariable stdVariable =
-				StandardVariableTestDataInitializer.createStandardVariable(TermId.CROSS.getId(), TermId.CROSS.name());
-		final MeasurementVariable variable =
-				MeasurementVariableTestDataInitializer.createMeasurementVariable(TermId.CROSS.getId(), TermId.CROSS.name(), null);
-		variable.setDataTypeId(TermId.CHARACTER_VARIABLE.getId());
-		final ImportedGermplasm importedGermplasm = ImportedGermplasmTestDataInitializer.createImportedGermplasm();
-		WorkbookUtil.addFactorsToMeasurementRowDataList(row, stdVariable, true, variable, Collections.singletonList(importedGermplasm));
-		Assert.assertEquals(importedGermplasm.getCross(), row.getDataList().get(4).getValue());
 	}
 
 	@Test
@@ -439,11 +322,11 @@ public class WorkbookUtilTest {
 		measurementVariable2.setFormula(formula);
 
 		final Map<MeasurementVariable, List<MeasurementVariable>> variatesMapUsedInFormulas =
-				WorkbookUtil.getVariatesMapUsedInFormulas(measurementVariables);
-		Assert.assertEquals(variatesMapUsedInFormulas.size(), 1);
+			WorkbookUtil.getVariatesMapUsedInFormulas(measurementVariables);
+		Assert.assertEquals(1, variatesMapUsedInFormulas.size());
 		Assert.assertTrue(variatesMapUsedInFormulas.containsKey(measurementVariable1));
 		final List<MeasurementVariable> measurementVariableList = variatesMapUsedInFormulas.get(measurementVariable1);
-		Assert.assertTrue(measurementVariableList.get(0).equals(measurementVariable2));
+		Assert.assertEquals(measurementVariable2, measurementVariableList.get(0));
 	}
 
 	@Test
@@ -470,10 +353,10 @@ public class WorkbookUtilTest {
 		measurementVariable2.setFormula(formula);
 
 		final Map<Integer, List<Integer>> variatesMapUsedInFormulas = WorkbookUtil.getVariatesUsedInFormulas(measurementVariables);
-		Assert.assertEquals(variatesMapUsedInFormulas.size(), 1);
+		Assert.assertEquals(1, variatesMapUsedInFormulas.size() );
 		Assert.assertTrue(variatesMapUsedInFormulas.containsKey(measurementVariable1.getTermId()));
 		final List<Integer> measurementVariableList = variatesMapUsedInFormulas.get(measurementVariable1.getTermId());
-		Assert.assertTrue(measurementVariableList.get(0).equals(measurementVariable2.getTermId()));
+		Assert.assertEquals(measurementVariable2.getTermId(), measurementVariableList.get(0).intValue());
 
 	}
 
@@ -486,7 +369,8 @@ public class WorkbookUtilTest {
 		instance.setStockId(Long.parseLong(RandomStringUtils.randomNumeric(5)));
 		instance.setExperimentId(Integer.parseInt(RandomStringUtils.randomNumeric(5)));
 		instance.setInstanceId(Long.parseLong(RandomStringUtils.randomNumeric(5)));
-		final List<MeasurementRow> row = WorkbookUtil.createMeasurementRowsFromEnvironments(Arrays.asList(instance), Arrays.asList(variable), new ExpDesignParameterUi());
+		final List<MeasurementRow> row = WorkbookUtil
+			.createMeasurementRowsFromEnvironments(Arrays.asList(instance), Arrays.asList(variable), new ExpDesignParameterUi());
 		Assert.assertNotNull(row);
 		Assert.assertEquals(instance.getExperimentId(), row.get(0).getExperimentId());
 		Assert.assertEquals(instance.getStockId(), row.get(0).getStockId());
