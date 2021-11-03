@@ -183,22 +183,7 @@ public class FieldbookServiceImpl implements FieldbookService {
 	}
 
 	private List<Location> getAllBreedingLocationsByUniqueID(final String programUUID) {
-		final List<Location> breedingLocationsOfCurrentProgram = new ArrayList<>();
-
-		try {
-			final List<Location> breedingLocations = this.fieldbookMiddlewareService.getAllBreedingLocations();
-
-			for (final Location location : breedingLocations) {
-				if (location.getProgramUUID() == null || location.getProgramUUID().equals(programUUID)) {
-					breedingLocationsOfCurrentProgram.add(location);
-				}
-			}
-
-		} catch (final MiddlewareQueryException e) {
-			FieldbookServiceImpl.LOG.error(e.getMessage(), e);
-		}
-
-		return breedingLocationsOfCurrentProgram;
+		return this.fieldbookMiddlewareService.getAllBreedingLocations();
 	}
 
 	@Override
@@ -250,7 +235,7 @@ public class FieldbookServiceImpl implements FieldbookService {
 			return this.convertLocationsToValueReferences(this.getAllBreedingLocationsByUniqueID(currentProgramUUID));
 		}
 
-		final List<Location> locations = this.fieldbookMiddlewareService.getLocationsByProgramUUID(currentProgramUUID);
+		final List<Location> locations = this.fieldbookMiddlewareService.getAllLocations();
 		return this.convertLocationsToValueReferences(locations);
 	}
 

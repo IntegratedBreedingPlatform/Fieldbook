@@ -8,8 +8,6 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.generationcp.commons.constant.AppConstants;
 import org.generationcp.commons.spring.util.ContextUtil;
 import org.generationcp.middleware.data.initializer.LocationTestDataInitializer;
-import org.generationcp.middleware.data.initializer.MeasurementVariableTestDataInitializer;
-import org.generationcp.middleware.data.initializer.MethodTestDataInitializer;
 import org.generationcp.middleware.data.initializer.StandardVariableTestDataInitializer;
 import org.generationcp.middleware.data.initializer.VariableTestDataInitializer;
 import org.generationcp.middleware.data.initializer.WorkbookTestDataInitializer;
@@ -45,7 +43,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FieldbookServiceTest {
@@ -82,9 +79,9 @@ public class FieldbookServiceTest {
 	public void setUp() throws MiddlewareException {
 		final List<Location> allLocation = new ArrayList<>();
 		Mockito.when(this.contextUtil.getCurrentProgramUUID()).thenReturn(FieldbookServiceTest.PROGRAMUUID);
-		allLocation.add(LocationTestDataInitializer.createLocation(1, FieldbookServiceTest.LOCATION_NAME, null));
-		allLocation.add(LocationTestDataInitializer.createLocation(2, "Loc2", null));
-		Mockito.when(this.fieldbookMiddlewareService.getLocationsByProgramUUID(FieldbookServiceTest.PROGRAMUUID))
+		allLocation.add(LocationTestDataInitializer.createLocation(1, FieldbookServiceTest.LOCATION_NAME));
+		allLocation.add(LocationTestDataInitializer.createLocation(2, "Loc2"));
+		Mockito.when(this.fieldbookMiddlewareService.getAllLocations())
 				.thenReturn(allLocation);
 		Mockito.when(this.fieldbookMiddlewareService.getAllBreedingLocations()).thenReturn(new ArrayList<>());
 
