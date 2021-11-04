@@ -6,14 +6,11 @@ import com.efficio.fieldbook.web.naming.expression.dataprocessor.ExpressionDataP
 import com.efficio.fieldbook.web.naming.expression.dataprocessor.ExpressionDataProcessorFactory;
 import com.efficio.fieldbook.web.trial.bean.AdvanceType;
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
-import org.generationcp.commons.pojo.AdvancingSource;
-import org.generationcp.commons.pojo.AdvancingSourceList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
-import org.junit.Assert;
-
+import org.generationcp.commons.pojo.AdvancingSource;
+import org.generationcp.commons.pojo.AdvancingSourceList;
 import org.generationcp.commons.spring.util.ContextUtil;
 import org.generationcp.middleware.domain.dms.Study;
 import org.generationcp.middleware.domain.dms.ValueReference;
@@ -24,11 +21,13 @@ import org.generationcp.middleware.domain.etl.StudyDetails;
 import org.generationcp.middleware.domain.etl.Workbook;
 import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.domain.study.StudyTypeDto;
+import org.generationcp.middleware.manager.api.StudyDataManager;
 import org.generationcp.middleware.manager.ontology.api.OntologyVariableDataManager;
 import org.generationcp.middleware.pojos.Germplasm;
 import org.generationcp.middleware.pojos.Method;
 import org.generationcp.middleware.pojos.Name;
 import org.generationcp.middleware.service.api.FieldbookService;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -38,6 +37,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -61,6 +61,9 @@ public class AdvancingSourceListFactoryTest {
 
     @Mock
     private ExpressionDataProcessorFactory dataProcessorFactory;
+
+    @Mock
+    private StudyDataManager studyDataManager;
 
 	@InjectMocks
 	AdvancingSourceListFactory factory = new AdvancingSourceListFactory();
@@ -105,6 +108,7 @@ public class AdvancingSourceListFactoryTest {
         final Workbook workBook = new Workbook();
         final StudyDetails studyDetails = new StudyDetails();
         studyDetails.setStudyType(StudyTypeDto.getNurseryDto());
+        studyDetails.setId(1);
         workBook.setStudyDetails(studyDetails);
         workBook.setObservations(generateMeasurementRows());
 
@@ -130,6 +134,7 @@ public class AdvancingSourceListFactoryTest {
         breedingMethodMap.put(13, bulkMethod);
         final Map<String, Method > breedingMethodCodeMap = Maps.newConcurrentMap();
 
+        Mockito.when(this.studyDataManager.getInstanceMetadata(1)).thenReturn(Collections.emptyList());
         advanceInfo.setSelectedTrialInstances(Sets.newHashSet(ENV_NUMBER));
         advanceInfo.setSelectedReplications(Sets.newHashSet(REPLICATION_NUMBER));
         advanceInfo.setAdvanceType(AdvanceType.STUDY);
@@ -203,6 +208,7 @@ public class AdvancingSourceListFactoryTest {
         final Workbook workBook = new Workbook();
         final StudyDetails studyDetails = new StudyDetails();
         studyDetails.setStudyType(StudyTypeDto.getNurseryDto());
+        studyDetails.setId(1);
         workBook.setStudyDetails(studyDetails);
 
         final List<MeasurementRow> measurementRows = generateMeasurementRows();
@@ -245,6 +251,7 @@ public class AdvancingSourceListFactoryTest {
         final Map<String, Method > breedingMethodCodeMap = Maps.newConcurrentMap();
         breedingMethodCodeMap.put("DSP", variateMethod);
 
+        Mockito.when(this.studyDataManager.getInstanceMetadata(1)).thenReturn(Collections.emptyList());
         advanceInfo.setSelectedTrialInstances(Sets.newHashSet(ENV_NUMBER));
         advanceInfo.setSelectedReplications(Sets.newHashSet(REPLICATION_NUMBER));
         advanceInfo.setAdvanceType(AdvanceType.STUDY);

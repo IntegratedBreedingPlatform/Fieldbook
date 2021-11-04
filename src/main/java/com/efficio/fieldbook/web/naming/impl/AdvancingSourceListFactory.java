@@ -9,6 +9,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.generationcp.commons.parsing.pojo.ImportedGermplasm;
 import org.generationcp.commons.pojo.AdvancingSource;
 import org.generationcp.commons.pojo.AdvancingSourceList;
+import org.generationcp.middleware.dao.dms.InstanceMetadata;
 import org.generationcp.middleware.domain.dms.Study;
 import org.generationcp.middleware.domain.dms.ValueReference;
 import org.generationcp.middleware.domain.etl.MeasurementData;
@@ -28,7 +29,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -79,6 +86,9 @@ public class AdvancingSourceListFactory {
 		final List<Integer> gids = new ArrayList<>();
 
 		if (workbook != null && workbook.getObservations() != null && !workbook.getObservations().isEmpty()) {
+			final Integer studyId = workbook.getStudyDetails().getId();
+			final List<InstanceMetadata> instanceMeta = this.studyDataManager.getInstanceMetadata(studyId);
+
 			for (final MeasurementRow row : workbook.getObservations()) {
 				final AdvancingSource advancingSourceCandidate = environmentLevel.copy();
 
@@ -88,6 +98,12 @@ public class AdvancingSourceListFactory {
 				if (advancingSourceCandidate.getTrialInstanceNumber() != null) {
 					final MeasurementRow trialInstanceObservations = workbook.getTrialObservationByTrialInstanceNo(
 							Integer.valueOf(advancingSourceCandidate.getTrialInstanceNumber()));
+
+					// Workaround to correct outdated location ID in trial instance
+					if (!instanceMeta.isEmpty()) {
+						trialInstanceObservations.getMeasurementData(TermId.LOCATION_ID.getId())
+							.setValue(String.valueOf(instanceMeta.get(0).getLocationDbId()));
+					}
 
 					advancingSourceCandidate.setTrailInstanceObservation(trialInstanceObservations);
 				}
@@ -172,7 +188,7 @@ public class AdvancingSourceListFactory {
 					advancingSourceCandidate.setBreedingMethod(breedingMethod);
 					advancingSourceCandidate.setCheck(isCheck);
 					advancingSourceCandidate.setStudyName(studyName);
-					advancingSourceCandidate.setStudyId(workbook.getStudyDetails().getId());
+					advancingSourceCandidate.setStudyId(studyId);
 					advancingSourceCandidate.setEnvironmentDatasetId(workbook.getTrialDatasetId());
 					advancingSourceCandidate.setDesignationIsPreviewOnly(true);
 
