@@ -77,7 +77,7 @@ public class AdvancingSourceListFactoryTest {
 	@Test
     public void testCreateAdvancingSourceListSuccess() throws FieldbookException {
         final ExpressionDataProcessor expressionDataProcessor = Mockito.mock(ExpressionDataProcessor.class);
-        Mockito.when(dataProcessorFactory.retrieveExecutorProcessor()).thenReturn(expressionDataProcessor);
+        Mockito.when(this.dataProcessorFactory.retrieveExecutorProcessor()).thenReturn(expressionDataProcessor);
 
         Mockito.doNothing().when(expressionDataProcessor).processEnvironmentLevelData(Matchers.isA(AdvancingSource.class),
 			Matchers.isA(Workbook.class), Matchers.isA(AdvancingStudy.class), Matchers.isNull(Study.class));
@@ -110,7 +110,7 @@ public class AdvancingSourceListFactoryTest {
         studyDetails.setStudyType(StudyTypeDto.getNurseryDto());
         studyDetails.setId(1);
         workBook.setStudyDetails(studyDetails);
-        workBook.setObservations(generateMeasurementRows());
+        workBook.setObservations(this.generateMeasurementRows());
 
         final AdvancingStudy advanceInfo = new AdvancingStudy();
         advanceInfo.setMethodVariateId(8262);
@@ -139,7 +139,7 @@ public class AdvancingSourceListFactoryTest {
         advanceInfo.setSelectedReplications(Sets.newHashSet(REPLICATION_NUMBER));
         advanceInfo.setAdvanceType(AdvanceType.STUDY);
         
-        final AdvancingSourceList advancingSourceList = factory.createAdvancingSourceList(workBook, advanceInfo, study, breedingMethodMap, breedingMethodCodeMap);
+        final AdvancingSourceList advancingSourceList = this.factory.createAdvancingSourceList(workBook, advanceInfo, study, breedingMethodMap, breedingMethodCodeMap);
 
         Assert.assertEquals("Expected number of advancing source rows were not generated.", 1, advancingSourceList.getRows().size());
         final AdvancingSource source = advancingSourceList.getRows().get(0);
@@ -177,7 +177,7 @@ public class AdvancingSourceListFactoryTest {
     @Test
     public void testCreateAdvancingSourceListSuccessWithSelectionVariateMethod() throws FieldbookException {
         final ExpressionDataProcessor expressionDataProcessor = Mockito.mock(ExpressionDataProcessor.class);
-        Mockito.when(dataProcessorFactory.retrieveExecutorProcessor()).thenReturn(expressionDataProcessor);
+        Mockito.when(this.dataProcessorFactory.retrieveExecutorProcessor()).thenReturn(expressionDataProcessor);
 
         Mockito.doNothing().when(expressionDataProcessor).processEnvironmentLevelData(Matchers.isA(AdvancingSource.class),
 			Matchers.isA(Workbook.class), Matchers.isA(AdvancingStudy.class), Matchers.isNull(Study.class));
@@ -211,7 +211,7 @@ public class AdvancingSourceListFactoryTest {
         studyDetails.setId(1);
         workBook.setStudyDetails(studyDetails);
 
-        final List<MeasurementRow> measurementRows = generateMeasurementRows();
+        final List<MeasurementRow> measurementRows = this.generateMeasurementRows();
         final MeasurementRow row = new MeasurementRow();
         final List<MeasurementData> rowData = Lists.newArrayList();
 
@@ -256,7 +256,7 @@ public class AdvancingSourceListFactoryTest {
         advanceInfo.setSelectedReplications(Sets.newHashSet(REPLICATION_NUMBER));
         advanceInfo.setAdvanceType(AdvanceType.STUDY);
 
-        final AdvancingSourceList advancingSourceList = factory.createAdvancingSourceList(workBook, advanceInfo, study, breedingMethodMap, breedingMethodCodeMap);
+        final AdvancingSourceList advancingSourceList = this.factory.createAdvancingSourceList(workBook, advanceInfo, study, breedingMethodMap, breedingMethodCodeMap);
 
         Assert.assertEquals("Expected number of advancing source rows were not generated.", 1, advancingSourceList.getRows().size());
         final AdvancingSource source = advancingSourceList.getRows().get(0);

@@ -65,7 +65,7 @@ public class AdvancingSourceListFactory {
 		}
 
 		final AdvancingSource environmentLevel = new AdvancingSource();
-		final ExpressionDataProcessor dataProcessor = dataProcessorFactory.retrieveExecutorProcessor();
+		final ExpressionDataProcessor dataProcessor = this.dataProcessorFactory.retrieveExecutorProcessor();
 
 		final AdvancingSourceList advancingSourceList = new AdvancingSourceList();
 
