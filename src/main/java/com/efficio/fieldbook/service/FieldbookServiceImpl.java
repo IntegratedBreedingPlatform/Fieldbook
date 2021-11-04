@@ -35,7 +35,6 @@ import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.domain.oms.TermSummary;
 import org.generationcp.middleware.domain.ontology.DataType;
 import org.generationcp.middleware.domain.ontology.Variable;
-import org.generationcp.middleware.exceptions.MiddlewareQueryException;
 import org.generationcp.middleware.manager.Operation;
 import org.generationcp.middleware.manager.ontology.api.OntologyVariableDataManager;
 import org.generationcp.middleware.pojos.Location;
@@ -182,7 +181,7 @@ public class FieldbookServiceImpl implements FieldbookService {
 		return possibleValues != null ? possibleValues : new ArrayList<>();
 	}
 
-	private List<Location> getAllBreedingLocationsByUniqueID(final String programUUID) {
+	private List<Location> getAllBreedingLocations() {
 		return this.fieldbookMiddlewareService.getAllBreedingLocations();
 	}
 
@@ -230,9 +229,8 @@ public class FieldbookServiceImpl implements FieldbookService {
 	}
 
 	List<ValueReference> getLocations(final boolean isBreedingMethodOnly) {
-		final String currentProgramUUID = this.contextUtil.getCurrentProgramUUID();
 		if (isBreedingMethodOnly) {
-			return this.convertLocationsToValueReferences(this.getAllBreedingLocationsByUniqueID(currentProgramUUID));
+			return this.convertLocationsToValueReferences(this.getAllBreedingLocations());
 		}
 
 		final List<Location> locations = this.fieldbookMiddlewareService.getAllLocations();
