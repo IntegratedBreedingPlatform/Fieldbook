@@ -9,7 +9,6 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.generationcp.commons.parsing.pojo.ImportedGermplasm;
 import org.generationcp.commons.pojo.AdvancingSource;
 import org.generationcp.commons.pojo.AdvancingSourceList;
-import org.generationcp.middleware.dao.dms.InstanceMetadata;
 import org.generationcp.middleware.domain.dms.Study;
 import org.generationcp.middleware.domain.dms.ValueReference;
 import org.generationcp.middleware.domain.etl.MeasurementData;
@@ -23,6 +22,8 @@ import org.generationcp.middleware.pojos.Germplasm;
 import org.generationcp.middleware.pojos.Method;
 import org.generationcp.middleware.pojos.Name;
 import org.generationcp.middleware.service.api.FieldbookService;
+import org.generationcp.middleware.service.api.study.StudyInstanceService;
+import org.generationcp.middleware.service.impl.study.StudyInstance;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -52,6 +54,9 @@ public class AdvancingSourceListFactory {
 
 	@Resource
 	private StudyDataManager studyDataManager;
+
+	@Resource
+	private StudyInstanceService studyInstanceService;
 
 	private static final String DEFAULT_TEST_VALUE = "T";
 
@@ -87,7 +92,9 @@ public class AdvancingSourceListFactory {
 
 		if (workbook != null && workbook.getObservations() != null && !workbook.getObservations().isEmpty()) {
 			final Integer studyId = workbook.getStudyDetails().getId();
-			final List<InstanceMetadata> instanceMeta = this.studyDataManager.getInstanceMetadata(studyId);
+			final Map<Integer, StudyInstance> studyInstanceMap =
+				this.studyInstanceService.getStudyInstances(studyId).stream()
+					.collect(Collectors.toMap(StudyInstance::getInstanceNumber, i -> i));
 
 			for (final MeasurementRow row : workbook.getObservations()) {
 				final AdvancingSource advancingSourceCandidate = environmentLevel.copy();
@@ -96,13 +103,15 @@ public class AdvancingSourceListFactory {
 
 				// If study is Trial, then setting data if trial instance is not null
 				if (advancingSourceCandidate.getTrialInstanceNumber() != null) {
+					final Integer trialInstanceNumber = Integer.valueOf(advancingSourceCandidate.getTrialInstanceNumber());
 					final MeasurementRow trialInstanceObservations = workbook.getTrialObservationByTrialInstanceNo(
 							Integer.valueOf(advancingSourceCandidate.getTrialInstanceNumber()));
 
 					// Workaround to correct outdated location ID in trial instance
-					if (!instanceMeta.isEmpty()) {
+					if (studyInstanceMap.containsKey(trialInstanceNumber) &&
+						trialInstanceObservations.getMeasurementData(TermId.LOCATION_ID.getId()) != null) {
 						trialInstanceObservations.getMeasurementData(TermId.LOCATION_ID.getId())
-							.setValue(String.valueOf(instanceMeta.get(0).getLocationDbId()));
+							.setValue(String.valueOf(studyInstanceMap.get(trialInstanceNumber).getLocationId()));
 					}
 
 					advancingSourceCandidate.setTrailInstanceObservation(trialInstanceObservations);

@@ -21,12 +21,12 @@ import org.generationcp.middleware.domain.etl.StudyDetails;
 import org.generationcp.middleware.domain.etl.Workbook;
 import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.domain.study.StudyTypeDto;
-import org.generationcp.middleware.manager.api.StudyDataManager;
 import org.generationcp.middleware.manager.ontology.api.OntologyVariableDataManager;
 import org.generationcp.middleware.pojos.Germplasm;
 import org.generationcp.middleware.pojos.Method;
 import org.generationcp.middleware.pojos.Name;
 import org.generationcp.middleware.service.api.FieldbookService;
+import org.generationcp.middleware.service.api.study.StudyInstanceService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -63,7 +63,7 @@ public class AdvancingSourceListFactoryTest {
     private ExpressionDataProcessorFactory dataProcessorFactory;
 
     @Mock
-    private StudyDataManager studyDataManager;
+    private StudyInstanceService studyInstanceService;
 
 	@InjectMocks
 	AdvancingSourceListFactory factory = new AdvancingSourceListFactory();
@@ -134,7 +134,7 @@ public class AdvancingSourceListFactoryTest {
         breedingMethodMap.put(13, bulkMethod);
         final Map<String, Method > breedingMethodCodeMap = Maps.newConcurrentMap();
 
-        Mockito.when(this.studyDataManager.getInstanceMetadata(1)).thenReturn(Collections.emptyList());
+        Mockito.when(this.studyInstanceService.getStudyInstances(Mockito.anyInt())).thenReturn(Collections.emptyList());
         advanceInfo.setSelectedTrialInstances(Sets.newHashSet(ENV_NUMBER));
         advanceInfo.setSelectedReplications(Sets.newHashSet(REPLICATION_NUMBER));
         advanceInfo.setAdvanceType(AdvanceType.STUDY);
@@ -251,7 +251,7 @@ public class AdvancingSourceListFactoryTest {
         final Map<String, Method > breedingMethodCodeMap = Maps.newConcurrentMap();
         breedingMethodCodeMap.put("DSP", variateMethod);
 
-        Mockito.when(this.studyDataManager.getInstanceMetadata(1)).thenReturn(Collections.emptyList());
+        Mockito.when(this.studyInstanceService.getStudyInstances(Mockito.anyInt())).thenReturn(Collections.emptyList());
         advanceInfo.setSelectedTrialInstances(Sets.newHashSet(ENV_NUMBER));
         advanceInfo.setSelectedReplications(Sets.newHashSet(REPLICATION_NUMBER));
         advanceInfo.setAdvanceType(AdvanceType.STUDY);
