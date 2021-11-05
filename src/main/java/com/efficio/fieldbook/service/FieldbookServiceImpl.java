@@ -35,7 +35,6 @@ import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.domain.oms.TermSummary;
 import org.generationcp.middleware.domain.ontology.DataType;
 import org.generationcp.middleware.domain.ontology.Variable;
-import org.generationcp.middleware.exceptions.MiddlewareQueryException;
 import org.generationcp.middleware.manager.Operation;
 import org.generationcp.middleware.manager.ontology.api.OntologyVariableDataManager;
 import org.generationcp.middleware.pojos.Location;
@@ -182,23 +181,8 @@ public class FieldbookServiceImpl implements FieldbookService {
 		return possibleValues != null ? possibleValues : new ArrayList<>();
 	}
 
-	private List<Location> getAllBreedingLocationsByUniqueID(final String programUUID) {
-		final List<Location> breedingLocationsOfCurrentProgram = new ArrayList<>();
-
-		try {
-			final List<Location> breedingLocations = this.fieldbookMiddlewareService.getAllBreedingLocations();
-
-			for (final Location location : breedingLocations) {
-				if (location.getProgramUUID() == null || location.getProgramUUID().equals(programUUID)) {
-					breedingLocationsOfCurrentProgram.add(location);
-				}
-			}
-
-		} catch (final MiddlewareQueryException e) {
-			FieldbookServiceImpl.LOG.error(e.getMessage(), e);
-		}
-
-		return breedingLocationsOfCurrentProgram;
+	private List<Location> getAllBreedingLocations() {
+		return this.fieldbookMiddlewareService.getAllBreedingLocations();
 	}
 
 	@Override
@@ -245,12 +229,11 @@ public class FieldbookServiceImpl implements FieldbookService {
 	}
 
 	List<ValueReference> getLocations(final boolean isBreedingMethodOnly) {
-		final String currentProgramUUID = this.contextUtil.getCurrentProgramUUID();
 		if (isBreedingMethodOnly) {
-			return this.convertLocationsToValueReferences(this.getAllBreedingLocationsByUniqueID(currentProgramUUID));
+			return this.convertLocationsToValueReferences(this.getAllBreedingLocations());
 		}
 
-		final List<Location> locations = this.fieldbookMiddlewareService.getLocationsByProgramUUID(currentProgramUUID);
+		final List<Location> locations = this.fieldbookMiddlewareService.getAllLocations();
 		return this.convertLocationsToValueReferences(locations);
 	}
 
