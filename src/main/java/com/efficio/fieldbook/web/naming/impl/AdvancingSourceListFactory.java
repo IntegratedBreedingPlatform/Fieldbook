@@ -22,13 +22,22 @@ import org.generationcp.middleware.pojos.Germplasm;
 import org.generationcp.middleware.pojos.Method;
 import org.generationcp.middleware.pojos.Name;
 import org.generationcp.middleware.service.api.FieldbookService;
+import org.generationcp.middleware.service.api.study.StudyInstanceService;
+import org.generationcp.middleware.service.impl.study.StudyInstance;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -46,6 +55,9 @@ public class AdvancingSourceListFactory {
 	@Resource
 	private StudyDataManager studyDataManager;
 
+	@Resource
+	private StudyInstanceService studyInstanceService;
+
 	private static final String DEFAULT_TEST_VALUE = "T";
 
 	public AdvancingSourceList createAdvancingSourceList(final Workbook workbook, final AdvancingStudy advanceInfo, final Study study,
@@ -58,7 +70,7 @@ public class AdvancingSourceListFactory {
 		}
 
 		final AdvancingSource environmentLevel = new AdvancingSource();
-		final ExpressionDataProcessor dataProcessor = dataProcessorFactory.retrieveExecutorProcessor();
+		final ExpressionDataProcessor dataProcessor = this.dataProcessorFactory.retrieveExecutorProcessor();
 
 		final AdvancingSourceList advancingSourceList = new AdvancingSourceList();
 
@@ -79,6 +91,11 @@ public class AdvancingSourceListFactory {
 		final List<Integer> gids = new ArrayList<>();
 
 		if (workbook != null && workbook.getObservations() != null && !workbook.getObservations().isEmpty()) {
+			final Integer studyId = workbook.getStudyDetails().getId();
+			final Map<Integer, StudyInstance> studyInstanceMap =
+				this.studyInstanceService.getStudyInstances(studyId).stream()
+					.collect(Collectors.toMap(StudyInstance::getInstanceNumber, i -> i));
+
 			for (final MeasurementRow row : workbook.getObservations()) {
 				final AdvancingSource advancingSourceCandidate = environmentLevel.copy();
 
@@ -86,8 +103,16 @@ public class AdvancingSourceListFactory {
 
 				// If study is Trial, then setting data if trial instance is not null
 				if (advancingSourceCandidate.getTrialInstanceNumber() != null) {
+					final Integer trialInstanceNumber = Integer.valueOf(advancingSourceCandidate.getTrialInstanceNumber());
 					final MeasurementRow trialInstanceObservations = workbook.getTrialObservationByTrialInstanceNo(
 							Integer.valueOf(advancingSourceCandidate.getTrialInstanceNumber()));
+
+					// Workaround to correct outdated location ID in trial instance
+					if (studyInstanceMap.containsKey(trialInstanceNumber) &&
+						trialInstanceObservations.getMeasurementData(TermId.LOCATION_ID.getId()) != null) {
+						trialInstanceObservations.getMeasurementData(TermId.LOCATION_ID.getId())
+							.setValue(String.valueOf(studyInstanceMap.get(trialInstanceNumber).getLocationId()));
+					}
 
 					advancingSourceCandidate.setTrailInstanceObservation(trialInstanceObservations);
 				}
@@ -172,7 +197,7 @@ public class AdvancingSourceListFactory {
 					advancingSourceCandidate.setBreedingMethod(breedingMethod);
 					advancingSourceCandidate.setCheck(isCheck);
 					advancingSourceCandidate.setStudyName(studyName);
-					advancingSourceCandidate.setStudyId(workbook.getStudyDetails().getId());
+					advancingSourceCandidate.setStudyId(studyId);
 					advancingSourceCandidate.setEnvironmentDatasetId(workbook.getTrialDatasetId());
 					advancingSourceCandidate.setDesignationIsPreviewOnly(true);
 
