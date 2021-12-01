@@ -602,10 +602,10 @@ public class WorkbookDataUtil {
 		final List<Location> locations = new ArrayList<Location>();
 		locations.add(new Location(WorkbookDataUtil.LOCATION_ID_1, WorkbookDataUtil.LTYPE, WorkbookDataUtil.NLLP, WorkbookDataUtil.LNAME
 				+ " 1", WorkbookDataUtil.LABBR, WorkbookDataUtil.SNL3ID, WorkbookDataUtil.SNL2ID, WorkbookDataUtil.SNL1ID,
-				WorkbookDataUtil.CNTRYID, WorkbookDataUtil.LRPLCE));
+				new Location(WorkbookDataUtil.CNTRYID), WorkbookDataUtil.LRPLCE));
 		locations.add(new Location(WorkbookDataUtil.LOCATION_ID_2, WorkbookDataUtil.LTYPE, WorkbookDataUtil.NLLP, WorkbookDataUtil.LNAME
 				+ " 2", WorkbookDataUtil.LABBR, WorkbookDataUtil.SNL3ID, WorkbookDataUtil.SNL2ID, WorkbookDataUtil.SNL1ID,
-				WorkbookDataUtil.CNTRYID, WorkbookDataUtil.LRPLCE));
+				new Location(WorkbookDataUtil.CNTRYID), WorkbookDataUtil.LRPLCE));
 		return locations;
 	}
 
