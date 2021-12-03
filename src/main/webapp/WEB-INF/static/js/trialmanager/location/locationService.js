@@ -12,8 +12,15 @@
 
 			locationService.getLocations = function (locationTypes, favoritesOnly, name, page, size) {
 
-				var request = $http.get(BASE_URL + '/locations?programUUID=' + studyContext.programId + '&favoritesOnly=' + favoritesOnly
-					+ '&name=' + name + '&locationTypes=' + locationTypes + '&page=' + page + '&size=' + size);
+				var data = {
+					locationName: name,
+					locationTypeIds: locationTypes
+				}
+				if (favoritesOnly) {
+					data['favoriteProgramUUID'] = studyContext.programId;
+				}
+
+				var request = $http.post(BASE_URL + '/locations/search?programUUID=' + studyContext.programId + '&page=' + page + '&size=' + size, JSON.stringify(data));
 				return request.then(((response) => {
 					return response;
 				}), failureHandler);
