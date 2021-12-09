@@ -243,10 +243,11 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 		'$timeout', '_', '$localStorage', '$state', '$window', '$location', 'HasAnyAuthorityService', 'derivedVariableService', 'exportStudyModalService',
 		'importStudyModalService', 'createSampleModalService', 'derivedVariableModalService', '$uibModal', '$q', 'datasetService', 'InventoryService',
 		'studyContext', 'PERMISSIONS', 'LABEL_PRINTING_TYPE', 'HAS_LISTS_OR_SUB_OBS', 'HAS_GENERATED_DESIGN', 'germplasmStudySourceService', 'studyEntryService', 'HAS_MEANS_DATASET',
-		'advanceStudyModalService',
+		'advanceStudyModalService', 'STABRAPP_URL',
 		function ($scope, $rootScope, studyStateService, TrialManagerDataService, $http, $timeout, _, $localStorage, $state, $window, $location, HasAnyAuthorityService,
 				  derivedVariableService, exportStudyModalService, importStudyModalService, createSampleModalService, derivedVariableModalService, $uibModal, $q, datasetService, InventoryService,
-				  studyContext, PERMISSIONS, LABEL_PRINTING_TYPE, HAS_LISTS_OR_SUB_OBS, HAS_GENERATED_DESIGN, germplasmStudySourceService, studyEntryService, HAS_MEANS_DATASET, advanceStudyModalService) {
+				  studyContext, PERMISSIONS, LABEL_PRINTING_TYPE, HAS_LISTS_OR_SUB_OBS, HAS_GENERATED_DESIGN, germplasmStudySourceService, studyEntryService, HAS_MEANS_DATASET, advanceStudyModalService,
+				  STABRAPP_URL) {
 
 			$scope.germplasmDetailsHasChanges = false;
 			$window.addEventListener("message", (event) => {
@@ -308,6 +309,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			$scope.studyTypeSelected = undefined;
 			$scope.isChoosePreviousStudy = false;
 			$scope.hasUnsavedData = studyStateService.hasUnsavedData;
+			$scope.STABRAPP_URL = STABRAPP_URL;
 
 			$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
 			$scope.PERMISSIONS = PERMISSIONS;
@@ -1039,6 +1041,39 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			$scope.startAdvance = function (advanceType) {
 				advanceStudyModalService.startAdvance(advanceType);
 			}
+
+			$scope.analyzeWithStaBrapp = function () {
+				datasetService.getDatasetInstances(studyContext.measurementDatasetId).then((datasetInstances) => {
+					$uibModal.open({
+						template: '<multiple-instance-selector-modal instances="instances" ' +
+							' instance-id-property="instanceId" ' +
+							' selected-instances="selectedInstances" ' +
+							' on-select-instance="onSelectInstance" ' +
+							' on-continue="onContinue" ' +
+							' ></multiple-instance-selector-modal>',
+						controller: function ($scope) {
+							$scope.selectedInstances = {};
+							$scope.instances = datasetInstances;
+							$scope.isEmptySelection = false;
+
+							$scope.onContinue = function () {
+								$uibModal.open({
+									templateUrl: '/Fieldbook/static/js/trialmanager/stabrapp/stabrapp-modal.html',
+									controller: 'StaBrappModalCtrl',
+									windowClass: 'modal-large',
+									resolve: {
+										instanceIds: function () {
+											return Object.entries($scope.selectedInstances)
+												.filter(([key, isSelected]) => isSelected)
+												.map(([key, value]) => key);
+										}
+									}
+								});
+							};
+						}
+					});
+				});
+			};
 
 			$scope.init = function () {
 				derivedVariableService.displayExecuteCalculateVariableMenu();
