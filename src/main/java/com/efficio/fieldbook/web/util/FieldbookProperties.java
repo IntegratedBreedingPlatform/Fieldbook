@@ -11,7 +11,7 @@ public class FieldbookProperties {
 	private String uploadDirectory;
 	private Integer maxNumOfSubObsSetsPerStudy;
 	private Integer maxNumOfSubObsPerParentUnit;
-
+	private String staBrappUrl;
 
 	public String getProgramLocationsUrl() {
 		return WorkbenchAppPathResolver.getFullWebAddress(this.programLocationsUrl);
@@ -53,4 +53,11 @@ public class FieldbookProperties {
 		this.maxNumOfSubObsPerParentUnit = maxNumOfSubObsPerParentUnit;
 	}
 
+	public String getStaBrappUrl() {
+		return staBrappUrl;
+	}
+
+	public void setStaBrappUrl(final String staBrappUrl) {
+		this.staBrappUrl = staBrappUrl;
+	}
 }
