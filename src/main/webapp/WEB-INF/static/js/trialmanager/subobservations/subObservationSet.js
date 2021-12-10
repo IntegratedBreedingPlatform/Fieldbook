@@ -593,7 +593,8 @@
 			};
 
 			$scope.changeEnvironment = function () {
-				table().columns("TRIAL_INSTANCE:name").visible($scope.nested.selectedEnvironment === $scope.environments[0]);
+				var trialInstanceIndex = $scope.isFileStorageConfigured? 2 : 1;
+				table().column(trialInstanceIndex).visible($scope.nested.selectedEnvironment === $scope.environments[0]);
 				resetChecksStatus();
 				table().ajax.reload();
 			};
