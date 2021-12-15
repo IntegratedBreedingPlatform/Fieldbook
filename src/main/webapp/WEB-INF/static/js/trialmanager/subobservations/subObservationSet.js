@@ -593,7 +593,7 @@
 			};
 
 			$scope.changeEnvironment = function () {
-				table().columns("TRIAL_INSTANCE:name").visible($scope.nested.selectedEnvironment === $scope.environments[0]);
+				table().columns('.termId-'+TRIAL_INSTANCE).visible($scope.nested.selectedEnvironment === $scope.environments[0]);
 				resetChecksStatus();
 				table().ajax.reload();
 			};
@@ -1515,6 +1515,7 @@
 						var className = columnData.factor === true ? 'factors' : 'variates';
 						// include data type for determining when to show context menu option/s
 						className += ' datatype-' + columnData.dataTypeId;
+						className += ' termId-' + columnData.termId;
 						// avoid wrapping filter icon
 						className += ' dt-head-nowrap';
 						return className;

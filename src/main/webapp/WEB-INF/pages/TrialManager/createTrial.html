@@ -201,6 +201,9 @@
 							<li>
 								<a href="" th:text="#{study.studydetails.action.unlock.study}" ng-show="isLockedStudy() &amp;&amp;  userHasLockPermission()" ng-click="changeLockedStatus(0)">Unlock Study</a>
 							</li>
+							<li ng-show="STABRAPP_URL">
+								<a href="" th:utext="#{study.studydetails.action.stabrapp}" ng-click="analyzeWithStaBrapp()"></a>
+							</li>
 						</ul>
 					</div>
 				</span>
@@ -701,6 +704,7 @@
 			).constant('UNSPECIFIED_LOCATION_ID', /*[[${unspecifiedLocationId}]]*/ ''
 			).constant('BREEDING_METHOD_SCALE', /*[[${breedingMethodCodeScale}]]*/ ''
 			).constant('HAS_MEANS_DATASET', /*[[${hasMeansDataset}]]*/ ''
+			).constant('STABRAPP_URL', /*[[${staBrappUrl}]]*/ ''
 			).constant('DESIGN_TYPE',
 				{
 					RANDOMIZED_COMPLETE_BLOCK: /*[[${T(org.generationcp.middleware.domain.dms.ExperimentDesignType).RANDOMIZED_COMPLETE_BLOCK.getId()}]]*/ 0
@@ -782,6 +786,7 @@
 	<!-- Controller js files -->
 	<script type="text/javascript" th:src="@{/static/angular-templates/instance-selector/single-instance-selector.js}"></script>
 	<script type="text/javascript" th:src="@{/static/angular-templates/instance-selector/single-instance-selector-modal.js}"></script>
+	<script type="text/javascript" th:src="@{/static/angular-templates/instance-selector/multiple-instance-selector-modal.js}"></script>
 	<script type="text/javascript" th:src="@{/static/angular-templates/geojson/geojson-modal.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/trialSettings.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/germplasm/germplasm.js}"></script>
@@ -812,6 +817,7 @@
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/column-filters/column-filters.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/observations/change-plot-entry-modal.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/observations/change-plot-entry-service.js}"></script>
+	<script type="text/javascript" th:src="@{/static/js/trialmanager/stabrapp/stabrapp-modal.js}"></script>
 
 	<script type="text/javascript" th:src="@{/static/js/auth/auth.module.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/auth/account.service.js}"></script>
