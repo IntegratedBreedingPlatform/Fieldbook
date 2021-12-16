@@ -9,6 +9,7 @@ import com.efficio.etl.web.bean.SheetDTO;
 import com.efficio.etl.web.bean.UserSelection;
 import com.efficio.etl.web.bean.VariableDTO;
 import com.efficio.etl.web.util.AppConstants;
+import com.efficio.fieldbook.web.exception.FieldbookRequestValidationException;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
@@ -605,7 +606,12 @@ public class ETLServiceImpl implements ETLService {
 		final Map<String, Integer> availableEntryTypes) {
 		if (TermId.ENTRY_TYPE.getId() == variable.getTermId() && measurementData.getValue() != null) {
 			final String value = measurementData.getValue();
-			measurementData.setValue(availableEntryTypes.get(value).toString());
+			final Integer entryType = availableEntryTypes.get(value);
+			if (entryType == null) {
+				throw new FieldbookRequestValidationException("error.invalid.entry.type",
+					new String[] {String.join(", ", availableEntryTypes.keySet())});
+			}
+			measurementData.setValue(entryType.toString());
 		}
 	}
 

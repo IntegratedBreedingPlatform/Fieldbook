@@ -36,12 +36,13 @@ public class DefaultExceptionHandler {
 
 	@RequestMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
 	@ExceptionHandler(FieldbookRequestValidationException.class)
-	@ResponseStatus(value = NOT_ACCEPTABLE)
+	@ResponseStatus(value = BAD_REQUEST)
 	@ResponseBody
-	public String handleValidationException(FieldbookRequestValidationException ex) {
+	public ErrorResponse handleValidationException(FieldbookRequestValidationException ex) {
 		LOG.error("Error in service validation", ex.getErrorCode());
-		String message = this.messageSource.getMessage(ex.getErrorCode(), null, LocaleContextHolder.getLocale());
-		return message;
+		ErrorResponse response = new ErrorResponse();
+		response.addError(this.messageSource.getMessage(ex.getErrorCode(), ex.getParams(), LocaleContextHolder.getLocale()));
+		return response;
 	}
 
 	@RequestMapping(produces = {MediaType.APPLICATION_JSON_VALUE})

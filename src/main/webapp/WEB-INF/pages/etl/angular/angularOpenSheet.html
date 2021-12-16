@@ -29,7 +29,7 @@
     </div>
 
 
-    <!-- Separate div for client side errors -->
+    <!-- Separate div for client side (or ajax) errors -->
     <div ng:repeat="message in messages" id="message-div">
         <div class="alert alert-danger" ng:bind="message"></div>
     </div>
@@ -291,6 +291,12 @@
                             } else {
                                 $scope.messages = data.messages;
                                 $scope.userAttemptedSubmission = false;
+                            }
+                        }).error(function (resp) {
+                            if (resp && resp.errors && resp.errors.length) {
+                                for (const error of resp.errors) {
+                                    $scope.messages.push(error.message);
+                                }
                             }
                         });
                     } else {

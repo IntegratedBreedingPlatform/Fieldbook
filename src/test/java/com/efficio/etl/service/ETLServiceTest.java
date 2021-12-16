@@ -7,6 +7,7 @@ import com.efficio.etl.web.bean.SheetDTO;
 import com.efficio.etl.web.bean.UserSelection;
 import com.efficio.etl.web.bean.VariableDTO;
 import com.efficio.etl.web.util.AppConstants;
+import com.efficio.fieldbook.web.exception.FieldbookRequestValidationException;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -378,6 +379,16 @@ public class ETLServiceTest {
 		this.etlService.convertEntryTypeNameToID(variable, measurementData, availableEntryTypes);
 		Assert.assertEquals("The measurement data's value should be " + TermId.ENTRY_TYPE.getId(),
 			String.valueOf(TermId.ENTRY_TYPE.getId()), measurementData.getValue());
+	}
+
+	@Test(expected = FieldbookRequestValidationException.class)
+	public void testConvertEntryTypeNameInvalid() {
+		final String value = "Invalid";
+		final MeasurementVariable variable = MeasurementVariableTestDataInitializer
+			.createMeasurementVariable(TermId.ENTRY_TYPE.getId(), value);
+		final MeasurementData measurementData = this.measurementDataTestDataInitializer.createMeasurementData(value, variable);
+		final Map<String, Integer> availableEntryTypes = new HashMap<>();
+		this.etlService.convertEntryTypeNameToID(variable, measurementData, availableEntryTypes);
 	}
 
 	@Test
