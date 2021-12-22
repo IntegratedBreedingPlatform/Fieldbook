@@ -583,6 +583,11 @@
 		<aop:scoped-proxy />
     </bean>
 
+	<bean id="fileMetadataService" factory-bean="managerFactory"
+		  factory-method="getFileMetadataService" scope="request">
+		<aop:scoped-proxy />
+	</bean>
+
 	<bean id="studyEntryTransformer" class="com.efficio.fieldbook.web.study.germplasm.StudyEntryTransformer" scope="request">
 		<aop:scoped-proxy/>
 	</bean>
