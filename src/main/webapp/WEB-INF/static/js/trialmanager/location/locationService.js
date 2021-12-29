@@ -13,7 +13,10 @@
 			locationService.getLocations = function (locationTypes, favoritesOnly, name, page, size) {
 
 				var data = {
-					locationName: name,
+					locationNameFilter: {
+						type: 'STARTSWITH',
+						value: name
+					},
 					locationTypeIds: locationTypes
 				}
 				if (favoritesOnly) {

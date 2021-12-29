@@ -25,6 +25,7 @@ import org.generationcp.middleware.domain.oms.Term;
 import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.domain.study.StudyTypeDto;
 import org.generationcp.middleware.operation.builder.WorkbookBuilder;
+import org.generationcp.middleware.pojos.Country;
 import org.generationcp.middleware.pojos.Location;
 
 import java.text.DecimalFormat;
@@ -602,10 +603,10 @@ public class WorkbookDataUtil {
 		final List<Location> locations = new ArrayList<Location>();
 		locations.add(new Location(WorkbookDataUtil.LOCATION_ID_1, WorkbookDataUtil.LTYPE, WorkbookDataUtil.NLLP, WorkbookDataUtil.LNAME
 				+ " 1", WorkbookDataUtil.LABBR, WorkbookDataUtil.SNL3ID, WorkbookDataUtil.SNL2ID, new Location(WorkbookDataUtil.SNL1ID),
-				new Location(WorkbookDataUtil.CNTRYID), WorkbookDataUtil.LRPLCE));
+				new Country(WorkbookDataUtil.CNTRYID), WorkbookDataUtil.LRPLCE));
 		locations.add(new Location(WorkbookDataUtil.LOCATION_ID_2, WorkbookDataUtil.LTYPE, WorkbookDataUtil.NLLP, WorkbookDataUtil.LNAME
 				+ " 2", WorkbookDataUtil.LABBR, WorkbookDataUtil.SNL3ID, WorkbookDataUtil.SNL2ID, new Location(WorkbookDataUtil.SNL1ID),
-				new Location(WorkbookDataUtil.CNTRYID), WorkbookDataUtil.LRPLCE));
+				new Country(WorkbookDataUtil.CNTRYID), WorkbookDataUtil.LRPLCE));
 		return locations;
 	}
 
