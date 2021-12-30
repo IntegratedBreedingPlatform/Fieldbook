@@ -20,6 +20,7 @@
 					locationTypeIds: locationTypes
 				}
 				if (favoritesOnly) {
+					data['filterFavoriteProgramUUID'] = true;
 					data['favoriteProgramUUID'] = studyContext.programId;
 				}
 
@@ -89,7 +90,7 @@
 
 					locationService.getLocations($scope.localData.locationLookup == 1 ? BREEDING_LOCATION : [], $scope.localData.useFavorites, $select ? $select.search : '', $scope.locationPage, 500).then(function (response) {
 						$scope.locationItems = $scope.locationItems.concat(response.data);
-						$scope.loadMore = ($scope.locationPage + 1) * 500 < response.headers()['x-filtered-count'];
+						$scope.loadMore = ($scope.locationPage + 1) * 500 < response.headers()['x-total-count'];
 					});
 				}
 			}]
