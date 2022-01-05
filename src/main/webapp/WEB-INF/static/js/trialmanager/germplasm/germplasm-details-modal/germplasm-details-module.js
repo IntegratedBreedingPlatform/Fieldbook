@@ -9,7 +9,7 @@
                 controller: function ($scope, $uibModalInstance, germplasmDetailsService, studyContext) {
 
                     const germplasmDetailsURL = '/ibpworkbench/main/app/#/germplasm-details/' + gid + '?cropName=' + studyContext.cropName + '&programUUID=' + studyContext.programId
-                        + '&modal=true&authToken=' + JSON.parse(localStorage["bms.xAuthToken"]).token;
+                        + '&modal=true';
                     $scope.url = germplasmDetailsURL;
                     $scope.gid = gid;
 
