@@ -663,7 +663,7 @@ public class CrossingSettingsControllerTest {
 
 		final List<Map<String, Object>> masterList = (List<Map<String, Object>>) responseMap.get(CrossesListUtil.LIST_DATA_TABLE);
 		Assert.assertEquals(germplasm.getGid(), masterList.get(0).get(ColumnLabels.GID.getName()));
-		Assert.assertEquals(germplasm.getGermplasmPeferredName(), masterList.get(0).get(ColumnLabels.DESIGNATION.getName()));
+		Assert.assertEquals(germplasm.getGermplasmPreferredName(), masterList.get(0).get(ColumnLabels.DESIGNATION.getName()));
 	}
 
 	private void fillUpUserSelectionWithImportedCrossTestData() {
