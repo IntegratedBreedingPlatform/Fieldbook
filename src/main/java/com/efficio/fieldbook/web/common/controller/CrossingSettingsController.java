@@ -287,11 +287,11 @@ public class CrossingSettingsController extends SettingsController {
 				.filter(cross -> !StringUtils.isEmpty(cross.getRawBreedingMethod())).map(ImportedCross::getRawBreedingMethod).collect(
 					Collectors.toSet());
 			if(!CollectionUtils.isEmpty(breedingMethods)) {
-				final BreedingMethodSearchRequest breedingMethodSearchRequest = new BreedingMethodSearchRequest(null,
-					new ArrayList<>(breedingMethods), false);
+				final BreedingMethodSearchRequest breedingMethodSearchRequest = new BreedingMethodSearchRequest();
+				breedingMethodSearchRequest.setMethodAbbreviations(new ArrayList<>(breedingMethods));
 				breedingMethodSearchRequest.setMethodTypes(Collections.singletonList(MethodType.GENERATIVE.getCode()));
 				final List<BreedingMethodDTO> generativeBreedingMethodDtos = this.breedingMethodService
-					.getBreedingMethods(breedingMethodSearchRequest, null);
+					.searchBreedingMethods(breedingMethodSearchRequest, null, null);
 
 				if (generativeBreedingMethodDtos.size() != breedingMethods.size()) {
 					final List<String> generativeBreedingMethodCodes = generativeBreedingMethodDtos.stream().map(BreedingMethodDTO::getCode)

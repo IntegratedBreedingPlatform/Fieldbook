@@ -567,7 +567,7 @@ public class CrossingSettingsControllerTest {
 		final ImportedCrossesList importedCrossesList = new ImportedCrossesList();
 		importedCrossesList.setImportedGermplasms(Collections.singletonList(cross));
 		Mockito.when(this.studySelection.getImportedCrossesList()).thenReturn(importedCrossesList);
-		Mockito.when(this.breedingMethodService.getBreedingMethods(ArgumentMatchers.any(BreedingMethodSearchRequest.class), ArgumentMatchers.any()))
+		Mockito.when(this.breedingMethodService.searchBreedingMethods(ArgumentMatchers.any(BreedingMethodSearchRequest.class), ArgumentMatchers.any(), ArgumentMatchers.isNull()))
 			.thenReturn(new ArrayList<>());
 		final String errorMessage = "error.crossing.non.generative.method";
 		Mockito.when(this.messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(String[].class),
@@ -585,7 +585,7 @@ public class CrossingSettingsControllerTest {
 		Mockito.when(this.studySelection.getImportedCrossesList()).thenReturn(importedCrossesList);
 		final BreedingMethodDTO method = new BreedingMethodDTO();
 		method.setNumberOfProgenitors(1);
-		Mockito.when(this.breedingMethodService.getBreedingMethods(ArgumentMatchers.any(BreedingMethodSearchRequest.class), ArgumentMatchers.any()))
+		Mockito.when(this.breedingMethodService.searchBreedingMethods(ArgumentMatchers.any(BreedingMethodSearchRequest.class), ArgumentMatchers.any(), ArgumentMatchers.isNull()))
 			.thenReturn(Collections.singletonList(method));
 		final String errorMessage = "error.crossing.method.mprgn.equals.one";
 		Mockito.when(this.messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(String[].class),
