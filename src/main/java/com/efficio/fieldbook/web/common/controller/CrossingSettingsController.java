@@ -488,7 +488,7 @@ public class CrossingSettingsController extends SettingsController {
 		for(final Germplasm existingCross: existingCrosses) {
 			final Map<String, Object> dataMap = new HashMap<>();
 			dataMap.put(ColumnLabels.GID.getName(), existingCross.getGid());
-			dataMap.put(ColumnLabels.DESIGNATION.getName(), existingCross.getGermplasmPeferredName());
+			dataMap.put(ColumnLabels.DESIGNATION.getName(), existingCross.getGermplasmPreferredName());
 			masterList.add(dataMap);
 		}
 
