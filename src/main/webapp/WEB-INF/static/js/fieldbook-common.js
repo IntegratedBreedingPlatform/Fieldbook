@@ -1281,10 +1281,9 @@ function closeModal(modalId) {
 
 function openGermplasmDetailsFromImportOwnDesign(gid) {
 	$('#reviewDesignModal').modal('hide');
-	callback = function () {
+	openGermplasmDetailsPopup(gid, function () {
 		$('#reviewDesignModal').modal('show');
-	}
-	openGermplasmDetailsPopup(gid, callback);
+	});
 }
 
 function openGermplasmDetailsPopup(gid, callback) {
