@@ -5,7 +5,7 @@
         const germplasmDetailsModalService = {};
         germplasmDetailsModalService.openGermplasmDetailsModal = function (gid, callBackFunction) {
             germplasmDetailsModalService.modal = $uibModal.open({
-                windowClass: 'force-zindex modal-extra-large',
+                windowClass: 'modal-extra-large',
                 templateUrl: '/Fieldbook/static/js/trialmanager/germplasm/germplasm-details-modal/germplasm-details-modal.html',
                 controller: function ($scope, $uibModalInstance, germplasmDetailsService, studyContext) {
 
