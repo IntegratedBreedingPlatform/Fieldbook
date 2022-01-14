@@ -1000,7 +1000,12 @@
 						columns: ':gt(0)'
 					}])
 					.withColReorder()
+					.withColReorderCallback(colReorderCallback)
 					.withPaginationType('full_numbers');
+			}
+
+			function colReorderCallback() {
+				table().ajax.reload();
 			}
 
 			function initCompleteCallback() {
