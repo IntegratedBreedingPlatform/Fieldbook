@@ -1565,13 +1565,10 @@
 						columnsDef.push({
 							targets: columns.length - 1,
 							orderable: false,
-							createdCell: function (td, data, full) {
-								$(td).html(
-									$compile(
-										'<a class="gid-link" href="javascript: void(0)" ng-click="openGermplasmDetailsModal(\'' +
-										full.gid + '\')">' + EscapeHTML.escape(data.value) + '</a>'
-									)($scope)
-								);
+							render: function (data, type, full, meta) {
+								return '<a class="gid-link" href="javascript: void(0)" ' +
+									'onclick="openGermplasmDetailsPopup(\'' +
+									full.gid + '\')">' + EscapeHTML.escape(data.value) + '</a>';
 							}
 						});
 					} else if (columnData.termId === STOCK_ID) {
