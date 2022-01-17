@@ -51,12 +51,12 @@
 
                     <div class="row form-group add-bottom-padding">
                         <div class="col-xs-4 col-md-4">
-                            <input type="radio" value="false" ng-model="useManualNaming" ng-click="toggleNamingSection()" />
+                            <input data-test="automaticNameGenerationOption" type="radio" value="false" ng-model="useManualNaming" ng-click="toggleNamingSection()" />
                             <label th:text="#{study.crosses.import.automaticNameGeneration}"></label>
 
                         </div>
                         <div class="col-xs-8 col-md-8 text-left">
-                            <input type="radio" value="true" ng-model="useManualNaming" ng-click="toggleNamingSection()"/>
+                            <input data-test="manualNamingSettingsOption" type="radio" value="true" ng-model="useManualNaming" ng-click="toggleNamingSection()"/>
                             <label th:text="#{study.crosses.import.manualNamingSettings}"></label>
                         </div>
                     </div>
@@ -324,10 +324,10 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" id="goBackToSelectBreedingMethodModal"
+                    <button data-test="importCrossesNamingCancel" type="button" class="btn btn-default" id="goBackToSelectBreedingMethodModal"
                             aria-hidden="true" th:text="#{common.form.back.text}">Back
                     </button>
-                    <button type="button" class="btn btn-primary"
+                    <button data-test="importCrossesNamingContinue" type="button" class="btn btn-primary"
                             aria-hidden="true" th:text="#{common.form.continue.text}" ng-click="continue()">Continue
                     </button>
                 </div>
