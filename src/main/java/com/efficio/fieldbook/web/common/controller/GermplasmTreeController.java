@@ -92,6 +92,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -317,7 +318,7 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 			final CrossSetting crossSetting = this.userSelection.getCrossSettings();
 			final ImportedCrossesList importedCrossesList = this.userSelection.getImportedCrossesList();
 
-			final Boolean isTrimmed = this.applyNamingSettingToCrosses(listDataItems, germplasmList, crossSetting, importedCrossesList, germplasmStudySourceList);
+			final Boolean isTrimmed = this.applyNamingSettingToCrosses(listDataItems, germplasmList, crossSetting, importedCrossesList, germplasmStudySourceList, form.getOmitAlertedCrosses());
 			// Set imported user as owner of the list
 			germplasmList.setUserId(importedCrossesList.getUserId());
 
@@ -374,7 +375,7 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 	 * @throws RuleException
 	 */
 	private Boolean applyNamingSettingToCrosses(final List<Pair<Germplasm, GermplasmListData>> listDataItems,
-			final GermplasmList germplasmList, final CrossSetting crossSetting, final ImportedCrossesList importedCrossesList, final List<GermplasmStudySourceInput> germplasmStudySourceList)
+			final GermplasmList germplasmList, final CrossSetting crossSetting, final ImportedCrossesList importedCrossesList, final List<GermplasmStudySourceInput> germplasmStudySourceList, final boolean omitAlertedCrosses)
 			throws RuleException {
 
 		boolean isTrimed;
@@ -382,7 +383,7 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 			// this line of code is where the creation of new germplasm takes place
 			isTrimed = this.crossingService
 					.applyCrossSetting(crossSetting, importedCrossesList, this.userSelection.getWorkbook());
-			isTrimed = isTrimed || this.createGermplasmListDataAndGermplasmStudySource(germplasmList, listDataItems, importedCrossesList.getImportedCrosses(), germplasmStudySourceList);
+			isTrimed = isTrimed || this.createGermplasmListDataAndGermplasmStudySource(germplasmList, listDataItems, importedCrossesList.getImportedCrosses(), germplasmStudySourceList, omitAlertedCrosses);
 		} else {
 			final ImportedCrossesList importedCrossesListWithNamingSettings = this.applyNamingRules(importedCrossesList);
 			// this line of code is where the creation of new germplasm takes place
@@ -390,7 +391,7 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 					.applyCrossSettingWithNamingRules(crossSetting, importedCrossesListWithNamingSettings, this.getCurrentIbdbUserId(),
 							this.userSelection.getWorkbook());
 			isTrimed = isTrimed || this
-					.createGermplasmListDataAndGermplasmStudySource(germplasmList, listDataItems, importedCrossesListWithNamingSettings.getImportedCrosses(), germplasmStudySourceList);
+					.createGermplasmListDataAndGermplasmStudySource(germplasmList, listDataItems, importedCrossesListWithNamingSettings.getImportedCrosses(), germplasmStudySourceList, omitAlertedCrosses);
 		}
 		this.checkForEmptyDesigNames(importedCrossesList.getImportedCrosses());
 		return isTrimed;
@@ -531,7 +532,8 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 	}
 
 	private boolean createGermplasmListDataAndGermplasmStudySource(final GermplasmList germplasmList,
-			final List<Pair<Germplasm, GermplasmListData>> listDataItems, final List<ImportedCross> importedGermplasmList, final List<GermplasmStudySourceInput> germplasmStudySourceList) {
+			final List<Pair<Germplasm, GermplasmListData>> listDataItems, final List<ImportedCross> importedGermplasmList, final List<GermplasmStudySourceInput> germplasmStudySourceList,
+			final boolean omitAlertedCrosses) {
 
 		boolean isTrimed = false;
 		final Integer studyId = this.userSelection.getWorkbook().getStudyDetails().getId();
@@ -544,6 +546,13 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 					Collections.singleton(1), sourcePlotNumbers);
 		}
 		for (final ImportedCross importedCross : importedGermplasmList) {
+
+			// Skip cross that is already existing in the database
+			final Optional<Integer> optionalGid = importedCross.getGid() == null? Optional.empty(): Optional.of(Integer.valueOf(importedCross.getGid()));
+			if (omitAlertedCrosses && this.germplasmDataManager.hasExistingCrosses(Integer.valueOf(importedCross.getFemaleGid()), importedCross.getMaleGids(),
+				optionalGid)) {
+				continue;
+			}
 
 			final Integer gid = importedCross.getGid() != null ? Integer.valueOf(importedCross.getGid()) : null;
 
