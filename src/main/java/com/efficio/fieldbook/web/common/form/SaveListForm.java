@@ -44,6 +44,8 @@ public class SaveListForm {
 
 	private String listOwner;
 
+	private Boolean omitAlertedCrosses;
+
 	public String getParentId() {
 		return this.parentId;
 	}
@@ -177,5 +179,13 @@ public class SaveListForm {
 
 	public void setListOwner(final String listOwner) {
 		this.listOwner = listOwner;
+	}
+
+	public Boolean getOmitAlertedCrosses() {
+		return this.omitAlertedCrosses;
+	}
+
+	public void setOmitAlertedCrosses(final Boolean omitAlertedCrosses) {
+		this.omitAlertedCrosses = omitAlertedCrosses;
 	}
 }

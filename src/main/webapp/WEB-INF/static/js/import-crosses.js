@@ -91,6 +91,7 @@ var ImportCrosses = {
 		$('#presetName').val('');
 		$('#checkExistingCrosses').prop('checked', false);
 		$('#showOnlyRecordsWithAlerts').prop('checked', false);
+		$('#omitAlertedCrossesCheckbox').prop('checked', false);
 	},
 
 	hasPlotDuplicate: function() {
@@ -124,12 +125,16 @@ var ImportCrosses = {
 			$('#crossSettingsModal').removeClass('import-crosses-from-file');
 		});
 
+
 		$('#openCrossListNextButton').off('click');
 		$('#openCrossListNextButton').on('click', function() {
 			$('#openCrossesListModal').modal('hide');
 			// delete temporary list created from Design Crosses
 			ImportCrosses.deleteCrossList(createdCrossesListId)
-				.done(ImportCrosses.openSaveListModal)
+				.done(function () {
+					var omitAlertedCrosses = $('#omitAlertedCrossesCheckbox').is(':checked');
+					ImportCrosses.openSaveListModal(omitAlertedCrosses);
+				})
 				.fail(function () {
 					showErrorMessage('', 'Could not delete cross list');
 				});
@@ -369,7 +374,7 @@ var ImportCrosses = {
 			}
 		});
 	},
-	openSaveListModal: function() {
+	openSaveListModal: function(omitAlertedCrosses) {
 		'use strict';
 		var  germplasmTreeNode = $('#germplasmFolderTree').dynatree('getTree');
 		//TODO handle errors for ajax request
@@ -379,6 +384,7 @@ var ImportCrosses = {
 			cache: false,
 			success: function(html) {
 				$('#saveGermplasmRightSection').html(html);
+				$('#omitAlertedCrosses').val(omitAlertedCrosses);
 				$('#saveListTreeModal').modal({
 					show: true,
 					keyboard: true,
@@ -460,8 +466,10 @@ $(document).ready(function() {
 	$('#checkExistingCrosses').on('change', function() {
 		if ( $('#checkExistingCrosses').is(':checked')) {
 			$('#showOnlyRecordsWithAlertsDiv').removeClass('fbk-hide');
+			$('#omitAlertedCrossesDiv').removeClass('fbk-hide');
 		} else {
 			$('#showOnlyRecordsWithAlertsDiv').addClass('fbk-hide');
+			$('#omitAlertedCrossesDiv').addClass('fbk-hide');
 		}
 	});
 });
