@@ -7,15 +7,15 @@ var ImportCrosses = {
 	isFileCrossesImport: true,
 	hasHybridMethod: false,
 	hybridMethods: null,
-	showPopup: function() {
+	showPopup: function () {
 		'use strict';
 		$('#fileupload-import-crosses').val('');
-		$('.import-crosses-section .modal').modal({ backdrop: 'static', keyboard: true });
+		$('.import-crosses-section .modal').modal({backdrop: 'static', keyboard: true});
 		$('.import-crosses-section .modal .fileupload-exists').click();
 		ImportCrosses.showFavoriteLocationsOnly = true;
 	},
 
-	doSubmitImport: function() {
+	doSubmitImport: function () {
 		'use strict';
 
 		if ($('#fileupload-import-crosses').val() === '') {
@@ -23,7 +23,7 @@ var ImportCrosses = {
 			return false;
 		}
 
-		ImportCrosses.submitImport($('.import-crosses-section')).done(function(resp) {
+		ImportCrosses.submitImport($('.import-crosses-section')).done(function (resp) {
 
 			if (!resp.isSuccess) {
 				createErrorNotification(crossingImportErrorHeader, resp.error.join('<br/>'));
@@ -46,15 +46,15 @@ var ImportCrosses = {
 
 
 			if (resp.isChoosingListOwnerNeeded) {
-				$('#chooseListOwner').modal({ backdrop: 'static', keyboard: true });
+				$('#chooseListOwner').modal({backdrop: 'static', keyboard: true});
 				$('#chooseListOwner').addClass('import-crosses-from-file');
 
 				$('#goBackToImportFileCrossesButton').off('click');
-				$('#goBackToImportFileCrossesButton').on('click', function() {
+				$('#goBackToImportFileCrossesButton').on('click', function () {
 					ImportCrosses.goBackToPage('#chooseListOwner', '.import-crosses-section .modal');
 				});
 
-				$('#chooseListOwnerNextButton').on('click', function() {
+				$('#chooseListOwnerNextButton').on('click', function () {
 					$('#chooseListOwner').modal('hide');
 					setTimeout(ImportCrosses.showPlotDuplicateConfirmation, 500);
 
@@ -68,9 +68,9 @@ var ImportCrosses = {
 
 	},
 
-	openBreedingModal: function() {
+	openBreedingModal: function () {
 		'use strict';
-		$('#crossingBreedingMethodModal').modal({ backdrop: 'static', keyboard: true });
+		$('#crossingBreedingMethodModal').modal({backdrop: 'static', keyboard: true});
 		var $scope = angular.element('#crossingBreedingMethodModal').scope();
 		$scope.init(createdCrossesListId == null || createdCrossesListId == 0);
 		$scope.$apply();
@@ -81,9 +81,9 @@ var ImportCrosses = {
 		$('#sequenceNumberDigits').select2('val', '');
 		$('#crossSuffix').val('');
 		$('input:radio[name=hasPrefixSpace][value=' + false + ']').prop('checked', true);
-		$('input:radio[name=hasSuffixSpace][value=' +false + ']').prop('checked', true);
-		$('input:radio[name=manualNamingSettings][value=' +false + ']').prop('checked', true);
-		$('input:radio[name=hasParentageDesignationName][value=' +false + ']').prop('checked', true);
+		$('input:radio[name=hasSuffixSpace][value=' + false + ']').prop('checked', true);
+		$('input:radio[name=manualNamingSettings][value=' + false + ']').prop('checked', true);
+		$('input:radio[name=hasParentageDesignationName][value=' + false + ']').prop('checked', true);
 		$('#parentageDesignationSeparator').val('/');
 		$('#startingSequenceNumber').val('');
 		$('#locationDropdown').select2('val', '');
@@ -94,7 +94,7 @@ var ImportCrosses = {
 		$('#omitAlertedCrossesCheckbox').prop('checked', false);
 	},
 
-	hasPlotDuplicate: function() {
+	hasPlotDuplicate: function () {
 		'use strict';
 		if ($('#openCrossesListModal').data('hasPlotDuplicate') === true) {
 			return true;
@@ -102,24 +102,24 @@ var ImportCrosses = {
 		return false;
 	},
 
-	openCrossesList: function(createdCrossesListId) {
+	openCrossesList: function (createdCrossesListId) {
 		'use strict';
 
 
-		$('#openCrossesListModal').one('shown.bs.modal', function() {
+		$('#openCrossesListModal').one('shown.bs.modal', function () {
 			// After the modal window is shown, make sure that the table header is properly adjusted.
 			$('#preview-crosses-table').resize();
-		}).modal({ backdrop: 'static', keyboard: true });
+		}).modal({backdrop: 'static', keyboard: true});
 
 		if (ImportCrosses.isFileCrossesImport) {
 			$('#openCrossesListModal').addClass('import-crosses-from-file');
 		}
 
-		$('#openCrossesListModal').on('hidden.bs.modal', function() {
+		$('#openCrossesListModal').on('hidden.bs.modal', function () {
 			$('#openCrossesListModal').removeClass('import-crosses-from-file');
 		});
 
-		$('#crossSettingsModal').on('hidden.bs.modal', function() {
+		$('#crossSettingsModal').on('hidden.bs.modal', function () {
 			//we should clear the form and form fields on closing as we are going to reuse it later
 			//TODO clear other fields as well, some of them need to set the default value back
 			$('#crossSettingsModal').removeClass('import-crosses-from-file');
@@ -127,7 +127,7 @@ var ImportCrosses = {
 
 
 		$('#openCrossListNextButton').off('click');
-		$('#openCrossListNextButton').on('click', function() {
+		$('#openCrossListNextButton').on('click', function () {
 			$('#openCrossesListModal').modal('hide');
 			// delete temporary list created from Design Crosses
 			ImportCrosses.deleteCrossList(createdCrossesListId)
@@ -141,46 +141,46 @@ var ImportCrosses = {
 		});
 
 		$('#goBackToNamingModal').off('click');
-		$('#goBackToNamingModal').on('click', function() {
+		$('#goBackToNamingModal').on('click', function () {
 			ImportCrosses.goBackToPage('#openCrossesListModal', '#crossSettingsModal');
 		});
 
-		return ImportCrosses.getImportedCrossesTable(createdCrossesListId).done(function(response) {
+		return ImportCrosses.getImportedCrossesTable(createdCrossesListId).done(function (response) {
 			if (response.isSuccess === 0) {
 				showErrorMessage('', response.error);
 				return;
 			}
 			var checkExistingCrosses = $('#checkExistingCrosses').is(':checked');
-			new  BMS.Fieldbook.PreviewCrossesDataTable('#preview-crosses-table', response.listDataTable, response.tableHeaderList,
+			new BMS.Fieldbook.PreviewCrossesDataTable('#preview-crosses-table', response.listDataTable, response.tableHeaderList,
 				response.isImport, checkExistingCrosses);
 		}).fail(function (jqXHR, textStatus) {
 			showErrorMessage('', textStatus);
 		});
 	},
 
-	viewExistingCrosses: function(femaleGID, maleGIDs, cross, breedingMethodId, gid) {
+	viewExistingCrosses: function (femaleGID, maleGIDs, cross, breedingMethodId, gid) {
 		$('#openCrossesListModal').modal('hide');
-		$('#existingCrossesModal').one('shown.bs.modal', function() {
+		$('#existingCrossesModal').one('shown.bs.modal', function () {
 			$('#existingCrossesModal .modal-title').html(cross);
 			$('#existingCrossesModal .existing-cross-label').html('<i>Cross <b>' + cross + '</b> already exists in the database.</i>');
 			// After the modal window is shown, make sure that the table header is properly adjusted.
 			$('#existing-crosses-table').resize();
-		}).modal({ backdrop: 'static', keyboard: true });
+		}).modal({backdrop: 'static', keyboard: true});
 
 		$('#existingCrossesModal').on('hidden.bs.modal', function () {
-			$('#existingCrossesModal').modal ('hide');
-			$('#openCrossesListModal').one('shown.bs.modal', function() {
+			$('#existingCrossesModal').modal('hide');
+			$('#openCrossesListModal').one('shown.bs.modal', function () {
 				// After the modal window is shown, make sure that the table header is properly adjusted.
 				$('#preview-crosses-table').resize();
-			}).modal({ backdrop: 'static', keyboard: true });
+			}).modal({backdrop: 'static', keyboard: true});
 		});
 
-		return ImportCrosses.getExistingCrossesTable(femaleGID, maleGIDs, breedingMethodId, gid).done(function(response) {
+		return ImportCrosses.getExistingCrossesTable(femaleGID, maleGIDs, breedingMethodId, gid).done(function (response) {
 			if (response.isSuccess === 0) {
 				showErrorMessage('', response.error);
 				return;
 			}
-			new  BMS.Fieldbook.ExistingCrossesDataTable('#existing-crosses-table', response.listDataTable, response.tableHeaderList);
+			new BMS.Fieldbook.ExistingCrossesDataTable('#existing-crosses-table', response.listDataTable, response.tableHeaderList);
 		}).fail(function (jqXHR, textStatus) {
 			showErrorMessage('', textStatus);
 		});
@@ -199,17 +199,17 @@ var ImportCrosses = {
 		});
 	},
 
-	goBackToPage: function(hiddenModalSelector, shownModalSelector) {
+	goBackToPage: function (hiddenModalSelector, shownModalSelector) {
 		'use strict';
 		$(hiddenModalSelector).modal('hide');
-		$(shownModalSelector).one('shown.bs.modal', function() {
+		$(shownModalSelector).one('shown.bs.modal', function () {
 			// The bootstrap modal intermittently adds extra padding from the left that makes the layout of dialog content inconsistent when loading.
 			// We add this line to prevent that inconsistency with padding.
 			$(shownModalSelector).addClass('remove-excess-padding');
-		}).modal({ backdrop: 'static', keyboard: true });
+		}).modal({backdrop: 'static', keyboard: true});
 	},
 
-	getImportedCrossesTable: function(createdCrossesListId) {
+	getImportedCrossesTable: function (createdCrossesListId) {
 		'use strict';
 		var checkExistingCrosses = $('#checkExistingCrosses').is(':checked');
 		var crossesURL = ImportCrosses.CROSSES_URL + '/getImportedCrossesList' + '/' + checkExistingCrosses + '/' + (createdCrossesListId &&
@@ -223,7 +223,7 @@ var ImportCrosses = {
 			});
 	},
 
-	getExistingCrossesTable: function(femaleGID, maleGIDs, breedingMethodId, gid) {
+	getExistingCrossesTable: function (femaleGID, maleGIDs, breedingMethodId, gid) {
 		'use strict';
 		var crossesURL = ImportCrosses.CROSSES_URL + '/getExistingCrossesList' + '/' + femaleGID + '/' + maleGIDs + '/' + gid;
 		return $.ajax(
@@ -235,15 +235,15 @@ var ImportCrosses = {
 			});
 	},
 
-	submitImport: function($importCrossesForm) {
+	submitImport: function ($importCrossesForm) {
 		'use strict';
 		var deferred = $.Deferred();
 		$importCrossesForm.ajaxForm({
 			dataType: 'json',
-			success: function(response) {
+			success: function (response) {
 				deferred.resolve(response);
 			},
-			error: function(response) {
+			error: function (response) {
 				createErrorNotification(crossingImportErrorHeader, invalidImportedFile);
 				deferred.reject(response);
 			}
@@ -253,24 +253,9 @@ var ImportCrosses = {
 	},
 
 
-	showPlotDuplicateConfirmation: function() {
+	showPlotDuplicateConfirmation: function () {
 		'use strict';
 		if (ImportCrosses.hasPlotDuplicate()) {
-			/** Functionality temporarily suppress by the v4 public release.  See issue: BMS-3514 **/
-			/*	//show the confirmation now
-				$('#duplicate-crosses-modal input[type=checkbox]').prop('checked', ImportCrosses.preservePlotDuplicates);
-
-				$('#duplicate-crosses-modal').modal({ backdrop: 'static', keyboard: true });
-
-				$('#continue-duplicate-crosses').off('click');
-				$('#continue-duplicate-crosses').on('click', function() {
-					//get the value of the checkbox
-					ImportCrosses.preservePlotDuplicates = $('#duplicate-crosses-modal input[type=checkbox]').is(':checked');
-					$('#duplicate-crosses-modal').modal('hide');
-					setTimeout(ImportCrosses.showImportSettingsPopup, 500);
-				});
-				*/
-			/** End Functionality temporarily suppress **/
 			/** Palliative for BMS-3514 **/
 			ImportCrosses.preservePlotDuplicates = true;
 			ImportCrosses.openBreedingModal();
@@ -280,10 +265,10 @@ var ImportCrosses = {
 		}
 	},
 
-	showImportSettingsPopup: function() {
+	showImportSettingsPopup: function () {
 		'use strict';
 		var crossSettingsPopupModal = $('#crossSettingsModal');
-		crossSettingsPopupModal.modal({ backdrop: 'static', keyboard: true });
+		crossSettingsPopupModal.modal({backdrop: 'static', keyboard: true});
 
 		$('#presetSettingsDelete').off('click');
 		$('#presetSettingsDelete').on('click', function () {
@@ -297,45 +282,45 @@ var ImportCrosses = {
 			crossSettingsPopupModal.data('open', '1');
 
 			var deleteModalElm = $('#fbk-delete-import-settings-confirm');
-			$('#fbk-delete-import-settings-confirm .yes').on('click', function() {
+			$('#fbk-delete-import-settings-confirm .yes').on('click', function () {
 				deleteModalElm.modal('hide');
 				deleteModalElm.data('open', '1');
 				setTimeout(function () {
-					crossSettingsPopupModal.modal({ backdrop: 'static', keyboard: true })
+					crossSettingsPopupModal.modal({backdrop: 'static', keyboard: true})
 					ImportCrosses.onDeleteSettingOk(data);
 				}, 500)
 			});
 
-			$('#fbk-delete-import-settings-confirm .no').on('click', function() {
+			$('#fbk-delete-import-settings-confirm .no').on('click', function () {
 				deleteModalElm.modal('hide');
 				deleteModalElm.data('open', '1');
 				setTimeout(function () {
-					crossSettingsPopupModal.modal({ backdrop: 'static', keyboard: true })
+					crossSettingsPopupModal.modal({backdrop: 'static', keyboard: true})
 				}, 500)
 			});
-			deleteModalElm.modal({ backdrop: 'static', keyboard: true });
+			deleteModalElm.modal({backdrop: 'static', keyboard: true});
 		});
 
 
 		$('#goBackToSelectBreedingMethodModal').off('click');
-		$('#goBackToSelectBreedingMethodModal').on('click', function() {
+		$('#goBackToSelectBreedingMethodModal').on('click', function () {
 			ImportCrosses.showFavoriteLoationsOnly = $('#locationFavoritesOnlyCheckbox').is(':checked');
 			ImportCrosses.showAllLocationOnly = $('#showAllLocationOnlyRadio').is(':checked');
 			ImportCrosses.goBackToPage('#crossSettingsModal', '#crossingBreedingMethodModal');
 		});
 	},
 
-	onDeleteSettingOk: function(data) {
+	onDeleteSettingOk: function (data) {
 
 	},
 
-	updateSampleParentageDesignation: function() {
+	updateSampleParentageDesignation: function () {
 		'use strict';
 		var value = $('#parentageDesignationSeparator').val();
 		$('#sampleParentageDesignation').text('FEMALE-123' + value + 'MALE-456');
 	},
 
-	deleteImportSettings: function(programPresetId) {
+	deleteImportSettings: function (programPresetId) {
 		'use strict';
 		return $.ajax({
 			url: ImportCrosses.CROSSES_URL + '/deleteSetting/' + programPresetId,
@@ -349,7 +334,7 @@ var ImportCrosses = {
 		});
 	},
 
-	exportCrosses: function() {
+	exportCrosses: function () {
 		'use strict';
 		//TODO handle errors for ajax request
 		return $.ajax({
@@ -359,9 +344,9 @@ var ImportCrosses = {
 		});
 	},
 
-	downloadCrosses: function() {
+	downloadCrosses: function () {
 		'use strict';
-		ImportCrosses.exportCrosses().done(function(result) {
+		ImportCrosses.exportCrosses().done(function (result) {
 			if (result.isSuccess) {
 				var downloadUrl = ImportCrosses.CROSSES_URL + '/download/file';
 
@@ -374,15 +359,15 @@ var ImportCrosses = {
 			}
 		});
 	},
-	openSaveListModal: function(omitAlertedCrosses) {
+	openSaveListModal: function (omitAlertedCrosses) {
 		'use strict';
-		var  germplasmTreeNode = $('#germplasmFolderTree').dynatree('getTree');
+		var germplasmTreeNode = $('#germplasmFolderTree').dynatree('getTree');
 		//TODO handle errors for ajax request
 		$.ajax({
 			url: '/Fieldbook/ListTreeManager/saveCrossesList/',
 			type: 'GET',
 			cache: false,
-			success: function(html) {
+			success: function (html) {
 				$('#saveGermplasmRightSection').html(html);
 				$('#omitAlertedCrosses').val(omitAlertedCrosses);
 				$('#saveListTreeModal').modal({
@@ -399,13 +384,13 @@ var ImportCrosses = {
 					germplasmTreeNode.getNodeByKey('LOCAL').activate();
 				}
 			},
-			error: function() {
+			error: function () {
 				//TODO process errors
 			}
 		});
 	},
 
-	openGermplasmModalFromExistingCrossesView : function (gid) {
+	openGermplasmModalFromExistingCrossesView: function (gid) {
 		'use strict';
 		$('#existingCrossesModal').off('hidden.bs.modal');
 		$('#existingCrossesModal').off('shown.bs.modal');
@@ -413,58 +398,58 @@ var ImportCrosses = {
 
 		const callback = function () {
 			$('#existingCrossesModal').on('hidden.bs.modal', function () {
-				$('#existingCrossesModal').modal ('hide');
-				$('#openCrossesListModal').one('shown.bs.modal', function() {
+				$('#existingCrossesModal').modal('hide');
+				$('#openCrossesListModal').one('shown.bs.modal', function () {
 					// After the modal window is shown, make sure that the table header is properly adjusted.
 					$('#preview-crosses-table').resize();
-				}).modal({ backdrop: 'static', keyboard: true });
+				}).modal({backdrop: 'static', keyboard: true});
 			});
-			$('#existingCrossesModal').one('shown.bs.modal', function() {
+			$('#existingCrossesModal').one('shown.bs.modal', function () {
 				// After the modal window is shown, make sure that the table header is properly adjusted.
 				$('#existing-crosses-table').resize();
-			}).modal({ backdrop: 'static', keyboard: true });
+			}).modal({backdrop: 'static', keyboard: true});
 		}
 		openGermplasmDetailsPopup(gid, callback);
 	},
 
-	openGermplasmModal : function (gid) {
+	openGermplasmModal: function (gid) {
 		'use strict';
 		$('#openCrossesListModal').off('hidden.bs.modal');
 		$('#openCrossesListModal').off('shown.bs.modal');
 		$('#openCrossesListModal').modal('hide');
 
-		const callback = function() {
-			$('#openCrossesListModal').one('shown.bs.modal', function() {
+		const callback = function () {
+			$('#openCrossesListModal').one('shown.bs.modal', function () {
 				// After the modal window is shown, make sure that the table header is properly adjusted.
 				$('#preview-crosses-table').resize();
-			}).modal({ backdrop: 'static', keyboard: true });
+			}).modal({backdrop: 'static', keyboard: true});
 		}
 
 		openGermplasmDetailsPopup(gid, callback);
 	}
 };
 
-$(document).ready(function() {
+$(document).ready(function () {
 	'use strict';
 	$('.import-crosses').off('click');
 	$('.btn-import-crosses').off('click');
 	$('.import-crosses').on('click', ImportCrosses.showPopup);
 	$('.btn-import-crosses').on('click', ImportCrosses.doSubmitImport);
-	$('.import-crosses-section .modal').on('hide.bs.modal', function() {
+	$('.import-crosses-section .modal').on('hide.bs.modal', function () {
 		$('div.import-crosses-file-upload').parent().parent().removeClass('has-error');
 	});
 
 	// handler for the showing on records with Alerts filtering
-	$('#showOnlyRecordsWithAlerts').on('change', function() {
-		if ( $('#showOnlyRecordsWithAlerts').is(':checked')) {
+	$('#showOnlyRecordsWithAlerts').on('change', function () {
+		if ($('#showOnlyRecordsWithAlerts').is(':checked')) {
 			$('#preview-crosses-table').DataTable().column(0).search('View Existing Crosses', true, false).draw();
 		} else {
 			$('#preview-crosses-table').DataTable().column(0).search('', true, false).draw();
 		}
 	});
 
-	$('#checkExistingCrosses').on('change', function() {
-		if ( $('#checkExistingCrosses').is(':checked')) {
+	$('#checkExistingCrosses').on('change', function () {
+		if ($('#checkExistingCrosses').is(':checked')) {
 			$('#showOnlyRecordsWithAlertsDiv').removeClass('fbk-hide');
 			$('#omitAlertedCrossesDiv').removeClass('fbk-hide');
 		} else {

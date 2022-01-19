@@ -12,24 +12,36 @@
 package com.efficio.fieldbook.web.common.form;
 
 // TODO: Auto-generated Javadoc
+
+
 /**
  * The Class SaveListForm.
  */
 public class SaveListForm {
 
-	/** The list name. */
+	/**
+	 * The list name.
+	 */
 	private String listName;
 
-	/** The list description. */
+	/**
+	 * The list description.
+	 */
 	private String listDescription;
 
-	/** The list type. */
+	/**
+	 * The list type.
+	 */
 	private String listType;
 
-	/** The list date. */
+	/**
+	 * The list date.
+	 */
 	private String listDate;
 
-	/** The list notes. */
+	/**
+	 * The list notes.
+	 */
 	private String listNotes;
 
 	// to be use for dynamic of advance list
@@ -44,7 +56,7 @@ public class SaveListForm {
 
 	private String listOwner;
 
-	private Boolean omitAlertedCrosses;
+	private boolean omitAlertedCrosses;
 
 	public String getParentId() {
 		return this.parentId;
@@ -74,8 +86,7 @@ public class SaveListForm {
 	/**
 	 * Sets the list name.
 	 *
-	 * @param listName
-	 *            the new list name
+	 * @param listName the new list name
 	 */
 	public void setListName(final String listName) {
 		this.listName = listName;
@@ -93,8 +104,7 @@ public class SaveListForm {
 	/**
 	 * Sets the list description.
 	 *
-	 * @param listDescription
-	 *            the new list description
+	 * @param listDescription the new list description
 	 */
 	public void setListDescription(final String listDescription) {
 		this.listDescription = listDescription;
@@ -112,8 +122,7 @@ public class SaveListForm {
 	/**
 	 * Sets the list type.
 	 *
-	 * @param listType
-	 *            the new list type
+	 * @param listType the new list type
 	 */
 	public void setListType(final String listType) {
 		this.listType = listType;
@@ -131,8 +140,7 @@ public class SaveListForm {
 	/**
 	 * Sets the list date.
 	 *
-	 * @param listDate
-	 *            the new list date
+	 * @param listDate the new list date
 	 */
 	public void setListDate(final String listDate) {
 		this.listDate = listDate;
@@ -150,8 +158,7 @@ public class SaveListForm {
 	/**
 	 * Sets the list notes.
 	 *
-	 * @param listNotes
-	 *            the new list notes
+	 * @param listNotes the new list notes
 	 */
 	public void setListNotes(final String listNotes) {
 		this.listNotes = listNotes;
@@ -181,11 +188,11 @@ public class SaveListForm {
 		this.listOwner = listOwner;
 	}
 
-	public Boolean getOmitAlertedCrosses() {
+	public boolean getOmitAlertedCrosses() {
 		return this.omitAlertedCrosses;
 	}
 
-	public void setOmitAlertedCrosses(final Boolean omitAlertedCrosses) {
+	public void setOmitAlertedCrosses(final boolean omitAlertedCrosses) {
 		this.omitAlertedCrosses = omitAlertedCrosses;
 	}
 }
