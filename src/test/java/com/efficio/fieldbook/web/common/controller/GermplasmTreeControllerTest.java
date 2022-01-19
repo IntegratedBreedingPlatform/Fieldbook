@@ -808,6 +808,7 @@ public class GermplasmTreeControllerTest {
 		form.setListNotes(GermplasmTreeControllerTest.LIST_NOTES);
 		form.setListType(GermplasmTreeControllerTest.LIST_TYPE);
 		form.setParentId(GermplasmTreeControllerTest.LIST_PARENT_ID);
+		form.setOmitAlertedCrosses(false);
 		return form;
 	}
 

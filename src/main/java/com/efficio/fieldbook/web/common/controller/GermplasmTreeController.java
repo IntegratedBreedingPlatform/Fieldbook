@@ -319,13 +319,19 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 			final ImportedCrossesList importedCrossesList = this.userSelection.getImportedCrossesList();
 
 			final Boolean isTrimmed = this.applyNamingSettingToCrosses(listDataItems, germplasmList, crossSetting, importedCrossesList, germplasmStudySourceList, form.getOmitAlertedCrosses());
-			// Set imported user as owner of the list
-			germplasmList.setUserId(importedCrossesList.getUserId());
 
-			final Integer germplasmListId = this.fieldbookMiddlewareService
+			if (listDataItems.isEmpty()) {
+				throw new MiddlewareException("No crosses to save.");
+			} else {
+				// Set imported user as owner of the list
+				germplasmList.setUserId(importedCrossesList.getUserId());
+
+				final Integer germplasmListId = this.fieldbookMiddlewareService
 					.saveGermplasmList(this.contextUtil.getProjectInContext().getCropType().getCropName(), listDataItems, germplasmList, crossSetting.isApplyNewGroupToPreviousCrosses());
 
-			return new GermplasmListResult().withGermplasmListId(germplasmListId).withIsTrimmed(isTrimmed).withNamesChanged(false);
+				return new GermplasmListResult().withGermplasmListId(germplasmListId).withIsTrimmed(isTrimmed).withNamesChanged(false);
+			}
+
 		} else {
 			throw new IllegalArgumentException("Unknown germplasm list type supplied when saving germplasm list");
 		}
