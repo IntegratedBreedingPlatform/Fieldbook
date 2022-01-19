@@ -69,7 +69,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
+import java.util.Optional;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GermplasmTreeControllerTest {
@@ -265,6 +265,60 @@ public class GermplasmTreeControllerTest {
 		Assert.assertEquals("isNamesChanged should be 0", 0, result.get("isNamesChanged"));
 		Mockito.verify(this.crossingService).applyCrossSetting(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any());
 		Mockito.verify(this.germplasmStudySourceService).saveGermplasmStudySources(ArgumentMatchers.anyList());
+	}
+
+	@Test
+	public void testSaveCrossesList_OmitAlertedCrosses_OneCrossIsOmitted() {
+		final SaveListForm form = this.createSaveListForm();
+		form.setOmitAlertedCrosses(true);
+		form.setGermplasmListType(GermplasmTreeController.GERMPLASM_LIST_TYPE_CROSS);
+
+		final ImportedCross cross1 = this.userSelection.getImportedCrossesList().getImportedCrosses().get(0);
+
+		// Set the first cross to have existing crosses
+		Mockito.when(this.germplasmDataManager.hasExistingCrosses(Integer.valueOf(cross1.getFemaleGid()),
+			cross1.getMaleGids(), Optional.of(Integer.valueOf(cross1.getGid())))).thenReturn(true);
+
+		final Map<String, Object> result = this.controller.savePost(form, Mockito.mock(Model.class));
+
+		Assert.assertEquals("isSuccess Value should be 1", 1, result.get("isSuccess"));
+		Assert.assertEquals("germplasmListId should be " + SAVED_GERMPLASM_ID, SAVED_GERMPLASM_ID, result.get("germplasmListId"));
+		Assert.assertEquals("Unique ID should be LIST IDENTIFIER", form.getListIdentifier(), result.get("uniqueId"));
+		Assert.assertEquals("List Name should be LIST 1", form.getListName(), result.get("listName"));
+		Assert.assertEquals("isNamesChanged should be 0", 0, result.get("isNamesChanged"));
+		Mockito.verify(this.crossingService).applyCrossSetting(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any());
+		Mockito.verify(this.germplasmStudySourceService).saveGermplasmStudySources(ArgumentMatchers.anyList());
+
+		final ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
+		final ArgumentCaptor<List> listCaptor = ArgumentCaptor.forClass(List.class);
+		final ArgumentCaptor<GermplasmList> germplasmListCaptor = ArgumentCaptor.forClass(GermplasmList.class);
+		final ArgumentCaptor<Boolean> booleanCaptor = ArgumentCaptor.forClass(Boolean.class);
+
+		Mockito.verify(this.fieldbookMiddlewareService).saveGermplasmList(stringCaptor.capture(), listCaptor.capture(),
+			germplasmListCaptor.capture(), booleanCaptor.capture());
+
+		Assert.assertEquals("Only one cross should be created", 1, listCaptor.getValue().size());
+	}
+
+	@Test
+	public void testSaveCrossesList_OmitAlertedCrosses_AllCrossesAreOmitted() {
+		final SaveListForm form = this.createSaveListForm();
+		form.setOmitAlertedCrosses(true);
+		form.setGermplasmListType(GermplasmTreeController.GERMPLASM_LIST_TYPE_CROSS);
+
+		final ImportedCross cross1 = this.userSelection.getImportedCrossesList().getImportedCrosses().get(0);
+
+		// Set all crosses to have existing crosses
+		Mockito.when(this.germplasmDataManager.hasExistingCrosses(Mockito.any(),
+			Mockito.anyList(), Mockito.any())).thenReturn(true);
+
+		final Map<String, Object> result = this.controller.savePost(form, Mockito.mock(Model.class));
+		Assert.assertEquals("isSuccess Value should be 0", 0, result.get("isSuccess"));
+		Assert.assertEquals("No crosses to save.", result.get("message"));
+
+		Mockito.verify(this.crossingService).applyCrossSetting(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any());
+		Mockito.verify(this.germplasmStudySourceService, Mockito.times(0)).saveGermplasmStudySources(ArgumentMatchers.anyList());
+
 	}
 
 	@Test
