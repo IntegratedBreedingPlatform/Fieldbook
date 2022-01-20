@@ -515,7 +515,7 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 
 		final GermplasmList germplasmList =
 				new GermplasmList(null, listName, dateLong, listType, currentUserId, description, parent, status,
-						saveListForm.getListNotes());
+						saveListForm.getListNotes(), null);
 
 		// If the germplasm list is saved in 'Crop lists' folder, the programUUID should be null
 		// so that the germplasm list will be accessible to all programs of the same crop.
