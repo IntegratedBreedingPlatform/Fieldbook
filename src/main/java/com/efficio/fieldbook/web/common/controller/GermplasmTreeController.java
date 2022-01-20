@@ -519,7 +519,9 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 
 		// If the germplasm list is saved in 'Crop lists' folder, the programUUID should be null
 		// so that the germplasm list will be accessible to all programs of the same crop.
-		if (GermplasmTreeController.CROP_LISTS.equals(saveListForm.getParentId())) {
+
+		if (GermplasmTreeController.CROP_LISTS.equals(saveListForm.getParentId()) || (parent != null && StringUtils.isEmpty(
+			parent.getProgramUUID()))) {
 			// list should be locked by default if it is saved in 'Crop lists' folder.
 			germplasmList.setStatus(LOCKED_LIST_STATUS);
 		} else {
@@ -1096,15 +1098,17 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 		try {
 
 			final GermplasmList gpList = this.germplasmListManager.getGermplasmListById(Integer.parseInt(sourceId));
+			GermplasmList parent = null;
 
 			if (targetId == null || PROGRAM_LISTS.equals(targetId) || CROP_LISTS.equals(targetId)) {
 				gpList.setParent(null);
 			} else {
-				final GermplasmList parent = this.germplasmListManager.getGermplasmListById(Integer.parseInt(targetId));
+			    parent = this.germplasmListManager.getGermplasmListById(Integer.parseInt(targetId));
 				gpList.setParent(parent);
 			}
 
-			if (CROP_LISTS.equals(targetId)) {
+			if (CROP_LISTS.equals(targetId) || (parent != null && StringUtils.isEmpty(parent.getProgramUUID()) && !StringUtils.isEmpty(
+				gpList.getProgramUUID()) && !GermplasmList.FOLDER_TYPE.equals(gpList.getType()))) {
 				gpList.setProgramUUID(null);
 				gpList.setStatus(LOCKED_LIST_STATUS);
 			} else {
