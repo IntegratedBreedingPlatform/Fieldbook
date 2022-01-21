@@ -136,14 +136,16 @@
 				return datasetService.getAllVariables(datasetId).then(function (columnsData) {
 					var importedData = $scope.importedData[0];
 					var newVariables = [];
-					var output = [];
+					var existingVariableNames = [];
+					var existingVariableAliases = [];
 
 					$.each(columnsData, function (i, e) {
-						output.push(e.alias)
+						existingVariableAliases.push(e.alias)
+						existingVariableNames.push(e.name)
 					});
 
 					for (var i = 0; i < importedData.length; i++) {
-						if (!output.includes(importedData[i])) {
+						if (!existingVariableAliases.includes(importedData[i]) && !existingVariableNames.includes(importedData[i])) {
 							newVariables.push(importedData[i]);
 						}
 					}
