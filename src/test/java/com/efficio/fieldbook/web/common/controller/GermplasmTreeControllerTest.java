@@ -291,7 +291,7 @@ public class GermplasmTreeControllerTest {
 		Mockito.verify(this.germplasmStudySourceService).saveGermplasmStudySources(ArgumentMatchers.anyList());
 
 		final ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
-		final ArgumentCaptor<List> listCaptor = ArgumentCaptor.forClass(List.class);
+		final ArgumentCaptor<List<Pair<Germplasm, GermplasmListData>>> listCaptor = ArgumentCaptor.forClass(List.class);
 		final ArgumentCaptor<GermplasmList> germplasmListCaptor = ArgumentCaptor.forClass(GermplasmList.class);
 		final ArgumentCaptor<Boolean> booleanCaptor = ArgumentCaptor.forClass(Boolean.class);
 
@@ -299,6 +299,8 @@ public class GermplasmTreeControllerTest {
 			germplasmListCaptor.capture(), booleanCaptor.capture());
 
 		Assert.assertEquals("Only one cross should be created", 1, listCaptor.getValue().size());
+		Assert.assertEquals(1, listCaptor.getValue().get(0).getRight().getEntryId().intValue());
+		Assert.assertEquals("1", listCaptor.getValue().get(0).getRight().getEntryCode());
 	}
 
 	@Test

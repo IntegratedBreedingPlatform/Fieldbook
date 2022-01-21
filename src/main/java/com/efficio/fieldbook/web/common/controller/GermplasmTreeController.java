@@ -572,6 +572,8 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 				this.userSelection.getWorkbook().getMeasurementDatesetId(),
 				Collections.singleton(1), sourcePlotNumbers);
 		}
+
+		Integer entryNumber = 0;
 		for (final ImportedCross importedCross : importedGermplasmList) {
 
 			// Skip cross that is already existing in the database
@@ -582,7 +584,7 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 				optionalGid)) {
 				continue;
 			}
-
+			entryNumber++;
 			final Integer gid = importedCross.getGid() != null ? Integer.valueOf(importedCross.getGid()) : null;
 
 			final Germplasm germplasm = new Germplasm();
@@ -591,8 +593,6 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 
 			// Create list data items to save - Map<Germplasm,
 			// GermplasmListData>
-			final Integer entryNumber = importedCross.getEntryNumber();
-			final String entryCode = importedCross.getEntryCode();
 			final String seedSource = importedCross.getSource();
 			final String designation = importedCross.getDesig();
 			final String notes = importedCross.getNotes();
@@ -617,7 +617,8 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 			}
 
 			final GermplasmListData listData =
-				this.createGermplasmListData(germplasmList, gid, entryNumber, entryCode, seedSource, designation, notes, crossingDate,
+				this.createGermplasmListData(germplasmList, gid, entryNumber, String.valueOf(entryNumber), seedSource, designation, notes,
+					crossingDate,
 					groupName, listDataId, listDataStatus, localRecordId);
 
 			listDataItems.add(new ImmutablePair<>(germplasm, listData));
