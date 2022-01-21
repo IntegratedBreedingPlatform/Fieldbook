@@ -439,12 +439,26 @@ $(document).ready(function () {
 		$('div.import-crosses-file-upload').parent().parent().removeClass('has-error');
 	});
 
-	// handler for the showing on records with Alerts filtering
-	$('#showOnlyRecordsWithAlerts').on('change', function () {
+	var showOnlyRecordsWithAlerts = () => {
 		if ($('#showOnlyRecordsWithAlerts').is(':checked')) {
 			$('#preview-crosses-table').DataTable().column(0).search('View Existing Crosses', true, false).draw();
 		} else {
 			$('#preview-crosses-table').DataTable().column(0).search('', true, false).draw();
+		}
+	};
+
+	// handler for the showing on records with Alerts filtering
+	$('#showOnlyRecordsWithAlerts').on('change', showOnlyRecordsWithAlerts);
+
+	// When Omit Alerted Crosses is checked, only show the records without the alerted crosses
+	$('#omitAlertedCrossesCheckbox').on('change', function () {
+		if ($('#omitAlertedCrossesCheckbox').is(':checked')) {
+			$('#showOnlyRecordsWithAlerts').attr('disabled', true);
+			// Show only records without alerted crosses.
+			$('#preview-crosses-table').DataTable().column(0).search('^$', true, false).draw();
+		} else {
+			$('#showOnlyRecordsWithAlerts').removeAttr('disabled');
+			showOnlyRecordsWithAlerts();
 		}
 	});
 
