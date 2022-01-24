@@ -669,6 +669,7 @@ public class GermplasmTreeControllerTest {
 
 		final SaveListForm saveListForm = this.createSaveListForm();
 		final GermplasmList parentListFolder = new GermplasmList();
+		parentListFolder.setProgramUUID(TEST_PROGRAM_UUID);
 		parentListFolder.setType(GermplasmList.FOLDER_TYPE);
 		Mockito.when(this.germplasmListManager.getGermplasmListById(Integer.valueOf(LIST_PARENT_ID))).thenReturn(parentListFolder);
 
