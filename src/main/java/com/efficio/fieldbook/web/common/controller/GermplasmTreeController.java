@@ -1035,6 +1035,7 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 				newList = new GermplasmList(null, folderName,
 					Long.valueOf(new SimpleDateFormat(GermplasmTreeController.DATE_FORMAT).format(Calendar.getInstance().getTime())),
 					GermplasmTreeController.FOLDER, userId, folderName, null, 0);
+				newList.setProgramUUID(programUUID);
 			} else {
 				gpList = this.germplasmListManager.getGermplasmListById(Integer.parseInt(id));
 
@@ -1047,21 +1048,24 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 						newList = new GermplasmList(null, folderName, Long.valueOf(
 							new SimpleDateFormat(GermplasmTreeController.DATE_FORMAT).format(Calendar.getInstance().getTime())),
 							GermplasmTreeController.FOLDER, userId, folderName, null, 0);
+						newList.setProgramUUID(programUUID);
+
 					} else {
 						newList = new GermplasmList(null, folderName, Long.valueOf(
 							new SimpleDateFormat(GermplasmTreeController.DATE_FORMAT).format(Calendar.getInstance().getTime())),
 							GermplasmTreeController.FOLDER, userId, folderName, parent, 0);
+						newList.setProgramUUID(programUUID);
 					}
 				} else {
 					newList = new GermplasmList(null, folderName, Long.valueOf(
 						new SimpleDateFormat(GermplasmTreeController.DATE_FORMAT).format(Calendar.getInstance().getTime())),
 						GermplasmTreeController.FOLDER, userId, folderName, gpList, 0);
+					newList.setProgramUUID((gpList!=null) ? gpList.getProgramUUID(): programUUID);
 				}
 
 			}
 
 			newList.setDescription(folderName);
-			newList.setProgramUUID(programUUID);
 			final Integer germplasmListFolderId = this.germplasmListManager.addGermplasmList(newList);
 			resultsMap.put("id", germplasmListFolderId);
 			resultsMap.put(GermplasmTreeController.IS_SUCCESS, "1");
