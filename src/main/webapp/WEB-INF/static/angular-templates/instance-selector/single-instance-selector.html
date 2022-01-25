@@ -11,7 +11,7 @@
 		<td><input type="radio" ng-attr-name="single-instance-selector-group"
 				   value="{{instance[instanceIdProperty]}}"
 				   ng-change="onSelectInstance(instance[instanceIdProperty])"
-				   ng-model="selected[instanceIdProperty]" /></td>
+				   ng-model="selected[instanceIdProperty]" data-test="singleInstanceRadio"/></td>
 		<td>{{::instance.instanceNumber}}</td>
 		<td>{{::instance.locationName}} - ({{::instance.locationAbbreviation}})</td>
 	</tr>
