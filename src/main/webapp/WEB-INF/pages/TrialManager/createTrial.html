@@ -188,6 +188,9 @@
 									</li>
 								</ul>
                             </li>
+							<li ng-show="showCreateLotsAction()">
+								<a ng-click="openLotCreationModal()">Create lots</a>
+							</li>
 							<li>
 								<a th:href="@{/TrialManager}" th:text="#{study.studydetails.action.close.study}">Close Study</a>
 							</li>
@@ -203,9 +206,6 @@
 							</li>
 							<li ng-show="STABRAPP_URL">
 								<a href="" th:utext="#{study.studydetails.action.stabrapp}" ng-click="analyzeWithStaBrapp()"></a>
-							</li>
-							<li ng-show="showCreateLotsAction()">
-								<a ng-click="openLotCreationModal()">Create lots</a>
 							</li>
 						</ul>
 					</div>
