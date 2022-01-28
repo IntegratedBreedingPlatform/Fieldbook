@@ -11,7 +11,8 @@
 	};
 	var observationsChangedDeRegister = () => {
 	};
-
+	var createLotsFromSubObsRegister = () => {
+	};
 	var subObservationModule = angular.module('subObservation', ['visualization', 'germplasmDetailsModule']);
 	var TRIAL_INSTANCE = 8170,
 		GID = 8240,
@@ -25,10 +26,10 @@
 
 	subObservationModule.controller('SubObservationSetCtrl', ['$scope', '$rootScope', 'TrialManagerDataService', '$stateParams',
 		'DTOptionsBuilder', 'DTColumnBuilder', '$http', '$q', '$compile', 'studyInstanceService', 'datasetService',
-		'derivedVariableService', 'fileService', '$timeout', '$uibModal', 'visualizationModalService', 'studyContext', 'germplasmDetailsModalService',
+		'derivedVariableService', 'fileService', '$timeout', '$uibModal', 'visualizationModalService', 'studyContext', 'germplasmDetailsModalService', 'SEARCH_ORIGIN',
 		function ($scope, $rootScope, TrialManagerDataService, $stateParams, DTOptionsBuilder, DTColumnBuilder, $http, $q, $compile,
 				  studyInstanceService, datasetService, derivedVariableService, fileService, $timeout, $uibModal, visualizationModalService,
-				  studyContext, germplasmDetailsModalService
+				  studyContext, germplasmDetailsModalService, SEARCH_ORIGIN
 		) {
 
 			// used also in tests - to call $rootScope.$apply()
@@ -296,6 +297,45 @@
 							}
 						}).result.then(() => {
 							loadTable();
+						});
+					});
+				});
+			});
+
+			createLotsFromSubObsRegister();
+			createLotsFromSubObsRegister = $rootScope.$on('createLotsFromSubObsRegister', function (event) {
+				$scope.tableRenderedPromise.then(function () {
+					if (!$scope.validateSelection()) {
+						return;
+					}
+
+					let filter = Object.assign(getFilter(), {filteredNdExperimentIds: $scope.selectedItems.length ? $scope.selectedItems : null});
+
+					var searchRequest = {
+						studyId: studyContext.studyId,
+						datasetId: $scope.subObservationSet.dataset.datasetId,
+						instanceId: $scope.nested.selectedEnvironment.instanceId,
+						draftMode: $scope.isPendingView,
+						filter: filter
+					};
+
+					datasetService.saveSearchRequest(searchRequest, $scope.subObservationSet.dataset.datasetId).then((searchDto) => {
+						$uibModal.open({
+							templateUrl: '/Fieldbook/static/js/trialmanager/inventory/lot-creation/lot-creation-modal.html',
+							controller: 'LotCreationCtrl',
+							windowClass: 'modal-large',
+							resolve: {
+								searchResultDbId: function () {
+									return searchDto.result.searchResultDbId;
+								},
+								searchOrigin: function () {
+									return SEARCH_ORIGIN.MANAGE_STUDY_PLOT.$name;
+								}
+							}
+						}).result.finally(function () {
+							// Refresh and show the 'Inventory' tab
+							$rootScope.navigateToTab('inventory', {reload: true});
+							$rootScope.$broadcast('inventoryChanged');
 						});
 					});
 				});
