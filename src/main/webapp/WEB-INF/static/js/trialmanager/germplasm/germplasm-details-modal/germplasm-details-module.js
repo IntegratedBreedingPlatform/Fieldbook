@@ -5,6 +5,7 @@
         const germplasmDetailsModalService = {};
         germplasmDetailsModalService.openGermplasmDetailsModal = function (gid, callBackFunction) {
             germplasmDetailsModalService.modal = $uibModal.open({
+                windowClass: 'modal-extra-large',
                 templateUrl: '/Fieldbook/static/js/trialmanager/germplasm/germplasm-details-modal/germplasm-details-modal.html',
                 controller: function ($scope, $uibModalInstance, germplasmDetailsService, studyContext) {
 
@@ -33,7 +34,6 @@
                         });
                     }
                 },
-                windowClass: 'modal-extra-large',
             }).result.finally(function() {
                 setTimeout(function() {
                     if (callBackFunction) {

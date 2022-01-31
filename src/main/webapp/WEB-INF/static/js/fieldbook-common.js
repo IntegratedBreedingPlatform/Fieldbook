@@ -1279,6 +1279,13 @@ function closeModal(modalId) {
 	$('#' + modalId).modal('hide');
 }
 
+function openGermplasmDetailsFromImportOwnDesign(gid) {
+	$('#reviewDesignModal').modal('hide');
+	openGermplasmDetailsPopup(gid, function () {
+		$('#reviewDesignModal').modal('show');
+	});
+}
+
 function openGermplasmDetailsPopup(gid, callback) {
 	const germplasmDetailsModalService = angular.element('#mainApp').injector().get('germplasmDetailsModalService');
 	germplasmDetailsModalService.openGermplasmDetailsModal(gid, callback);
