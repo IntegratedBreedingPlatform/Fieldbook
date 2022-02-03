@@ -979,7 +979,7 @@
 						'<"row"<"col-sm-12 paginate-float-center"<"pull-left"i><"pull-right"l>p>>')
 					.withButtons([{
 						className: 'fbk-buttons-no-border fbk-colvis-button',
-						text: '<img src="/Fieldbook/static/img/statistics.svg" height="16px" width="16px"></img>',
+						text: '<img src="/Fieldbook/static/img/statistics.svg" height="16px" width="16px" data-test="plotVisualizationButton"></img>',
 						action: function (e, dt, node, config) {
 
 							var observationUnitsSearch = {
