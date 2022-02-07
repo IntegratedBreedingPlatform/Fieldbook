@@ -12,8 +12,19 @@
 
 			locationService.getLocations = function (locationTypes, favoritesOnly, name, page, size) {
 
-				var request = $http.get(BASE_URL + '/locations?programUUID=' + studyContext.programId + '&favoritesOnly=' + favoritesOnly
-					+ '&name=' + name + '&locationTypes=' + locationTypes + '&page=' + page + '&size=' + size);
+				var data = {
+					locationNameFilter: {
+						type: 'STARTSWITH',
+						value: name
+					},
+					locationTypeIds: locationTypes
+				}
+				if (favoritesOnly) {
+					data['filterFavoriteProgramUUID'] = true;
+					data['favoriteProgramUUID'] = studyContext.programId;
+				}
+
+				var request = $http.post(BASE_URL + '/locations/search?programUUID=' + studyContext.programId + '&page=' + page + '&size=' + size, JSON.stringify(data));
 				return request.then(((response) => {
 					return response;
 				}), failureHandler);
@@ -79,7 +90,7 @@
 
 					locationService.getLocations($scope.localData.locationLookup == 1 ? BREEDING_LOCATION : [], $scope.localData.useFavorites, $select ? $select.search : '', $scope.locationPage, 500).then(function (response) {
 						$scope.locationItems = $scope.locationItems.concat(response.data);
-						$scope.loadMore = ($scope.locationPage + 1) * 500 < response.headers()['x-filtered-count'];
+						$scope.loadMore = ($scope.locationPage + 1) * 500 < response.headers()['x-total-count'];
 					});
 				}
 			}]

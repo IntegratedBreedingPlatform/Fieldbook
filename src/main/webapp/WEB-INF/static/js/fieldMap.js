@@ -411,10 +411,11 @@ function recreatePopupLocationCombo() {
 	'use strict';
 	$.ajax(
 	{ // Get ALL Locations
-		url: '/bmsapi/crops/'+ cropName +'/locations?programUUID=' + currentProgramId + '&favoritesOnly=false&page=0&size=10000',
-		type: 'GET',
+		url: '/bmsapi/crops/'+ cropName +'/locations/search?programUUID=' + currentProgramId + '&page=0&size=10000',
+		type: 'POST',
 		cache: false,
-		data: '',
+		contentType: 'application/json',
+		data: '{}',
 		beforeSend: beforeSend,
 		success: function(data) {
 			if (data && data.length > 0) {
