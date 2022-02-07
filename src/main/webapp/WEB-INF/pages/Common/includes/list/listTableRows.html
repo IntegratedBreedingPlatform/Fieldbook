@@ -1,5 +1,6 @@
 <tr class="list-row" th:each="list : ${listChildNodes}"
-	th:attr="data-tt-id=${list.id},data-tt-parent-id=${list.parentId},is-folder=${list.isFolder},num-of-children=${list.numOfChildren}">
+	th:attr="data-tt-id=${list.id},data-tt-parent-id=${list.parentId},is-folder=${list.isFolder},num-of-children=${list.numOfChildren},
+		data-test=(${list.isFolder=='1'}? 'folderRow' : 'listRow')">
 	<td><span th:class="${list.isFolder=='1'}? 'folder name' : 'file name'" th:text="${list.name}"></span></td>
 	<td th:text="${list.owner}"></td>
 	<td th:text="${list.description}"></td>
