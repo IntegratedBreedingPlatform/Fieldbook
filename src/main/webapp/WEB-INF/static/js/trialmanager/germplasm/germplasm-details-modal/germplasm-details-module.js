@@ -5,11 +5,12 @@
         const germplasmDetailsModalService = {};
         germplasmDetailsModalService.openGermplasmDetailsModal = function (gid, callBackFunction) {
             germplasmDetailsModalService.modal = $uibModal.open({
+                windowClass: 'modal-extra-large',
                 templateUrl: '/Fieldbook/static/js/trialmanager/germplasm/germplasm-details-modal/germplasm-details-modal.html',
                 controller: function ($scope, $uibModalInstance, germplasmDetailsService, studyContext) {
 
                     const germplasmDetailsURL = '/ibpworkbench/main/app/#/germplasm-details/' + gid + '?cropName=' + studyContext.cropName + '&programUUID=' + studyContext.programId
-                        + '&modal=true&authToken=' + JSON.parse(localStorage["bms.xAuthToken"]).token;
+                        + '&modal=true';
                     $scope.url = germplasmDetailsURL;
                     $scope.gid = gid;
 
@@ -33,7 +34,6 @@
                         });
                     }
                 },
-                windowClass: 'modal-extra-large',
             }).result.finally(function() {
                 setTimeout(function() {
                     if (callBackFunction) {
