@@ -532,8 +532,7 @@ BMS.NurseryManager.VariableSelection = (function($) {
 			 *
 			 */
 			var authParams =
-				'authToken=' + authToken
-				+ '&selectedProjectId=' + selectedProjectId
+				'&selectedProjectId=' + selectedProjectId
 				+ '&loggedInUserId=' + loggedInUserId;
 
 			var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;

@@ -49,8 +49,7 @@ BMS.Fieldbook.SamplesSummaryDataTable = (function ($) {
 								return '-';
 							}
 							var authParams =
-								'&authToken=' + authToken
-								+ '&selectedProjectId=' + selectedProjectId
+								'&selectedProjectId=' + selectedProjectId
 								+ '&loggedInUserId=' + loggedInUserId;
 							return "<a href='/Fieldbook/TrialManager/openTrial/" + row.studyId + "?restartApplication" + authParams
 									+ "'>" + data + "</a>"
@@ -87,8 +86,7 @@ BMS.Fieldbook.SamplesSummaryDataTable = (function ($) {
 								return '-';
 							}
 							var authParams =
-								'&authToken=' + authToken
-								+ '&selectedProjectId=' + selectedProjectId
+								'&selectedProjectId=' + selectedProjectId
 								+ '&loggedInUserId=' + loggedInUserId;
 							return data.map(function (dataset) {
 								return "<a href='/GDMS/main/?restartApplication&datasetId=" + dataset.datasetId
