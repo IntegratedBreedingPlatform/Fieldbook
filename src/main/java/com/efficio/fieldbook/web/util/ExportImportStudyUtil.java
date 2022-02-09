@@ -1,14 +1,7 @@
 
 package com.efficio.fieldbook.web.util;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang3.math.NumberUtils;
-import org.generationcp.commons.pojo.FileExportInfo;
-import org.generationcp.commons.spring.util.ContextUtil;
-import org.generationcp.commons.util.InstallationDirectoryUtil;
 import org.generationcp.middleware.domain.dms.ValueReference;
 import org.generationcp.middleware.domain.etl.MeasurementData;
 import org.generationcp.middleware.domain.etl.MeasurementRow;
@@ -16,10 +9,12 @@ import org.generationcp.middleware.domain.etl.MeasurementVariable;
 import org.generationcp.middleware.domain.etl.Workbook;
 import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.exceptions.MiddlewareQueryException;
-import org.generationcp.middleware.pojos.workbench.ToolName;
 import org.generationcp.middleware.service.api.OntologyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class ExportImportStudyUtil {
@@ -185,33 +180,4 @@ public class ExportImportStudyUtil {
 		}
 	}
 
-	public static FileExportInfo getFileNamePath(final int trialInstanceNo, final MeasurementRow trialObservation, final List<Integer> instances,
-			final String filename, final org.generationcp.middleware.service.api.FieldbookService fieldbookMiddlewareService, final ContextUtil contextUtil) throws IOException {
-
-		final InstallationDirectoryUtil installationDirectoryUtil = new InstallationDirectoryUtil();
-		final String cleanFilename = SettingsUtil.cleanSheetAndFileName(filename);
-		String downloadFilename = cleanFilename;
-
-		// For Trial, include the trial instance # and site name (if existing)
-		if (instances != null && !instances.isEmpty()) {
-
-			final int fileExtensionIndex = cleanFilename.lastIndexOf(".");
-			final String siteName = ExportImportStudyUtil.getSiteNameOfTrialInstance(trialObservation, fieldbookMiddlewareService);
-
-			final StringBuilder filenameBuilder = new StringBuilder(cleanFilename.substring(0, fileExtensionIndex));
-			filenameBuilder.append("-");
-			filenameBuilder.append(trialInstanceNo);
-			filenameBuilder.append(SettingsUtil.cleanSheetAndFileName(siteName));
-			filenameBuilder.append(cleanFilename.substring(fileExtensionIndex));
-
-			downloadFilename = filenameBuilder.toString();
-		}
-		
-		String filenamePath = installationDirectoryUtil.getFileInTemporaryDirectoryForProjectAndTool(downloadFilename,
-				contextUtil.getProjectInContext(), ToolName.FIELDBOOK_WEB);
-		
-		return new FileExportInfo(filenamePath, downloadFilename);
-
-	}
-	
 }

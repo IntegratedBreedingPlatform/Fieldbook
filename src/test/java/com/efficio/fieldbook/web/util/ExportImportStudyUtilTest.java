@@ -1,13 +1,10 @@
 
 package com.efficio.fieldbook.web.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import org.generationcp.commons.pojo.FileExportInfo;
+import com.efficio.fieldbook.utils.test.WorkbookDataUtil;
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import org.generationcp.commons.spring.util.ContextUtil;
 import org.generationcp.commons.util.InstallationDirectoryUtil;
 import org.generationcp.middleware.data.initializer.ProjectTestDataInitializer;
@@ -34,10 +31,10 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.context.MessageSource;
 
-import com.efficio.fieldbook.utils.test.WorkbookDataUtil;
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class ExportImportStudyUtilTest {
 
@@ -149,58 +146,6 @@ public class ExportImportStudyUtilTest {
 
 		Assert.assertTrue("Expected that the measurement variable of the given measurementData has value but didn't.",
 				ExportImportStudyUtil.measurementVariableHasValue(data));
-	}
-
-	@Test
-	public void testGetFileNamePathWithSiteAndMoreThanOneInstance() throws IOException {
-
-		Mockito.when(this.fieldbookMiddlewareService.getLocationById(WorkbookDataUtil.LOCATION_ID_1)).thenReturn(this.locations.get(0));
-		Mockito.when(this.fieldbookMiddlewareService.getLocationById(WorkbookDataUtil.LOCATION_ID_2)).thenReturn(this.locations.get(1));
-
-		this.workbook = WorkbookDataUtil.getTestWorkbookForStudy(10, 2);
-		this.instances = WorkbookDataUtil.getTrialInstances(this.workbook);
-
-		int index = 1;
-		for (final MeasurementRow row : this.workbook.getTrialObservations()) {
-			final FileExportInfo exportInfo = ExportImportStudyUtil.getFileNamePath(index, row, this.instances, this.fileNameWithExtension,
-					 this.fieldbookMiddlewareService, this.contextUtil);
-			
-			Assert.assertTrue("Expected location in filename but did not found one.",
-					exportInfo.getDownloadFileName().contains(WorkbookDataUtil.LNAME + "_" + index));
-			index++;
-		}
-	}
-
-	@Test
-	public void testGetFileNamePathWithSiteAndOneInstance() throws IOException {
-
-		Mockito.when(this.fieldbookMiddlewareService.getLocationById(WorkbookDataUtil.LOCATION_ID_1)).thenReturn(this.locations.get(0));
-
-		this.workbook = WorkbookDataUtil.getTestWorkbookForStudy(10, 1);
-		this.instances = WorkbookDataUtil.getTrialInstances(this.workbook);
-
-		final FileExportInfo exportInfo =
-				ExportImportStudyUtil.getFileNamePath(1, this.workbook.getTrialObservations().get(0), this.instances, this.fileNameWithExtension,
-						this.fieldbookMiddlewareService, this.contextUtil);
-		Assert.assertTrue("Expected location in filename but did not found one.", exportInfo.getDownloadFileName().contains(WorkbookDataUtil.LNAME + "_1"));
-	}
-
-	@Test
-	public void testGetFileNamePathWithoutSite() throws IOException {
-
-		Mockito.when(this.fieldbookMiddlewareService.getLocationById(WorkbookDataUtil.LOCATION_ID_1)).thenReturn(this.locations.get(0));
-
-		final MeasurementRow studyObservationWithoutSite = WorkbookDataUtil.createStudyObservationWithoutSite();
-		this.instances = new ArrayList<Integer>();
-		this.instances.add(1);
-
-		final FileExportInfo exportInfo = ExportImportStudyUtil.getFileNamePath(1, studyObservationWithoutSite, this.instances,
-				this.fileNameWithExtension,  this.fieldbookMiddlewareService, this.contextUtil);
-		Assert.assertTrue("Expected filename in output filename but found none.",
-				exportInfo.getDownloadFileName().contains(this.fileNameWithExtension.substring(0, this.fileNameWithExtension.lastIndexOf("."))));
-		final String processedFileName = exportInfo.getDownloadFileName().substring(0, this.fileNameWithExtension.lastIndexOf("."));
-		Assert.assertFalse("Expected no underscore before the file extension but found one.",
-				processedFileName.charAt(processedFileName.length() - 1) == '_');
 	}
 
 	@Test
