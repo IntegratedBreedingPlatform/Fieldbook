@@ -235,6 +235,12 @@
 				return $q.reject('datasetId not defined.');
 			};
 
+			datasetService.saveSearchRequest = function (germplasmStudySourceRequest, datasetId) {
+				germplasmStudySourceRequest.studyId = studyContext.studyId;
+				return $http.post(BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/observationUnits/search', germplasmStudySourceRequest)
+					.then(successHandler, failureHandler);
+			};
+
 			return datasetService;
 
 		}]);
