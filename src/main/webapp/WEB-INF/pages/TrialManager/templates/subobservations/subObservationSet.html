@@ -140,7 +140,7 @@
 				</div>
 			</div>
 			<div class="col-xs-12" style="padding-left: 0px;">
-				<label class="control-label section-toggle toggle-icon" ng-click="collapseBatchAction()">
+				<label class="control-label section-toggle toggle-icon" ng-click="collapseBatchAction()" data-test="toggleBatchActionButton">
 					<img class="icn section-expanded" ng-show="toggleSectionBatchAction" src="/Fieldbook/static/img/expanded-arrow.png"/>
 					<img style="margin-left: 7px" class="icn section-collapsed" ng-show="!toggleSectionBatchAction" src="/Fieldbook/static/img/collapsed-arrow.png"/>
 					<strong class="sub-content-heading">Batch Actions</strong>
@@ -149,7 +149,7 @@
 					<div class="col-xs-12 form-inline" ng-if="hasVariableFilter">
 						<div class="row form-group" style="padding-right: 10px;">
 							<label style="padding-right: 10px;padding-left: 15px;">Select variable:</label>
-							<ui-select ng-model="nested.selectedVariableFilter" class="input-sm form-control inline-select" ng-change="changeSelectedVariableFilter()" search-enabled="false" theme="select2">
+							<ui-select ng-model="nested.selectedVariableFilter" class="input-sm form-control inline-select" ng-change="changeSelectedVariableFilter()" search-enabled="false" theme="select2" data-test="selectVariable">
 								<ui-select-match>{{$select.selected.alias}}</ui-select-match>
 								<ui-select-choices repeat="variable as variable in selectVariableFilter">
 									<div title="{{variable.alias}}">{{variable.alias}}</div>
@@ -165,7 +165,7 @@
 						</div>
 						<div class="form-group" ng-if="hasVariableFilter &amp;&amp; hasDataFiltered() &amp;&amp; nested.selectedVariableFilter.termId !== null">
 							<label style="padding-right: 10px;">Select batch action:</label>
-							<ui-select ng-model="nested.selectedBatchAction" class="input-sm form-control inline-select" search-enabled="false" theme="select2">
+							<ui-select ng-model="nested.selectedBatchAction" class="input-sm form-control inline-select" search-enabled="false" theme="select2" data-test="selectAction">
 								<ui-select-match>{{$select.selected.name}}</ui-select-match>
 								<ui-select-choices repeat="selectBatchAction as selectBatchAction in selectBatchActions">
 									<div title="{{selectBatchAction.name}}">{{selectBatchAction.name}}</div>
@@ -175,7 +175,7 @@
 						<div class="form-group" style="padding-left: 10px;" ng-if="nested.selectedBatchAction.id === 1  &amp;&amp; hasDataFiltered()">
 							<label style="padding-right: 10px;">New value:</label>
 							<div class="form-group" ng-if="nested.selectedVariableFilter.dataTypeCode === 'N' || nested.selectedVariableFilter.dataTypeCode === 'T'">
-								<input class="form-control inline-select" ng-model='nested.newValueBatchUpdate'/>
+								<input class="form-control inline-select" ng-model='nested.newValueBatchUpdate' data-test="newValueInput"/>
 							</div>
 							<div class="form-group" ng-if="nested.selectedVariableFilter.dataTypeCode === 'C' &amp;&amp; nested.selectedVariableFilter.dataType !== 'Breeding Method'">
 								<ui-select ng-model="nested.newValueBatchUpdate"
@@ -206,7 +206,7 @@
 							</div>
 						</div>
 						<div class="form-group" style="padding-left: 10px;" ng-if="hasVariableFilter &amp;&amp; hasDataFiltered() &amp;&amp; nested.selectedBatchAction.id !== null">
-							<button type="button" class="btn  btn-info" ng-disabled="disableApply()" ng-click="applyBatchAction()">Apply</button>
+							<button type="button" class="btn  btn-info" ng-disabled="disableApply()" ng-click="applyBatchAction()" data-test="applyBatchActionButton">Apply</button>
 						</div>
 					</div>
 					<div class="col-xs-12 form-inline" ng-show="!hasVariableFilter">

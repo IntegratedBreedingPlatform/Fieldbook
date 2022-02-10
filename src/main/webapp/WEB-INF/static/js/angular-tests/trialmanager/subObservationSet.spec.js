@@ -904,6 +904,7 @@ describe('SubObservationSetCtrl', function () {
 			$provide.value("TrialManagerDataService", TrialManagerDataServiceMock);
 			$provide.value("$uibModal", $uibModal);
 			$provide.value("studyContext", studyContext);
+			$provide.value("SEARCH_ORIGIN", ['MANAGE_STUDY_SOURCE', 'MANAGE_STUDY_PLOT']);
 		});
 
 		module('subObservation');
@@ -950,7 +951,7 @@ describe('SubObservationSetCtrl', function () {
 				datasetService: datasetServiceMock,
 				$timeout: $timeout,
 				$uibModal: $uibModal,
-				visualizationModalService: visualizationModalService,
+				visualizationModalService: visualizationModalService
 			});
 
 			scope.tableLoadedPromise.then(function () {

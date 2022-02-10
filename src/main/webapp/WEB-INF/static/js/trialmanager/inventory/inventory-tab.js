@@ -592,7 +592,7 @@
 					instanceNumber: null,
 					locationName: 'All environments'
 				}].concat(instances.filter((instance) => instance.hasInventory));
-				$scope.nested.selectedEnvironment = $scope.environments[1];
+				$scope.nested.selectedEnvironment = $scope.environments[0];
 
 				dtOptionsDeferred.resolve(dtOptions);
 			});

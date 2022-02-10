@@ -588,6 +588,11 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 					HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.PREPARE_PLANTING_PERMISSIONS);
 			}
 
+			$scope.showCreateLotsAction = function () {
+				return $scope.hasDesignGenerated &&
+					HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.MS_CREATE_LOTS_PERMISSIONS);
+			}
+
 			$scope.displayGermplasmOrMeasurmentOnlyActions = function () {
 				return this.hasGermplasmListSelected() || studyStateService.hasGeneratedDesign();
 			};
@@ -1080,6 +1085,12 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			}
 
 			$scope.init();
+
+			$scope.openLotCreationModal = function () {
+				$scope.navigateToSubObsTab(studyContext.measurementDatasetId).then(function () {
+					$rootScope.$broadcast('createLotsFromSubObsRegister');
+				});
+			}
 
 		}]);
 
