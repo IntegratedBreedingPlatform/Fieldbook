@@ -11,11 +11,19 @@
 			var methodService = {};
 
 			methodService.getMethods = function (methodTypes, favoritesOnly, methodCodes) {
-				var methodCodesURL = methodCodes ? '&methodCodes=' + methodCodes : '';
-				var methodTypesURL = methodTypes ? '&methodTypes=' + methodTypes : '';
+				var breedingMethodSearchRequest = {};
+				if (methodTypes) {
+					breedingMethodSearchRequest['methodTypes'] = methodTypes;
+				}
+				if (favoritesOnly) {
+					breedingMethodSearchRequest['favoriteProgramUUID'] = studyContext.programId;
+					breedingMethodSearchRequest['filterFavoriteProgramUUID'] = true;
+				}
+				if (methodCodes) {
+					breedingMethodSearchRequest['methodAbbreviations'] = methodCodes;
+				}
 
-				var request = $http.get(BASE_URL + '/breedingmethods?programUUID=' + studyContext.programId + '&favoritesOnly=' + favoritesOnly +
-					methodCodesURL + methodTypesURL);
+				var request = $http.post(BASE_URL + '/breedingmethods/search?programUUID=' + studyContext.programId, breedingMethodSearchRequest);
 				return request.then(((response) => {
 					// Concatenate name and code to form displayDescription
 					angular.forEach(response.data, function (method) {

@@ -188,6 +188,9 @@
 									</li>
 								</ul>
                             </li>
+							<li ng-show="showCreateLotsAction()">
+								<a ng-click="openLotCreationModal()">Create lots</a>
+							</li>
 							<li>
 								<a th:href="@{/TrialManager}" th:text="#{study.studydetails.action.close.study}">Close Study</a>
 							</li>
@@ -755,6 +758,9 @@
 			}).constant('LABEL_PRINTING_TYPE', {
 				OBSERVATION_DATASET: /*[[${T(org.generationcp.middleware.domain.labelprinting.LabelPrintingType).OBSERVATION_DATASET.getCode()}]]*/ null,
 				SUBOBSERVATION_DATASET: /*[[${T(org.generationcp.middleware.domain.labelprinting.LabelPrintingType).SUBOBSERVATION_DATASET.getCode()}]]*/ null
+			}).constant('SEARCH_ORIGIN', {
+				MANAGE_STUDY_SOURCE: /*[[${T(org.generationcp.middleware.domain.inventory.common.SearchOriginCompositeDto.SearchOrigin).MANAGE_STUDY_SOURCE}]]*/ null,
+				MANAGE_STUDY_PLOT: /*[[${T(org.generationcp.middleware.domain.inventory.common.SearchOriginCompositeDto.SearchOrigin).MANAGE_STUDY_PLOT}]]*/ null
 			});
 
 			$(document).ready(function () {

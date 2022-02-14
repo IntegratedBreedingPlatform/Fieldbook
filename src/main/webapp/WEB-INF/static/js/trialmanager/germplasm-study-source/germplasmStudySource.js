@@ -5,9 +5,9 @@
 
 	germplasmStudySourceModule.controller('GermplasmStudySourceCtrl',
 		['$rootScope', '$scope', '$q', '$compile', '$uibModal', 'studyContext', 'DTOptionsBuilder', 'germplasmStudySourceService', 'lotService',
-			'HasAnyAuthorityService', 'PERMISSIONS',
+			'HasAnyAuthorityService', 'PERMISSIONS', 'SEARCH_ORIGIN',
 			function ($rootScope, $scope, $q, $compile, $uibModal, studyContext, DTOptionsBuilder, germplasmStudySourceService, lotService,
-					  HasAnyAuthorityService, PERMISSIONS) {
+					  HasAnyAuthorityService, PERMISSIONS, SEARCH_ORIGIN) {
 
 				$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
 				$scope.PERMISSIONS = PERMISSIONS;
@@ -413,6 +413,9 @@
 							resolve: {
 								searchResultDbId: function () {
 									return searchDto.result.searchResultDbId;
+								},
+								searchOrigin: function () {
+									return SEARCH_ORIGIN.MANAGE_STUDY_SOURCE.$name;
 								}
 							}
 						}).result.finally(function () {
