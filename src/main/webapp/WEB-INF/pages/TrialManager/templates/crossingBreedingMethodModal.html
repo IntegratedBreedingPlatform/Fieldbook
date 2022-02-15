@@ -93,10 +93,10 @@
 
 
 				<div class="modal-footer add-top-bottom-padding">
-					<button ng-show="isCrossesImport" type="button" class="btn btn-default go-back-to-import" ng-click="goBackToImportCrosses()"
+					<button data-test="importCrossesSpecifyBreedingMethodCancel" ng-show="isCrossesImport" type="button" class="btn btn-default go-back-to-import" ng-click="goBackToImportCrosses()"
 							aria-hidden="true" th:text="#{common.form.back.text}">Back
 					</button>
-					<button type="button" class="btn btn-primary"
+					<button data-test="importCrossesSpecifyBreedingMethodContinue" type="button" class="btn btn-primary"
 							aria-hidden="true" th:text="#{common.form.continue.text}" ng-click="goToNamingModal()">Continue
 					</button>
 				</div>
