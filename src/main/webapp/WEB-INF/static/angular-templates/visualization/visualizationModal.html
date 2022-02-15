@@ -20,10 +20,10 @@
 			<div class="form-group">
 				<label class="control-label col-md-4"><strong>Plot type:</strong></label>
 				<div class="col-md-6">
-					<ui-select ng-model="selection.selectedRCall" theme="select2" search-enabled="false" class="text-truncate">
+					<ui-select ng-model="selection.selectedRCall" theme="select2" search-enabled="false" class="text-truncate" data-test="plotTypeSelect">
 						<ui-select-match>{{$select.selected.description}}</ui-select-match>
 						<ui-select-choices repeat="item in rCalls">
-							<span>{{item.description}}</span>
+							<span data-test="{{item.description}}_option">{{item.description}}</span>
 						</ui-select-choices>
 					</ui-select>
 				</div>
@@ -35,22 +35,22 @@
 				<label ng-if="key == 'binwidth'" class="control-label col-md-4"><strong>Bin Width:</strong></label>
 				<div class="col-md-6">
 					<!-- Scatterplot -->
-					<ui-select ng-if="(key == 'method')" ng-model="selection.selectedRCall.parameters[key]" theme="select2" search-enabled="false" class="text-truncate">
+					<ui-select ng-if="(key == 'method')" ng-model="selection.selectedRCall.parameters[key]" theme="select2" search-enabled="false" class="text-truncate" data-test="regressionMethodSelect">
 						<ui-select-match placeholder="Please choose">{{$select.selected.description}}</ui-select-match>
 						<ui-select-choices repeat="item.method as item in regressionMethods">
-							<span>{{item.description}}</span>
+							<span data-test="{{item.description}}_option">{{item.description}}</span>
 						</ui-select-choices>
 					</ui-select>
-					<ui-select ng-if="key == 'x' && selection.selectedRCall.description == 'Scatterplot'" ng-model="selection.selectedVariableX" theme="select2" search-enabled="false" class="text-truncate">
+					<ui-select ng-if="key == 'x' && selection.selectedRCall.description == 'Scatterplot'" ng-model="selection.selectedVariableX" theme="select2" search-enabled="false" class="text-truncate" data-test="xVariableSelect">
 						<ui-select-match placeholder="Please choose">{{$select.selected.alias}}</ui-select-match>
 						<ui-select-choices repeat="item in variates">
-							<span>{{item.alias}}</span>
+							<span data-test="{{item.alias}}_option">{{item.alias}}</span>
 						</ui-select-choices>
 					</ui-select>
-					<ui-select ng-if="key == 'y' && selection.selectedRCall.description == 'Scatterplot'" ng-model="selection.selectedVariableY" theme="select2" search-enabled="false" class="text-truncate">
+					<ui-select ng-if="key == 'y' && selection.selectedRCall.description == 'Scatterplot'" ng-model="selection.selectedVariableY" theme="select2" search-enabled="false" class="text-truncate" data-test="yVariableSelect">
 						<ui-select-match placeholder="Please choose">{{$select.selected.alias}}</ui-select-match>
 						<ui-select-choices repeat="item in variates">
-							<span>{{item.alias}}</span>
+							<span data-test="{{item.alias}}_option">{{item.alias}}</span>
 						</ui-select-choices>
 					</ui-select>
 					<input class="form-control" ng-if="key == 'binwidth'" numbers-only ng-model="selection.selectedRCall.parameters[key]">
@@ -84,7 +84,7 @@
 		<div class="col-md-4"></div>
 		<div class="col-md-4">
 			<button class="btn btn-default" ng-click="cancel()">Cancel</button>
-			<button class="btn btn-primary" ng-disabled="isExporting" ng-click="generate()">Generate</button>
+			<button class="btn btn-primary" ng-disabled="isExporting" ng-click="generate()" data-test="generateVisualizationButton">Generate</button>
 		</div>
 	</div>
 	<div class="col-md-4"></div>

@@ -16,7 +16,7 @@
 			<label class="control-label label-bold" th:text="#{germplasm.save.list.name.label}">List Name:</label><span class="required">*</span>
 		</div>
 		<div class="col-xs-7 col-md-7">
-			<input type="text" class="form-control" th:field="*{listName}"/>
+			<input data-test="listNameTextBox" type="text" class="form-control" th:field="*{listName}"/>
 		</div>
 	</div>
 	
@@ -34,7 +34,7 @@
 			<label class="control-label label-bold" th:text="#{germplasm.save.list.description.label}">List Description:</label>
 		</div>
 		<div class="col-xs-7 col-md-7">
-			<textarea rows="5" cols="20" class="form-control" th:field="*{listDescription}"/>
+			<textarea data-test="listDescriptionTextArea" rows="5" cols="20" class="form-control" th:field="*{listDescription}"/>
 		</div>
 	</div>
 	<div class="row form-group">
@@ -42,7 +42,7 @@
 			<label class="control-label label-bold" th:text="#{germplasm.save.list.type.label}">List Type:</label><span class="required">*</span>
 		</div>
 		<div class="col-xs-7 col-md-7">
-			<select class="form-input"  th:field="*{listType}">
+			<select data-test="listTypeSelect" class="form-input"  th:field="*{listType}">
 				<option th:each="listType : ${germplasmListTypes}" th:value="${listType.fcode}" th:text="${listType.fname}"></option>
 			</select>
 		</div>
@@ -52,7 +52,7 @@
 			<label class="control-label label-bold" th:text="#{germplasm.save.list.date.label}">List Date:</label><span class="required">*</span>
 		</div>
 		<div class="col-xs-7 col-md-7" data-date="" data-date-format="yyyymmdd">
-			<input placeholder="yyyy-mm-dd" type="text" class="form-control date-input" th:field="*{listDate}" style="width: 100px"/>
+			<input data-test="listDateTextBox" placeholder="yyyy-mm-dd" type="text" class="form-control date-input" th:field="*{listDate}" style="width: 100px"/>
 			<label for="listDate" class="btn datepicker">
 				<img width="20" height="22" th:src="@{/static/img/calendar.png}" style="padding-bottom:3px;" />
 			</label>
@@ -65,7 +65,7 @@
 			<label class="control-label label-bold" th:text="#{germplasm.save.list.notes.label}">Notes:</label>
 		</div>
 		<div class="col-xs-7 col-md-7">
-			<textarea rows="5" cols="20" class="form-control" th:field="*{listNotes}"/>
+			<textarea data-test="listNotesTextArea" rows="5" cols="20" class="form-control" th:field="*{listNotes}"/>
 		</div>
 	</div>
 
