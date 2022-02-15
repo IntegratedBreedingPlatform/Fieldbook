@@ -52,7 +52,8 @@ public class StudyEntryTransformer {
 				}
 				importedGermplasm.setCross(studyEntryDto.getStudyEntryPropertyValue(TermId.CROSS.getId()).orElse(""));
 				importedGermplasm.setDesig(studyEntryDto.getDesignation());
-				importedGermplasm.setEntryCode(studyEntryDto.getEntryCode());
+				// TODO: should get entry code from properties?
+//				importedGermplasm.setEntryCode(studyEntryDto.getEntryCode());
 				importedGermplasm.setEntryNumber(studyEntryDto.getEntryNumber());
 				importedGermplasm.setGid(studyEntryDto.getGid().toString());
 				final Optional<String> groupGid = studyEntryDto.getStudyEntryPropertyValue(TermId.GROUPGID.getId());
@@ -104,7 +105,8 @@ public class StudyEntryTransformer {
 
 					@Override
 					public String getEntryCode() {
-						return studyEntryDto.getEntryCode();
+						// TODO: should get entry code from properties?
+						return null;
 					}
 
 					@Override
@@ -183,7 +185,6 @@ public class StudyEntryTransformer {
 			final StudyEntryDto dto = new StudyEntryDto();
 			dto.setDesignation(importedGermplasm.getDesig());
 			dto.setGid(Integer.valueOf(importedGermplasm.getGid()));
-			dto.setEntryCode(importedGermplasm.getEntryCode());
 			dto.setEntryNumber(importedGermplasm.getEntryNumber());
 			dto.getProperties().put(TermId.ENTRY_TYPE.getId(),
 				new StudyEntryPropertyData(null, TermId.ENTRY_TYPE.getId(), String.valueOf(importedGermplasm.getEntryTypeCategoricalID())));
@@ -193,6 +194,8 @@ public class StudyEntryTransformer {
 					new StudyEntryPropertyData(null, TermId.CROSS.getId(), String.valueOf(importedGermplasm.getCross())));
 			dto.getProperties().put(TermId.GROUPGID.getId(),
 				new StudyEntryPropertyData(null, TermId.GROUPGID.getId(), String.valueOf(importedGermplasm.getGroupId())));
+			dto.getProperties().put(TermId.ENTRY_CODE.getId(),
+				new StudyEntryPropertyData(null, TermId.ENTRY_CODE.getId(), String.valueOf(importedGermplasm.getEntryCode())));
 			list.add(dto);
 		}
 		return list;

@@ -257,8 +257,6 @@ public class ExportStudyEntriesServiceImpl implements ExportStudyEntriesService 
 			final Integer term = Integer.valueOf(termId);
 			if (term.intValue() == TermId.GID.getId()) {
 				value = studyEntryDto.getGid().toString();
-			} else if (term.intValue() == TermId.ENTRY_CODE.getId()) {
-				value = studyEntryDto.getEntryCode();
 			} else if (term.intValue() == TermId.ENTRY_NO.getId()) {
 				value = studyEntryDto.getEntryNumber().toString();
 			} else if (term.intValue() == TermId.SOURCE.getId() || term.intValue() == TermId.GERMPLASM_SOURCE.getId()) {

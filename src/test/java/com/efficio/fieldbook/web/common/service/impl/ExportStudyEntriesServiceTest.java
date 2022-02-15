@@ -445,8 +445,8 @@ public class ExportStudyEntriesServiceTest {
 	private List<StudyEntryDto> createStudyEntry() {
 		final List<StudyEntryDto> studyEntries = new ArrayList<>();
 		final StudyEntryDto studyEntry = new StudyEntryDto(Integer.valueOf(ExportStudyEntriesServiceTest.ENTRY_NO_VALUE),
-				Integer.valueOf(ExportStudyEntriesServiceTest.ENTRY_NO_VALUE), ExportStudyEntriesServiceTest.ENTRY_CODE_VALUE,
-				Integer.valueOf(ExportStudyEntriesServiceTest.GID_VALUE), ExportStudyEntriesServiceTest.DESIG_VALUE);
+				Integer.valueOf(ExportStudyEntriesServiceTest.ENTRY_NO_VALUE),
+			Integer.valueOf(ExportStudyEntriesServiceTest.GID_VALUE), ExportStudyEntriesServiceTest.DESIG_VALUE);
 		studyEntry.getProperties().put(TermId.SEED_SOURCE.getId(), new StudyEntryPropertyData(ExportStudyEntriesServiceTest.SOURCE_VALUE));
 		studyEntry.getProperties().put(TermId.CROSS.getId(), new StudyEntryPropertyData(ExportStudyEntriesServiceTest.CROSS_VALUE));
 		studyEntries.add(studyEntry);
