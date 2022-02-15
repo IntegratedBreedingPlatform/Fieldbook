@@ -833,7 +833,7 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 		} else if (NumberUtils.isNumber(id)) {
 			final int parentId = Integer.parseInt(id);
 			children = this.germplasmListManager
-				.getGermplasmListByParentFolderIdBatched(parentId, programUUID, GermplasmTreeController.BATCH_SIZE);
+				.getGermplasmListByParentFolderId(parentId, programUUID);
 		} else {
 			GermplasmTreeController.LOG.error("germplasm id = " + id + " is not a number");
 		}
@@ -892,7 +892,7 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 
 	private List<GermplasmList> getGermplasmChildrenNode(final String parentKey, final String programUUID) {
 		final int parentId = Integer.parseInt(parentKey);
-		return this.germplasmListManager.getGermplasmListByParentFolderIdBatched(parentId, programUUID, GermplasmTreeController.BATCH_SIZE);
+		return this.germplasmListManager.getGermplasmListByParentFolderId(parentId, programUUID);
 	}
 
 	private List<TreeTableNode> getGermplasmFolderChildrenNode(final String id, final String programUUID) {
