@@ -160,7 +160,7 @@ public class GermplasmTreeControllerTestIT extends AbstractBaseIntegrationTest {
 		Mockito.when(germplasmListManager.getAllTopLevelLists(GermplasmTreeControllerTestIT.PROGRAM_UUID)).thenReturn(GermplasmTreeControllerTestIT.PROGRAM_LISTS);
 		Mockito.when(germplasmListManager.getAllTopLevelLists(null)).thenReturn(GermplasmTreeControllerTestIT.CROP_LISTS);
 		Mockito.when(
-				germplasmListManager.getGermplasmListByParentFolderIdBatched(ArgumentMatchers.anyInt(), ArgumentMatchers.anyString(), ArgumentMatchers.anyInt()))
+				germplasmListManager.getGermplasmListByParentFolderId(ArgumentMatchers.anyInt(), ArgumentMatchers.anyString()))
 				.thenReturn(GermplasmTreeControllerTestIT.EMPTY_GERMPLASM_LIST_TEST_DATA);
 		List<UserDefinedField> userDefinedFields = this.createGermplasmListUserDefinedFields();
 		Mockito.when(germplasmListManager.getGermplasmListTypes()).thenReturn(userDefinedFields);
