@@ -2,8 +2,7 @@ package com.efficio.fieldbook.web.trial.controller;
 
 import com.efficio.fieldbook.service.api.ErrorHandlerService;
 import com.efficio.fieldbook.web.common.bean.SettingDetail;
-import com.efficio.fieldbook.web.common.bean.UserSelection;
-import com.efficio.fieldbook.web.study.germplasm.StudyEntryTransformer;
+import com.efficio.fieldbook.web.trial.bean.TabInfo;
 import com.efficio.fieldbook.web.trial.bean.TrialData;
 import com.efficio.fieldbook.web.trial.form.CreateTrialForm;
 import com.efficio.fieldbook.web.trial.form.ImportGermplasmListForm;
@@ -25,10 +24,11 @@ import org.generationcp.middleware.domain.ontology.VariableType;
 import org.generationcp.middleware.domain.samplelist.SampleListDTO;
 import org.generationcp.middleware.enumeration.DatasetTypeEnum;
 import org.generationcp.middleware.exceptions.MiddlewareQueryException;
-import org.generationcp.middleware.manager.api.InventoryDataManager;
+import org.generationcp.middleware.manager.ontology.api.OntologyVariableDataManager;
 import org.generationcp.middleware.manager.ontology.api.TermDataManager;
 import org.generationcp.middleware.pojos.UserDefinedField;
 import org.generationcp.middleware.pojos.dms.DmsProject;
+import org.generationcp.middleware.pojos.dms.ProjectProperty;
 import org.generationcp.middleware.pojos.workbench.settings.Dataset;
 import org.generationcp.middleware.service.api.SampleListService;
 import org.generationcp.middleware.service.api.dataset.DatasetService;
@@ -38,6 +38,7 @@ import org.generationcp.middleware.service.api.study.StudyEntryService;
 import org.generationcp.middleware.service.api.study.StudyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -58,6 +59,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(OpenTrialController.URL)
@@ -92,17 +94,8 @@ public class OpenTrialController extends BaseTrialController {
 	@Resource
 	private StudyService studyService;
 
-	/**
-	 * The Inventory list manager.
-	 */
-	@Resource
-	private InventoryDataManager inventoryDataManager;
-
 	@Resource
 	private StudyEntryService studyEntryService;
-
-	@Resource
-	private StudyEntryTransformer studyEntryTransformer;
 
 	@Resource
 	private SampleListService sampleListService;
@@ -260,7 +253,7 @@ public class OpenTrialController extends BaseTrialController {
 				form.setStudyId(studyId);
 				form.setStudyTypeName(dmsProject.getStudyType().getName());
 				this.setModelAttributes(form, studyId, model, workbook);
-				this.setGermplasmListSize(this.userSelection, studyId, model);
+				this.setGermplasmListSize(studyId, model);
 			}
 			return this.showAngularPage(model);
 
@@ -282,7 +275,7 @@ public class OpenTrialController extends BaseTrialController {
 		}
 	}
 
-	void setGermplasmListSize(final UserSelection userSelection, final Integer studyId, final Model model) {
+	void setGermplasmListSize(final Integer studyId, final Model model) {
 
 		final List<StudyEntryDto> studyEntries = this.studyEntryService.getStudyEntries(studyId);
 		if (!studyEntries.isEmpty()) {
@@ -305,6 +298,7 @@ public class OpenTrialController extends BaseTrialController {
 		final boolean hasMeansDataset = this.studyService.studyHasGivenDatasetType(trialId, DatasetTypeEnum.MEANS_DATA.getId());
 		model.addAttribute("basicDetailsData", this.prepareBasicDetailsTabInfo(trialWorkbook.getStudyDetails(), false, trialId));
 		model.addAttribute("germplasmData", this.prepareGermplasmTabInfo(trialWorkbook.getFactors(), false));
+		model.addAttribute("entryDetailsData", this.prepareVariableTabInfo(trialWorkbook.getEntryDetails()));
 		model.addAttribute(OpenTrialController.ENVIRONMENT_DATA_TAB, this.prepareEnvironmentsTabInfo(trialWorkbook, false));
 		model.addAttribute(
 			OpenTrialController.TRIAL_SETTINGS_DATA,
@@ -685,5 +679,16 @@ public class OpenTrialController extends BaseTrialController {
 		final Term exptDesignValue = this.termDataManager.getTermById(experimentalDesignId);
 		output.put("name", exptDesignValue.getDefinition());
 		return output;
+	}
+
+	private TabInfo prepareVariableTabInfo(final List<MeasurementVariable> entryDetails) {
+		final List<SettingDetail> settings = entryDetails.stream()
+			.map(variable -> this.createSettingDetail(variable.getTermId(), variable.getName(), variable.getVariableType().getRole().name()))
+			.collect(Collectors.toList());
+
+		final TabInfo tabInfo = new TabInfo();
+		tabInfo.setSettings(settings);
+
+		return tabInfo;
 	}
 }

@@ -1,23 +1,23 @@
 <div ng-cloak="">
 <div class="row" >
-<!--	<div class="col-lg-6 col-md-8 col-sm-10 col-xs-12">-->
-<!--		<section-container th:attr="heading=#{study.managesettings.germplasm.factors.label}" collapsible="true">-->
-<!--			<section-container icon="bms-factors" name="content"-->
-<!--							   th:attr="heading=#{study.studydetails.germplasm.descriptors}" help-tool-type="MANAGE_STUDIES_GERMPLASM"-->
-<!--							   add-variable="true" hide-variable="addVariable" on-hide-callback="onHideCallback" model-data="settings"-->
-<!--							   variable-type="1804" callback="onAddVariable(result, 1804)">-->
-<!--				<display-settings hide-delete="isHideDelete" name="content" predelete-function="onRemoveVariable" settings="settings" variable-type="1804"></display-settings>-->
-<!--            </section-container>-->
-<!--		</section-container>-->
-<!--	</div>-->
+	<div class="col-lg-6 col-md-8 col-sm-10 col-xs-12">
+		<section-container th:attr="heading=#{study.managesettings.germplasm.factors.label}" collapsible="true">
+			<section-container icon="bms-factors" name="content"
+							   th:attr="heading=#{study.studydetails.germplasm.descriptors}" help-tool-type="MANAGE_STUDIES_GERMPLASM"
+							   add-variable="true" hide-variable="addVariable" on-hide-callback="onHideCallback" model-data="settings"
+							   variable-type="1804" callback="onAddVariable(result, 1804)">
+				<display-settings hide-delete="isHideDelete" name="content" predelete-function="onRemoveVariable" settings="settings" variable-type="1804"></display-settings>
+            </section-container>
+		</section-container>
+	</div>
 	<div class="col-lg-6 col-md-8 col-sm-10 col-xs-12">
 		<section-container th:attr="heading=#{study.managesettings.entry.details.label}" collapsible="true">
 			<!-- TODO: implement add entry detail -->
 			<section-container icon="bms-factors" name="content"
 							   th:attr="heading=#{study.studydetails.entry.details}"
-							   add-variable="false" hide-variable="addVariable" on-hide-callback="onHideCallback" model-data="settings"
+							   add-variable="false" hide-variable="addVariable" on-hide-callback="onHideCallback" model-data="entryDetails"
 							   variable-type="1815" callback="onAddVariable(result, 1815)">
-				<display-settings hide-delete="true" name="content" predelete-function="onRemoveVariable" settings="settings" variable-type="1815"></display-settings>
+				<display-settings hide-delete="true" name="content" predelete-function="onRemoveVariable" settings="entryDetails" variable-type="1815"></display-settings>
 			</section-container>
 		</section-container>
 	</div>

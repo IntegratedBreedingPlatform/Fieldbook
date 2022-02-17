@@ -12,6 +12,7 @@
 					  datasetService, $timeout, $uibModal, germplasmDetailsModalService) {
 
 				$scope.settings = TrialManagerDataService.settings.germplasm;
+				$scope.entryDetails = TrialManagerDataService.settings.entryDetails;
 				$scope.trialMeasurement = {hasMeasurement: studyStateService.hasGeneratedDesign()};
 				$scope.isHideDelete = studyStateService.hasGeneratedDesign();
 				$scope.addVariable = !studyStateService.hasGeneratedDesign();
