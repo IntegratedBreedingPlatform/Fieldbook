@@ -869,6 +869,9 @@ public class SettingsUtil {
 		final List<SettingDetail> germplasmDescriptors = new ArrayList<>();
 		SettingsUtil.rearrangeSettings(factors, germplasmDescriptors, PhenotypicType.GERMPLASM);
 		studyDetails.setGermplasmDescriptors(germplasmDescriptors);
+		final List<SettingDetail> entryDetails =
+			SettingsUtil.convertWorkbookFactorsToSettingDetails(workbook.getEntryDetails(), fieldbookMiddlewareService);
+		studyDetails.setEntryDetails(entryDetails);
 		final List<TreatmentFactorDetail> treatmentFactorDetails =
 			SettingsUtil.convertWorkbookFactorsToTreatmentDetailFactors(workbook.getTreatmentFactors());
 		studyDetails.setTreatmentFactorDetails(treatmentFactorDetails);

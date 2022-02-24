@@ -70,6 +70,9 @@ public class StudyDetails {
 
 	private List<SettingDetail> germplasmDescriptors;
 
+	private List<SettingDetail> entryDetails;
+
+
 	private List<TreatmentFactorDetail> treatmentFactorDetails;
 
 	private boolean hasMeasurements;
@@ -420,6 +423,14 @@ public class StudyDetails {
 		this.experimentalDesignDetails = experimentalDesignDetails;
 	}
 
+	public List<SettingDetail> getEntryDetails() {
+		return this.entryDetails;
+	}
+
+	public void setEntryDetails(final List<SettingDetail> entryDetails) {
+		this.entryDetails = entryDetails;
+	}
+
 	public Map<Integer, SettingDetail> getFactorsMap() {
 		if (this.factorsMap == null) {
 			this.factorsMap = new HashMap<Integer, SettingDetail>();
@@ -428,6 +439,9 @@ public class StudyDetails {
 			}
 			if (this.germplasmDescriptors != null) {
 				this.buildFactorsMapFromSettingDetailsList(this.germplasmDescriptors);
+			}
+			if (this.entryDetails != null) {
+				this.buildFactorsMapFromSettingDetailsList(this.entryDetails);
 			}
 		}
 		return this.factorsMap;
