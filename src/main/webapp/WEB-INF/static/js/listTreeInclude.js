@@ -3,7 +3,8 @@
 /*exported displayGermplasmListTree, displaySampleListTree, openTreeType*/
 /*exported getDisplayedTreeName, doGermplasmLazyLoad, doSampleLazyLoad*/
 
-var lazyLoadUrl = '/Fieldbook/ListTreeManager/expandGermplasmTree/',
+var lazyLoadUrl = '/bmsapi/crops/' + cropName + '/germplasm-lists/tree?onlyFolders=false&programUUID=' + currentProgramId +
+	'&parentFolderId=',
 	additionalLazyLoadUrl = '',
 	germplasmFocusNode = null,
 	sampleFocusNode = null,
@@ -155,9 +156,10 @@ function doSampleLazyLoad(node) {
 function displayGermplasmListTree(treeName, isLocalOnly, isFolderOnly,
 								  clickFunction) {
 	'use strict';
-	var lazyLoadUrlGetChildren = '/Fieldbook/ListTreeManager/expandGermplasmTree/';
-	var initLoadUrl = '/Fieldbook/ListTreeManager/loadInitGermplasmTree';
-	initLoadUrl += '/' + isFolderOnly;
+	var lazyLoadUrlGetChildren = '/bmsapi/crops/' + cropName + '/germplasm-lists/tree?onlyFolders=' + isFolderOnly
+		+ '&programUUID=' + currentProgramId + '&parentFolderId=';
+	var initLoadUrl = '/bmsapi/crops/' + cropName + '/germplasm-lists/tree-state?programUUID=' + currentProgramId + "&userId=" + currentCropUserId;
+	var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
 
 	var dynaTreeOptions = {
 		title : treeName,
@@ -168,7 +170,10 @@ function displayGermplasmListTree(treeName, isLocalOnly, isFolderOnly,
 		activeVisible : true,
 		initAjax : {
 			url : initLoadUrl,
-			dataType : 'json'
+			dataType : 'json',
+			beforeSend: function (xhr) {
+				xhr.setRequestHeader('X-Auth-Token', xAuthToken);
+			},
 		},
 		onLazyRead : function(node) {
 			doGermplasmLazyLoad(node);
@@ -297,8 +302,7 @@ function displayGermplasmListTree(treeName, isLocalOnly, isFolderOnly,
                     showErrorMessage(getMessageErrorDiv(), cannotMoveItemToAListError);
 				} else {
 					$.ajax({
-						url : lazyLoadUrlGetChildren
-						+ sourceNode.data.key,
+						url : lazyLoadUrlGetChildren + sourceNode.data.key,
 						type : 'GET',
 						cache : false,
 						aysnc : false,

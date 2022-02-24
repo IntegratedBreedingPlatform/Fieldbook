@@ -76,8 +76,6 @@
 			var cannotMove = /*[[#{browse.study.move.can.not}]]*/ '',
 				hasChildrenString = /*[[#{browse.study.move.has.children}]]*/ '',
 				pleaseChooseFolder = /*[[#{import.germplasm.choose.a.list}]]*/ '',
-				lazyLoadUrl = '/Fieldbook/ListTreeManager/expandGermplasmListFolder/',
-				additionalLazyLoadUrl = '',
 				germplasmFocusNode = null,
 				openTreeType = 0,
                 selectListFunction;
@@ -118,10 +116,9 @@
 			function displayGermplasmListTreeTable(divId) {
 				'use strict';
 
-				var baseurl = '/Fieldbook/ListTreeManager';
-
+				var baseurl = '/bmsapi/crops/' + cropName + '/germplasm-list-folders';
 				germplasmTreetable = new TreeTable({
-					baseurl: baseurl,
+					baseurl: '/Fieldbook/ListTreeManager',
 					treeTableSelector: '#treeTable',
 					tableContainer: $('#germplasmTree'),
 					authparams: {},
@@ -135,7 +132,7 @@
 						var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
 
 						return $.ajax({
-							url: '/bmsapi/crops/' + cropName + '/germplasm-list-folders?folderName=' + folderName + '&parentId=' + parentFolderId + '&programUUID=' + currentProgramId,
+							url:  baseurl + '?folderName=' + folderName + '&parentId=' + parentFolderId + '&programUUID=' + currentProgramId,
 							type: 'POST',
 							beforeSend: function (xhr) {
 								xhr.setRequestHeader('X-Auth-Token', xAuthToken);
@@ -157,7 +154,7 @@
 						var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
 						var targetId = targetNode.id;
 						return $.ajax({
-							url: '/bmsapi/crops/' + cropName + '/germplasm-list-folders/' + sourceNode.id + '/move?newParentId=' + targetId + '&programUUID=' + currentProgramId,
+							url: baseurl + '/' + sourceNode.id + '/move?newParentId=' + targetId + '&programUUID=' + currentProgramId,
 							type: 'PUT',
 							beforeSend: function (xhr) {
 								xhr.setRequestHeader('X-Auth-Token', xAuthToken);
@@ -167,7 +164,7 @@
 					rename: function (id, folderName) {
 						var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
 						return $.ajax({
-							url:  '/bmsapi/crops/' + cropName + '/germplasm-list-folders/' + id + '?newFolderName=' + folderName + '&programUUID=' + currentProgramId,
+							url:  baseurl + '/' + id + '?newFolderName=' + folderName + '&programUUID=' + currentProgramId,
 							type: 'PUT',
 							beforeSend: function (xhr) {
 								xhr.setRequestHeader('X-Auth-Token', xAuthToken);
@@ -188,7 +185,7 @@
 					delete: function (folderId) {
 						var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
 						return $.ajax({
-							url: '/bmsapi/crops/' + cropName + '/germplasm-list-folders/' + folderId + '?programUUID=' + currentProgramId,
+							url: baseurl + '/' + folderId + '?programUUID=' + currentProgramId,
 							type: 'DELETE',
 							beforeSend: function(xhr) {
 								xhr.setRequestHeader('X-Auth-Token', xAuthToken);

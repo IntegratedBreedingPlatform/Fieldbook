@@ -785,23 +785,6 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 		return originAttribute;
 	}
 
-	/**
-	 * Load initial germplasm tree.
-	 *
-	 * @return the string
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/loadInitGermplasmTree/{isFolderOnly}", method = RequestMethod.GET)
-	public String loadInitialGermplasmTree(@PathVariable final String isFolderOnly) {
-		final List<TreeNode> rootNodes = new ArrayList<>();
-		rootNodes.add(new TreeNode(GermplasmTreeController.CROP_LISTS, AppConstants.CROP_LISTS.getString(), true, "lead",
-			AppConstants.FOLDER_ICON_PNG.getString(), null));
-		rootNodes.add(new TreeNode(GermplasmTreeController.PROGRAM_LISTS, AppConstants.PROGRAM_LISTS.getString(), true, "lead",
-			AppConstants.FOLDER_ICON_PNG.getString(), this.getCurrentProgramUUID()));
-		return TreeViewUtil.convertTreeViewToJson(rootNodes);
-
-	}
-
 	@ResponseBody
 	@RequestMapping(value = "/getPreferredName/{gid}", method = RequestMethod.GET)
 	public String getPreferredName(@PathVariable final String gid) {
@@ -840,52 +823,10 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 		return children;
 	}
 
-	protected List<TreeTableNode> getGermplasmListFolderChildNodes(final TreeTableNode node, final String programUUID) {
-		final List<TreeTableNode> childNodes = this.getGermplasmListFolderChildNodes(node.getId(), programUUID);
-		if (childNodes != null) {
-			node.setNumOfChildren(Integer.toString(childNodes.size()));
-		} else {
-			node.setNumOfChildren("0");
-		}
-		return childNodes;
-	}
-
 	protected List<TreeTableNode> getGermplasmListFolderChildNodes(final String id, final String programUUID) {
 		List<TreeTableNode> childNodes = new ArrayList<>();
 		if (id != null && !"".equals(id)) {
 			childNodes = this.getGermplasmFolderChildrenNode(id, programUUID);
-		}
-		return childNodes;
-	}
-
-	private List<TreeNode> getGermplasmChildNodes(final String parentKey, final boolean isFolderOnly, final String programUUID) {
-		if (!(parentKey != null && !"".equals(parentKey))) {
-			return new ArrayList<>();
-		}
-
-		final List<GermplasmList> rootLists;
-		if (GermplasmTreeController.PROGRAM_LISTS.equals(parentKey)) {
-			rootLists = this.germplasmListManager.getAllTopLevelLists(programUUID);
-		} else if (GermplasmTreeController.CROP_LISTS.equals(parentKey)) {
-			rootLists = this.germplasmListManager.getAllTopLevelLists(null);
-		} else if (NumberUtils.isNumber(parentKey)) {
-			rootLists = this.getGermplasmChildrenNode(parentKey, programUUID);
-		} else {
-			throw new IllegalStateException("Add a message");
-		}
-
-		final List<UserDefinedField> listTypes = this.germplasmDataManager
-			.getUserDefinedFieldByFieldTableNameAndType(RowColumnType.LIST_TYPE.getFtable(), RowColumnType.LIST_TYPE.getFtype());
-
-		final List<TreeNode> childNodes = TreeViewUtil.convertGermplasmListToTreeView(rootLists, isFolderOnly, listTypes);
-
-		final Map<Integer, ListMetadata> allListMetaData = this.germplasmListManager.getGermplasmListMetadata(rootLists);
-
-		for (final TreeNode newNode : childNodes) {
-			final ListMetadata nodeMetaData = allListMetaData.get(Integer.parseInt(newNode.getKey()));
-			if (nodeMetaData != null && nodeMetaData.getNumberOfChildren() > 0) {
-				newNode.setIsLazy(true);
-			}
 		}
 		return childNodes;
 	}
@@ -973,32 +914,6 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 		}
 
 		return super.showAjaxPage(model, GermplasmTreeController.GERMPLASM_LIST_TABLE_ROWS_PAGE);
-	}
-
-	/**
-	 * Expand germplasm tree.
-	 *
-	 * @param parentKey the parent key
-	 * @return the string
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/expandGermplasmTree/{parentKey}/{isFolderOnly}", method = RequestMethod.GET)
-	public String expandGermplasmTree(@PathVariable final String parentKey, @PathVariable final String isFolderOnly) {
-		final boolean isFolderOnlyBool = "1".equalsIgnoreCase(isFolderOnly);
-		try {
-			final List<TreeNode> childNodes = this.getGermplasmChildNodes(parentKey, isFolderOnlyBool, this.getCurrentProgramUUID());
-			return TreeViewUtil.convertTreeViewToJson(childNodes);
-		} catch (final Exception e) {
-			GermplasmTreeController.LOG.error(e.getMessage(), e);
-		}
-
-		return "[]";
-	}
-
-	@ResponseBody
-	@RequestMapping(value = "/expandGermplasmTree/{parentKey}", method = RequestMethod.GET)
-	public String expandGermplasmAllTree(@PathVariable final String parentKey) {
-		return this.expandGermplasmTree(parentKey, "0");
 	}
 
 	void checkIfUnique(final String folderName, final String programUUID) {

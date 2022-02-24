@@ -102,34 +102,6 @@ public class GermplasmTreeControllerTestIT extends AbstractBaseIntegrationTest {
 	}
 
 	/**
-	 * Test load initial tree.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testLoadInitialTree() throws Exception {
-		String jsonResponse = this.controller.loadInitialGermplasmTree("0");
-
-		List<TreeNode> treeNodes = this.objectMapper.readValue(jsonResponse, new TypeReference<List<TreeNode>>() {
-		});
-
-		Assert.assertEquals(2, treeNodes.size());
-		Assert.assertEquals(GermplasmTreeController.CROP_LISTS, treeNodes.get(0).getKey());
-		Assert.assertEquals(GermplasmTreeController.PROGRAM_LISTS, treeNodes.get(1).getKey());
-	}
-
-	/**
-	 * Test expand germplasm node.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testExpandGermplasmNode() throws Exception {
-		String jsonResponse = this.controller.expandGermplasmTree("List 1", "0");
-		Assert.assertEquals("[]", jsonResponse);
-	}
-
-	/**
 	 * Test load initial tree table.
 	 *
 	 * @throws Exception the exception
