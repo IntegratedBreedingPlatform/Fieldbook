@@ -154,16 +154,14 @@
 						});
 					},
 					move: function (sourceNode, targetNode) {
+						var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
 						var targetId = targetNode.id;
-						if (targetId === 'LISTS') {
-							targetId = 0;
-						}
 						return $.ajax({
-							url: baseurl + '/moveGermplasmFolder',
-							type: 'POST',
-							data: { sourceId: sourceNode.id, targetId: targetId },
-							cache: false,
-							error: null
+							url: '/bmsapi/crops/' + cropName + '/germplasm-list-folders/' + sourceNode.id + '/move?newParentId=' + targetId + '&programUUID=' + currentProgramId,
+							type: 'PUT',
+							beforeSend: function (xhr) {
+								xhr.setRequestHeader('X-Auth-Token', xAuthToken);
+							}
 						});
 					},
 					rename: function (id, folderName) {

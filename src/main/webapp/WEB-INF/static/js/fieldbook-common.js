@@ -1177,6 +1177,28 @@ function moveStudy(sourceNode, targetNode) {
 	});
 }
 
+function moveGermplasm(sourceNode, targetNode) {
+	'use strict';
+	var sourceId = sourceNode.data.key,
+		targetId = targetNode.data.key;
+
+
+	var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
+	$.ajax({
+		url: '/bmsapi/crops/' + cropName + '/germplasm-list-folders/' + sourceId + '/move?newParentId=' + targetId + '&programUUID=' + currentProgramId,
+		type: 'PUT',
+		beforeSend: function (xhr) {
+			xhr.setRequestHeader('X-Auth-Token', xAuthToken);
+		},
+		success: function () {
+			var node = targetNode;
+			sourceNode.remove();
+			doGermplasmLazyLoad(node);
+			node.focus();
+		}
+	});
+}
+
 function moveSamplesListFolder(sourceNode, targetNode) {
 	'use strict';
 	var sourceId = sourceNode.data.key,
