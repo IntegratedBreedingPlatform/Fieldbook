@@ -141,7 +141,7 @@
 								if (data.status == 401) {
 									bmsAuth.handleReAuthentication();
 								} else {
-									showErrorMessage('page-add-germplasm-folder-message-modal', data.message);
+									showErrorMessage('page-add-germplasm-folder-message-modal', data.responseJSON.errors[0].message);
 									return $.Deferred().reject(data).promise();
 								}
 							},
@@ -173,7 +173,7 @@
 								if (data.status == 401) {
 									bmsAuth.handleReAuthentication();
 								} else {
-									showErrorMessage('page-rename-germplasm-folder-message-modal', data.message);
+									showErrorMessage('page-rename-germplasm-folder-message-modal', data.responseJSON.errors[0].message);
 									return $.Deferred().reject(data).promise();
 								}
 							},
@@ -194,7 +194,7 @@
 								if (data.status == 401) {
 									bmsAuth.handleReAuthentication();
 								} else {
-									showErrorMessage('page-delete-germplasm-folder-message-modal', data.message);
+									showErrorMessage('page-delete-germplasm-folder-message-modal', data.responseJSON.errors[0].message);
 									return $.Deferred().reject(data).promise();
 								}
 							},
