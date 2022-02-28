@@ -44,11 +44,14 @@ function doGermplasmLazyLoad(node) {
 	'use strict';
 
 	if (node.data.isFolder === true) {
-
+		var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
 		node.appendAjax({
 			url : lazyLoadUrl + node.data.key + additionalLazyLoadUrl,
 			dataType : 'json',
 			async : false,
+			beforeSend: function (xhr) {
+				xhr.setRequestHeader('X-Auth-Token', xAuthToken);
+			},
 			success : function(node) {
 				//do nothing
 

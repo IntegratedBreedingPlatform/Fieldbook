@@ -34,7 +34,27 @@ var TreePersist = {
 	},
 	saveGermplasmTreeState : function(isTreeTable, containerSection) {
 		'use strict';
-		TreePersist.saveTreeState(isTreeTable, containerSection, GERMPLASM_LIST_TYPE);
+		var programFolders = TreePersist.retrieveExpandedNodes(isTreeTable,
+			containerSection);
+		var data = {
+			userId: currentCropUserId,
+			programFolders: programFolders,
+			cropFolders: null
+		}
+		var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
+		$.ajax({
+			url : '/bmsapi/crops/' + cropName + '/germplasm-lists/tree-state?programUUID=' + currentProgramId,
+			type : 'POST',
+			beforeSend: function (xhr) {
+				xhr.setRequestHeader('X-Auth-Token', xAuthToken);
+			},
+			data : JSON.stringify(data),
+			cache : false,
+			async : false,
+			contentType: 'application/json',
+			success : function(data) {
+			}
+		});
 	},
 	saveSampleTreeState : function(isTreeTable, containerSection) {
 		'use strict';
