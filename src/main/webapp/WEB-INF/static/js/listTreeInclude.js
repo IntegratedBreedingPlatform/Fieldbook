@@ -3,7 +3,7 @@
 /*exported displayGermplasmListTree, displaySampleListTree, openTreeType*/
 /*exported getDisplayedTreeName, doGermplasmLazyLoad, doSampleLazyLoad*/
 
-var lazyLoadUrl = '/bmsapi/crops/' + cropName + '/germplasm-lists/tree?onlyFolders=false&programUUID=' + currentProgramId +
+var lazyLoadUrl = '/bmsapi/crops/' + cropName + '/germplasm-lists/tree?onlyFolders=true&programUUID=' + currentProgramId +
 	'&parentFolderId=',
 	additionalLazyLoadUrl = '',
 	germplasmFocusNode = null,
@@ -66,9 +66,6 @@ function doGermplasmLazyLoad(node) {
 				if (node.data.isFolder === false) {
 					changeBrowseGermplasmButtonBehavior(false);
 				} else {
-
-
-
 					if (node.data.key === 'LISTS' || node.data.key === 'CROPLISTS') {
 						changeBrowseGermplasmButtonBehavior(true);
 						$('.edit-germplasm-folder').addClass(

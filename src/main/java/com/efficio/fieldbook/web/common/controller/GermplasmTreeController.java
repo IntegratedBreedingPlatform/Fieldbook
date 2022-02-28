@@ -960,17 +960,13 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/retrieve/state/{type}/{saveMode}", method = RequestMethod.GET)
-	public String retrieveTreeState(@PathVariable final String type, @PathVariable final Boolean saveMode) {
+	@RequestMapping(value = "/retrieve/state/{type}", method = RequestMethod.GET)
+	public String retrieveTreeState(@PathVariable final String type) {
 
 		final List<String> stateList;
 		final int userID = this.contextUtil.getCurrentWorkbenchUserId();
 		final String programUUID = this.getCurrentProgramUUID();
-		if (saveMode) {
-			stateList = this.userTreeStateService.getUserProgramTreeStateForSaveList(userID, programUUID);
-		} else {
-			stateList = this.userTreeStateService.getUserProgramTreeStateByUserIdProgramUuidAndType(userID, programUUID, type);
-		}
+		stateList = this.userTreeStateService.getUserProgramTreeStateByUserIdProgramUuidAndType(userID, programUUID, type);
 
 		return super.convertObjectToJson(stateList);
 	}

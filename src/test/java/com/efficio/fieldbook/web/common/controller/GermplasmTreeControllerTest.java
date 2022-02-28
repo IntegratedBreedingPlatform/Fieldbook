@@ -427,7 +427,7 @@ public class GermplasmTreeControllerTest {
 	}
 
 	@Test
-	public void testLoadTreeStateNonSaveDialog() throws MiddlewareQueryException {
+	public void testLoadTreeState() throws MiddlewareQueryException {
 		final List<String> response = new ArrayList<String>();
 		response.add("1");
 		response.add("2");
@@ -435,24 +435,7 @@ public class GermplasmTreeControllerTest {
 			.getUserProgramTreeStateByUserIdProgramUuidAndType(GermplasmTreeControllerTest.TEST_USER_ID,
 				GermplasmTreeControllerTest.TEST_PROGRAM_UUID, ListTreeState.GERMPLASM_LIST.name());
 
-		final String returnData = this.controller.retrieveTreeState(ListTreeState.GERMPLASM_LIST.name(), false);
-
-		Assert.assertEquals("Should return [1, 2]", "[\"1\",\"2\"]", returnData);
-	}
-
-	@Test
-	public void testLoadTreeStateSaveDialog() throws MiddlewareQueryException {
-		final List<String> response = new ArrayList<>();
-		response.add("1");
-		response.add("2");
-		Mockito.doReturn(response).when(this.userTreeStateService)
-			.getUserProgramTreeStateForSaveList(GermplasmTreeControllerTest.TEST_USER_ID,
-				GermplasmTreeControllerTest.TEST_PROGRAM_UUID);
-
-		final String returnData = this.controller.retrieveTreeState(ListTreeState.GERMPLASM_LIST.name(), true);
-
-		Mockito.verify(this.userTreeStateService).getUserProgramTreeStateForSaveList(GermplasmTreeControllerTest.TEST_USER_ID,
-			GermplasmTreeControllerTest.TEST_PROGRAM_UUID);
+		final String returnData = this.controller.retrieveTreeState(ListTreeState.GERMPLASM_LIST.name());
 
 		Assert.assertEquals("Should return [1, 2]", "[\"1\",\"2\"]", returnData);
 	}
