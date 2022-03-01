@@ -85,15 +85,29 @@ var TreePersist = {
 	},
 	preLoadStudyTreeState : function(containerSection) {
 		'use strict';
-		TreePersist.preLoadTreeState(containerSection,
-				STUDY_LIST_TYPE);
+		TreePersist.retrievePreviousStudyTreeState().done(function(expandedNodes) {
+			var dynatree = $(containerSection).dynatree('getTree');
+			TreePersist.traverseNodes(expandedNodes, STUDY_LIST_TYPE, function(key) {
+				var germplasmFocusNode = dynatree.getNodeByKey(key);
+				if (germplasmFocusNode !== null) {
+					germplasmFocusNode.expand();
+				}
+			});
+			setTimeout(function() {
+				$(containerSection).dynatree('getRoot').visit(function(node) {
+					node.select(false);
+					node.deactivate();
+				});
+			}, 50);
+
+		});
 	},
 	preLoadGermplasmTreeState: function(isTreeTable, containerSection, isSaveList) {
 		'use strict';
 		if (isTreeTable){
-			TreePersist.preLoadTreeTableState(GERMPLASM_LIST_TYPE);
+			TreePersist.preLoadGermplasmTreeTableState();
 		} else {
-			TreePersist.preLoadTreeState(containerSection, GERMPLASM_LIST_TYPE, isSaveList);
+			TreePersist.preLoadTreeState(containerSection, isSaveList);
 		}
 
 	},
@@ -107,50 +121,54 @@ var TreePersist = {
 		}
 
 	},
-	retrievePreviousTreeState: function(listType) {
+
+	retrievePreviousStudyTreeState: function() {
+		'use strict';
+		var deferred = $.Deferred();
+		$.ajax({
+			url: '/Fieldbook/ListTreeManager/retrieve/state/' + STUDY_LIST_TYPE,
+			type : 'GET',
+			data : '',
+			cache : false,
+			async : false,
+			success : function(data) {
+				var expandedNodes = $.parseJSON(data);
+				if((expandedNodes.length === 1 && expandedNodes[0] === '') || expandedNodes.length === 0){
+					deferred.reject(expandedNodes);
+				} else {
+					deferred.resolve(expandedNodes);
+				}
+			}
+		});
+
+		return deferred.promise();
+	},
+	retrievePreviousGermplasmTreeState: function() {
 		'use strict';
 		var deferred = $.Deferred();
 		var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
 
-		if(listType === GERMPLASM_LIST_TYPE) {
-			$.ajax({
-				url: '/bmsapi/crops/' + cropName + '/germplasm-lists/tree-state?programUUID=' + currentProgramId + '&userId=' + currentCropUserId,
-				type : 'GET',
-				data : '',
-				cache : false,
-				beforeSend: function (xhr) {
-					xhr.setRequestHeader('X-Auth-Token', xAuthToken);
-				},
-				async : false,
-				success : function(data) {
-					//Remove the crop lists nodes
-					data.shift();
-					var expandedNodes = [];
-					TreePersist.getAllTreeExpandedNode(data, expandedNodes);
-					if((expandedNodes.length === 1 && expandedNodes[0] === '') || expandedNodes.length === 0){
-						deferred.reject(expandedNodes);
-					} else {
-						deferred.resolve(expandedNodes);
-					}
+		$.ajax({
+			url: '/bmsapi/crops/' + cropName + '/germplasm-lists/tree-state?programUUID=' + currentProgramId + '&userId=' + currentCropUserId,
+			type : 'GET',
+			data : '',
+			cache : false,
+			beforeSend: function (xhr) {
+				xhr.setRequestHeader('X-Auth-Token', xAuthToken);
+			},
+			async : false,
+			success : function(data) {
+				//Remove the crop lists nodes
+				data.shift();
+				var expandedNodes = [];
+				TreePersist.getAllTreeExpandedNode(data, expandedNodes);
+				if((expandedNodes.length === 1 && expandedNodes[0] === '') || expandedNodes.length === 0){
+					deferred.reject(expandedNodes);
+				} else {
+					deferred.resolve(expandedNodes);
 				}
-			});
-		} else {
-			$.ajax({
-				url: '/Fieldbook/ListTreeManager/retrieve/state/' + listType,
-				type : 'GET',
-				data : '',
-				cache : false,
-				async : false,
-				success : function(data) {
-					var expandedNodes = $.parseJSON(data);
-					if((expandedNodes.length === 1 && expandedNodes[0] === '') || expandedNodes.length === 0){
-						deferred.reject(expandedNodes);
-					} else {
-						deferred.resolve(expandedNodes);
-					}
-				}
-			});
-		}
+			}
+		});
 
 		return deferred.promise();
 	},
@@ -186,10 +204,10 @@ var TreePersist = {
 		$('#treeTable').treetable('expandNode', id);
 	},
 
-	preLoadTreeTableState: function(listType) {
+	preLoadGermplasmTreeTableState: function() {
 		'use strict';
-		TreePersist.retrievePreviousTreeState(listType).done(function(expandedNodes) {
-			TreePersist.traverseNodes(expandedNodes, listType, TreePersist.expandNode);
+		TreePersist.retrievePreviousGermplasmTreeState().done(function(expandedNodes) {
+			TreePersist.traverseNodes(expandedNodes, GERMPLASM_LIST_TYPE, TreePersist.expandNode);
 		}).fail(function () {
 			// If there's no previous tree state, the top level 'Lists' node should be expanded by default.
 			TreePersist.expandNode('LISTS');
@@ -212,13 +230,13 @@ var TreePersist = {
 		TreePersist.expandNode('CROPLISTS');
 	},
 
-	preLoadTreeState: function(containerSection, listType, isSaveList) {
+	preLoadTreeState: function(containerSection, isSaveList) {
 		'use strict';
 
-		TreePersist.retrievePreviousTreeState(listType).done(function(expandedNodes) {
+		TreePersist.retrievePreviousGermplasmTreeState().done(function(expandedNodes) {
 			var dynatree = $(containerSection).dynatree('getTree');
 			var shouldActivateNode = isSaveList;
-			TreePersist.traverseNodes(expandedNodes, listType, function(key) {
+			TreePersist.traverseNodes(expandedNodes, GERMPLASM_LIST_TYPE, function(key) {
 				var germplasmFocusNode = dynatree.getNodeByKey(key);
 				if (germplasmFocusNode !== null) {
 					germplasmFocusNode.expand();
