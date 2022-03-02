@@ -97,10 +97,6 @@ var TreeTable = (function () {
 			return resolved;
 		} else {
 			parentFolderId = self.getSelectedListId();
-			if (parentFolderId === 'LISTS' || parentFolderId === 'CROPLISTS') {
-				parentFolderId = 0;
-			}
-
 			var id;
 			return self.create(parentFolderId, folderName)
 				.then(function (data) {

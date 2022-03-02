@@ -25,26 +25,29 @@ var ListTreeOperation = {};
 			return false;
 		} else {
 			parentFolderId = $('#' + getDisplayedTreeName()).dynatree('getTree').getActiveNode().data.key;
-			if (parentFolderId === 'LISTS') {
-				parentFolderId = 0;
-			}
+			var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
 			$.ajax({
-				url: '/Fieldbook/ListTreeManager/addGermplasmFolder',
+				url: '/bmsapi/crops/' + cropName + '/germplasm-list-folders?folderName=' + folderName + '&parentId=' + parentFolderId
+					+ '&programUUID=' + currentProgramId,
 				type: 'POST',
-				data: 'parentFolderId=' + parentFolderId + '&folderName=' + folderName,
-				cache: false,
-				success: function(data) {
-					if (data.isSuccess === '1') {
-						// Lazy load the node
-						var node = $('#' + getDisplayedTreeName()).dynatree('getTree').getActiveNode();
-						doGermplasmLazyLoad(node);
-						node.focus();
-						node.expand();
-						$(getDisplayedModalSelector() + ' #addGermplasmFolderDiv').slideUp('fast');
-						showSuccessfulMessage('', addFolderSuccessful);
+				beforeSend: function (xhr) {
+					xhr.setRequestHeader('X-Auth-Token', xAuthToken);
+				},
+				error: function (data) {
+					if (data.status == 401) {
+						bmsAuth.handleReAuthentication();
 					} else {
-						showErrorMessage('page-add-message-modal', data.message);
+						showErrorMessage('page-add-message-modal', data.responseJSON.errors[0].message);
 					}
+				},
+				success: function() {
+					// Lazy load the node
+					var node = $('#' + getDisplayedTreeName()).dynatree('getTree').getActiveNode();
+					doGermplasmLazyLoad(node);
+					node.focus();
+					node.expand();
+					$(getDisplayedModalSelector() + ' #addGermplasmFolderDiv').slideUp('fast');
+					showSuccessfulMessage('', addFolderSuccessful);
 				}
 			});
 		}
@@ -186,23 +189,31 @@ var ListTreeOperation = {};
 			if (parentFolderId === 'LISTS') {
 				parentFolderId = 0;
 			}
+
+			var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
+
 			$.ajax({
-				url: '/Fieldbook/ListTreeManager/renameGermplasmFolder',
-				type: 'POST',
-				data: 'folderId=' + parentFolderId + '&newFolderName=' + folderName,
-				cache: false,
-				success: function(data) {
-					var node;
-					if (data.isSuccess === '1') {
-						$(getDisplayedModalSelector() + ' #renameGermplasmFolderDiv').slideUp('fast');
-						node = $('#' + getDisplayedTreeName()).dynatree('getTree').getActiveNode();
-						node.data.title = folderName;
-						$(node.span).find('a').html(folderName);
-						node.focus();
-						showSuccessfulMessage('', renameItemSuccessful);
+				url:  '/bmsapi/crops/' + cropName + '/germplasm-list-folders/' + parentFolderId + '?newFolderName=' + folderName
+						+ '&programUUID=' + currentProgramId,
+				type: 'PUT',
+				beforeSend: function (xhr) {
+					xhr.setRequestHeader('X-Auth-Token', xAuthToken);
+				},
+				error: function (data) {
+					if (data.status == 401) {
+						bmsAuth.handleReAuthentication();
 					} else {
-						showErrorMessage('page-rename-message-modal', data.message);
+						showErrorMessage('page-rename-message-modal', data.responseJSON.errors[0].message);
 					}
+				},
+				success: function () {
+					var node;
+					$(getDisplayedModalSelector() + ' #renameGermplasmFolderDiv').slideUp('fast');
+					node = $('#' + getDisplayedTreeName()).dynatree('getTree').getActiveNode();
+					node.data.title = folderName;
+					$(node.span).find('a').html(folderName);
+					node.focus();
+					showSuccessfulMessage('', renameItemSuccessful);
 				}
 			});
 		}
@@ -260,7 +271,6 @@ var ListTreeOperation = {};
 					$(node.span).find('a').html(folderName);
 					node.focus();
 					showSuccessfulMessage('', renameItemSuccessful);
-
 				}
 			});
 		}
@@ -295,23 +305,29 @@ var ListTreeOperation = {};
 	ListTreeOperation.submitDeleteGermplasmFolder = function() {
 		'use strict';
 		var folderId = $('#' + getDisplayedTreeName()).dynatree('getTree').getActiveNode().data.key;
+		var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
+
 		$.ajax({
-			url: '/Fieldbook/ListTreeManager/deleteGermplasmFolder',
-			type: 'POST',
-			data: 'folderId=' + folderId,
-			cache: false,
-			success: function(data) {
-				var node;
-				if (data.isSuccess === '1') {
-					$('#deleteFolderModal').modal('hide');
-					node = $('#' + getDisplayedTreeName()).dynatree('getTree').getActiveNode();
-					node.remove();
-					showSuccessfulMessage('', deleteItemSuccessful);
+			url: '/bmsapi/crops/' + cropName + '/germplasm-list-folders/' + folderId + '?programUUID=' + currentProgramId,
+			type: 'DELETE',
+			beforeSend: function(xhr) {
+				xhr.setRequestHeader('X-Auth-Token', xAuthToken);
+			},
+			error: function (data) {
+				if (data.status == 401) {
+					bmsAuth.handleReAuthentication();
 				} else {
-					showErrorMessage('page-delete-message-modal', data.message);
+					showErrorMessage('page-delete-message-modal', data.responseJSON.errors[0].message);
 				}
+			},
+			success: function() {
+				var node;
+				node = $('#' + getDisplayedTreeName()).dynatree('getTree').getActiveNode();
+				node.remove();
+				showSuccessfulMessage('', deleteItemSuccessful);
 			}
 		});
+		$('#deleteFolderModal').modal('hide');
 	};
 
 	ListTreeOperation.submitDeleteSampleFolder = function() {

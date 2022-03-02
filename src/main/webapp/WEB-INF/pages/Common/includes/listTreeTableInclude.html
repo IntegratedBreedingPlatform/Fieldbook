@@ -76,8 +76,6 @@
 			var cannotMove = /*[[#{browse.study.move.can.not}]]*/ '',
 				hasChildrenString = /*[[#{browse.study.move.has.children}]]*/ '',
 				pleaseChooseFolder = /*[[#{import.germplasm.choose.a.list}]]*/ '',
-				lazyLoadUrl = '/Fieldbook/ListTreeManager/expandGermplasmListFolder/',
-				additionalLazyLoadUrl = '',
 				germplasmFocusNode = null,
 				openTreeType = 0,
                 selectListFunction;
@@ -118,10 +116,10 @@
 			function displayGermplasmListTreeTable(divId) {
 				'use strict';
 
-				var baseurl = '/Fieldbook/ListTreeManager';
-
+				var baseurl = '/bmsapi/crops/' + cropName + '/germplasm-list-folders';
 				germplasmTreetable = new TreeTable({
-					baseurl: baseurl,
+					// Set the base URL to GermplasmTreeController because some pages are still in thymeleaf
+					baseurl: '/Fieldbook/ListTreeManager',
 					treeTableSelector: '#treeTable',
 					tableContainer: $('#germplasmTree'),
 					authparams: {},
@@ -132,60 +130,78 @@
 						ListTable.chooseList();
 					},
 					create: function (parentFolderId, folderName) {
+						var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
+
 						return $.ajax({
-							url: baseurl + '/addGermplasmFolder',
+							url:  baseurl + '?folderName=' + folderName + '&parentId=' + parentFolderId + '&programUUID=' + currentProgramId,
 							type: 'POST',
-							data: { parentFolderId: parentFolderId, folderName: folderName },
-							cache: false,
-							error: null
-						}).then(function (data) {
-							if (data.isSuccess !== '1') {
-								showErrorMessage('page-add-germplasm-folder-message-modal', data.message);
-								return $.Deferred().reject(data).promise();
+							beforeSend: function (xhr) {
+								xhr.setRequestHeader('X-Auth-Token', xAuthToken);
+							},
+							error: function (data) {
+								if (data.status == 401) {
+									bmsAuth.handleReAuthentication();
+								} else {
+									showErrorMessage('page-add-germplasm-folder-message-modal', data.responseJSON.errors[0].message);
+									return $.Deferred().reject(data).promise();
+								}
+							},
+							success: function(data) {
+								return $.Deferred().resolve(data).promise();
 							}
-							return $.Deferred().resolve(data).promise();
 						});
 					},
 					move: function (sourceNode, targetNode) {
+						var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
 						var targetId = targetNode.id;
-						if (targetId === 'LISTS') {
-							targetId = 0;
-						}
 						return $.ajax({
-							url: baseurl + '/moveGermplasmFolder',
-							type: 'POST',
-							data: { sourceId: sourceNode.id, targetId: targetId },
-							cache: false,
-							error: null
+							url: baseurl + '/' + sourceNode.id + '/move?newParentId=' + targetId + '&programUUID=' + currentProgramId,
+							type: 'PUT',
+							beforeSend: function (xhr) {
+								xhr.setRequestHeader('X-Auth-Token', xAuthToken);
+							}
 						});
 					},
 					rename: function (id, folderName) {
+						var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
 						return $.ajax({
-							url: baseurl + '/renameGermplasmFolder',
-							type: 'POST',
-							data: { folderId: id, newFolderName: folderName },
-							cache: false,
-							error: null
-						}).then(function (data) {
-							if (data.isSuccess !== '1') {
-								showErrorMessage('page-rename-germplasm-folder-message-modal', data.message);
-								return $.Deferred().reject(data).promise();
+							url:  baseurl + '/' + id + '?newFolderName=' + folderName + '&programUUID=' + currentProgramId,
+							type: 'PUT',
+							beforeSend: function (xhr) {
+								xhr.setRequestHeader('X-Auth-Token', xAuthToken);
+							},
+							error: function (data) {
+								if (data.status == 401) {
+									bmsAuth.handleReAuthentication();
+								} else {
+									showErrorMessage('page-rename-germplasm-folder-message-modal', data.responseJSON.errors[0].message);
+									return $.Deferred().reject(data).promise();
+								}
+							},
+							success: function (data) {
+								return $.Deferred().resolve(data).promise();
 							}
-							return $.Deferred().resolve(data).promise();
 						});
 					},
 					delete: function (folderId) {
+						var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
 						return $.ajax({
-							url: baseurl + '/deleteGermplasmFolder',
-							type: 'POST',
-							data: { folderId: folderId },
-							cache: false
-						}).then(function (data) {
-							if (data.isSuccess !== '1') {
-								showErrorMessage('page-delete-germplasm-folder-message-modal', data.message);
-								return $.Deferred().reject(data).promise();
+							url: baseurl + '/' + folderId + '?programUUID=' + currentProgramId,
+							type: 'DELETE',
+							beforeSend: function(xhr) {
+								xhr.setRequestHeader('X-Auth-Token', xAuthToken);
+							},
+							error: function (data) {
+								if (data.status == 401) {
+									bmsAuth.handleReAuthentication();
+								} else {
+									showErrorMessage('page-delete-germplasm-folder-message-modal', data.responseJSON.errors[0].message);
+									return $.Deferred().reject(data).promise();
+								}
+							},
+							success: function(data) {
+								return $.Deferred().resolve(data).promise();
 							}
-							return $.Deferred().resolve(data).promise();
 						});
 					}
 				});

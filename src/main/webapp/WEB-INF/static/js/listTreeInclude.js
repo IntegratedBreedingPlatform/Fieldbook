@@ -3,7 +3,8 @@
 /*exported displayGermplasmListTree, displaySampleListTree, openTreeType*/
 /*exported getDisplayedTreeName, doGermplasmLazyLoad, doSampleLazyLoad*/
 
-var lazyLoadUrl = '/Fieldbook/ListTreeManager/expandGermplasmTree/',
+var lazyLoadUrl = '/bmsapi/crops/' + cropName + '/germplasm-lists/tree?onlyFolders=false&programUUID=' + currentProgramId +
+	'&parentFolderId=',
 	additionalLazyLoadUrl = '',
 	germplasmFocusNode = null,
 	sampleFocusNode = null,
@@ -43,11 +44,14 @@ function doGermplasmLazyLoad(node) {
 	'use strict';
 
 	if (node.data.isFolder === true) {
-
+		var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
 		node.appendAjax({
 			url : lazyLoadUrl + node.data.key + additionalLazyLoadUrl,
 			dataType : 'json',
 			async : false,
+			beforeSend: function (xhr) {
+				xhr.setRequestHeader('X-Auth-Token', xAuthToken);
+			},
 			success : function(node) {
 				//do nothing
 
@@ -62,9 +66,6 @@ function doGermplasmLazyLoad(node) {
 				if (node.data.isFolder === false) {
 					changeBrowseGermplasmButtonBehavior(false);
 				} else {
-
-
-
 					if (node.data.key === 'LISTS' || node.data.key === 'CROPLISTS') {
 						changeBrowseGermplasmButtonBehavior(true);
 						$('.edit-germplasm-folder').addClass(
@@ -155,9 +156,10 @@ function doSampleLazyLoad(node) {
 function displayGermplasmListTree(treeName, isLocalOnly, isFolderOnly,
 								  clickFunction) {
 	'use strict';
-	var lazyLoadUrlGetChildren = '/Fieldbook/ListTreeManager/expandGermplasmTree/';
-	var initLoadUrl = '/Fieldbook/ListTreeManager/loadInitGermplasmTree';
-	initLoadUrl += '/' + isFolderOnly;
+	var lazyLoadUrlGetChildren = '/bmsapi/crops/' + cropName + '/germplasm-lists/tree?onlyFolders=false'
+		+ '&programUUID=' + currentProgramId + '&parentFolderId=';
+	var initLoadUrl = '/bmsapi/crops/' + cropName + '/germplasm-lists/tree-state?programUUID=' + currentProgramId + "&userId=" + currentCropUserId;
+	var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
 
 	var dynaTreeOptions = {
 		title : treeName,
@@ -168,7 +170,10 @@ function displayGermplasmListTree(treeName, isLocalOnly, isFolderOnly,
 		activeVisible : true,
 		initAjax : {
 			url : initLoadUrl,
-			dataType : 'json'
+			dataType : 'json',
+			beforeSend: function (xhr) {
+				xhr.setRequestHeader('X-Auth-Token', xAuthToken);
+			},
 		},
 		onLazyRead : function(node) {
 			doGermplasmLazyLoad(node);
@@ -295,15 +300,19 @@ function displayGermplasmListTree(treeName, isLocalOnly, isFolderOnly,
 					showErrorMessage(getMessageErrorDiv(), cannotMoveFolderToCropListError);
                 } else if (!node.data.isFolder) {
                     showErrorMessage(getMessageErrorDiv(), cannotMoveItemToAListError);
-				} else {
+				} else if (!sourceNode.data.isFolder) {
+					moveGermplasm(sourceNode, node);
+				}else {
 					$.ajax({
-						url : lazyLoadUrlGetChildren
-						+ sourceNode.data.key,
+						url : lazyLoadUrlGetChildren + sourceNode.data.key,
 						type : 'GET',
 						cache : false,
+						beforeSend: function (xhr) {
+							xhr.setRequestHeader('X-Auth-Token', xAuthToken);
+						},
 						aysnc : false,
 						success : function(data) {
-							var childCount = $.parseJSON(data).length;
+							var childCount = data.length;
 							if (childCount === 0) {
 								moveGermplasm(sourceNode, node);
 							} else {

@@ -1,10 +1,11 @@
 
 package com.efficio.fieldbook.web.common.controller;
 
+import com.efficio.fieldbook.web.AbstractBaseFieldbookController;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.generationcp.commons.constant.AppConstants;
 import org.generationcp.commons.pojo.treeview.TreeNode;
-import org.generationcp.commons.spring.util.ContextUtil;
+import org.generationcp.commons.service.UserTreeStateService;
 import org.generationcp.commons.util.TreeViewUtil;
 import org.generationcp.middleware.domain.dms.Reference;
 import org.generationcp.middleware.exceptions.MiddlewareException;
@@ -26,12 +27,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.HtmlUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -39,7 +42,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping(StudyTreeController.URL)
-public class StudyTreeController {
+public class StudyTreeController extends AbstractBaseFieldbookController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(StudyTreeController.class);
 	public static final String URL = "/StudyTreeManager";
@@ -59,13 +62,13 @@ public class StudyTreeController {
 	private MessageSource messageSource;
 
 	@Autowired
-	private ContextUtil contextUtil;
-
-	@Autowired
 	private HttpServletRequest request;
 
 	@Autowired
 	private PlatformTransactionManager transactionManager;
+
+	@Resource
+	private UserTreeStateService userTreeStateService;
 
 	@ResponseBody
 	@RequestMapping(value = "/loadInitialTree/{isFolderOnly}", method = RequestMethod.GET)
@@ -287,7 +290,6 @@ public class StudyTreeController {
 	@RequestMapping(value = "/renameStudy", method = RequestMethod.POST)
 	public Map<String, Object> renameStudy(final HttpServletRequest req) {
 		final Map<String, Object> resultsMap = new HashMap<>();
-		final Locale locale = LocaleContextHolder.getLocale();
 		try {
 			final String newStudyName = req.getParameter("newStudyName");
 			final String studyId = req.getParameter("studyId");
@@ -360,6 +362,34 @@ public class StudyTreeController {
 		return resultsMap;
 	}
 
+	@ResponseBody
+	@RequestMapping(value = "/save/state/{type}")
+	public String saveTreeState(@PathVariable final String type, @RequestParam(value = "expandedNodes[]") final String[] expandedNodes) {
+		StudyTreeController.LOG.debug("Save the debug nodes");
+		String status = "OK";
+		try {
+			this.userTreeStateService
+				.saveOrUpdateUserProgramTreeState(this.contextUtil.getCurrentWorkbenchUserId(), this.getCurrentProgramUUID(), type,
+					Arrays.asList(expandedNodes));
+		} catch (final MiddlewareQueryException e) {
+			StudyTreeController.LOG.error(e.getMessage(), e);
+			status = "ERROR";
+		}
+		return status;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/retrieve/state/{type}", method = RequestMethod.GET)
+	public String retrieveTreeState(@PathVariable final String type) {
+
+		final List<String> stateList;
+		final int userID = this.contextUtil.getCurrentWorkbenchUserId();
+		final String programUUID = this.getCurrentProgramUUID();
+		stateList = this.userTreeStateService.getUserProgramTreeStateByUserIdProgramUuidAndType(userID, programUUID, type);
+
+		return super.convertObjectToJson(stateList);
+	}
+
 	protected String getCurrentProgramUUID() {
 		return this.contextUtil.getCurrentProgramUUID();
 	}
@@ -376,8 +406,9 @@ public class StudyTreeController {
 		this.messageSource = messageSource;
 	}
 
-	void setContextUtil(final ContextUtil contextUtil) {
-		this.contextUtil = contextUtil;
+	@Override
+	public String getContentName() {
+		return null;
 	}
 
 	void setRequest(final HttpServletRequest request) {
