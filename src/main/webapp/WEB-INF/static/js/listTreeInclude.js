@@ -3,7 +3,7 @@
 /*exported displayGermplasmListTree, displaySampleListTree, openTreeType*/
 /*exported getDisplayedTreeName, doGermplasmLazyLoad, doSampleLazyLoad*/
 
-var lazyLoadUrl = '/bmsapi/crops/' + cropName + '/germplasm-lists/tree?onlyFolders=true&programUUID=' + currentProgramId +
+var lazyLoadUrl = '/bmsapi/crops/' + cropName + '/germplasm-lists/tree?onlyFolders=false&programUUID=' + currentProgramId +
 	'&parentFolderId=',
 	additionalLazyLoadUrl = '',
 	germplasmFocusNode = null,
@@ -156,7 +156,7 @@ function doSampleLazyLoad(node) {
 function displayGermplasmListTree(treeName, isLocalOnly, isFolderOnly,
 								  clickFunction) {
 	'use strict';
-	var lazyLoadUrlGetChildren = '/bmsapi/crops/' + cropName + '/germplasm-lists/tree?onlyFolders=' + isFolderOnly
+	var lazyLoadUrlGetChildren = '/bmsapi/crops/' + cropName + '/germplasm-lists/tree?onlyFolders=false'
 		+ '&programUUID=' + currentProgramId + '&parentFolderId=';
 	var initLoadUrl = '/bmsapi/crops/' + cropName + '/germplasm-lists/tree-state?programUUID=' + currentProgramId + "&userId=" + currentCropUserId;
 	var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
@@ -300,14 +300,19 @@ function displayGermplasmListTree(treeName, isLocalOnly, isFolderOnly,
 					showErrorMessage(getMessageErrorDiv(), cannotMoveFolderToCropListError);
                 } else if (!node.data.isFolder) {
                     showErrorMessage(getMessageErrorDiv(), cannotMoveItemToAListError);
-				} else {
+				} else if (!sourceNode.data.isFolder) {
+					moveGermplasm(sourceNode, node);
+				}else {
 					$.ajax({
 						url : lazyLoadUrlGetChildren + sourceNode.data.key,
 						type : 'GET',
 						cache : false,
+						beforeSend: function (xhr) {
+							xhr.setRequestHeader('X-Auth-Token', xAuthToken);
+						},
 						aysnc : false,
 						success : function(data) {
-							var childCount = $.parseJSON(data).length;
+							var childCount = data.length;
 							if (childCount === 0) {
 								moveGermplasm(sourceNode, node);
 							} else {
