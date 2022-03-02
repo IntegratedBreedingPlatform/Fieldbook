@@ -34,7 +34,6 @@ import org.generationcp.commons.parsing.pojo.ImportedCrossesList;
 import org.generationcp.commons.parsing.pojo.ImportedGermplasm;
 import org.generationcp.commons.pojo.AdvancingSource;
 import org.generationcp.commons.pojo.AdvancingSourceList;
-import org.generationcp.commons.pojo.treeview.TreeNode;
 import org.generationcp.commons.pojo.treeview.TreeTableNode;
 import org.generationcp.commons.ruleengine.RuleException;
 import org.generationcp.commons.ruleengine.RulesNotConfiguredException;
@@ -42,7 +41,6 @@ import org.generationcp.commons.service.UserTreeStateService;
 import org.generationcp.commons.settings.CrossSetting;
 import org.generationcp.commons.util.DateUtil;
 import org.generationcp.commons.util.TreeViewUtil;
-import org.generationcp.commons.workbook.generator.RowColumnType;
 import org.generationcp.middleware.api.germplasm.GermplasmService;
 import org.generationcp.middleware.domain.etl.Workbook;
 import org.generationcp.middleware.domain.oms.CvId;
@@ -58,7 +56,6 @@ import org.generationcp.middleware.pojos.Germplasm;
 import org.generationcp.middleware.pojos.GermplasmList;
 import org.generationcp.middleware.pojos.GermplasmListData;
 import org.generationcp.middleware.pojos.GermplasmStudySourceType;
-import org.generationcp.middleware.pojos.ListMetadata;
 import org.generationcp.middleware.pojos.Name;
 import org.generationcp.middleware.pojos.UserDefinedField;
 import org.generationcp.middleware.service.api.FieldbookService;
@@ -80,12 +77,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -132,7 +126,6 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 	/**
 	 * The Constant BATCH_SIZE.
 	 */
-	public static final int BATCH_SIZE = 500;
 	public static final String DATE_TIME_FORMAT = "yyyyMMdd";
 
 	/**
@@ -160,14 +153,10 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 	private GermplasmService germplasmService;
 
 	static final String NAME_NOT_UNIQUE = "Name not unique";
-	private static final String HAS_CHILDREN = "Folder has children";
-	private static final String FOLDER = "FOLDER";
 
 	static final String IS_SUCCESS = "isSuccess";
 
 	private static final String MESSAGE = "message";
-
-	static final String DATE_FORMAT = DATE_TIME_FORMAT;
 
 	@Resource
 	private ResourceBundleMessageSource messageSource;
@@ -829,11 +818,6 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 			childNodes = this.getGermplasmFolderChildrenNode(id, programUUID);
 		}
 		return childNodes;
-	}
-
-	private List<GermplasmList> getGermplasmChildrenNode(final String parentKey, final String programUUID) {
-		final int parentId = Integer.parseInt(parentKey);
-		return this.germplasmListManager.getGermplasmListByParentFolderId(parentId, programUUID);
 	}
 
 	private List<TreeTableNode> getGermplasmFolderChildrenNode(final String id, final String programUUID) {
