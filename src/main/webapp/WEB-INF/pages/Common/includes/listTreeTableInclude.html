@@ -118,6 +118,7 @@
 
 				var baseurl = '/bmsapi/crops/' + cropName + '/germplasm-list-folders';
 				germplasmTreetable = new TreeTable({
+					// Set the base URL to GermplasmTreeController because some pages are still in thymeleaf
 					baseurl: '/Fieldbook/ListTreeManager',
 					treeTableSelector: '#treeTable',
 					tableContainer: $('#germplasmTree'),
