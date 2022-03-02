@@ -37,7 +37,6 @@ import org.generationcp.commons.pojo.AdvancingSourceList;
 import org.generationcp.commons.pojo.treeview.TreeTableNode;
 import org.generationcp.commons.ruleengine.RuleException;
 import org.generationcp.commons.ruleengine.RulesNotConfiguredException;
-import org.generationcp.commons.service.UserTreeStateService;
 import org.generationcp.commons.settings.CrossSetting;
 import org.generationcp.commons.util.DateUtil;
 import org.generationcp.commons.util.TreeViewUtil;
@@ -73,7 +72,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
@@ -98,12 +96,6 @@ import java.util.stream.Collectors;
 @Transactional
 public class GermplasmTreeController extends AbstractBaseFieldbookController {
 
-	/**
-	 * The default folder open state stored when closing the germplasm lists
-	 * browser.
-	 */
-	static final String DEFAULT_STATE_SAVED_FOR_GERMPLASM_LIST = "Lists";
-
 	private static final String COMMON_SAVE_GERMPLASM_LIST = "Common/saveGermplasmList";
 
 	private static final String GERMPLASM_LIST_TYPES = "germplasmListTypes";
@@ -122,7 +114,6 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 
 	public static final String GERMPLASM_LIST_TYPE_ADVANCE = "advance";
 	public static final String GERMPLASM_LIST_TYPE_CROSS = "cross";
-	public static final String NODE_NONE = "None";
 	/**
 	 * The Constant BATCH_SIZE.
 	 */
@@ -163,9 +154,6 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 
 	@Resource
 	private UserSelection userSelection;
-
-	@Resource
-	private UserTreeStateService userTreeStateService;
 
 	@Resource
 	private GermplasmDataManager germplasmDataManager;
@@ -913,46 +901,6 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 
 	protected boolean isSimilarToRootFolderName(final String itemName) {
 		return itemName.equalsIgnoreCase(AppConstants.PROGRAM_LISTS.getString());
-
-	}
-
-	@ResponseBody
-	@RequestMapping(value = "/save/state/{type}")
-	public String saveTreeState(@PathVariable final String type, @RequestParam(value = "expandedNodes[]") final String[] expandedNodes) {
-		GermplasmTreeController.LOG.debug("Save the debug nodes");
-		final List<String> states = new ArrayList<>();
-		String status = "OK";
-		try {
-
-			if (!GermplasmTreeController.NODE_NONE.equalsIgnoreCase(expandedNodes[0])) {
-				for (int index = 0; index < expandedNodes.length; index++) {
-					states.add(expandedNodes[index]);
-				}
-			}
-
-			if (states.isEmpty()) {
-				states.add(GermplasmTreeController.DEFAULT_STATE_SAVED_FOR_GERMPLASM_LIST);
-			}
-
-			this.userTreeStateService
-				.saveOrUpdateUserProgramTreeState(this.contextUtil.getCurrentWorkbenchUserId(), this.getCurrentProgramUUID(), type, states);
-		} catch (final MiddlewareQueryException e) {
-			GermplasmTreeController.LOG.error(e.getMessage(), e);
-			status = "ERROR";
-		}
-		return status;
-	}
-
-	@ResponseBody
-	@RequestMapping(value = "/retrieve/state/{type}", method = RequestMethod.GET)
-	public String retrieveTreeState(@PathVariable final String type) {
-
-		final List<String> stateList;
-		final int userID = this.contextUtil.getCurrentWorkbenchUserId();
-		final String programUUID = this.getCurrentProgramUUID();
-		stateList = this.userTreeStateService.getUserProgramTreeStateByUserIdProgramUuidAndType(userID, programUUID, type);
-
-		return super.convertObjectToJson(stateList);
 	}
 
 	protected String getCurrentProgramUUID() {

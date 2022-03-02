@@ -72,7 +72,7 @@ var TreePersist = {
 			expandedNodesState = ['None'];
 		}
 		$.ajax({
-			url : '/Fieldbook/ListTreeManager/save/state/' + listType,
+			url : '/Fieldbook/StudyTreeManager/save/state/' + listType,
 			type : 'POST',
 			data : {
 				expandedNodes : expandedNodesState
@@ -126,7 +126,7 @@ var TreePersist = {
 		'use strict';
 		var deferred = $.Deferred();
 		$.ajax({
-			url: '/Fieldbook/ListTreeManager/retrieve/state/' + STUDY_LIST_TYPE,
+			url: '/Fieldbook/StudyTreeManager/retrieve/state/' + STUDY_LIST_TYPE,
 			type : 'GET',
 			data : '',
 			cache : false,

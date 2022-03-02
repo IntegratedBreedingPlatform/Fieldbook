@@ -11,6 +11,9 @@
 
 package com.efficio.fieldbook.web.common.controller;
 
+import com.google.common.collect.Lists;
+import org.generationcp.commons.constant.ListTreeState;
+import org.generationcp.commons.service.UserTreeStateService;
 import org.generationcp.commons.spring.util.ContextUtil;
 import org.generationcp.middleware.domain.dms.FolderReference;
 import org.generationcp.middleware.domain.dms.Reference;
@@ -51,6 +54,8 @@ public class StudyTreeControllerTest {
 
 	private static final String FOLDER_NOT_EMPTY = "The folder FOLDER 1 cannot be deleted because it is not empty";
 
+	private static final Integer TEST_USER_ID = 101;
+
 	private Project selectedProject;
 
 	private Map<String, String> data;
@@ -73,6 +78,9 @@ public class StudyTreeControllerTest {
 	@Mock
 	private PlatformTransactionManager transactionManager;
 
+	@Mock
+	private UserTreeStateService userTreeStateService;
+
 	@InjectMocks
 	private StudyTreeController controller;
 
@@ -81,6 +89,7 @@ public class StudyTreeControllerTest {
 		MockitoAnnotations.initMocks(this);
 		this.selectedProject = this.createProject();
 		Mockito.doReturn(this.selectedProject.getUniqueID()).when(this.contextUtil).getCurrentProgramUUID();
+		Mockito.doReturn(StudyTreeControllerTest.TEST_USER_ID).when(this.contextUtil).getCurrentWorkbenchUserId();
 		this.data = new HashMap<String, String>();
 		this.data.put("folderName", StudyTreeControllerTest.FOLDER_NAME);
 	}
@@ -215,5 +224,30 @@ public class StudyTreeControllerTest {
 		Assert.assertEquals("The result's isSuccess attribute should be 0", "0", result.get(StudyTreeController.IS_SUCCESS));
 		Assert.assertEquals("The message should be '" + StudyTreeControllerTest.FOLDER_NOT_EMPTY + "'",
 				StudyTreeControllerTest.FOLDER_NOT_EMPTY, result.get(StudyTreeController.MESSAGE));
+	}
+
+	@Test
+	public void testSaveTreeState() throws MiddlewareQueryException {
+		final String[] expandedNodes = {"2", "5", "6"};
+		final String response = this.controller.saveTreeState(ListTreeState.STUDY_LIST.toString(), expandedNodes);
+		Assert.assertEquals("Should return ok", "OK", response);
+		Mockito.verify(this.userTreeStateService)
+			.saveOrUpdateUserProgramTreeState(StudyTreeControllerTest.TEST_USER_ID, this.selectedProject.getUniqueID(),
+				ListTreeState.STUDY_LIST.toString(), Lists.newArrayList("2", "5", "6"));
+
+	}
+
+	@Test
+	public void testLoadTreeState() throws MiddlewareQueryException {
+		final List<String> response = new ArrayList<String>();
+		response.add("1");
+		response.add("2");
+		Mockito.doReturn(response).when(this.userTreeStateService)
+			.getUserProgramTreeStateByUserIdProgramUuidAndType(StudyTreeControllerTest.TEST_USER_ID,
+				this.selectedProject.getUniqueID(), ListTreeState.STUDY_LIST.name());
+
+		final String returnData = this.controller.retrieveTreeState(ListTreeState.STUDY_LIST.name());
+
+		Assert.assertEquals("Should return [1, 2]", "[\"1\",\"2\"]", returnData);
 	}
 }

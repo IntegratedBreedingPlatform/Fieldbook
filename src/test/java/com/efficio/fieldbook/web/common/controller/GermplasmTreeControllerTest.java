@@ -13,7 +13,6 @@ import com.google.common.collect.Table;
 import org.apache.commons.lang.math.RandomUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.generationcp.commons.constant.AppConstants;
-import org.generationcp.commons.constant.ListTreeState;
 import org.generationcp.commons.parsing.pojo.ImportedCross;
 import org.generationcp.commons.parsing.pojo.ImportedCrossesList;
 import org.generationcp.commons.parsing.pojo.ImportedGermplasm;
@@ -118,9 +117,6 @@ public class GermplasmTreeControllerTest {
 
 	@Mock
 	private CrossingServiceImpl crossingService;
-
-	@Mock
-	private UserTreeStateService userTreeStateService;
 
 	@Mock
 	private NamingConventionService namingConventionService;
@@ -401,43 +397,6 @@ public class GermplasmTreeControllerTest {
 
 		Assert.assertEquals(0, result.get("isSuccess"));
 		Assert.assertEquals(GermplasmTreeControllerTest.ERROR_MESSAGE, result.get("message"));
-	}
-
-	@Test
-	public void testSaveTreeState() throws MiddlewareQueryException {
-		final String[] expandedNodes = {"2", "5", "6"};
-		final String response = this.controller.saveTreeState(ListTreeState.GERMPLASM_LIST.toString(), expandedNodes);
-		Assert.assertEquals("Should return ok", "OK", response);
-		Mockito.verify(this.userTreeStateService)
-			.saveOrUpdateUserProgramTreeState(GermplasmTreeControllerTest.TEST_USER_ID, GermplasmTreeControllerTest.TEST_PROGRAM_UUID,
-				ListTreeState.GERMPLASM_LIST.toString(), Lists.newArrayList("2", "5", "6"));
-
-	}
-
-	@Test
-	public void testSaveTreeStateDefaults() throws MiddlewareQueryException {
-		final String[] expandedNodes = {"None"};
-
-		final String response = this.controller.saveTreeState(ListTreeState.GERMPLASM_LIST.toString(), expandedNodes);
-		Assert.assertEquals("Should return ok", "OK", response);
-		Mockito.verify(this.userTreeStateService)
-			.saveOrUpdateUserProgramTreeState(GermplasmTreeControllerTest.TEST_USER_ID, GermplasmTreeControllerTest.TEST_PROGRAM_UUID,
-				ListTreeState.GERMPLASM_LIST.toString(),
-				Collections.singletonList(GermplasmTreeController.DEFAULT_STATE_SAVED_FOR_GERMPLASM_LIST));
-	}
-
-	@Test
-	public void testLoadTreeState() throws MiddlewareQueryException {
-		final List<String> response = new ArrayList<String>();
-		response.add("1");
-		response.add("2");
-		Mockito.doReturn(response).when(this.userTreeStateService)
-			.getUserProgramTreeStateByUserIdProgramUuidAndType(GermplasmTreeControllerTest.TEST_USER_ID,
-				GermplasmTreeControllerTest.TEST_PROGRAM_UUID, ListTreeState.GERMPLASM_LIST.name());
-
-		final String returnData = this.controller.retrieveTreeState(ListTreeState.GERMPLASM_LIST.name());
-
-		Assert.assertEquals("Should return [1, 2]", "[\"1\",\"2\"]", returnData);
 	}
 
 	@Test
