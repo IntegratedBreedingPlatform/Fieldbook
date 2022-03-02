@@ -1177,62 +1177,20 @@ function moveStudy(sourceNode, targetNode) {
 	});
 }
 
-function deleteGermplasmFolder(object) {
-	'use strict';
-
-	var currentFolderName;
-
-	if (!$(object).hasClass('disable-image')) {
-		$('#deleteGermplasmFolder').modal('show');
-		$('#addGermplasmFolderDiv').slideUp('fast');
-		$('#renameGermplasmFolderDiv').slideUp('fast');
-		currentFolderName = $('#' + getDisplayedTreeName()).dynatree('getTree').getActiveNode().data.title;
-		$('#delete-folder-confirmation').html(deleteConfirmation + ' ' + currentFolderName + '?');
-
-		$('#page-delete-germplasm-folder-message-modal').html('');
-	}
-}
-
-function submitDeleteGermplasmFolder() {
-	'use strict';
-
-	var folderId = $('#' + getDisplayedTreeName()).dynatree('getTree').getActiveNode().data.key;
-
-	$.ajax({
-		url: '/Fieldbook/ListTreeManager/deleteGermplasmFolder',
-		type: 'POST',
-		data: 'folderId=' + folderId,
-		cache: false,
-		success: function (data) {
-			var node;
-			if (data.isSuccess === '1') {
-				$('#deleteGermplasmFolder').modal('hide');
-				node = $('#' + getDisplayedTreeName()).dynatree('getTree').getActiveNode();
-				node.remove();
-				showSuccessfulMessage('', deleteItemSuccessful);
-			} else {
-				showErrorMessage('page-delete-germplasm-folder-message-modal', data.message);
-			}
-		}
-	});
-}
-
 function moveGermplasm(sourceNode, targetNode) {
 	'use strict';
 	var sourceId = sourceNode.data.key,
-		targetId = targetNode.data.key,
-		title;
+		targetId = targetNode.data.key;
 
-	if (targetId === 'LOCAL') {
-		targetId = 1;
-	}
 
+	var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
 	$.ajax({
-		url: '/Fieldbook/ListTreeManager/moveGermplasmFolder',
-		type: 'POST',
-		data: 'sourceId=' + sourceId + '&targetId=' + targetId,
-		cache: false,
-		success: function (data) {
+		url: '/bmsapi/crops/' + cropName + '/germplasm-list-folders/' + sourceId + '/move?newParentId=' + targetId + '&programUUID=' + currentProgramId,
+		type: 'PUT',
+		beforeSend: function (xhr) {
+			xhr.setRequestHeader('X-Auth-Token', xAuthToken);
+		},
+		success: function () {
 			var node = targetNode;
 			sourceNode.remove();
 			doGermplasmLazyLoad(node);
