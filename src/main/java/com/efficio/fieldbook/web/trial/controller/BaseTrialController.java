@@ -56,6 +56,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 /**
  * Created by IntelliJ IDEA. User: Daniel Villafuerte
@@ -297,6 +298,31 @@ public abstract class BaseTrialController extends SettingsController {
 			}
 		}
 		return false;
+	}
+
+	TabInfo prepareEntryDetailsData(final List<MeasurementVariable> entryDetails) {
+		final List<Integer> requiredIDList = this.buildVariableIDList(AppConstants.CREATE_STUDY_ENTRY_DETAILS_REQUIRED_FIELDS.getString());
+
+		final List<SettingDetail> settings = entryDetails.stream()
+			.map(variable -> {
+				final SettingDetail detail = this.createSettingDetail(
+					variable.getTermId(),
+					variable.getName(),
+					variable.getVariableType().getRole().name()
+				);
+				if (requiredIDList.contains(variable.getTermId())) {
+					detail.setDeletable(false);
+				} else {
+					detail.setDeletable(true);
+				}
+				return detail;
+			})
+			.collect(Collectors.toList());
+
+		final TabInfo tabInfo = new TabInfo();
+		tabInfo.setSettings(settings);
+
+		return tabInfo;
 	}
 
 	protected TabInfo prepareTreatmentFactorsInfo(final List<TreatmentVariable> treatmentVariables, final boolean isUsePrevious) {

@@ -11,15 +11,20 @@
 
 package com.efficio.fieldbook.web.trial.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
-
+import com.efficio.fieldbook.service.api.ErrorHandlerService;
+import com.efficio.fieldbook.web.common.bean.SettingDetail;
+import com.efficio.fieldbook.web.trial.bean.BasicDetails;
 import com.efficio.fieldbook.web.trial.bean.Instance;
+import com.efficio.fieldbook.web.trial.bean.InstanceInfo;
+import com.efficio.fieldbook.web.trial.bean.TabInfo;
+import com.efficio.fieldbook.web.trial.bean.TrialData;
+import com.efficio.fieldbook.web.trial.bean.TrialSettingsBean;
+import com.efficio.fieldbook.web.trial.form.CreateTrialForm;
+import com.efficio.fieldbook.web.trial.form.ImportGermplasmListForm;
+import com.efficio.fieldbook.web.util.SessionUtility;
+import com.efficio.fieldbook.web.util.SettingsUtil;
+import com.efficio.fieldbook.web.util.WorkbookUtil;
+import org.generationcp.commons.constant.AppConstants;
 import org.generationcp.commons.context.ContextInfo;
 import org.generationcp.middleware.domain.etl.MeasurementRow;
 import org.generationcp.middleware.domain.etl.MeasurementVariable;
@@ -45,19 +50,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.efficio.fieldbook.service.api.ErrorHandlerService;
-import com.efficio.fieldbook.web.common.bean.SettingDetail;
-import com.efficio.fieldbook.web.trial.bean.BasicDetails;
-import com.efficio.fieldbook.web.trial.bean.InstanceInfo;
-import com.efficio.fieldbook.web.trial.bean.TabInfo;
-import com.efficio.fieldbook.web.trial.bean.TrialData;
-import com.efficio.fieldbook.web.trial.bean.TrialSettingsBean;
-import com.efficio.fieldbook.web.trial.form.CreateTrialForm;
-import com.efficio.fieldbook.web.trial.form.ImportGermplasmListForm;
-import org.generationcp.commons.constant.AppConstants;
-import com.efficio.fieldbook.web.util.SessionUtility;
-import com.efficio.fieldbook.web.util.SettingsUtil;
-import com.efficio.fieldbook.web.util.WorkbookUtil;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 /**
  * The Class CreateTrialController.
@@ -122,6 +122,7 @@ public class CreateTrialController extends BaseTrialController {
 
 		model.addAttribute("basicDetailsData", this.prepareBasicDetailsTabInfo());
 		model.addAttribute("germplasmData", this.prepareGermplasmTabInfo(false));
+		model.addAttribute("entryDetailsData", this.prepareEntryDetailsData());
 		model.addAttribute(CreateTrialController.ENVIRONMENT_DATA_TAB, this.prepareEnvironmentsTabInfo(false));
 		model.addAttribute(CreateTrialController.TRIAL_SETTINGS_DATA_TAB, this.prepareTrialSettingsTabInfo());
 		model.addAttribute("experimentalDesignSpecialData", this.prepareExperimentalDesignSpecialData());
@@ -344,6 +345,30 @@ public class CreateTrialController extends BaseTrialController {
 
 		if (isClearSettings || this.userSelection.getPlotsLevelList() == null) {
 			this.userSelection.setPlotsLevelList(initialDetailList);
+		}
+
+		return info;
+	}
+
+	protected TabInfo prepareEntryDetailsData() {
+		final List<SettingDetail> initialDetailList = new ArrayList<>();
+		final List<Integer> initialSettingIDs = this.buildVariableIDList(AppConstants.CREATE_STUDY_ENTRY_DETAILS_REQUIRED_FIELDS.getString());
+
+		for (final Integer initialSettingID : initialSettingIDs) {
+			try {
+				final SettingDetail detail =
+					this.createSettingDetail(initialSettingID, null, VariableType.ENTRY_DETAIL.getRole().name());
+				initialDetailList.add(detail);
+			} catch (final MiddlewareException e) {
+				CreateTrialController.LOG.error(e.getMessage(), e);
+			}
+		}
+
+		final TabInfo info = new TabInfo();
+		info.setSettings(initialDetailList);
+
+		if (!isEmpty(this.userSelection.getPlotsLevelList())) {
+			this.userSelection.getPlotsLevelList().addAll(initialDetailList);
 		}
 
 		return info;
