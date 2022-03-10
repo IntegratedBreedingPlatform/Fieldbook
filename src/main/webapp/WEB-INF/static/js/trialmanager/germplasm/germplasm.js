@@ -7,9 +7,9 @@
 
 	manageTrialAppModule.controller('GermplasmCtrl',
 		['$scope', '$rootScope', '$q', '$compile', 'TrialManagerDataService', 'DTOptionsBuilder', 'studyStateService', 'studyEntryService', 'germplasmStudySourceService',
-			'datasetService', '$timeout', '$uibModal', 'germplasmDetailsModalService',
+			'datasetService', '$timeout', '$uibModal', 'germplasmDetailsModalService', 'DATASET_TYPES',
 			function ($scope, $rootScope, $q, $compile, TrialManagerDataService, DTOptionsBuilder, studyStateService, studyEntryService, germplasmStudySourceService,
-					  datasetService, $timeout, $uibModal, germplasmDetailsModalService) {
+					  datasetService, $timeout, $uibModal, germplasmDetailsModalService, DATASET_TYPES) {
 
 				$scope.settings = TrialManagerDataService.settings.germplasm;
 				$scope.entryDetails = TrialManagerDataService.settings.entryDetails;
@@ -521,7 +521,7 @@
 					angular.forEach(result, function (val) {
 						variable = val.variable;
 					});
-					datasetService.getDatasets([4]).then(function (data) {
+					datasetService.getDatasets([DATASET_TYPES.PLOT_OBSERVATIONS]).then(function (data) {
 						angular.forEach(data, function (dataset) {
 							var variableName = variable.alias ? variable.alias : variable.name;
 							datasetService.addVariables(dataset.datasetId, {
