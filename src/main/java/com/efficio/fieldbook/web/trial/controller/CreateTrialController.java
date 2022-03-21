@@ -57,6 +57,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.springframework.util.CollectionUtils.isEmpty;
 
@@ -155,7 +156,7 @@ public class CreateTrialController extends BaseTrialController {
 						this.prepareTrialSettingsTabInfo(trialWorkbook.getStudyConditions(), true));
 				tabDetails.put("measurementsData",
 						this.prepareMeasurementVariableTabInfo(trialWorkbook.getVariates(), VariableType.TRAIT, true));
-				tabDetails.put("entryDetailsData", this.prepareEntryDetailsData(trialWorkbook.getEntryDetails(),true));
+				tabDetails.put("entryDetailsData", this.prepareEntryDetailsData(trialWorkbook.getEntryDetails(), true));
 				// TODO:Uncomment lines below related to treatment factors after resolving IBP-2207
 				/*this.fieldbookMiddlewareService
 						.setTreatmentFactorValues(trialWorkbook.getTreatmentFactors(), trialWorkbook.getMeasurementDatesetId());
@@ -376,32 +377,32 @@ public class CreateTrialController extends BaseTrialController {
 	}
 
 	protected TabInfo prepareEntryDetailsData(final List<MeasurementVariable> measurementVariables, final boolean isUsePrevious) {
-		final List<SettingDetail> detailList = new ArrayList<>();
 		final List<Integer> requiredIDList = this.buildVariableIDList(AppConstants.CREATE_STUDY_ENTRY_DETAILS_REQUIRED_FIELDS.getString());
+		final List<SettingDetail> detailList = measurementVariables.stream()
+			.map(measurementVariable -> {
+				final SettingDetail settingDetail =
+					this.createSettingDetail(measurementVariable.getTermId(), measurementVariable.getName(),
+						VariableType.ENTRY_DETAIL.getRole().name());
 
-		for (final MeasurementVariable measurementVariable : measurementVariables) {
-			final SettingDetail detail =
-				this.createSettingDetail(measurementVariable.getTermId(), measurementVariable.getName(), VariableType.ENTRY_DETAIL.getRole().name());
+				if (measurementVariable.getRole() != null) {
+					settingDetail.setRole(measurementVariable.getRole());
+					settingDetail.getVariable().setRole(measurementVariable.getRole().name());
+				}
 
-			if (measurementVariable.getRole() != null) {
-				detail.setRole(measurementVariable.getRole());
-				detail.getVariable().setRole(measurementVariable.getRole().name());
-			}
+				if (requiredIDList.contains(measurementVariable.getTermId())) {
+					settingDetail.setDeletable(false);
+				} else {
+					settingDetail.setDeletable(true);
+				}
 
-			if (requiredIDList.contains(measurementVariable.getTermId())) {
-				detail.setDeletable(false);
-			} else {
-				detail.setDeletable(true);
-			}
-
-			if (!isUsePrevious) {
-				detail.getVariable().setOperation(Operation.UPDATE);
-			} else {
-				detail.getVariable().setOperation(Operation.ADD);
-			}
-
-			detailList.add(detail);
-		}
+				if (!isUsePrevious) {
+					settingDetail.getVariable().setOperation(Operation.UPDATE);
+				} else {
+					settingDetail.getVariable().setOperation(Operation.ADD);
+				}
+				return settingDetail;
+			})
+			.collect(Collectors.toList());
 
 		final TabInfo info = new TabInfo();
 		info.setSettings(detailList);
