@@ -143,8 +143,6 @@ public class CreateTrialController extends BaseTrialController {
 
 				this.excludeTreatmentFactorVariables(trialWorkbook);
 
-				this.removeAnalysisAndAnalysisSummaryVariables(trialWorkbook);
-
 				this.userSelection.setConstantsWithLabels(trialWorkbook.getConstants());
 
 				tabDetails.put("germplasmData", this.prepareGermplasmTabInfo(trialWorkbook.getFactors(), true));

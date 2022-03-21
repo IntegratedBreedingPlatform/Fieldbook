@@ -1047,10 +1047,6 @@ public class OpenTrialControllerTest {
 			.setExperimentalDesignVariables(WorkbookUtil.getExperimentalDesignVariables(workbook.getConditions()));
 		Mockito.verify(this.userSelection, Mockito.times(1))
 			.setExpDesignParams(SettingsUtil.convertToExpDesignParamsUi(this.userSelection.getExperimentalDesignVariables()));
-
-		// Verify that Analysis and/or Analysis Summary variables are removed
-		Assert.assertFalse(this.hasAnalysisVariables(workbook.getConditions()));
-		Assert.assertFalse(this.hasAnalysisVariables(workbook.getConstants()));
 	}
 
 	@Test

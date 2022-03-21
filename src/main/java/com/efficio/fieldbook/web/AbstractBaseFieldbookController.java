@@ -201,29 +201,6 @@ public abstract class AbstractBaseFieldbookController {
 		this.contextUtil = contextUtil;
 	}
 
-	/**
-	 * Remove variables with variable types 'Analysis' and 'Analysis Summary' in the workbook's conditions, constants, factors and variates
-	 */
-	protected void removeAnalysisAndAnalysisSummaryVariables(final Workbook workbook) {
-		this.removeAnalysisVariables(workbook.getConditions());
-		this.removeAnalysisVariables(workbook.getConstants());
-		this.removeAnalysisVariables(workbook.getFactors());
-		this.removeAnalysisVariables(workbook.getVariates());
-	}
-
-	/**
-	 * Remove variables with variable types 'Analysis' and 'Analysis Summary' in the list of measurement variables
-	 */
-	private void removeAnalysisVariables(final List<MeasurementVariable> measurementVariables) {
-		final Iterator<MeasurementVariable> measurementVariablesIterator = measurementVariables.iterator();
-		while (measurementVariablesIterator.hasNext()) {
-			final MeasurementVariable measurementVariable = measurementVariablesIterator.next();
-			if (measurementVariable != null && VariableType.getReservedVariableTypes().contains(measurementVariable.getVariableType())) {
-				measurementVariablesIterator.remove();
-			}
-		}
-	}
-	
 	public void setIsSuperAdminAttribute(final Model model) {
 		model.addAttribute("isSuperAdmin", this.authorizationService.isSuperAdminUser());
 	}
