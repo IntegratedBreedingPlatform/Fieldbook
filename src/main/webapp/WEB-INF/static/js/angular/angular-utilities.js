@@ -272,7 +272,8 @@
 			SELECTION_METHOD: 1807,
 			TRAIT: 1808,
 			TREATMENT_FACTOR: 1809,
-			EXPERIMENTAL_DESIGN: 1810
+			EXPERIMENTAL_DESIGN: 1810,
+			ENTRY_DETAIL: 1815
 		})
 
 		// USAGE: Returns a function, that, as long as it continues to be invoked, will not

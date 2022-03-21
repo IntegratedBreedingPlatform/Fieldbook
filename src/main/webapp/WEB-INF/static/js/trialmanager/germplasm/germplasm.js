@@ -7,9 +7,9 @@
 
 	manageTrialAppModule.controller('GermplasmCtrl',
 		['$scope', '$rootScope', '$q', '$compile', 'TrialManagerDataService', 'DTOptionsBuilder', 'studyStateService', 'studyEntryService', 'germplasmStudySourceService',
-			'datasetService', '$timeout', '$uibModal', 'germplasmDetailsModalService', 'DATASET_TYPES',
+			'datasetService', '$timeout', '$uibModal', 'germplasmDetailsModalService', 'studyEntryObservationService', 'DATASET_TYPES', 'VARIABLE_TYPES',
 			function ($scope, $rootScope, $q, $compile, TrialManagerDataService, DTOptionsBuilder, studyStateService, studyEntryService, germplasmStudySourceService,
-					  datasetService, $timeout, $uibModal, germplasmDetailsModalService, DATASET_TYPES) {
+					  datasetService, $timeout, $uibModal, germplasmDetailsModalService, studyEntryObservationService, DATASET_TYPES, VARIABLE_TYPES) {
 
 				$scope.settings = TrialManagerDataService.settings.germplasm;
 				$scope.entryDetails = TrialManagerDataService.settings.entryDetails;
@@ -492,8 +492,16 @@
 					});
 				}
 
-				$scope.onRemoveVariable = function (variableType, variableIds) {
+				$scope.onRemoveVariable = async function (variableType, variableIds) {
 					if(variableIds && variableIds.length !== 0) {
+
+						if (variableType === VARIABLE_TYPES.ENTRY_DETAIL.toString()) {
+							let doContinue = await $scope.checkVariableHasMeasurementData(variableIds);
+							if (!doContinue) {
+								return;
+							}
+						}
+
 						var deferred = $q.defer();
 						datasetService.getDatasets([4]).then(function (data) {
 							angular.forEach(data, function (dataset) {
@@ -514,6 +522,24 @@
 					} else {
 						showAlertMessage('', $.germplasmMessages.removeVariableWarning);
 					}
+				};
+
+				$scope.checkVariableHasMeasurementData = function (deleteVariables) {
+					var deferred = $q.defer();
+					if (deleteVariables.length != 0) {
+						studyEntryObservationService.countObservationsByVariables(deleteVariables).then(function (response) {
+							var count = response.headers('X-Total-Count');
+							if (count > 0) {
+								// TODO: confirm message text
+								var message = observationVariableDeleteConfirmationText;
+								var modalInstance = $scope.openConfirmModal(message, environmentConfirmLabel);
+								modalInstance.result.then(deferred.resolve);
+							} else {
+								deferred.resolve(true);
+							}
+						});
+					}
+					return deferred.promise;
 				};
 
 				$scope.onAddVariable = function(result, variableType) {
