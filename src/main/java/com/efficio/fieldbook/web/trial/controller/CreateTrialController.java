@@ -34,6 +34,7 @@ import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.domain.ontology.VariableType;
 import org.generationcp.middleware.exceptions.MiddlewareException;
 import org.generationcp.middleware.exceptions.MiddlewareQueryException;
+import org.generationcp.middleware.manager.Operation;
 import org.generationcp.middleware.pojos.workbench.settings.Dataset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -154,7 +155,7 @@ public class CreateTrialController extends BaseTrialController {
 						this.prepareTrialSettingsTabInfo(trialWorkbook.getStudyConditions(), true));
 				tabDetails.put("measurementsData",
 						this.prepareMeasurementVariableTabInfo(trialWorkbook.getVariates(), VariableType.TRAIT, true));
-
+				tabDetails.put("entryDetailsData", this.prepareEntryDetailsData(trialWorkbook.getEntryDetails(),true));
 				// TODO:Uncomment lines below related to treatment factors after resolving IBP-2207
 				/*this.fieldbookMiddlewareService
 						.setTreatmentFactorValues(trialWorkbook.getTreatmentFactors(), trialWorkbook.getMeasurementDatesetId());
@@ -373,6 +374,45 @@ public class CreateTrialController extends BaseTrialController {
 
 		return info;
 	}
+
+	protected TabInfo prepareEntryDetailsData(final List<MeasurementVariable> measurementVariables, final boolean isUsePrevious) {
+		final List<SettingDetail> detailList = new ArrayList<>();
+		final List<Integer> requiredIDList = this.buildVariableIDList(AppConstants.CREATE_STUDY_ENTRY_DETAILS_REQUIRED_FIELDS.getString());
+
+		for (final MeasurementVariable measurementVariable : measurementVariables) {
+			final SettingDetail detail =
+				this.createSettingDetail(measurementVariable.getTermId(), measurementVariable.getName(), VariableType.ENTRY_DETAIL.getRole().name());
+
+			if (measurementVariable.getRole() != null) {
+				detail.setRole(measurementVariable.getRole());
+				detail.getVariable().setRole(measurementVariable.getRole().name());
+			}
+
+			if (requiredIDList.contains(measurementVariable.getTermId())) {
+				detail.setDeletable(false);
+			} else {
+				detail.setDeletable(true);
+			}
+
+			if (!isUsePrevious) {
+				detail.getVariable().setOperation(Operation.UPDATE);
+			} else {
+				detail.getVariable().setOperation(Operation.ADD);
+			}
+
+			detailList.add(detail);
+		}
+
+		final TabInfo info = new TabInfo();
+		info.setSettings(detailList);
+
+		if (!isEmpty(this.userSelection.getPlotsLevelList())) {
+			this.userSelection.getPlotsLevelList().addAll(detailList);
+		}
+
+		return info;
+	}
+
 
 	protected TabInfo prepareEnvironmentsTabInfo(final boolean isClearSettings) {
 		final TabInfo info = new TabInfo();
