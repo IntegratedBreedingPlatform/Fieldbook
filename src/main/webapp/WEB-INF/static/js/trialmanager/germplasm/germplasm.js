@@ -7,9 +7,9 @@
 
 	manageTrialAppModule.controller('GermplasmCtrl',
 		['$scope', '$rootScope', '$q', '$compile', 'TrialManagerDataService', 'DTOptionsBuilder', 'studyStateService', 'studyEntryService', 'germplasmStudySourceService',
-			'datasetService', '$timeout', '$uibModal', 'germplasmDetailsModalService', 'studyEntryObservationService', 'DATASET_TYPES', 'VARIABLE_TYPES',
+			'datasetService', '$timeout', '$uibModal', 'germplasmDetailsModalService', 'studyEntryObservationService', 'DATASET_TYPES', 'VARIABLE_TYPES', '$http', 'studyContext',
 			function ($scope, $rootScope, $q, $compile, TrialManagerDataService, DTOptionsBuilder, studyStateService, studyEntryService, germplasmStudySourceService,
-					  datasetService, $timeout, $uibModal, germplasmDetailsModalService, studyEntryObservationService, DATASET_TYPES, VARIABLE_TYPES) {
+					  datasetService, $timeout, $uibModal, germplasmDetailsModalService, studyEntryObservationService, DATASET_TYPES, VARIABLE_TYPES, $http, studyContext) {
 
 				$scope.settings = TrialManagerDataService.settings.germplasm;
 				$scope.entryDetails = TrialManagerDataService.settings.entryDetails;
@@ -66,6 +66,13 @@
 					);
 				}
 
+				$scope.reloadEntryDetails = function () {
+					$http.get('/Fieldbook/TrialManager/createTrial/useExistingStudy?studyId=' + studyContext.studyId).success(function (data) {
+						TrialManagerDataService.updateSettings('entryDetails', TrialManagerDataService.extractSettings(
+							data.entryDetailsData));
+					});
+
+				}
 
 				function getPageQueryParameters(data) {
 					var order = data.order && data.order[0];
@@ -607,7 +614,8 @@
 
 				$scope.reloadStudyEntryTableData = function(setShowValues) {
 					$scope.selectedItems = [];
-					table().ajax.reload();
+					$scope.reloadEntryDetails();
+					$rootScope.navigateToTab('germplasm', {reload: true});
 					if(setShowValues) {
 						$scope.showImportListBrowser = false;
 						$scope.showStudyEntriesTable = true;
