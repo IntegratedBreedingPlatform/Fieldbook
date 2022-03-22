@@ -1845,7 +1845,9 @@ public class SettingsUtil {
 				userSelection.getStudyLevelConditions().addAll(newDetails);
 			}
 
-		} else if (mode == VariableType.EXPERIMENTAL_DESIGN.getId() || mode == VariableType.GERMPLASM_DESCRIPTOR.getId()) {
+		} else if (mode == VariableType.EXPERIMENTAL_DESIGN.getId()
+			|| mode == VariableType.GERMPLASM_DESCRIPTOR.getId()
+			|| mode == VariableType.ENTRY_DETAIL.getId()) {
 			if (userSelection.getPlotsLevelList() == null) {
 				userSelection.setPlotsLevelList(newDetails);
 			} else {

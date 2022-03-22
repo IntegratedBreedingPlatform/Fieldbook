@@ -354,7 +354,9 @@ public class ManageSettingsController extends SettingsController {
 					}
 				}
 
-			} else if (mode == VariableType.EXPERIMENTAL_DESIGN.getId() || mode == VariableType.GERMPLASM_DESCRIPTOR.getId()) {
+			} else if (mode == VariableType.EXPERIMENTAL_DESIGN.getId()
+				|| mode == VariableType.GERMPLASM_DESCRIPTOR.getId()
+				|| mode == VariableType.ENTRY_DETAIL.getId()) {
 				this.addVariableInDeletedList(this.userSelection.getPlotsLevelList(), mode, variableId, true);
 				SettingsUtil.deleteVariableInSession(this.userSelection.getPlotsLevelList(), variableId);
 			} else if (mode == VariableType.ENVIRONMENT_CONDITION.getId() || mode == VariableType.ENVIRONMENT_CONDITION.getId()) {
