@@ -15,7 +15,7 @@
 				$scope.entryDetails = TrialManagerDataService.settings.entryDetails;
 				$scope.trialMeasurement = {hasMeasurement: studyStateService.hasGeneratedDesign()};
 				$scope.isHideDelete = studyStateService.hasGeneratedDesign();
-				$scope.addVariable = !studyStateService.hasGeneratedDesign();
+				$scope.addVariable = !studyStateService.hasGeneratedDesign() && TrialManagerDataService.applicationData.germplasmListSelected;
 				$scope.selectedItems = [];
 				$scope.numberOfEntries = 0;
 
