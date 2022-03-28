@@ -30,6 +30,8 @@
 				$scope.dtColumnDefs = dtColumnDefsPromise.promise;
 				$scope.dtOptions = null;
 
+				$scope.isCategoricalDescriptionView = window.isCategoricalDescriptionView;
+
 				loadTable();
 
 				$rootScope.$on("reloadStudyEntryTableData", function(setShowValues){
@@ -732,8 +734,16 @@
 					if (possibleValue
 						&& possibleValue.displayDescription) {
 
-						value = '<span class="fbk-measurement-categorical-desc">'
-							+ EscapeHTML.escape(possibleValue.description) + '</span>';
+						var categoricalNameDom = '<span class="fbk-measurement-categorical-name"'
+							+ ($scope.isCategoricalDescriptionView ? ' style="display: none; "' : '')
+							+ ' >'
+							+ EscapeHTML.escape(possibleValue.name) + '</span>';
+						var categoricalDescDom = '<span class="fbk-measurement-categorical-desc"'
+							+ (!$scope.isCategoricalDescriptionView ? ' style="display: none; "' : '')
+							+ ' >'
+							+ EscapeHTML.escape(possibleValue.displayDescription) + '</span>';
+
+						value = categoricalNameDom + categoricalDescDom;
 					}
 					return value;
 				}
@@ -1060,8 +1070,65 @@
 
 				$scope.openGermplasmDetailsModal = function (gid) {
 					germplasmDetailsModalService.openGermplasmDetailsModal(gid, null);
+				};
+
+				$scope.toggleShowCategoricalDescription = function () {
+					switchCategoricalView().done(function () {
+						$('.fbk-measurement-categorical-name').toggle();
+						$('.fbk-measurement-categorical-desc').toggle();
+
+						$scope.$apply(function () {
+							$scope.isCategoricalDescriptionView = window.isCategoricalDescriptionView;
+							adjustColumns();
+						});
+					});
+				};
+
+				function switchCategoricalView(showCategoricalDescriptionView) {
+					'use strict';
+
+					if (typeof showCategoricalDescriptionView === 'undefined') {
+						showCategoricalDescriptionView = null;
+					}
+
+					return $.get('/Fieldbook/TrialManager/openTrial/setCategoricalDisplayType', {showCategoricalDescriptionView: showCategoricalDescriptionView})
+						.done(function (result) {
+							window.isCategoricalDescriptionView = result;
+
+							$('.fbk-toggle-categorical-display').text(result ? window.measurementObservationMessages.hideCategoricalDescription :
+								window.measurementObservationMessages.showCategoricalDescription);
+
+						});
 				}
-			}]);
+
+			}])
+		.directive('observationInlineEditor', function () {
+			return {
+				restrict: 'E',
+				templateUrl: '/Fieldbook/static/angular-templates/subObservations/observationInlineEditor.html',
+				scope: {
+					observation: '=',
+					// TODO upgrade angular to > 1.5 to use one-way binding
+					columnData: '=',
+					isCategoricalDescriptionView: '='
+				},
+				controller: function ($scope, BREEDING_METHOD_SCALE) {
+					$scope.targetkey = 'observationValue';
+					$scope.valuecontainer = {observationValue : $scope.observation.value};
+					$scope.isBreedingMethod = parseInt(BREEDING_METHOD_SCALE, 10) === parseInt($scope.columnData.scaleId, 10);
+					$scope.doBlur = function ($event) {
+						if ($event.keyCode === 13) {
+							$event.target.blur();
+						}
+					}
+
+					$scope.valuecontainer.onOpenClose = function(isOpen) {
+						$scope.observation.value = $scope.valuecontainer.observationValue;
+						$scope.observation.onOpenClose(isOpen);
+					}
+				}
+			};
+		});
 
 
 })();
