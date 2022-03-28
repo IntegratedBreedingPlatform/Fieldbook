@@ -470,7 +470,7 @@
 							if (columnData.variableType === 'ENTRY_DETAIL') {
 								className += 'entry-details ';
 
-								if (columnData.termId !== 8230) {
+								if (isEditable()) {
 									className += ' editable ';
 								}
 							}
@@ -482,6 +482,11 @@
 							className += ' dt-head-nowrap';
 
 							return className;
+						}
+
+						function isEditable() {
+							return (columnData.termId === 8255 && !studyStateService.hasGeneratedDesign()) ||
+								(columnData.termId !== 8230 && columnData.termId !== 8255);
 						}
 
 						columns.push({
@@ -514,21 +519,6 @@
 									var value = columnData.termId === 8240 ? rowData.properties['8240'].value : rowData.properties['8250'].value;
 									$(td).append($compile('<a class="gid-link" href="javascript: void(0)" ' +
 										'ng-click="openGermplasmDetailsModal(\'' + rowData.gid + '\')">' + value + '</a>')($scope));
-								},
-								render: function (data, type, full, meta) {
-									return '';
-								}
-							});
-						} else if (columnData.termId === 8255) {
-							// ENTRY_TYPE
-							columnsDef.push({
-								targets: columns.length - 1,
-								orderable: false,
-								createdCell: function (td, cellData, rowData, rowIndex, colIndex) {
-									$(td).val("");
-									$(td).append($compile('<a class="check-href edit-check' + rowData.entryId + '" href="javascript: void(0)" ' +
-										'ng-click="showPopOverCheck(\'' + rowData.entryId + '\',\'' + rowData.properties['8255'].value + '\')">' +
-										getCategoricalValue(rowData.properties['8255'].value, columnData) + '</a>')($scope));
 								},
 								render: function (data, type, full, meta) {
 									return '';
