@@ -63,7 +63,291 @@
 							})
 						.withDataProp('data')
 						.withOption('serverSide', true)
+						.withOption('drawCallback', drawCallback)
 					);
+				}
+
+				function drawCallback() {
+					addCellClickHandler();
+					adjustColumns();
+				}
+
+				function addCellClickHandler() {
+					var $table = angular.element('#germplasm-table');
+
+					addClickHandler();
+
+					function addClickHandler() {
+						$table.off('click').on('click', 'td.entry-details.editable:not([disabled])', clickHandler);
+					}
+
+					function clickHandler() {
+						var cell = this;
+
+						var table = $table.DataTable();
+						var dtRow = table.row(cell.parentNode);
+						var rowData = dtRow.data();
+						var dtCell = table.cell(cell);
+						var cellData = dtCell.data();
+						var index = table.colReorder.transpose(table.column(cell).index(), 'toOriginal');
+						var columnData = $scope.columnsObj.columns[index].columnData;
+						var termId = columnData.termId;
+
+						if (!termId) return;
+
+						/**
+						 * Remove handler to not interfere with inline editor
+						 * will be restored after fnUpdate
+						 */
+						$table.off('click');
+
+						$scope.$apply(function () {
+
+							var $inlineScope = $scope.$new(true);
+
+							$inlineScope.observation = {
+								value: $scope.isPendingView ? cellData.draftValue : cellData.value,
+								change: function () {
+									updateInline();
+								},
+								cancel: function () {
+									cancelUpdateInline();
+								},
+								// FIXME altenative to blur bug https://github.com/angular-ui/ui-select/issues/499
+								onOpenClose: function (isOpen) {
+									if (!isOpen) updateInline();
+								},
+								newInlineValue: function (newValue) {
+									return {name: newValue};
+								}
+							};
+
+							$inlineScope.columnData = columnData;
+							$inlineScope.isCategoricalDescriptionView = $scope.isCategoricalDescriptionView;
+
+							$(cell).html('');
+							var editor = $compile(
+								' <observation-inline-editor ' +
+								' is-categorical-description-view="isCategoricalDescriptionView" ' +
+								' column-data="columnData" ' +
+								' observation="observation"></observation-inline-editor> '
+							)($inlineScope);
+
+							$(cell).append(editor);
+
+							function updateInline() {
+
+								function doAjaxUpdate() {
+									if ((!$scope.isPendingView && cellData.value === $inlineScope.observation.value)
+										|| ($scope.isPendingView && cellData.draftValue === $inlineScope.observation.value)) {
+										return $q.resolve(cellData);
+									}
+
+									var value = cellData.value;
+									var draftValue = cellData.draftValue;
+
+									if ($scope.isPendingView) {
+										draftValue = $inlineScope.observation.value;
+									} else {
+										value = $inlineScope.observation.value;
+									}
+
+									if (cellData.studyEntryPropertyId) {
+										if (!value && !$scope.isPendingView) {
+											if (cellData.draftValue) {
+												value = null;
+											} else {
+												return studyEntryObservationService.deleteObservation(cellData.studyEntryPropertyId);
+											}
+										}
+
+										return confirmOutOfBoundData(value, columnData).then(function (doContinue) {
+											if (!doContinue) {
+												$inlineScope.observation.value = cellData.value;
+												return {studyEntryPropertyId: cellData.studyEntryPropertyId};
+											}
+											return studyEntryObservationService.updateObservation({
+												stockId: rowData.entryId,
+												variableId: termId,
+												value: value,
+												categoricalValueId: getCategoricalValueId(value, columnData)
+											});
+										});
+									}
+
+									if (value) {
+										return confirmOutOfBoundData(value, columnData).then(function (doContinue) {
+											if (!doContinue) {
+												$inlineScope.observation.value = cellData.value;
+												$inlineScope.observation.value = cellData.value;
+												return {observationId: cellData.observationId};
+											}
+											return studyEntryObservationService.addObservation({
+												stockId: rowData.entryId,
+												variableId: termId,
+												value: value,
+												categoricalValueId: getCategoricalValueId(value, columnData)
+											});
+										});
+									}
+
+									return $q.resolve(cellData);
+								} // doAjaxUpdate
+
+								var promise = doAjaxUpdate();
+
+								promise.then(function (data) {
+									var valueChanged = false;
+									if (cellData.value !== $inlineScope.observation.value) {
+										valueChanged = true;
+									}
+
+									if ($scope.isPendingView) {
+										cellData.draftValue = $inlineScope.observation.value;
+									} else {
+										cellData.value = $inlineScope.observation.value;
+									}
+
+									cellData.observationId = data.observationId;
+									cellData.status = data.status;
+
+									$inlineScope.$destroy();
+									editor.remove();
+
+									/**
+									 * We are updating the cell value and the target if the trait is input of a formula
+									 * to avoid reloading the page. It has these advantages:
+									 * - Make the inline edition more dynamic and fast
+									 * - Don't reset the table scroll
+									 *
+									 * The alternative would be:
+									 *
+									 *     table.ajax.reload(function () {
+									 *         // Restore handler
+									 *         $table.off('click').on('click', 'td.entry-details', clickHandler);
+									 *     }, false);
+									 */
+									dtCell.data(cellData);
+									processCell(cell, cellData, rowData, columnData);
+
+									if (valueChanged && $scope.columnDataByInputTermId[termId]) {
+										angular.forEach($scope.columnDataByInputTermId[termId], function (targetColumnData) {
+											var targetColIndex = table.colReorder.transpose(targetColumnData.index, 'toCurrent');
+											var targetDtCell = table.cell(dtRow.node(), targetColIndex);
+											var targetCellData = targetDtCell.data();
+											targetCellData.status = 'OUT_OF_SYNC';
+											processCell(targetDtCell.node(), targetCellData, rowData, targetColumnData);
+										});
+									}
+
+									// Restore handler
+									addClickHandler();
+									adjustColumns();
+								}, function (response) {
+									if (!response) {
+										// no ajax, local reject / cancel (e.g await modal confirm)
+										// keeps inline editor open
+										return;
+									}
+									if (response.errors) {
+										showErrorMessage('', response.errors[0].message);
+									} else {
+										showErrorMessage('', ajaxGenericErrorMsg);
+									}
+								});
+
+							} // updateInline
+
+							function cancelUpdateInline() {
+								$inlineScope.$destroy();
+								editor.remove();
+								dtCell.data(cellData);
+								processCell(cell, cellData, rowData, columnData);
+								// Restore handler
+								addClickHandler();
+								adjustColumns();
+							}
+
+							if (columnData.dataTypeCode === 'D') {
+								$(cell).one('click', 'input', function () {
+									var initialValue;
+									try {
+										initialValue = $.datepicker.formatDate("yy-mm-dd", $.datepicker.parseDate('yymmdd', $(this).val()));
+									} catch (e) {
+									}
+
+									$(this).on('keydown', function (e) {
+										if (e.keyCode === 13) {
+											e.stopImmediatePropagation();
+										}
+									}).datepicker({
+										format: 'yyyymmdd',
+										todayHighlight: true,
+										todayBtn: true,
+										forceParse: false
+									}).on('hide', function () {
+										updateInline();
+									}).datepicker("show").datepicker('update', initialValue)
+								});
+							}
+
+							// FIXME show combobox for categorical traits
+							$(cell).css('overflow', 'visible');
+
+							$timeout(function () {
+								/**
+								 * Initiate interaction with the input so that clicks on other parts of the page
+								 * will trigger blur immediately. Also necessary to initiate datepicker
+								 * This also avoids temporary click handler on body
+								 * FIXME is there a better way?
+								 */
+								$(cell).find('a.ui-select-match, input').click().focus();
+							}, 100);
+						});
+					} // clickHandler
+				}
+
+				function getCategoricalValueId(cellDataValue, columnData) {
+					if (columnData.possibleValues
+						&& cellDataValue !== 'missing') {
+
+						var categoricalValue = columnData.possibleValues.find(function (possibleValue) {
+							return possibleValue.name === cellDataValue;
+						});
+						if (categoricalValue !== undefined) {
+							return categoricalValue.id;
+						}
+
+					}
+					return null;
+				}
+
+				function confirmOutOfBoundData(cellDataValue, columnData) {
+					var deferred = $q.defer();
+
+					if ($scope.isPendingView) {
+						deferred.resolve(true);
+						return deferred.promise;
+					}
+
+					var invalid = validateDataOutOfRange(cellDataValue, columnData);
+
+					if (invalid) {
+						var confirmModal = $scope.openConfirmModal(observationOutOfRange, keepLabel, discardLabel);
+						confirmModal.result.then(deferred.resolve);
+					} else {
+						deferred.resolve(true);
+					}
+
+					return deferred.promise;
+				}
+
+				function adjustColumns() {
+					if ($scope.hasInstances) {
+						$timeout(function () {
+							table().columns.adjust();
+						});
+					}
 				}
 
 				$scope.reloadEntryDetails = function () {
@@ -174,9 +458,31 @@
 								columnData.possibleValuesById[possibleValue.id] = possibleValue;
 							});
 							// waiting for https://github.com/angular-ui/ui-select/issues/152
-							columnData.possibleValues.unshift({name: '', displayValue: 'Please Choose', displayDescription: 'Please Choose'});
+							columnData.possibleValues.unshift({
+								name: '', displayValue: 'Please Choose', displayDescription: 'Please Choose'
+							});
 						}
 						columnData.index = index;
+
+						function getClassName() {
+							var className = '';
+
+							if (columnData.variableType === 'ENTRY_DETAIL') {
+								className += 'entry-details ';
+
+								if (columnData.termId !== 8230) {
+									className += ' editable ';
+								}
+							}
+
+							// include data type for determining when to show context menu option/s
+							className += 'datatype-' + columnData.dataTypeId;
+							className += ' termId-' + columnData.termId;
+							// avoid wrapping filter icon
+							className += ' dt-head-nowrap';
+
+							return className;
+						}
 
 						columns.push({
 							title: columnData.alias,
@@ -185,6 +491,7 @@
 								return row.properties[columnData.termId];
 							},
 							defaultContent: '',
+							className: getClassName(),
 							columnData: columnData
 						});
 
@@ -263,7 +570,57 @@
 									return full.unit;
 								}
 							});
-						}else {
+						} else if (columnData.variableType === 'ENTRY_DETAIL' && columnData.termId !== 8230) {
+							columnsDef.push({
+								targets: columns.length - 1,
+								orderable: false,
+								createdCell: function (td, cellData, rowData, rowIndex, colIndex) {
+									processCell(td, cellData, rowData, columnData);
+								},
+								render: function (data, type, full, meta) {
+
+									if (!data) {
+										return '';
+									}
+
+									function renderByDataType(value, columnData) {
+										if (columnData.dataTypeId === 1130) {
+											return renderCategoricalValue(value, columnData);
+										} else if (columnData.dataTypeId === 1110) {
+											return getDisplayValueForNumericalValue(value);
+										} else {
+											return EscapeHTML.escape(value);
+										}
+									}
+
+									var value = renderByDataType(data.value, columnData);
+									if ($scope.isPendingView && data.draftValue !== null && data.draftValue !== undefined) {
+										var existingValue = value;
+										value = renderByDataType(data.draftValue, columnData);
+										if (existingValue || existingValue === 0) {
+											value += " (" + existingValue + ")";
+										}
+									}
+									if ($scope.isFileStorageConfigured
+										&& full
+										&& full.fileVariableIds
+										&& full.fileVariableIds.length
+										&& full.fileVariableIds.includes(columnData.termId.toString())) {
+
+										if (value === undefined) {
+											value = '';
+										}
+										value +=  '<i onclick="showFiles(\'' + full.variables['OBS_UNIT_ID'].value + '\''
+											+ ', \'' + columnData.name + '\')" '
+											+ ' class="glyphicon glyphicon-duplicate text-info" '
+											+ ' title="click to see associated files"'
+											+ ' style="font-size: 1.2em; margin-left: 10px; cursor: pointer"></i>';
+									}
+
+									return value;
+								}
+							});
+						} else {
 							columnsDef.push({
 								targets: columns.length - 1,
 								orderable: false,
@@ -289,6 +646,85 @@
 					};
 				}
 
+				function processCell(td, cellData, rowData, columnData) {
+					var $td = $(td);
+					$td.removeClass('accepted-value');
+					$td.removeClass('invalid-value');
+					$td.removeClass('manually-edited-value');
+
+					if ($scope.isPendingView) {
+						if (cellData.draftValue === null || cellData.draftValue === undefined) {
+							$td.text('');
+							$td.attr('disabled', true);
+							return;
+						}
+						var invalid = validateDataOutOfRange(cellData.draftValue, columnData);
+
+						if (invalid) {
+							$td.addClass('invalid-value');
+						}
+
+						return;
+					}
+
+					if (cellData.value || cellData.value === 0) {
+						var invalid = validateDataOutOfRange(cellData.value, columnData);
+
+						if (invalid) {
+							$td.addClass('accepted-value');
+						}
+					}
+					if (cellData.status) {
+						var status = cellData.status;
+						if (!cellData.studyEntryPropertyId) {
+							return;
+						}
+						$td.removeAttr('title');
+						$td.removeClass('manually-edited-value');
+						$td.removeClass('out-of-sync-value');
+						var toolTip = 'GID: ' + rowData.variables.GID.value + ' Designation: ' + rowData.variables.DESIGNATION.value;
+						if (status === 'MANUALLY_EDITED') {
+							$td.attr('title', toolTip + ' manually-edited-value');
+							$td.addClass('manually-edited-value');
+						} else if (status === 'OUT_OF_SYNC') {
+							$td.attr('title', toolTip + ' out-of-sync-value');
+							$td.addClass('out-of-sync-value');
+						}
+					}
+				}
+
+				function validateNumericRange(minVal, maxVal, value, invalid) {
+					if (parseFloat(value) < parseFloat(minVal) || parseFloat(value) > parseFloat(maxVal)) {
+
+						invalid = true;
+					}
+					return invalid;
+				}
+
+				function validateCategoricalValues(columnData, cellDataValue, invalid) {
+					if (columnData.possibleValues
+						&& columnData.possibleValues.find(function (possibleValue) {
+							return possibleValue.name === cellDataValue;
+						}) === undefined
+						&& cellDataValue !== 'missing') {
+
+						invalid = true;
+					}
+					return invalid;
+				}
+
+				function validateDataOutOfRange(cellDataValue, columnData) {
+					var invalid = false;
+
+					var value = cellDataValue;
+					var minVal = columnData.minRange;
+					var maxVal = columnData.maxRange;
+
+					invalid = validateNumericRange(minVal, maxVal, value, invalid);
+					invalid = validateCategoricalValues(columnData, cellDataValue, invalid);
+					return invalid;
+				}
+
 				function renderCategoricalValue(value, columnData) {
 					var possibleValue = null;
 
@@ -310,6 +746,14 @@
 							+ EscapeHTML.escape(possibleValue.description) + '</span>';
 					}
 					return value;
+				}
+
+				function getDisplayValueForNumericalValue(numericValue) {
+					if (numericValue === "missing" || numericValue === "") {
+						return numericValue;
+					} else {
+						return EscapeHTML.escape(numericValue ? Number(Math.round(numericValue + 'e4') + 'e-4') : '');
+					}
 				}
 
 				function getCategoricalValue(value, columnData) {

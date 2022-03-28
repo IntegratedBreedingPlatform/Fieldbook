@@ -14,13 +14,27 @@
         var successHandler = serviceUtilities.restSuccessHandler,
             failureHandler = serviceUtilities.restFailureHandler;
 
+		studyEntryObservationService.addObservation = function (observation) {
+			var request = $http.post(BASE_URL, observation);
+			return request.then(successHandler, failureHandler);
+		};
+
+		studyEntryObservationService.updateObservation = function (observation) {
+			var request = $http.patch(BASE_URL, observation);
+			return request.then(successHandler, failureHandler);
+		};
+
+		studyEntryObservationService.deleteObservation = function (observationId) {
+			var request = $http.delete(BASE_URL + '/' + observationId);
+			return request.then(successHandler, failureHandler);
+		};
+
 		studyEntryObservationService.countObservationsByVariables = function (variableIds) {
             return $http.head(BASE_URL + "?", {
 				params: {
 					variableIds: variableIds.join(",")
 				}
 			});
-            // return request.then(successHandler, failureHandler);
         };
 
         return studyEntryObservationService;
