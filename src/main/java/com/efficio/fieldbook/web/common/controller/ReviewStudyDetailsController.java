@@ -108,7 +108,6 @@ public class ReviewStudyDetailsController extends AbstractBaseFieldbookControlle
 		try {
 			workbook = this.fieldbookMiddlewareService.getStudyVariableSettings(id);
 			workbook.getStudyDetails().setId(id);
-			this.removeAnalysisAndAnalysisSummaryVariables(workbook);
 			final String createdBy = this.userService.getPersonNameForUserId(NumberUtils.toInt(workbook.getStudyDetails().getCreatedBy()));
 			details = SettingsUtil.convertWorkbookToStudyDetails(workbook, this.fieldbookMiddlewareService, this.fieldbookService,
 					this.userSelection, this.contextUtil.getCurrentProgramUUID(), this.appConstantsProperties, createdBy);

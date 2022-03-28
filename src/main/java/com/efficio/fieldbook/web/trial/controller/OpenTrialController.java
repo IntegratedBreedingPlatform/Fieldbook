@@ -226,12 +226,6 @@ public class OpenTrialController extends BaseTrialController {
 
 				final Workbook workbook = this.fieldbookMiddlewareService.getStudyDataSet(studyId);
 
-				// FIXME
-				// See setStartingEntryNoAndPlotNoFromObservations() in
-				// prepareExperimentalDesignTabInfo
-
-				this.removeAnalysisAndAnalysisSummaryVariables(workbook);
-
 				this.userSelection.setConstantsWithLabels(workbook.getConstants());
 				this.userSelection.setWorkbook(workbook);
 				this.userSelection.setExperimentalDesignVariables(WorkbookUtil.getExperimentalDesignVariables(workbook.getConditions()));
@@ -476,8 +470,6 @@ public class OpenTrialController extends BaseTrialController {
 	public Map<String, Object> updateSavedTrial(@RequestParam(value = "trialID") final int id) throws ParseException {
 		final Map<String, Object> returnVal = new HashMap<>();
 		final Workbook trialWorkbook = this.fieldbookMiddlewareService.getStudyDataSet(id);
-
-		this.removeAnalysisAndAnalysisSummaryVariables(trialWorkbook);
 
 		this.userSelection.setWorkbook(trialWorkbook);
 		this.userSelection.setExperimentalDesignVariables(WorkbookUtil.getExperimentalDesignVariables(trialWorkbook.getConditions()));
