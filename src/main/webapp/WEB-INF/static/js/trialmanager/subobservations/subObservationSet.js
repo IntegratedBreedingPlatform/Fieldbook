@@ -1888,6 +1888,7 @@
 			}
 
 		}])
+		// TODO: move to commons because it's also used by 'Germplasm & checks' tab
 		.directive('observationInlineEditor', function () {
 			return {
 				restrict: 'E',

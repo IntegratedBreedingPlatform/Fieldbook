@@ -1101,35 +1101,7 @@
 						});
 				}
 
-			}])
-		.directive('observationInlineEditor', function () {
-			return {
-				restrict: 'E',
-				templateUrl: '/Fieldbook/static/angular-templates/subObservations/observationInlineEditor.html',
-				scope: {
-					observation: '=',
-					// TODO upgrade angular to > 1.5 to use one-way binding
-					columnData: '=',
-					isCategoricalDescriptionView: '='
-				},
-				controller: function ($scope, BREEDING_METHOD_SCALE) {
-					$scope.targetkey = 'observationValue';
-					$scope.valuecontainer = {observationValue : $scope.observation.value};
-					$scope.isBreedingMethod = parseInt(BREEDING_METHOD_SCALE, 10) === parseInt($scope.columnData.scaleId, 10);
-					$scope.doBlur = function ($event) {
-						if ($event.keyCode === 13) {
-							$event.target.blur();
-						}
-					}
-
-					$scope.valuecontainer.onOpenClose = function(isOpen) {
-						$scope.observation.value = $scope.valuecontainer.observationValue;
-						$scope.observation.onOpenClose(isOpen);
-					}
-				}
-			};
-		});
-
+			}]);
 
 })();
 
