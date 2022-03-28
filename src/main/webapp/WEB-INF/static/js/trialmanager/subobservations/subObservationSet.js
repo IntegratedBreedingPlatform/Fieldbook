@@ -1041,6 +1041,7 @@
 					}])
 					.withColReorder()
 					.withColReorderCallback(colReorderCallback)
+					.withColReorderOption('iFixedColumnsLeft', $scope.isFileStorageConfigured ? 2 : 1)
 					.withPaginationType('full_numbers');
 			}
 
@@ -1369,7 +1370,7 @@
 
 			$scope.onSelectAllPages = function () {
 				$scope.isAllPagesSelected = !$scope.isAllPagesSelected;
-				table().columns(0).visible(!$scope.isAllPagesSelected);
+				table().columns('.termId--3').visible(!$scope.isAllPagesSelected);
 				$scope.selectedItems = [];
 				table().ajax.reload();
 			};
