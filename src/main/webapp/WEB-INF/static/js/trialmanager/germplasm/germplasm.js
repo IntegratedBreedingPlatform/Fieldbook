@@ -472,7 +472,7 @@
 							if (columnData.variableType === 'ENTRY_DETAIL') {
 								className += 'entry-details ';
 
-								if (isEditable()) {
+								if (isObservationEditable()) {
 									className += ' editable ';
 								}
 							}
@@ -486,9 +486,8 @@
 							return className;
 						}
 
-						function isEditable() {
-							return (columnData.termId === 8255 && !studyStateService.hasGeneratedDesign()) ||
-								(columnData.termId !== 8230 && columnData.termId !== 8255);
+						function isObservationEditable() {
+							return columnData.termId !== 8230 && !studyStateService.hasGeneratedDesign();
 						}
 
 						columns.push({
