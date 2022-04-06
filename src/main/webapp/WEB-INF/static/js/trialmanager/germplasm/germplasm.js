@@ -525,7 +525,16 @@
 									return '';
 								}
 							});
-						} else if (columnData.termId === -3) {
+						} else if (columnData.termId === 8377) {
+							// CROSS
+							columnsDef.push({
+								targets: columns.length - 1,
+								orderable: false,
+								render: function (data, type, full, meta) {
+									return full.cross;
+								}
+							});
+						} if (columnData.termId === -3) {
 							//ACTIVE LOT
 							columnsDef.push({
 								targets: columns.length - 1,
