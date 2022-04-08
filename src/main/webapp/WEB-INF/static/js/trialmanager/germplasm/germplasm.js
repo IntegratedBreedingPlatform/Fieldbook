@@ -1057,7 +1057,6 @@
 								variableId: variable.cvTermId,
 								studyAlias: variableName
 							}).then(function () {
-								loadTable();
 								showSuccessfulMessage('', $.germplasmMessages.addVariableSuccess.replace("{0}", variableName));
 							})
 						});
