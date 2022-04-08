@@ -81,6 +81,11 @@
 			return request.then(successHandler, failureHandler);
 		};
 
+		studyEntryService.fillWithCrossExpansion = function (generationLevel) {
+			var request = $http.put(BASE_STUDY_URL + studyContext.studyId + '/pedigree-generation-level', generationLevel);
+			return request.then(successHandler, failureHandler);
+		};
+
         return studyEntryService;
 
     }

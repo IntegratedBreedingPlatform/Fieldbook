@@ -32,6 +32,17 @@
 
 				$scope.isCategoricalDescriptionView = window.isCategoricalDescriptionView;
 
+				var tableRenderedResolve;
+				$scope.tableRenderedPromise = new Promise(function (resolve) {
+					tableRenderedResolve = resolve;
+				});
+
+				$scope.generationLevel = 1;
+				$scope.generationLevels = Array.from(Array(10).keys()).map((k) => k + 1);
+				$scope.isGenerationLevelLoading = false;
+
+				$scope.isLockedStudy = TrialManagerDataService.isLockedStudy;
+
 				loadTable();
 
 				$rootScope.$on("reloadStudyEntryTableData", function(setShowValues){
@@ -65,9 +76,31 @@
 							})
 						.withDataProp('data')
 						.withOption('serverSide', true)
+						.withOption('initComplete', initCompleteCallback)
 						.withOption('drawCallback', drawCallback)
 					);
 				}
+
+				function initCompleteCallback() {
+					table().columns().every(function () {
+						$(this.header())
+							.append($compile('<span class="glyphicon glyphicon-edit" ' +
+								' style="cursor:pointer; padding-left: 5px;"' +
+								' popover-placement="bottom"' +
+								' popover-append-to-body="true"' +
+								' popover-trigger="\'outsideClick\'"' +
+								// does not work with outsideClick
+								' ng-if="checkColumnByTermId(' + this.index() + ', 8377)"' +
+								' ng-show="!isLockedStudy()"' +
+								' uib-popover-template="\'crossOptionsPopover.html\'"></span>')($scope))
+					});
+					adjustColumns();
+					tableRenderedResolve();
+				}
+
+				$scope.checkColumnByTermId = function (index, termId) {
+					return $scope.columnsData[index].termId === termId;
+				};
 
 				function drawCallback() {
 					addCellClickHandler();
@@ -425,9 +458,19 @@
 				function loadColumns() {
 					return studyEntryService.getEntryTableColumns().then(function (columnsData) {
 						$scope.columnsData = addCheckBoxColumn(columnsData);
+						$scope.generationLevel = getCrossGenerationLevel();
+
 						var columnsObj = $scope.columnsObj = mapColumns($scope.columnsData);
 						return columnsObj;
 					});
+				}
+
+				function getCrossGenerationLevel() {
+					var crossColumn = $scope.columnsData.filter((column) => column.termId === 8377);
+					if (crossColumn.length === 1 && crossColumn[0].value) {
+						return Number(crossColumn[0].value);
+					}
+					return 1;
 				}
 
 				function addCheckBoxColumn(columnsData) {
@@ -437,7 +480,7 @@
 						alias: "",
 						factor: true,
 						name: "CHECK",
-						termId: -6,
+						termId: -6
 					});
 					return columns;
 				}
@@ -466,6 +509,10 @@
 						}
 						columnData.index = index;
 
+						function isObservationEditable() {
+							return columnData.termId !== 8230 && !studyStateService.hasGeneratedDesign();
+						}
+
 						function getClassName() {
 							var className = '';
 
@@ -484,10 +531,6 @@
 							className += ' dt-head-nowrap';
 
 							return className;
-						}
-
-						function isObservationEditable() {
-							return columnData.termId !== 8230 && !studyStateService.hasGeneratedDesign();
 						}
 
 						columns.push({
@@ -1092,6 +1135,20 @@
 					});
 				};
 
+				$scope.fillWithCrossExpansion = function () {
+					$scope.isGenerationLevelLoading = true;
+					studyEntryService.fillWithCrossExpansion($scope.generationLevel).then(function (response) {
+						$rootScope.$emit("reloadStudyEntryTableData", {});
+					}, function(errResponse) {
+						$uibModalInstance.close();
+						showErrorMessage($.fieldbookMessages.errorServerError,  errResponse.errors[0].message);
+					});
+				};
+
+				$scope.changeGenerationLevel = function(level) {
+					$scope.generationLevel = level;
+				};
+
 				function switchCategoricalView(showCategoricalDescriptionView) {
 					'use strict';
 
@@ -1107,7 +1164,7 @@
 								window.measurementObservationMessages.showCategoricalDescription);
 
 						});
-				}
+				};
 
 			}]);
 

@@ -124,3 +124,19 @@ $(document).ready(function() {
 
 //]]>
 </script>
+<script type="text/ng-template" id="crossOptionsPopover.html">
+	<form>
+		<div class="form-group">
+			<label for="generationLevel"><strong>Specify expansion level</strong></label>
+			<select class="form-control" id="generationLevel" name="generationLevel"
+					ng-model="generationLevel"
+					ng-options="level for level in generationLevels"
+					ng-change="changeGenerationLevel(generationLevel)">
+			</select>
+
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-primary" ng-click="fillWithCrossExpansion()">Apply</button>
+		</div>
+	</form>
+</script>
