@@ -63,6 +63,7 @@
 				<thead>
 				<tr>
 					<th data-sortable="false" class="fbk-delete-link"></th>
+					<th ng-show="isFileStorageConfigured" data-sortable="false" th:text="#{study.managesettings.files.label}">Files</th>
 					<th data-sortable="false" th:text="#{study.managesettings.environment.label}">Environment</th>
 					<th data-sortable="false" ng-repeat="key in settings.managementDetails.keys() track by $index"
 						ng-hide="settings.managementDetails.val(key).hidden" data-termid="{{key}}">
@@ -78,6 +79,12 @@
 					<td class="fbk-delete-link fbk-table-delete-link">
                         <span ng-click="deleteInstance($index, instance.instanceId)" ng-show="instanceInfo.numberOfInstances > 1"
 							  class="glyphicon glyphicon-minus-sign fbk-delete-sign" ng-model-options="{ debounce: 500 }">&nbsp;</span>
+					</td>
+					<td ng-show="isFileStorageConfigured">
+						<div ng-click="showFiles(instance.instanceId)" title="click to open the file manager" class="show-on-hover ng-scope"
+							 ng-show="hasAnyAuthority(PERMISSIONS.MS_MANAGE_FILES_PERMISSION)" style="cursor: pointer">
+							<i class="glyphicon glyphicon-duplicate text-info " style="font-size: 1.2em">&nbsp;</i>
+						</div>
 					</td>
 					<td>{{instance.managementDetailValues[TRIAL_INSTANCE_NO_INDEX]}}</td>
 					<td class="instance-editable-cell" ng-repeat="key in settings.managementDetails.keys() track by $index" ng-hide="settings.managementDetails.val(key).hidden">

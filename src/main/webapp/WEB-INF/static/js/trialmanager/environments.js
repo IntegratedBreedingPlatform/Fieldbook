@@ -4,9 +4,9 @@
 
 	angular.module('manageTrialApp').controller('EnvironmentCtrl', ['$scope', '$q', 'TrialManagerDataService', '$uibModal', '$stateParams',
 		'$http', 'DTOptionsBuilder', 'LOCATION_ID', 'UNSPECIFIED_LOCATION_ID', '$timeout', 'studyInstanceService', 'studyStateService', 'derivedVariableService', 'studyContext',
-		'datasetService', 'locationModalService', '$compile',
+		'datasetService', 'locationModalService', '$compile', 'fileService',
 		function ($scope, $q, TrialManagerDataService, $uibModal, $stateParams, $http, DTOptionsBuilder, LOCATION_ID, UNSPECIFIED_LOCATION_ID, $timeout, studyInstanceService,
-				  studyStateService, derivedVariableService, studyContext, datasetService, locationModalService, $compile) {
+				  studyStateService, derivedVariableService, studyContext, datasetService, locationModalService, $compile, fileService) {
 
 			var ctrl = this;
 			var tableId = '#environment-table';
@@ -24,6 +24,9 @@
 			};
 
 			$scope.settings = TrialManagerDataService.settings.environments;
+			fileService.getFileStorageStatus().then((map) => {
+				$scope.isFileStorageConfigured = map.status
+			});
 
 			$scope.onRemoveVariable = function (variableType, variableIds) {
 				return $scope.checkVariableIsUsedInCalculatedVariable(variableIds);
@@ -126,6 +129,32 @@
 
 					$(this).parents('.dataTables_wrapper').find('.dt-buttons').replaceWith(api.buttons().container());
 				}
+			};
+
+			$scope.showFiles = function (instanceId) {
+
+				$uibModal.open({
+					template: '<iframe ng-src="{{url}}"' +
+						' style="width:100%; height: 590px; border: 0" />',
+					size: 'lg',
+					controller: function ($scope, $uibModalInstance) {
+						$scope.url = '/ibpworkbench/controller/jhipster#file-manager'
+							+ '?cropName=' + studyContext.cropName
+							+ '&programUUID=' + studyContext.programId
+							+ '&instanceId=' + instanceId
+							+ '&datasetId=' + studyContext.trialDatasetId;
+
+						window.closeModal = function() {
+							$uibModalInstance.close();
+						}
+					},
+				});
+			};
+
+			// global handle for inline cell html
+			window.showFiles = function (instanceId) {
+				event.stopPropagation();
+				$scope.showFiles(instanceId);
 			};
 
 			$scope.renderDisplayValue = function (settingVariable, value) {
