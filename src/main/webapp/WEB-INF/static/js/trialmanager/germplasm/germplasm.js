@@ -13,6 +13,7 @@
 
 				$scope.settings = TrialManagerDataService.settings.germplasm;
 				$scope.entryDetails = TrialManagerDataService.settings.entryDetails;
+				$scope.isLockedStudy = TrialManagerDataService.isLockedStudy;
 				$scope.trialMeasurement = {hasMeasurement: studyStateService.hasGeneratedDesign()};
 				$scope.isHideDelete = studyStateService.hasGeneratedDesign();
 				$scope.addVariable = !studyStateService.hasGeneratedDesign() && TrialManagerDataService.applicationData.germplasmListSelected;
@@ -39,9 +40,6 @@
 
 				$scope.generationLevel = 1;
 				$scope.generationLevels = Array.from(Array(10).keys()).map((k) => k + 1);
-				$scope.isGenerationLevelLoading = false;
-
-				$scope.isLockedStudy = TrialManagerDataService.isLockedStudy;
 
 				loadTable();
 
@@ -1135,9 +1133,8 @@
 				};
 
 				$scope.fillWithCrossExpansion = function () {
-					$scope.isGenerationLevelLoading = true;
 					studyEntryService.fillWithCrossExpansion($scope.generationLevel).then(function (response) {
-						$rootScope.$emit("reloadStudyEntryTableData", {});
+						$scope.reloadStudyEntryTableData();
 					}, function(errResponse) {
 						$uibModalInstance.close();
 						showErrorMessage($.fieldbookMessages.errorServerError,  errResponse.errors[0].message);
