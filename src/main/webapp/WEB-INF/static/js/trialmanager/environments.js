@@ -70,19 +70,39 @@
 						modalInstance.result.then(deferred.resolve);
 						modalInstance.result.then((isOK) => {
 							if (isOK) {
-								datasetService.removeVariables(studyContext.trialDatasetId, deleteVariables).then(() => {
-									$scope.nested.dataTable.rerender();
-								});
+								$scope.detachOrDeleteFilesIfAny(deleteVariables, studyContext.trialDatasetId, null);
 							}
 						});
 					} else {
-						deferred.resolve(true);
-						datasetService.removeVariables(studyContext.trialDatasetId, deleteVariables).then(() => {
-							$scope.nested.dataTable.rerender();
-						});
+						$scope.detachOrDeleteFilesIfAny(deleteVariables, studyContext.trialDatasetId, null)
+							.then(deferred.resolve(true));
 					}
 				});
 				return deferred.promise;
+			};
+
+			$scope.detachOrDeleteFilesIfAny = async function (variableIds, datasetId, instanceId) {
+				const fileCountResp = await fileService.getFileCount(variableIds, $scope.subObservationSet.id, null);
+				const fileCount = parseInt(fileCountResp.headers('X-Total-Count'));
+
+				if (fileCount > 0) {
+					const modalInstance = $scope.showFileDeletionOptions(fileCount);
+					let doRemoveFiles;
+					try {
+						doRemoveFiles = await modalInstance.result;
+					} catch (e) {
+						return;
+					}
+					if (doRemoveFiles) {
+						await fileService.removeFiles(variableIds, datasetId, instanceId);
+					} else {
+						await fileService.detachFiles(variableIds, datasetId, instanceId);
+					}
+				}
+
+				datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
+					$scope.nested.dataTable.rerender();
+				});
 			};
 
 			$scope.onLocationChange = function (data) {
@@ -239,7 +259,8 @@
 						var modalConfirmDelete = $scope.openConfirmModal(message, 'Yes', 'No');
 						modalConfirmDelete.result.then(function (shouldContinue) {
 							if (shouldContinue) {
-								$scope.continueInstanceDeletion(index, [instanceId]);
+								$scope.detachOrDeleteFilesIfAny([], null, instanceId)
+									.then($scope.continueInstanceDeletion(index, [instanceId]));
 							}
 						});
 					}
@@ -334,6 +355,28 @@
 
 			$scope.initiateManageLocationModal = function () {
 				locationModalService.openManageLocations();
+			};
+
+			$scope.showFileDeletionOptions = function (fileCount) {
+				return $uibModal.open({
+					animation: true,
+					templateUrl: '/Fieldbook/static/js/trialmanager/file/fileDeletionOptions.html',
+					windowClass: 'force-zindex',
+					controller: function ($scope, $uibModalInstance) {
+						$scope.fileCount = fileCount;
+						$scope.removeFiles = function () {
+							$uibModalInstance.close(true);
+						};
+
+						$scope.detachFiles = function () {
+							$uibModalInstance.close(false);
+						};
+
+						$scope.cancel = function () {
+							$uibModalInstance.dismiss();
+						};
+					}
+				});
 			};
 
 			ctrl.updateInstanceVariables = function (type, entriesIncreased) {

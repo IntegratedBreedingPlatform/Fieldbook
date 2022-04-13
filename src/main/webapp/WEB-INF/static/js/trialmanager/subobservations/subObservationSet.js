@@ -434,7 +434,7 @@
 						return;
 					}
 
-					const fileCountResp = await fileService.getFileCount(variableIds, $scope.subObservationSet.id);
+					const fileCountResp = await fileService.getFileCount(variableIds, $scope.subObservationSet.id, null);
 					const fileCount = parseInt(fileCountResp.headers('X-Total-Count'));
 
 					if (fileCount > 0) {
@@ -446,9 +446,9 @@
 							return;
 						}
 						if (doRemoveFiles) {
-							await fileService.removeFiles(variableIds, $scope.subObservationSet.id);
+							await fileService.removeFiles(variableIds, $scope.subObservationSet.id, null);
 						} else {
-							await fileService.detachFiles(variableIds, $scope.subObservationSet.id);
+							await fileService.detachFiles(variableIds, $scope.subObservationSet.id, null);
 						}
 					}
 

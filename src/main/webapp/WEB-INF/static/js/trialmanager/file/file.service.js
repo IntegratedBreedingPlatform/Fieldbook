@@ -19,29 +19,32 @@
 				return $http.get(BASE_URL + '/filestorage/status').then(successHandler, failureHandler);
 			};
 
-			fileService.getFileCount = function (variableIds, datasetId) {
+			fileService.getFileCount = function (variableIds, datasetId, instanceId) {
 				return $http.head(BASE_URL + '/filemetadata', {
 					params: {
 						variableIds,
-						datasetId
+						datasetId,
+						instanceId
 					}
 				});
 			};
 
-			fileService.detachFiles = function (variableIds, datasetId) {
+			fileService.detachFiles = function (variableIds, datasetId, instanceId) {
 				return $http.delete(BASE_URL + '/filemetadata/variables', {
 					params: {
 						variableIds,
-						datasetId
+						datasetId,
+						instanceId
 					}
 				}).then(successHandler, failureHandler);
 			};
 
-			fileService.removeFiles = function (variableIds, datasetId) {
+			fileService.removeFiles = function (variableIds, datasetId, instanceId) {
 				return $http.delete(BASE_URL + '/filemetadata', {
 					params: {
 						variableIds,
-						datasetId
+						datasetId,
+						instanceId
 					}
 				}).then(successHandler, failureHandler);
 			};
