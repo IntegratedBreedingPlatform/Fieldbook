@@ -636,6 +636,8 @@ public abstract class BaseTrialController extends SettingsController {
 		basic.setUserID(studyOwnerUserId);
 		basic.setUserName(studyOwnerPersonName);
 		basic.setStudyType(studyDetails.getStudyType());
+		basic.setGenerationLevel(studyDetails.getGenerationLevel());
+
 		final TabInfo tab = new TabInfo();
 		tab.setData(basic);
 

@@ -38,7 +38,7 @@
 					tableRenderedResolve = resolve;
 				});
 
-				$scope.generationLevel = 1;
+				$scope.generationLevel = TrialManagerDataService.generationLevel() ? TrialManagerDataService.generationLevel() : 1;
 				$scope.generationLevels = Array.from(Array(10).keys()).map((k) => k + 1);
 
 				loadTable();
@@ -456,19 +456,10 @@
 				function loadColumns() {
 					return studyEntryService.getEntryTableColumns().then(function (columnsData) {
 						$scope.columnsData = addCheckBoxColumn(columnsData);
-						$scope.generationLevel = getCrossGenerationLevel();
 
 						var columnsObj = $scope.columnsObj = mapColumns($scope.columnsData);
 						return columnsObj;
 					});
-				}
-
-				function getCrossGenerationLevel() {
-					var crossColumn = $scope.columnsData.filter((column) => column.termId === 8377);
-					if (crossColumn.length === 1 && crossColumn[0].value) {
-						return Number(crossColumn[0].value);
-					}
-					return 1;
 				}
 
 				function addCheckBoxColumn(columnsData) {
@@ -1134,6 +1125,7 @@
 
 				$scope.fillWithCrossExpansion = function () {
 					studyEntryService.fillWithCrossExpansion($scope.generationLevel).then(function (response) {
+						TrialManagerDataService.updateGenerationLevel($scope.generationLevel);
 						$scope.reloadStudyEntryTableData();
 					}, function(errResponse) {
 						$uibModalInstance.close();

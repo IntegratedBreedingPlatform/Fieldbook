@@ -323,6 +323,14 @@
 					return service.currentData.basicDetails.isLocked;
 				},
 
+				generationLevel: function() {
+					return service.currentData.basicDetails.generationLevel;
+				},
+
+				updateGenerationLevel: function(level) {
+					service.currentData.basicDetails.generationLevel = level;
+				},
+
 				changeLockedStatus : function(doLock) {
 
 					var studyId = service.currentData.basicDetails.studyID;
