@@ -90,18 +90,25 @@
 					try {
 						doRemoveFiles = await modalInstance.result;
 					} catch (e) {
+						console.log("May Error");
 						return;
 					}
 					if (doRemoveFiles) {
-						await fileService.removeFiles(variableIds, studyContext.trialDatasetId, null);
+						console.log("removed");
+						await fileService.removeFiles(variableIds, studyContext.trialDatasetId, null)
+							.then(datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
+								$scope.nested.dataTable.rerender();
+							}));
 					} else {
-						await fileService.detachFiles(variableIds, studyContext.trialDatasetId, null);
+						console.log("detached");
+						await fileService.detachFiles(variableIds, studyContext.trialDatasetId, null)
+							.then(datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
+								$scope.nested.dataTable.rerender();
+							}));
 					}
 				}
 
-				datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
-					$scope.nested.dataTable.rerender();
-				});
+
 			};
 
 			$scope.onLocationChange = function (data) {
