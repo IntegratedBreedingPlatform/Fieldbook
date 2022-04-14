@@ -70,19 +70,18 @@
 						modalInstance.result.then(deferred.resolve);
 						modalInstance.result.then((isOK) => {
 							if (isOK) {
-								$scope.detachOrDeleteFilesIfAny(deleteVariables, studyContext.trialDatasetId, null);
+								$scope.detachOrDeleteFilesIfAny(deleteVariables);
 							}
 						});
 					} else {
-						$scope.detachOrDeleteFilesIfAny(deleteVariables, studyContext.trialDatasetId, null)
-							.then(deferred.resolve(true));
+						$scope.detachOrDeleteFilesIfAny(deleteVariables).then(deferred.resolve(true));
 					}
 				});
 				return deferred.promise;
 			};
 
-			$scope.detachOrDeleteFilesIfAny = async function (variableIds, datasetId, instanceId) {
-				const fileCountResp = await fileService.getFileCount(variableIds, $scope.subObservationSet.id, null);
+			$scope.detachOrDeleteFilesIfAny = async function (variableIds) {
+				const fileCountResp = await fileService.getFileCount(variableIds, studyContext.trialDatasetId, null);
 				const fileCount = parseInt(fileCountResp.headers('X-Total-Count'));
 
 				if (fileCount > 0) {
@@ -94,9 +93,9 @@
 						return;
 					}
 					if (doRemoveFiles) {
-						await fileService.removeFiles(variableIds, datasetId, instanceId);
+						await fileService.removeFiles(variableIds, studyContext.trialDatasetId, null);
 					} else {
-						await fileService.detachFiles(variableIds, datasetId, instanceId);
+						await fileService.detachFiles(variableIds, studyContext.trialDatasetId, null);
 					}
 				}
 
@@ -259,8 +258,8 @@
 						var modalConfirmDelete = $scope.openConfirmModal(message, 'Yes', 'No');
 						modalConfirmDelete.result.then(function (shouldContinue) {
 							if (shouldContinue) {
-								$scope.detachOrDeleteFilesIfAny([], null, instanceId)
-									.then($scope.continueInstanceDeletion(index, [instanceId]));
+								fileService.removeFiles([], null, instanceId);
+								$scope.continueInstanceDeletion(index, [instanceId]);
 							}
 						});
 					}
