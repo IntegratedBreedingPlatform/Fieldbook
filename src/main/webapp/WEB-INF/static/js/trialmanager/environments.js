@@ -90,17 +90,14 @@
 					try {
 						doRemoveFiles = await modalInstance.result;
 					} catch (e) {
-						console.log("May Error");
 						return;
 					}
 					if (doRemoveFiles) {
-						console.log("removed");
 						await fileService.removeFiles(variableIds, studyContext.trialDatasetId, null)
 							.then(datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
 								$scope.nested.dataTable.rerender();
 							}));
 					} else {
-						console.log("detached");
 						await fileService.detachFiles(variableIds, studyContext.trialDatasetId, null)
 							.then(datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
 								$scope.nested.dataTable.rerender();
@@ -249,7 +246,9 @@
 
 			$scope.deleteInstance = function (index, instanceId) {
 
-				studyInstanceService.getStudyInstance(instanceId).then(function (studyInstance) {
+				studyInstanceService.getStudyInstance(instanceId).then(async function (studyInstance) {
+					const fileCountResp = await fileService.getFileCount(variableIds, studyContext.trialDatasetId, null);
+					const fileCount = parseInt(fileCountResp.headers('X-Total-Count'));
 
 					// Show error if instance cannot be deleted
 					if (!studyInstance.canBeDeleted) {
@@ -259,13 +258,15 @@
 						// Show confirmation message for overwriting measurements and/or fieldmap
 					} else {
 						var message = $.environmentMessages.deleteEnvironmentNoData;
-						if (studyInstance.hasMeasurements || studyInstance.hasFieldmap || studyInstance.hasExperimentalDesign) {
+						if (fileCount > 0 || studyInstance.hasMeasurements || studyInstance.hasFieldmap || studyInstance.hasExperimentalDesign) {
 							message = $.environmentMessages.environmentHasDataThatWillBeLost;
 						}
 						var modalConfirmDelete = $scope.openConfirmModal(message, 'Yes', 'No');
-						modalConfirmDelete.result.then(function (shouldContinue) {
+						modalConfirmDelete.result.then(async function (shouldContinue) {
 							if (shouldContinue) {
-								fileService.removeFiles([], null, instanceId);
+								if (fileCount > 0) {
+									await fileService.removeFiles([], null, instanceId);
+								}
 								$scope.continueInstanceDeletion(index, [instanceId]);
 							}
 						});
