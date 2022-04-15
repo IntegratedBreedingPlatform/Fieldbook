@@ -154,7 +154,7 @@
 				}
 			};
 
-			$scope.showFiles = function (instanceId) {
+			$scope.showFiles = function (instanceId, variableName) {
 
 				$uibModal.open({
 					template: '<iframe ng-src="{{url}}"' +
@@ -165,7 +165,8 @@
 							+ '?cropName=' + studyContext.cropName
 							+ '&programUUID=' + studyContext.programId
 							+ '&instanceId=' + instanceId
-							+ '&datasetId=' + studyContext.trialDatasetId;
+							+ '&datasetId=' + studyContext.trialDatasetId
+							+ '&variableName=' + (variableName || '');
 
 						window.closeModal = function() {
 							$uibModalInstance.close();
@@ -175,9 +176,9 @@
 			};
 
 			// global handle for inline cell html
-			window.showFiles = function (instanceId) {
+			window.showFiles = function (instanceId, variableName) {
 				event.stopPropagation();
-				$scope.showFiles(instanceId);
+				$scope.showFiles(instanceId, variableName);
 			};
 
 			$scope.renderDisplayValue = function (settingVariable, value) {

@@ -25,6 +25,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.generationcp.commons.constant.AppConstants;
 import org.generationcp.commons.util.DateUtil;
+import org.generationcp.middleware.api.file.FileMetadataDTO;
+import org.generationcp.middleware.api.file.FileMetadataFilterRequest;
+import org.generationcp.middleware.api.file.FileMetadataService;
 import org.generationcp.middleware.domain.dms.ExperimentDesignType;
 import org.generationcp.middleware.domain.dms.PhenotypicType;
 import org.generationcp.middleware.domain.dms.StandardVariable;
@@ -36,12 +39,14 @@ import org.generationcp.middleware.domain.etl.StudyDetails;
 import org.generationcp.middleware.domain.etl.TreatmentVariable;
 import org.generationcp.middleware.domain.etl.Workbook;
 import org.generationcp.middleware.domain.oms.TermId;
+import org.generationcp.middleware.domain.ontology.Variable;
 import org.generationcp.middleware.domain.ontology.VariableType;
 import org.generationcp.middleware.exceptions.MiddlewareException;
 import org.generationcp.middleware.exceptions.MiddlewareQueryException;
 import org.generationcp.middleware.manager.Operation;
 import org.generationcp.middleware.manager.api.StudyDataManager;
 import org.generationcp.middleware.pojos.dms.DmsProject;
+import org.generationcp.middleware.pojos.file.FileMetadata;
 import org.generationcp.middleware.service.api.user.UserService;
 import org.generationcp.middleware.util.Util;
 import org.slf4j.Logger;
@@ -56,6 +61,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 /**
  * Created by IntelliJ IDEA. User: Daniel Villafuerte
@@ -64,6 +70,9 @@ public abstract class BaseTrialController extends SettingsController {
 
 	@Resource
 	protected UserService userService;
+
+	@Resource
+	private FileMetadataService fileMetadataService;
 
 	private static final Logger LOG = LoggerFactory.getLogger(BaseTrialController.class);
 
@@ -455,6 +464,13 @@ public abstract class BaseTrialController extends SettingsController {
 
 		data.setNumberOfInstances(trialObservations.size());
 
+		final FileMetadataFilterRequest filterRequest = new FileMetadataFilterRequest();
+		filterRequest.setInstanceIds(trialObservations.stream().map(row -> (int)row.getLocationId()).collect(Collectors.toList()));
+		final List<FileMetadataDTO> files = this.fileMetadataService
+			.search(filterRequest, this.contextUtil.getCurrentProgramUUID(), null);
+		final Map<Integer, List<FileMetadataDTO>> filesMap = new HashMap<>();
+
+		files.forEach(file -> filesMap.computeIfAbsent(file.getInstanceId(), k -> new ArrayList<>()).add(file));
 		final List<Instance> instances = new ArrayList<>();
 		for (final MeasurementRow row : trialObservations) {
 			final Instance instance = new Instance();
@@ -462,6 +478,16 @@ public abstract class BaseTrialController extends SettingsController {
 				instance.setInstanceId(row.getLocationId());
 				instance.setStockId(row.getStockId());
 				instance.setExperimentId(row.getExperimentId());
+				if (filesMap.containsKey(instance.getInstanceId())) {
+					instance.setFileCount(filesMap.get(instance.getInstanceId()).size());
+
+					final Set<String> fileVariableIdsList = filesMap.get(instance.getInstanceId()).stream()
+						.filter(f -> CollectionUtils.isNotEmpty(f.getVariables())).flatMap(f -> f.getVariables().stream())
+						.map(v -> String.valueOf(v.getId())).collect(Collectors.toSet());
+					if(CollectionUtils.isNotEmpty(fileVariableIdsList)) {
+						instance.setFileVariableIds(fileVariableIdsList.toArray(new String[fileVariableIdsList.size()]));
+					}
+				}
 			}
 
 			final Map<String, String> managementDetailValues = new HashMap<>();
