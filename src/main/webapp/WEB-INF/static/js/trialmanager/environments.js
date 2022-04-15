@@ -245,9 +245,8 @@
 			};
 
 			$scope.deleteInstance = function (index, instanceId) {
-
 				studyInstanceService.getStudyInstance(instanceId).then(async function (studyInstance) {
-					const fileCountResp = await fileService.getFileCount(variableIds, studyContext.trialDatasetId, null);
+					const fileCountResp = await fileService.getFileCount(null, studyContext.trialDatasetId, null);
 					const fileCount = parseInt(fileCountResp.headers('X-Total-Count'));
 
 					// Show error if instance cannot be deleted
@@ -265,7 +264,7 @@
 						modalConfirmDelete.result.then(async function (shouldContinue) {
 							if (shouldContinue) {
 								if (fileCount > 0) {
-									await fileService.removeFiles([], null, instanceId);
+									await fileService.removeFiles(null, null, instanceId);
 								}
 								$scope.continueInstanceDeletion(index, [instanceId]);
 							}
