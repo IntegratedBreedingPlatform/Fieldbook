@@ -478,10 +478,10 @@ public abstract class BaseTrialController extends SettingsController {
 				instance.setInstanceId(row.getLocationId());
 				instance.setStockId(row.getStockId());
 				instance.setExperimentId(row.getExperimentId());
-				if (filesMap.containsKey(instance.getInstanceId())) {
-					instance.setFileCount(filesMap.get(instance.getInstanceId()).size());
-
-					final Set<String> fileVariableIdsList = filesMap.get(instance.getInstanceId()).stream()
+				final int instanceId = (int)instance.getInstanceId();
+				if (filesMap.containsKey(instanceId)) {
+					instance.setFileCount(filesMap.get(instanceId).size());
+					final Set<String> fileVariableIdsList = filesMap.get(instanceId).stream()
 						.filter(f -> CollectionUtils.isNotEmpty(f.getVariables())).flatMap(f -> f.getVariables().stream())
 						.map(v -> String.valueOf(v.getId())).collect(Collectors.toSet());
 					if(CollectionUtils.isNotEmpty(fileVariableIdsList)) {
