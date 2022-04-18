@@ -182,11 +182,11 @@
 				$scope.showFiles(instanceId, variableName);
 			};
 
-			$scope.showFileIcon = function (instance, settingVariable) {
+			$scope.showFileIcon = function (fileVariableIds, settingVariable) {
 				return $scope.isFileStorageConfigured
-					&& instance.fileVariableIds
-					&& instance.fileVariableIds.length
-					&& instance.fileVariableIds.includes(settingVariable.variable.cvTermId.toString());
+					&& fileVariableIds
+					&& fileVariableIds.length
+					&& fileVariableIds.includes(settingVariable.variable.cvTermId.toString());
 			}
 
 			$scope.renderDisplayValue = function (settingVariable, value) {
