@@ -25,7 +25,8 @@
 
 			$scope.settings = TrialManagerDataService.settings.environments;
 			fileService.getFileStorageStatus().then((map) => {
-				$scope.isFileStorageConfigured = map.status
+				$scope.isFileStorageConfigured = map.status;
+				$scope.nested.dataTable.rerender();
 			});
 
 			$scope.onRemoveVariable = function (variableType, variableIds) {
