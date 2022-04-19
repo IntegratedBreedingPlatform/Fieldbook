@@ -115,14 +115,14 @@
 					$scope.instanceInfo.instances.forEach(instance => instanceIds.push(parseInt(instance.instanceId)));
 				}
 				await fileService.getFiles(instanceIds).then(function (files) {
-					const filesMap = {};
-					const fileVariableIdsMap = {};
+					const filesMap = new Map();
+					const fileVariableIdsMap = new Map();
 					if(files && files.length) {
 						files.forEach(function (file) {
 							const fileInstanceId = parseInt(file.instanceId);
-							if (!filesMap.get(fileInstanceId)) {
-								filesMap.put(fileInstanceId, []);
-								fileVariableIdsMap.put(fileInstanceId, []);
+							if (!filesMap.has(fileInstanceId)) {
+								filesMap.set(fileInstanceId, []);
+								fileVariableIdsMap.set(fileInstanceId, []);
 							}
 							filesMap.get(fileInstanceId).push(file);
 
@@ -135,8 +135,8 @@
 					$scope.instanceInfo.instances.forEach(function (instance) {
 						const currentInstanceId = parseInt(instance.instanceId);
 						if (instanceIds.includes(currentInstanceId)) {
-							instance.fileCount = filesMap.get(currentInstanceId) ? filesMap.get(currentInstanceId).length: 0;
-							instance.fileVariableIds = fileVariableIdsMap.get(currentInstanceId) ?
+							instance.fileCount = filesMap.has(currentInstanceId) ? filesMap.get(currentInstanceId).length: 0;
+							instance.fileVariableIds = fileVariableIdsMap.has(currentInstanceId) ?
 								fileVariableIdsMap.get(currentInstanceId): null;
 						}
 					});
@@ -194,7 +194,7 @@
 
 			$scope.showFiles = function (instanceId, variableName) {
 
-				$uibModal.open({
+				const showFilesModal = $uibModal.open({
 					template: '<iframe ng-src="{{url}}"' +
 						' style="width:100%; height: 590px; border: 0" />',
 					size: 'lg',
@@ -207,11 +207,12 @@
 							+ '&variableName=' + (variableName || '');
 
 						window.closeModal = function() {
-							$scope.updateFilesData(instanceId);
 							$uibModalInstance.close();
 						}
 					},
 				});
+
+				showFilesModal.result.then(() => $scope.updateFilesData(instanceId));
 			};
 
 			// global handle for inline cell html
