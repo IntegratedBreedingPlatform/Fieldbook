@@ -94,14 +94,14 @@
 					<td>{{instance.managementDetailValues[TRIAL_INSTANCE_NO_INDEX]}}</td>
 					<td class="instance-editable-cell" ng-repeat="key in settings.managementDetails.keys() track by $index" ng-hide="settings.managementDetails.val(key).hidden">
 						{{renderDisplayValue(settings.managementDetails.val(key), instance.managementDetailValues[key])}}
-						<i ng-show="showFileIcon(instance.fileVariableIds, settings.managementDetails.val(key))"
+						<i ng-show="showFileIcon(instance.fileVariableIds, settings.managementDetails.val(key).variable.cvTermId)"
 						   ng-click="showFiles(instance.instanceId, settings.managementDetails.val(key).variable.name)"
 							class="glyphicon glyphicon-duplicate text-info"	title="click to see associated files"
 							style="font-size: 1.2em; margin-left: 10px; cursor: pointer"></i>
 					</td>
 					<td class="instance-editable-cell" ng-repeat="key in settings.trialConditionDetails.keys() track by $index">
 						{{renderDisplayValue(settings.trialConditionDetails.val(key), instance.trialDetailValues[key])}}
-						<i ng-show="showFileIcon(instance.fileVariableIds, settings.trialConditionDetails.val(key))"
+						<i ng-show="showFileIcon(instance.fileVariableIds, settings.trialConditionDetails.val(key).variable.cvTermId)"
 						   ng-click="showFiles(instance.instanceId, settings.trialConditionDetails.val(key).variable.name)"
 						   class="glyphicon glyphicon-duplicate text-info"	title="click to see associated files"
 						   style="font-size: 1.2em; margin-left: 10px; cursor: pointer"></i>

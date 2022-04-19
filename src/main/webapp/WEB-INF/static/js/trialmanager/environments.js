@@ -221,11 +221,11 @@
 				$scope.showFiles(instanceId, variableName);
 			};
 
-			$scope.showFileIcon = function (fileVariableIds, settingVariable) {
+			$scope.showFileIcon = function (fileVariableIds, cvTermId) {
 				return $scope.isFileStorageConfigured
 					&& fileVariableIds
 					&& fileVariableIds.length
-					&& fileVariableIds.includes(settingVariable.variable.cvTermId.toString());
+					&& fileVariableIds.includes(cvTermId.toString());
 			}
 
 			$scope.renderDisplayValue = function (settingVariable, value) {
@@ -663,11 +663,11 @@
 						dtCell.data($scope.renderDisplayValue(variableSettings.vals()[variableId], valueContainer[variableId]));
 
 						const showFilesButton = $compile(
-							'<i	ng-show="showFileIcon(instance.fileVariableIds, settings.managementDetails.val(key))"'
-							+ 'ng-click="showFiles(instance.instanceId, settings.managementDetails.val(key).variable.name)"'
-							+ 'className="glyphicon glyphicon-duplicate text-info"'
-							+ 'title="click to see associated files"'
-							+ 'style="font-size: 1.2em; margin-left: 10px; cursor: pointer"></i>'
+							'<i	ng-show="showFileIcon(\'' + instance.fileVariableIds + '\', \'' + variableId + '\')"'
+							+ ' ng-click="showFiles(\'' + instance.instanceId + '\', \'' +  variableSettings.vals()[variableId].variable.name + '\')"'
+							+ ' className="glyphicon glyphicon-duplicate text-info"'
+							+ ' title="click to see associated files"'
+							+ ' style="font-size: 1.2em; margin-left: 10px; cursor: pointer"></i>'
 						)($inlineScope);
 						$(cell).append(showFilesButton);
 						// Restore handler
