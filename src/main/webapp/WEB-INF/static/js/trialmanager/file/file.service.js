@@ -29,22 +29,20 @@
 				});
 			};
 
-			fileService.detachFiles = function (variableIds, datasetId, instanceId) {
+			fileService.detachFiles = function (variableIds, datasetId) {
 				return $http.delete(BASE_URL + '/filemetadata/variables', {
 					params: {
 						variableIds,
-						datasetId,
-						instanceId
+						datasetId
 					}
 				}).then(successHandler, failureHandler);
 			};
 
-			fileService.removeFiles = function (variableIds, datasetId, instanceId) {
+			fileService.removeFiles = function (variableIds, datasetId) {
 				return $http.delete(BASE_URL + '/filemetadata', {
 					params: {
 						variableIds,
-						datasetId,
-						instanceId
+						datasetId
 					}
 				}).then(successHandler, failureHandler);
 			};

@@ -446,9 +446,9 @@
 							return;
 						}
 						if (doRemoveFiles) {
-							await fileService.removeFiles(variableIds, $scope.subObservationSet.id, null);
+							await fileService.removeFiles(variableIds, $scope.subObservationSet.id);
 						} else {
-							await fileService.detachFiles(variableIds, $scope.subObservationSet.id, null);
+							await fileService.detachFiles(variableIds, $scope.subObservationSet.id);
 						}
 					}
 

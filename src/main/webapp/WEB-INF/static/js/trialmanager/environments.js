@@ -94,12 +94,12 @@
 						return;
 					}
 					if (doRemoveFiles) {
-						await fileService.removeFiles(variableIds, studyContext.trialDatasetId, null)
+						await fileService.removeFiles(variableIds, studyContext.trialDatasetId)
 							.then(datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
 								$scope.nested.dataTable.rerender();
 							}));
 					} else {
-						await fileService.detachFiles(variableIds, studyContext.trialDatasetId, null)
+						await fileService.detachFiles(variableIds, studyContext.trialDatasetId)
 							.then(datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
 								$scope.nested.dataTable.rerender();
 							}));
