@@ -272,9 +272,6 @@
 						var modalConfirmDelete = $scope.openConfirmModal(message, 'Yes', 'No');
 						modalConfirmDelete.result.then(async function (shouldContinue) {
 							if (shouldContinue) {
-								if (fileCount > 0) {
-									await fileService.removeFiles(null, null, instanceId);
-								}
 								$scope.continueInstanceDeletion(index, [instanceId]);
 							}
 						});
