@@ -668,7 +668,7 @@
 							+ ' className="glyphicon glyphicon-duplicate text-info"'
 							+ ' title="click to see associated files"'
 							+ ' style="font-size: 1.2em; margin-left: 10px; cursor: pointer"></i>'
-						)($inlineScope);
+						)($scope);
 						$(cell).append(showFilesButton);
 						// Restore handler
 						addCellClickHandler();
