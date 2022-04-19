@@ -19,6 +19,14 @@
 				return $http.get(BASE_URL + '/filestorage/status').then(successHandler, failureHandler);
 			};
 
+			fileService.getFiles = function (instanceIds) {
+				const filterRequest = {
+					"instanceIds": instanceIds
+				}
+				return $http.post(BASE_URL + '/filemetadata/search', filterRequest)
+					.then(successHandler, failureHandler);
+			}
+
 			fileService.getFileCount = function (variableIds, datasetId, instanceId) {
 				return $http.head(BASE_URL + '/filemetadata', {
 					params: {

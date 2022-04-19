@@ -96,17 +96,54 @@
 					if (doRemoveFiles) {
 						await fileService.removeFiles(variableIds, studyContext.trialDatasetId)
 							.then(datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
-								$scope.nested.dataTable.rerender();
+								$scope.updateFilesData();
 							}));
 					} else {
 						await fileService.detachFiles(variableIds, studyContext.trialDatasetId)
 							.then(datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
-								$scope.nested.dataTable.rerender();
+								$scope.updateFilesData();
 							}));
 					}
 				}
+			};
 
+			$scope.updateFilesData = async function(instanceId) {
+				var instanceIds = [];
+				if (instanceId) {
+					instanceIds.push(parseInt(instanceId));
+				} else {
+					$scope.instanceInfo.instances.forEach(instance => instanceIds.push(parseInt(instance.instanceId)));
+				}
+				await fileService.getFiles(instanceIds).then(function (files) {
+					const filesMap = {};
+					const fileVariableIdsMap = {};
+					if(files && files.length) {
+						files.forEach(function (file) {
+							const fileInstanceId = parseInt(file.instanceId);
+							if (!filesMap.get(fileInstanceId)) {
+								filesMap.put(fileInstanceId, []);
+								fileVariableIdsMap.put(fileInstanceId, []);
+							}
+							filesMap.get(fileInstanceId).push(file);
 
+							if (file.variables && file.variables.length) {
+								file.variables.forEach(variable => fileVariableIdsMap.get(fileInstanceId).push(variable.id.toString()));
+							}
+						});
+					}
+
+					$scope.instanceInfo.instances.forEach(function (instance) {
+						const currentInstanceId = parseInt(instance.instanceId);
+						if (instanceIds.includes(currentInstanceId)) {
+							instance.fileCount = filesMap.get(currentInstanceId) ? filesMap.get(currentInstanceId).length: 0;
+							instance.fileVariableIds = fileVariableIdsMap.get(currentInstanceId) ?
+								fileVariableIdsMap.get(currentInstanceId): null;
+						}
+					});
+
+				});
+
+				$scope.nested.dataTable.rerender();
 			};
 
 			$scope.onLocationChange = function (data) {
@@ -170,6 +207,7 @@
 							+ '&variableName=' + (variableName || '');
 
 						window.closeModal = function() {
+							$scope.updateFilesData(instanceId);
 							$uibModalInstance.close();
 						}
 					},
