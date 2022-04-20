@@ -95,12 +95,12 @@
 						}
 						if (doRemoveFiles) {
 							await fileService.removeFiles(variableIds, studyContext.trialDatasetId)
-								.then(datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
+								.then(await datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
 									$scope.updateFilesData();
 								}));
 						} else {
 							await fileService.detachFiles(variableIds, studyContext.trialDatasetId)
-								.then(datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
+								.then(await datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
 									$scope.updateFilesData();
 								}));
 						}
