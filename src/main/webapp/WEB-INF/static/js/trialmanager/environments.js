@@ -82,29 +82,31 @@
 			};
 
 			$scope.detachOrDeleteFilesIfAny = async function (variableIds) {
-				const fileCountResp = await fileService.getFileCount(variableIds, studyContext.trialDatasetId, null);
-				const fileCount = parseInt(fileCountResp.headers('X-Total-Count'));
+				if ($scope.isFileStorageConfigured) {
+					const fileCountResp = await fileService.getFileCount(variableIds, studyContext.trialDatasetId, null);
+					const fileCount = parseInt(fileCountResp.headers('X-Total-Count'));
 
-				if (fileCount > 0) {
-					const modalInstance = $scope.showFileDeletionOptions(fileCount);
-					let doRemoveFiles;
-					try {
-						doRemoveFiles = await modalInstance.result;
-					} catch (e) {
-						return;
-					}
-					if (doRemoveFiles) {
-						await fileService.removeFiles(variableIds, studyContext.trialDatasetId)
-							.then(datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
-								$scope.nested.dataTable.rerender();
-								//$scope.updateFilesData();
-							}));
-					} else {
-						await fileService.detachFiles(variableIds, studyContext.trialDatasetId)
-							.then(datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
-								$scope.nested.dataTable.rerender();
-								//$scope.updateFilesData();
-							}));
+					if (fileCount > 0) {
+						const modalInstance = $scope.showFileDeletionOptions(fileCount);
+						let doRemoveFiles;
+						try {
+							doRemoveFiles = await modalInstance.result;
+						} catch (e) {
+							return;
+						}
+						if (doRemoveFiles) {
+							await fileService.removeFiles(variableIds, studyContext.trialDatasetId)
+								.then(datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
+									$scope.nested.dataTable.rerender();
+									//$scope.updateFilesData();
+								}));
+						} else {
+							await fileService.detachFiles(variableIds, studyContext.trialDatasetId)
+								.then(datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
+									$scope.nested.dataTable.rerender();
+									//$scope.updateFilesData();
+								}));
+						}
 					}
 				}
 			};

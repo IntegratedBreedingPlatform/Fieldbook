@@ -64,12 +64,11 @@ describe('Measurement Controller', function () {
 		canBeDeleted: 'true'
 	}
 
-	var fileServiceMock = jasmine.createSpyObj('fileService', ['getFileCount']);
-	var fileCountResp = {
-		headers: {
-			'X-Total-Count': 0
-		}
-	};
+	var fileServiceMock = jasmine.createSpyObj('fileService', ['getFileStorageStatus']);
+
+	var fileStorageMap = {
+		status: false
+	}
 
 	var uibModalInstance = {
 		close: jasmine.createSpy('close'),
@@ -137,6 +136,7 @@ describe('Measurement Controller', function () {
 	});
 
 	beforeEach(function () {
+		fileServiceMock.getFileStorageStatus.and.returnValue(q.resolve(fileStorageMap));
 		httpBackend.whenGET('/Fieldbook/TrialManager/createTrial/trialSettings').respond(200, {data: "ok"});
 	})
 
@@ -144,7 +144,6 @@ describe('Measurement Controller', function () {
 
 		it('should show confirmation window for study with measurements', function () {
 			studyInstanceServiceMock.getStudyInstance.and.returnValue(q.resolve(studyInstanceMockWithMeasurement));
-			fileServiceMock.getFileCount.and.returnValue(q.resolve(fileCountResp));
 			scope.deleteInstance(1,1);
 			scope.$apply();
 			expect(scope.openConfirmModal).toHaveBeenCalled();
@@ -152,7 +151,6 @@ describe('Measurement Controller', function () {
 
 		it('should show confirmation window for study without measurements / fieldmap', function () {
 			studyInstanceServiceMock.getStudyInstance.and.returnValue(q.resolve(studyInstanceMockWithoutMeasurement));
-			fileServiceMock.getFileCount.and.returnValue(q.resolve(fileCountResp));
 			scope.deleteInstance(1,1);
 			scope.$apply();
 			expect(scope.openConfirmModal).toHaveBeenCalled();
