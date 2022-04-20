@@ -668,7 +668,7 @@
 						const showFilesButton = $compile(
 							'<i	ng-show="showFileIcon(\'' + instance.fileVariableIds + '\', \'' + variableId + '\')"'
 							+ ' ng-click="showFiles(\'' + instance.instanceId + '\', \'' +  variableSettings.vals()[variableId].variable.name + '\')"'
-							+ ' className="glyphicon glyphicon-duplicate text-info"'
+							+ ' class="glyphicon glyphicon-duplicate text-info"'
 							+ ' title="click to see associated files"'
 							+ ' style="font-size: 1.2em; margin-left: 10px; cursor: pointer"></i>'
 						)($scope);
