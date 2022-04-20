@@ -81,14 +81,12 @@
 							  class="glyphicon glyphicon-minus-sign fbk-delete-sign" ng-model-options="{ debounce: 500 }">&nbsp;</span>
 					</td>
 					<td ng-show="isFileStorageConfigured">
-						<div ng-show="hasAnyAuthority(PERMISSIONS.MS_MANAGE_FILES_PERMISSION)">
-							<div ng-click="showFiles(instance.instanceId)" title="click to open the file manager" class="show-on-hover ng-scope"
-								 ng-show="!instance.fileCount" style="cursor: pointer">
-								<i class="glyphicon glyphicon-duplicate text-info " style="font-size: 1.2em">&nbsp;</i>
-							</div>
-							<div ng-click="showFiles(instance.instanceId)" title="# of files: {{instance.fileCount}}" ng-show="instance.fileCount" style="cursor: pointer">
-								<i class="glyphicon glyphicon-duplicate text-info" style="font-size: 1.2em">&nbsp;</i>
-							</div>
+						<div ng-click="showFiles(instance.instanceId)" title="click to open the file manager" class="show-on-hover ng-scope"
+							 ng-show="!instance.fileCount" style="cursor: pointer">
+							<i class="glyphicon glyphicon-duplicate text-info " style="font-size: 1.2em">&nbsp;</i>
+						</div>
+						<div ng-click="showFiles(instance.instanceId)" title="# of files: {{instance.fileCount}}" ng-show="instance.fileCount" style="cursor: pointer">
+							<i class="glyphicon glyphicon-duplicate text-info" style="font-size: 1.2em">&nbsp;</i>
 						</div>
 					</td>
 					<td>{{instance.managementDetailValues[TRIAL_INSTANCE_NO_INDEX]}}</td>
