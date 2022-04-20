@@ -660,12 +660,11 @@
 						}
 					}
 
-					function refreshDisplay() {
+					async function refreshDisplay() {
 						$inlineScope.$destroy();
 						editor.remove();
 						dtCell.data($scope.renderDisplayValue(variableSettings.vals()[variableId], valueContainer[variableId]));
-
-						const showFilesButton = $compile(
+						const showFilesButton = await $compile(
 							'<i	ng-show="showFileIcon(\'' + instance.fileVariableIds + '\', \'' + variableId + '\')"'
 							+ ' ng-click="showFiles(\'' + instance.instanceId + '\', \'' +  variableSettings.vals()[variableId].variable.name + '\')"'
 							+ ' class="glyphicon glyphicon-duplicate text-info"'
