@@ -13,6 +13,7 @@
                         + '&modal=true';
                     $scope.url = germplasmDetailsURL;
                     $scope.gid = gid;
+                    const MAX_NAME_DISPLAY_SIZE = 30;
 
                     setPreferredName(gid);
 
@@ -30,7 +31,8 @@
 
                     function setPreferredName () {
                         germplasmDetailsService.getGermplasmByGid(gid).then(function (response) {
-                            $scope.preferredName = response.data.preferredName;
+                            const name = response.data.preferredName;
+                            $scope.preferredName = (!!name && name.length > MAX_NAME_DISPLAY_SIZE) ? name.substring(0, MAX_NAME_DISPLAY_SIZE) + "..." : name;
                         });
                     }
                 },
