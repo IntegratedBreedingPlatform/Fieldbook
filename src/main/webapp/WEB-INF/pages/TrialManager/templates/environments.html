@@ -86,7 +86,7 @@
 								 ng-show="!instance.fileCount" style="cursor: pointer">
 								<i class="glyphicon glyphicon-duplicate text-info " style="font-size: 1.2em">&nbsp;</i>
 							</div>
-							<div ng-click="showFiles(instance.instanceId)" ng-show="instance.fileCount" style="cursor: pointer">
+							<div ng-click="showFiles(instance.instanceId)" title="# of files: {{instance.fileCount}}" ng-show="instance.fileCount" style="cursor: pointer">
 								<i class="glyphicon glyphicon-duplicate text-info" style="font-size: 1.2em">&nbsp;</i>
 							</div>
 						</div>
