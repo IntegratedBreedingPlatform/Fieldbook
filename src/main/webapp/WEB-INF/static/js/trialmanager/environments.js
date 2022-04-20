@@ -96,14 +96,12 @@
 						if (doRemoveFiles) {
 							await fileService.removeFiles(variableIds, studyContext.trialDatasetId)
 								.then(datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
-									$scope.nested.dataTable.rerender();
-									//$scope.updateFilesData();
+									$scope.updateFilesData();
 								}));
 						} else {
 							await fileService.detachFiles(variableIds, studyContext.trialDatasetId)
 								.then(datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
-									$scope.nested.dataTable.rerender();
-									//$scope.updateFilesData();
+									$scope.updateFilesData();
 								}));
 						}
 					} else {
@@ -151,10 +149,8 @@
 								fileVariableIdsMap.get(currentInstanceId): null;
 						}
 					});
-
+					$scope.nested.dataTable.rerender();
 				});
-
-				$scope.nested.dataTable.rerender();
 			};
 
 			$scope.onLocationChange = function (data) {
@@ -223,7 +219,7 @@
 					},
 				});
 
-				//showFilesModal.result.then(() => $scope.updateFilesData(instanceId));
+				showFilesModal.result.then(() => $scope.updateFilesData(instanceId));
 			};
 
 			// global handle for inline cell html
