@@ -144,7 +144,7 @@
 					$scope.instanceInfo.instances.forEach(function (instance) {
 						const currentInstanceId = parseInt(instance.instanceId);
 						if (instanceIds.includes(currentInstanceId)) {
-							instance.fileCount = filesMap.has(currentInstanceId) ? filesMap.get(currentInstanceId).length: 0;
+							instance.fileCount = filesMap.has(currentInstanceId) ? filesMap.get(currentInstanceId).length: null;
 							instance.fileVariableIds = fileVariableIdsMap.has(currentInstanceId) ?
 								fileVariableIdsMap.get(currentInstanceId): null;
 						}
