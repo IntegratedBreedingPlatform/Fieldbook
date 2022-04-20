@@ -89,7 +89,7 @@ public class Instance {
 	}
 
 	public Integer getFileCount() {
-		return fileCount;
+		return this.fileCount;
 	}
 
 	public void setFileCount(final Integer fileCount) {
@@ -97,7 +97,7 @@ public class Instance {
 	}
 
 	public String[] getFileVariableIds() {
-		return fileVariableIds;
+		return this.fileVariableIds;
 	}
 
 	public void setFileVariableIds(final String[] fileVariableIds) {
