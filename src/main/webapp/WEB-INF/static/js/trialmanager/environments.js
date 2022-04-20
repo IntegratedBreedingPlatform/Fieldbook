@@ -106,7 +106,15 @@
 									//$scope.updateFilesData();
 								}));
 						}
+					} else {
+						datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
+							$scope.nested.dataTable.rerender();
+						});
 					}
+				} else {
+					datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
+						$scope.nested.dataTable.rerender();
+					});
 				}
 			};
 
