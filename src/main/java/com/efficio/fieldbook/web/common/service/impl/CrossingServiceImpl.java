@@ -68,7 +68,7 @@ import static org.generationcp.middleware.service.api.dataset.ObservationUnitUti
 @Transactional
 public class CrossingServiceImpl implements CrossingService {
 
-	public static final int MAX_CROSS_NAME_SIZE = 240;
+	public static final int MAX_CROSS_NAME_SIZE = 4985;
 	static final Integer GERMPLASM_GNPGS = 2;
 	static final Integer GERMPLASM_GRPLCE = 0;
 	static final Integer GERMPLASM_LGID = 0;
