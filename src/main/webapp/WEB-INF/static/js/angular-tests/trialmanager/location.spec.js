@@ -46,8 +46,7 @@ describe('Location', function () {
             $provide.value("derivedVariableService", derivedVariableService);
             $provide.value("TrialManagerDataService", trialDataManagerService);
             $provide.value("UNSPECIFIED_LOCATION_ID", 1);
-
-
+            $provide.value("fileService", fileServiceMock);
         });
 
 
@@ -60,8 +59,6 @@ describe('Location', function () {
         angular.module('derived-variable');
         module('pascalprecht.translate');
         module('manageTrialApp');
-        $provide.value("fileService", fileServiceMock);
-
     });
 
 
@@ -72,7 +69,7 @@ describe('Location', function () {
             datasetService = $injector.get('datasetService');
             fileServiceMock = $injector.get('fileService');
             derivedVariableService.getFormulaVariables.and.returnValue($q.resolve(null));
-            fileServiceMock.getFileStorageStatus.and.returnValue(q.resolve(fileStorageMap));
+            fileServiceMock.getFileStorageStatus.and.returnValue($q.resolve(fileStorageMap));
             controller = $controller('EnvironmentCtrl',{
                 $rootScope: rootScope,
                 $scope: scope,

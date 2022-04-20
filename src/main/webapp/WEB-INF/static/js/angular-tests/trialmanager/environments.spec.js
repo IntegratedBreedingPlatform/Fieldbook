@@ -136,13 +136,13 @@ describe('Measurement Controller', function () {
 	});
 
 	beforeEach(function () {
-		fileServiceMock.getFileStorageStatus.and.returnValue(q.resolve(fileStorageMap));
 		httpBackend.whenGET('/Fieldbook/TrialManager/createTrial/trialSettings').respond(200, {data: "ok"});
 	})
 
 	describe('deleteInstance', function () {
 
 		it('should show confirmation window for study with measurements', function () {
+			fileServiceMock.getFileStorageStatus.and.returnValue(q.resolve(fileStorageMap));
 			studyInstanceServiceMock.getStudyInstance.and.returnValue(q.resolve(studyInstanceMockWithMeasurement));
 			scope.deleteInstance(1,1);
 			scope.$apply();
@@ -150,6 +150,7 @@ describe('Measurement Controller', function () {
 		});
 
 		it('should show confirmation window for study without measurements / fieldmap', function () {
+			fileServiceMock.getFileStorageStatus.and.returnValue(q.resolve(fileStorageMap));
 			studyInstanceServiceMock.getStudyInstance.and.returnValue(q.resolve(studyInstanceMockWithoutMeasurement));
 			scope.deleteInstance(1,1);
 			scope.$apply();
