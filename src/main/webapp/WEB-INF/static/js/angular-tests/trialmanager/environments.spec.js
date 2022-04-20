@@ -64,6 +64,13 @@ describe('Measurement Controller', function () {
 		canBeDeleted: 'true'
 	}
 
+	var fileServiceMock = jasmine.createSpyObj('fileService', ['getFileCount']);
+	var fileCountResp = {
+		headers: {
+			'X-Total-Count': 0
+		}
+	};
+
 	var uibModalInstance = {
 		close: jasmine.createSpy('close'),
 		dismiss: jasmine.createSpy('dismiss'),
@@ -94,6 +101,7 @@ describe('Measurement Controller', function () {
 			$provide.value("datasetService", datasetServiceMock);
 			$provide.value("studyContext", studyContext);
 			$provide.value("studyInstanceService", studyInstanceServiceMock);
+			$provide.value("fileService", fileServiceMock);
 		});
 
 	});
@@ -107,6 +115,7 @@ describe('Measurement Controller', function () {
 			httpBackend = $httpBackend;
 			trialManagerServiceMock.trialMeasurement['hasAdvancedOrCrossesList'] = false;
 			studyInstanceServiceMock = $injector.get('studyInstanceService');
+			fileServiceMock = $injector.get('fileService');
 			uibModalInstance.result.then.and.returnValue(q.resolve(false));
 			scope.openConfirmModal = jasmine.createSpy('openConfirmModal');
 			scope.openConfirmModal.and.returnValue(uibModalInstance)
@@ -121,7 +130,8 @@ describe('Measurement Controller', function () {
 				studyInstanceService: studyInstanceServiceMock,
 				LOCATION_ID: 1,
 				UNSPECIFIED_LOCATION_ID: 0,
-				derivedVariableService: derivedVariableService
+				derivedVariableService: derivedVariableService,
+				fileService: fileServiceMock
 			});
 		});
 	});
@@ -134,6 +144,7 @@ describe('Measurement Controller', function () {
 
 		it('should show confirmation window for study with measurements', function () {
 			studyInstanceServiceMock.getStudyInstance.and.returnValue(q.resolve(studyInstanceMockWithMeasurement));
+			fileServiceMock.getFileCount.and.returnValue(q.resolve(fileCountResp));
 			scope.deleteInstance(1,1);
 			scope.$apply();
 			expect(scope.openConfirmModal).toHaveBeenCalled();
@@ -141,6 +152,7 @@ describe('Measurement Controller', function () {
 
 		it('should show confirmation window for study without measurements / fieldmap', function () {
 			studyInstanceServiceMock.getStudyInstance.and.returnValue(q.resolve(studyInstanceMockWithoutMeasurement));
+			fileServiceMock.getFileCount.and.returnValue(q.resolve(fileCountResp));
 			scope.deleteInstance(1,1);
 			scope.$apply();
 			expect(scope.openConfirmModal).toHaveBeenCalled();
