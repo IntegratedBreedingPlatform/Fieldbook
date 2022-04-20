@@ -145,12 +145,10 @@
 
 					$scope.instanceInfo.instances.forEach(function (instance) {
 						const currentInstanceId = parseInt(instance.instanceId);
-						console.log(instance.fileCount);
 						if (instanceIds.includes(currentInstanceId)) {
 							instance.fileCount = filesMap.has(currentInstanceId) ? filesMap.get(currentInstanceId).length: null;
 							instance.fileVariableIds = fileVariableIdsMap.has(currentInstanceId) ?
 								fileVariableIdsMap.get(currentInstanceId): null;
-							console.log(instance.fileCount);
 						}
 					});
 				}).then($scope.nested.dataTable.rerender());
