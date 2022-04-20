@@ -85,7 +85,7 @@
 					const fileCountResp = await fileService.getFileCount(variableIds, studyContext.trialDatasetId, null);
 					const fileCount = parseInt(fileCountResp.headers('X-Total-Count'));
 
-					if (fileCount > 0) {
+					if (true) {
 						const modalInstance = $scope.showFileDeletionOptions(fileCount);
 						let doRemoveFiles;
 						try {
@@ -149,8 +149,7 @@
 								fileVariableIdsMap.get(currentInstanceId): null;
 						}
 					});
-					$scope.nested.dataTable.rerender();
-				});
+				}).then($scope.nested.dataTable.rerender());
 			};
 
 			$scope.onLocationChange = function (data) {
