@@ -95,14 +95,16 @@
 						}
 						if (doRemoveFiles) {
 							await fileService.removeFiles(variableIds, studyContext.trialDatasetId)
-								.then(await datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
-									$scope.updateFilesData();
-								}));
+								.then(async function () {
+									await datasetService.removeVariables(studyContext.trialDatasetId, variableIds);
+									await $scope.updateFilesData();
+								});
 						} else {
 							await fileService.detachFiles(variableIds, studyContext.trialDatasetId)
-								.then(await datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
-									$scope.updateFilesData();
-								}));
+								.then(async function () {
+									await datasetService.removeVariables(studyContext.trialDatasetId, variableIds);
+									await $scope.updateFilesData();
+								});
 						}
 					} else {
 						datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
