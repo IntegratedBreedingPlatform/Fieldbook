@@ -17,6 +17,7 @@ import org.generationcp.commons.ruleengine.naming.rules.NamingRuleExecutionConte
 import org.generationcp.commons.ruleengine.naming.service.ProcessCodeService;
 import org.generationcp.commons.ruleengine.service.RulesService;
 import org.generationcp.middleware.domain.etl.Workbook;
+import org.generationcp.middleware.exceptions.MiddlewareQueryException;
 import org.generationcp.middleware.manager.GermplasmNameType;
 import org.generationcp.middleware.manager.api.GermplasmDataManager;
 import org.generationcp.middleware.pojos.Method;
@@ -29,11 +30,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 @Service
 @Transactional
 public class NamingConventionServiceImpl implements NamingConventionService {
+
+	public static final int NAME_MAX_LENGTH = 5000;
 
 	@Resource
 	private FieldbookService fieldbookMiddlewareService;
@@ -53,12 +62,13 @@ public class NamingConventionServiceImpl implements NamingConventionService {
 	@Resource
 	private ResourceBundleMessageSource messageSource;
 
-
 	@SuppressWarnings("unchecked")
 	@Override
-	public void generateAdvanceListNames(final List<AdvancingSource> advancingSourceItems, final boolean checkForDuplicateName, final List<ImportedGermplasm> germplasmList) throws RuleException {
+	public void generateAdvanceListNames(final List<AdvancingSource> advancingSourceItems, final boolean checkForDuplicateName,
+		final List<ImportedGermplasm> germplasmList) throws MiddlewareQueryException, RuleException {
 
 		final TimerWatch timer = new TimerWatch("advance");
+		final Locale locale = LocaleContextHolder.getLocale();
 
 		Map<String, Integer> keySequenceMap = new HashMap<>();
 		final Iterator<ImportedGermplasm> germplasmIterator = germplasmList.iterator();
@@ -72,9 +82,11 @@ public class NamingConventionServiceImpl implements NamingConventionService {
 					this.setupNamingRuleExecutionContext(row, checkForDuplicateName);
 				names = (List<String>) this.rulesService.runRules(namingExecutionContext);
 
-
 				for (final String name : names) {
 					final ImportedGermplasm germplasm = germplasmIterator.next();
+					if (name.length() > NAME_MAX_LENGTH) {
+						throw new MiddlewareQueryException("error.save.resulting.name.exceeds.limit");
+					}
 					germplasm.setDesig(name);
 					this.assignNames(germplasm);
 				}
