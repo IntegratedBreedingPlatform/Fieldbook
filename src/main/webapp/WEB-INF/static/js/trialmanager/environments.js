@@ -26,6 +26,12 @@
 			$scope.settings = TrialManagerDataService.settings.environments;
 			fileService.getFileStorageStatus().then((map) => {
 				$scope.isFileStorageConfigured = map.status;
+				const table = angular.element(tableId);
+				if (table.length !== 0 && table.dataTable()) {
+					$timeout(function () {
+						table.dataTable().fnAdjustColumnSizing();
+					});
+				}
 			});
 
 			$scope.onRemoveVariable = function (variableType, variableIds) {
