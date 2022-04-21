@@ -21,6 +21,7 @@ import org.apache.commons.lang.StringUtils;
 import org.generationcp.commons.constant.AppConstants;
 import org.generationcp.commons.security.AuthorizationService;
 import org.generationcp.commons.spring.util.ContextUtil;
+import org.generationcp.middleware.api.file.FileMetadataService;
 import org.generationcp.middleware.data.initializer.MeasurementDataTestDataInitializer;
 import org.generationcp.middleware.data.initializer.MeasurementVariableTestDataInitializer;
 import org.generationcp.middleware.data.initializer.StandardVariableTestDataInitializer;
@@ -161,6 +162,9 @@ public class OpenTrialControllerTest {
 
 	@Mock
 	private StudyService studyService;
+
+	@Mock
+	private FileMetadataService fileMetadataService;
 
 	@Before
 	public void setUp() {

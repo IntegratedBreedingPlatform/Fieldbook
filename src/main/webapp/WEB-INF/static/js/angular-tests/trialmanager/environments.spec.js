@@ -2,7 +2,7 @@
 describe('Measurement Controller', function () {
 
 	var controller, q, httpBackend, $rootScope;
-	var scope =  jasmine.createSpyObj('scope', ['deleteInstance', 'openConfirmModal', '$watch'])
+	var scope = jasmine.createSpyObj('scope', ['deleteInstance', 'openConfirmModal', '$watch'])
 
 	var studyContext = {
 		studyId: 1,
@@ -64,6 +64,12 @@ describe('Measurement Controller', function () {
 		canBeDeleted: 'true'
 	}
 
+	var fileServiceMock = jasmine.createSpyObj('fileService', ['getFileStorageStatus', 'getFileCount']);
+
+	var fileStorageMap = {
+		status: false
+	}
+
 	var uibModalInstance = {
 		close: jasmine.createSpy('close'),
 		dismiss: jasmine.createSpy('dismiss'),
@@ -94,6 +100,7 @@ describe('Measurement Controller', function () {
 			$provide.value("datasetService", datasetServiceMock);
 			$provide.value("studyContext", studyContext);
 			$provide.value("studyInstanceService", studyInstanceServiceMock);
+			$provide.value("fileService", fileServiceMock);
 		});
 
 	});
@@ -107,6 +114,13 @@ describe('Measurement Controller', function () {
 			httpBackend = $httpBackend;
 			trialManagerServiceMock.trialMeasurement['hasAdvancedOrCrossesList'] = false;
 			studyInstanceServiceMock = $injector.get('studyInstanceService');
+			fileServiceMock = $injector.get('fileService');
+			fileServiceMock.getFileStorageStatus.and.returnValue(q.resolve(fileStorageMap));
+
+			var fileCountResponse = {headers: jasmine.createSpy('headers')};
+			fileCountResponse.headers.withArgs('X-Total-Count').and.returnValue(1);
+			fileServiceMock.getFileCount.and.returnValue(Promise.resolve(fileCountResponse));
+
 			uibModalInstance.result.then.and.returnValue(q.resolve(false));
 			scope.openConfirmModal = jasmine.createSpy('openConfirmModal');
 			scope.openConfirmModal.and.returnValue(uibModalInstance)
@@ -121,7 +135,8 @@ describe('Measurement Controller', function () {
 				studyInstanceService: studyInstanceServiceMock,
 				LOCATION_ID: 1,
 				UNSPECIFIED_LOCATION_ID: 0,
-				derivedVariableService: derivedVariableService
+				derivedVariableService: derivedVariableService,
+				fileService: fileServiceMock
 			});
 		});
 	});
@@ -134,16 +149,18 @@ describe('Measurement Controller', function () {
 
 		it('should show confirmation window for study with measurements', function () {
 			studyInstanceServiceMock.getStudyInstance.and.returnValue(q.resolve(studyInstanceMockWithMeasurement));
-			scope.deleteInstance(1,1);
+			scope.deleteInstance(1, 1).then(() => {
+				expect(scope.openConfirmModal).toHaveBeenCalled();
+			});
 			scope.$apply();
-			expect(scope.openConfirmModal).toHaveBeenCalled();
 		});
 
 		it('should show confirmation window for study without measurements / fieldmap', function () {
 			studyInstanceServiceMock.getStudyInstance.and.returnValue(q.resolve(studyInstanceMockWithoutMeasurement));
-			scope.deleteInstance(1,1);
+			scope.deleteInstance(1, 1).then(() => {
+				expect(scope.openConfirmModal).toHaveBeenCalled();
+			});
 			scope.$apply();
-			expect(scope.openConfirmModal).toHaveBeenCalled();
 		});
 
 	})

@@ -4,9 +4,9 @@
 
 	angular.module('manageTrialApp').controller('EnvironmentCtrl', ['$scope', '$q', 'TrialManagerDataService', '$uibModal', '$stateParams',
 		'$http', 'DTOptionsBuilder', 'LOCATION_ID', 'UNSPECIFIED_LOCATION_ID', '$timeout', 'studyInstanceService', 'studyStateService', 'derivedVariableService', 'studyContext',
-		'datasetService', 'locationModalService', '$compile',
+		'datasetService', 'locationModalService', '$compile', 'fileService',
 		function ($scope, $q, TrialManagerDataService, $uibModal, $stateParams, $http, DTOptionsBuilder, LOCATION_ID, UNSPECIFIED_LOCATION_ID, $timeout, studyInstanceService,
-				  studyStateService, derivedVariableService, studyContext, datasetService, locationModalService, $compile) {
+				  studyStateService, derivedVariableService, studyContext, datasetService, locationModalService, $compile, fileService) {
 
 			var ctrl = this;
 			var tableId = '#environment-table';
@@ -24,6 +24,15 @@
 			};
 
 			$scope.settings = TrialManagerDataService.settings.environments;
+			fileService.getFileStorageStatus().then((map) => {
+				$scope.isFileStorageConfigured = map.status;
+				const table = angular.element(tableId);
+				if (table.length !== 0 && table.dataTable()) {
+					$timeout(function () {
+						table.dataTable().fnAdjustColumnSizing();
+					});
+				}
+			});
 
 			$scope.onRemoveVariable = function (variableType, variableIds) {
 				return $scope.checkVariableIsUsedInCalculatedVariable(variableIds);
@@ -67,19 +76,88 @@
 						modalInstance.result.then(deferred.resolve);
 						modalInstance.result.then((isOK) => {
 							if (isOK) {
-								datasetService.removeVariables(studyContext.trialDatasetId, deleteVariables).then(() => {
-									$scope.nested.dataTable.rerender();
-								});
+								$scope.detachOrDeleteFilesIfAny(deleteVariables);
 							}
 						});
 					} else {
-						deferred.resolve(true);
-						datasetService.removeVariables(studyContext.trialDatasetId, deleteVariables).then(() => {
-							$scope.nested.dataTable.rerender();
-						});
+						$scope.detachOrDeleteFilesIfAny(deleteVariables).then(deferred.resolve(true));
 					}
 				});
 				return deferred.promise;
+			};
+
+			$scope.detachOrDeleteFilesIfAny = async function (variableIds) {
+				if ($scope.isFileStorageConfigured) {
+					const fileCountResp = await fileService.getFileCount(variableIds, studyContext.trialDatasetId, null);
+					const fileCount = parseInt(fileCountResp.headers('X-Total-Count'));
+
+					if (fileCount > 0) {
+						const modalInstance = $scope.showFileDeletionOptions(fileCount);
+						let doRemoveFiles;
+						try {
+							doRemoveFiles = await modalInstance.result;
+						} catch (e) {
+							return;
+						}
+						if (doRemoveFiles) {
+							await fileService.removeFiles(variableIds, studyContext.trialDatasetId)
+								.then(async function () {
+									await datasetService.removeVariables(studyContext.trialDatasetId, variableIds);
+									await $scope.updateFilesData();
+								});
+						} else {
+							await fileService.detachFiles(variableIds, studyContext.trialDatasetId)
+								.then(async function () {
+									await datasetService.removeVariables(studyContext.trialDatasetId, variableIds);
+									await $scope.updateFilesData();
+								});
+						}
+					} else {
+						datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
+							$scope.nested.dataTable.rerender();
+						});
+					}
+				} else {
+					datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
+						$scope.nested.dataTable.rerender();
+					});
+				}
+			};
+
+			$scope.updateFilesData = async function (instanceId) {
+				const instanceIds = [];
+				if (instanceId) {
+					instanceIds.push(parseInt(instanceId));
+				} else {
+					$scope.instanceInfo.instances.forEach(instance => instanceIds.push(parseInt(instance.instanceId)));
+				}
+				await fileService.getFiles(instanceIds).then(function (files) {
+					const filesMap = new Map();
+					const fileVariableIdsMap = new Map();
+					if (files && files.length) {
+						files.forEach(function (file) {
+							const fileInstanceId = parseInt(file.instanceId);
+							if (!filesMap.has(fileInstanceId)) {
+								filesMap.set(fileInstanceId, []);
+								fileVariableIdsMap.set(fileInstanceId, []);
+							}
+							filesMap.get(fileInstanceId).push(file);
+
+							if (file.variables && file.variables.length) {
+								file.variables.forEach(variable => fileVariableIdsMap.get(fileInstanceId).push(variable.id.toString()));
+							}
+						});
+					}
+
+					$scope.instanceInfo.instances.forEach(function (instance) {
+						const currentInstanceId = parseInt(instance.instanceId);
+						if (instanceIds.includes(currentInstanceId)) {
+							instance.fileCount = filesMap.has(currentInstanceId) ? filesMap.get(currentInstanceId).length : null;
+							instance.fileVariableIds = fileVariableIdsMap.has(currentInstanceId) ?
+								fileVariableIdsMap.get(currentInstanceId) : null;
+						}
+					});
+				}).then($scope.nested.dataTable.rerender());
 			};
 
 			$scope.onLocationChange = function (data) {
@@ -127,6 +205,42 @@
 					$(this).parents('.dataTables_wrapper').find('.dt-buttons').replaceWith(api.buttons().container());
 				}
 			};
+
+			$scope.showFiles = function (instanceId, variableName) {
+
+				const showFilesModal = $uibModal.open({
+					template: '<iframe ng-src="{{url}}"' +
+						' style="width:100%; height: 590px; border: 0" />',
+					size: 'lg',
+					controller: function ($scope, $uibModalInstance) {
+						$scope.url = '/ibpworkbench/controller/jhipster#file-manager'
+							+ '?cropName=' + studyContext.cropName
+							+ '&programUUID=' + studyContext.programId
+							+ '&instanceId=' + instanceId
+							+ '&datasetId=' + studyContext.trialDatasetId
+							+ '&variableName=' + (variableName || '');
+
+						window.closeModal = function () {
+							$uibModalInstance.close();
+						}
+					},
+				});
+
+				showFilesModal.result.then(() => $scope.updateFilesData(instanceId));
+			};
+
+			// global handle for inline cell html
+			window.showFiles = function (instanceId, variableName) {
+				event.stopPropagation();
+				$scope.showFiles(instanceId, variableName);
+			};
+
+			$scope.showFileIcon = function (fileVariableIds, cvTermId) {
+				return $scope.isFileStorageConfigured
+					&& fileVariableIds
+					&& fileVariableIds.length
+					&& fileVariableIds.includes(cvTermId.toString());
+			}
 
 			$scope.renderDisplayValue = function (settingVariable, value) {
 
@@ -194,7 +308,11 @@
 
 			$scope.deleteInstance = function (index, instanceId) {
 
-				studyInstanceService.getStudyInstance(instanceId).then(function (studyInstance) {
+				var deferred = $q.defer();
+
+				studyInstanceService.getStudyInstance(instanceId).then(async function (studyInstance) {
+					const fileCountResp = await fileService.getFileCount(null, studyContext.trialDatasetId, null);
+					const fileCount = parseInt(fileCountResp.headers('X-Total-Count'));
 
 					// Show error if instance cannot be deleted
 					if (!studyInstance.canBeDeleted) {
@@ -204,19 +322,23 @@
 						// Show confirmation message for overwriting measurements and/or fieldmap
 					} else {
 						var message = $.environmentMessages.deleteEnvironmentNoData;
-						if (studyInstance.hasMeasurements || studyInstance.hasFieldmap || studyInstance.hasExperimentalDesign) {
+						if (fileCount > 0 || studyInstance.hasMeasurements || studyInstance.hasFieldmap || studyInstance.hasExperimentalDesign) {
 							message = $.environmentMessages.environmentHasDataThatWillBeLost;
 						}
 						var modalConfirmDelete = $scope.openConfirmModal(message, 'Yes', 'No');
-						modalConfirmDelete.result.then(function (shouldContinue) {
+						modalConfirmDelete.result.then(async function (shouldContinue) {
 							if (shouldContinue) {
 								$scope.continueInstanceDeletion(index, [instanceId]);
 							}
 						});
 					}
+					deferred.resolve();
 				}, function (errResponse) {
 					showErrorMessage($.fieldbookMessages.errorServerError, errResponse.errors[0].message);
+					deferred.resolve();
 				});
+
+				return deferred.promise;
 
 			};
 
@@ -305,6 +427,28 @@
 
 			$scope.initiateManageLocationModal = function () {
 				locationModalService.openManageLocations();
+			};
+
+			$scope.showFileDeletionOptions = function (fileCount) {
+				return $uibModal.open({
+					animation: true,
+					templateUrl: '/Fieldbook/static/js/trialmanager/file/fileDeletionOptions.html',
+					windowClass: 'force-zindex',
+					controller: function ($scope, $uibModalInstance) {
+						$scope.fileCount = fileCount;
+						$scope.removeFiles = function () {
+							$uibModalInstance.close(true);
+						};
+
+						$scope.detachFiles = function () {
+							$uibModalInstance.close(false);
+						};
+
+						$scope.cancel = function () {
+							$uibModalInstance.dismiss();
+						};
+					}
+				});
 			};
 
 			ctrl.updateInstanceVariables = function (type, entriesIncreased) {
@@ -534,10 +678,18 @@
 						}
 					}
 
-					function refreshDisplay() {
+					async function refreshDisplay() {
 						$inlineScope.$destroy();
 						editor.remove();
 						dtCell.data($scope.renderDisplayValue(variableSettings.vals()[variableId], valueContainer[variableId]));
+						const showFilesButton = await $compile(
+							'<i	ng-show="showFileIcon(\'' + instance.fileVariableIds + '\', \'' + variableId + '\')"'
+							+ ' ng-click="showFiles(\'' + instance.instanceId + '\', \'' + variableSettings.vals()[variableId].variable.name + '\')"'
+							+ ' class="glyphicon glyphicon-duplicate text-info"'
+							+ ' title="click to see associated files"'
+							+ ' style="font-size: 1.2em; margin-left: 10px; cursor: pointer"></i>'
+						)($scope);
+						$(cell).append(showFilesButton);
 						// Restore handler
 						addCellClickHandler();
 						if ($table.length !== 0 && $table.dataTable()) {

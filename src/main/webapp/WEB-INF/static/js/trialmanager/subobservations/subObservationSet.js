@@ -434,7 +434,7 @@
 						return;
 					}
 
-					const fileCountResp = await fileService.getFileCount(variableIds, $scope.subObservationSet.id);
+					const fileCountResp = await fileService.getFileCount(variableIds, $scope.subObservationSet.id, null);
 					const fileCount = parseInt(fileCountResp.headers('X-Total-Count'));
 
 					if (fileCount > 0) {

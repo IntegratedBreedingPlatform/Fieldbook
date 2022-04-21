@@ -17,6 +17,8 @@ public class Instance {
 	private long stockId;
 	private long instanceId;
 	private int experimentId;
+	private Integer fileCount;
+	private String[] fileVariableIds;
 
 	private Map<String, String> managementDetailValues;
 	private Map<String, String> trialDetailValues;
@@ -84,5 +86,21 @@ public class Instance {
 
 	public void setExperimentId(final int experimentId) {
 		this.experimentId = experimentId;
+	}
+
+	public Integer getFileCount() {
+		return this.fileCount;
+	}
+
+	public void setFileCount(final Integer fileCount) {
+		this.fileCount = fileCount;
+	}
+
+	public String[] getFileVariableIds() {
+		return this.fileVariableIds;
+	}
+
+	public void setFileVariableIds(final String[] fileVariableIds) {
+		this.fileVariableIds = fileVariableIds;
 	}
 }
