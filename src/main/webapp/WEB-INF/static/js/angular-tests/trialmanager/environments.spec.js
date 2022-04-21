@@ -2,7 +2,7 @@
 describe('Measurement Controller', function () {
 
 	var controller, q, httpBackend, $rootScope;
-	var scope =  jasmine.createSpyObj('scope', ['deleteInstance', 'openConfirmModal', '$watch'])
+	var scope = jasmine.createSpyObj('scope', ['deleteInstance', 'openConfirmModal', '$watch'])
 
 	var studyContext = {
 		studyId: 1,
@@ -64,7 +64,7 @@ describe('Measurement Controller', function () {
 		canBeDeleted: 'true'
 	}
 
-	var fileServiceMock = jasmine.createSpyObj('fileService', ['getFileStorageStatus']);
+	var fileServiceMock = jasmine.createSpyObj('fileService', ['getFileStorageStatus', 'getFileCount']);
 
 	var fileStorageMap = {
 		status: false
@@ -116,6 +116,11 @@ describe('Measurement Controller', function () {
 			studyInstanceServiceMock = $injector.get('studyInstanceService');
 			fileServiceMock = $injector.get('fileService');
 			fileServiceMock.getFileStorageStatus.and.returnValue(q.resolve(fileStorageMap));
+
+			var fileCountResponse = {headers: jasmine.createSpy('headers')};
+			fileCountResponse.headers.withArgs('X-Total-Count').and.returnValue(1);
+			fileServiceMock.getFileCount.and.returnValue(Promise.resolve(fileCountResponse));
+
 			uibModalInstance.result.then.and.returnValue(q.resolve(false));
 			scope.openConfirmModal = jasmine.createSpy('openConfirmModal');
 			scope.openConfirmModal.and.returnValue(uibModalInstance)
@@ -144,16 +149,18 @@ describe('Measurement Controller', function () {
 
 		it('should show confirmation window for study with measurements', function () {
 			studyInstanceServiceMock.getStudyInstance.and.returnValue(q.resolve(studyInstanceMockWithMeasurement));
-			scope.deleteInstance(1,1);
+			scope.deleteInstance(1, 1).then(() => {
+				expect(scope.openConfirmModal).toHaveBeenCalled();
+			});
 			scope.$apply();
-			expect(scope.openConfirmModal).toHaveBeenCalled();
 		});
 
 		it('should show confirmation window for study without measurements / fieldmap', function () {
 			studyInstanceServiceMock.getStudyInstance.and.returnValue(q.resolve(studyInstanceMockWithoutMeasurement));
-			scope.deleteInstance(1,1);
+			scope.deleteInstance(1, 1).then(() => {
+				expect(scope.openConfirmModal).toHaveBeenCalled();
+			});
 			scope.$apply();
-			expect(scope.openConfirmModal).toHaveBeenCalled();
 		});
 
 	})

@@ -124,7 +124,7 @@
 				}
 			};
 
-			$scope.updateFilesData = async function(instanceId) {
+			$scope.updateFilesData = async function (instanceId) {
 				const instanceIds = [];
 				if (instanceId) {
 					instanceIds.push(parseInt(instanceId));
@@ -134,7 +134,7 @@
 				await fileService.getFiles(instanceIds).then(function (files) {
 					const filesMap = new Map();
 					const fileVariableIdsMap = new Map();
-					if(files && files.length) {
+					if (files && files.length) {
 						files.forEach(function (file) {
 							const fileInstanceId = parseInt(file.instanceId);
 							if (!filesMap.has(fileInstanceId)) {
@@ -152,9 +152,9 @@
 					$scope.instanceInfo.instances.forEach(function (instance) {
 						const currentInstanceId = parseInt(instance.instanceId);
 						if (instanceIds.includes(currentInstanceId)) {
-							instance.fileCount = filesMap.has(currentInstanceId) ? filesMap.get(currentInstanceId).length: null;
+							instance.fileCount = filesMap.has(currentInstanceId) ? filesMap.get(currentInstanceId).length : null;
 							instance.fileVariableIds = fileVariableIdsMap.has(currentInstanceId) ?
-								fileVariableIdsMap.get(currentInstanceId): null;
+								fileVariableIdsMap.get(currentInstanceId) : null;
 						}
 					});
 				}).then($scope.nested.dataTable.rerender());
@@ -220,7 +220,7 @@
 							+ '&datasetId=' + studyContext.trialDatasetId
 							+ '&variableName=' + (variableName || '');
 
-						window.closeModal = function() {
+						window.closeModal = function () {
 							$uibModalInstance.close();
 						}
 					},
@@ -307,6 +307,9 @@
 			};
 
 			$scope.deleteInstance = function (index, instanceId) {
+
+				var deferred = $q.defer();
+
 				studyInstanceService.getStudyInstance(instanceId).then(async function (studyInstance) {
 					const fileCountResp = await fileService.getFileCount(null, studyContext.trialDatasetId, null);
 					const fileCount = parseInt(fileCountResp.headers('X-Total-Count'));
@@ -329,9 +332,13 @@
 							}
 						});
 					}
+					deferred.resolve();
 				}, function (errResponse) {
 					showErrorMessage($.fieldbookMessages.errorServerError, errResponse.errors[0].message);
+					deferred.resolve();
 				});
+
+				return deferred.promise;
 
 			};
 
@@ -677,7 +684,7 @@
 						dtCell.data($scope.renderDisplayValue(variableSettings.vals()[variableId], valueContainer[variableId]));
 						const showFilesButton = await $compile(
 							'<i	ng-show="showFileIcon(\'' + instance.fileVariableIds + '\', \'' + variableId + '\')"'
-							+ ' ng-click="showFiles(\'' + instance.instanceId + '\', \'' +  variableSettings.vals()[variableId].variable.name + '\')"'
+							+ ' ng-click="showFiles(\'' + instance.instanceId + '\', \'' + variableSettings.vals()[variableId].variable.name + '\')"'
 							+ ' class="glyphicon glyphicon-duplicate text-info"'
 							+ ' title="click to see associated files"'
 							+ ' style="font-size: 1.2em; margin-left: 10px; cursor: pointer"></i>'
