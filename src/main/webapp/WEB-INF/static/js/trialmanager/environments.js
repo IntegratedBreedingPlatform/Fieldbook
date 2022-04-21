@@ -85,7 +85,7 @@
 					const fileCountResp = await fileService.getFileCount(variableIds, studyContext.trialDatasetId, null);
 					const fileCount = parseInt(fileCountResp.headers('X-Total-Count'));
 
-					if (true) {
+					if (fileCount > 0) {
 						const modalInstance = $scope.showFileDeletionOptions(fileCount);
 						let doRemoveFiles;
 						try {
