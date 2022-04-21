@@ -80,7 +80,7 @@
 							}
 						});
 					} else {
-						$scope.detachOrDeleteFilesIfAny(deleteVariables);
+						$scope.detachOrDeleteFilesIfAny(deleteVariables).then(deferred.resolve(true));
 					}
 				});
 				return deferred.promise;
