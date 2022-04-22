@@ -56,7 +56,7 @@
 
 			$scope.checkVariableIsUsedInCalculatedVariable = function (deleteVariables) {
 				var deferred = $q.defer();
-				if(deleteVariables.length !== 0) {
+				if(deleteVariables && deleteVariables.length !== 0) {
 					var variableIsUsedInOtherCalculatedVariable;
 
 					// Retrieve all formula variables in study
