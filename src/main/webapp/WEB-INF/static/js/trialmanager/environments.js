@@ -164,14 +164,7 @@
 				studyInstanceService.changeEnvironments(data);
 			}
 
-			$scope.buttonsTopWithLocation = [{
-				//TODO disable?
-				text: $.fieldbookMessages.studyManageSettingsManageLocation,
-				className: 'fbk-buttons-no-border fbk-buttons-link',
-				action: function () {
-					$scope.initiateManageLocationModal();
-				}
-			},
+			$scope.buttonsTop = [
 				{
 					extend: 'colvis',
 					className: 'fbk-buttons-no-border fbk-colvis-button',
@@ -180,7 +173,7 @@
 				}];
 
 			$scope.dtOptions = DTOptionsBuilder.newOptions().withDOM('<"fbk-datatable-panel-top"liB>rtp')
-				.withButtons($scope.buttonsTopWithLocation.slice())
+				.withButtons($scope.buttonsTop.slice())
 				.withOption('scrollX', true)
 				.withOption('scrollCollapse', true)
 				.withOption('deferRender', true)
@@ -199,7 +192,7 @@
 						api.buttons().remove();
 					}
 					new $.fn.dataTable.Buttons(api, {
-						buttons: $scope.buttonsTopWithLocation.slice()
+						buttons: $scope.buttonsTop.slice()
 					});
 
 					$(this).parents('.dataTables_wrapper').find('.dt-buttons').replaceWith(api.buttons().container());

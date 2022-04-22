@@ -39,6 +39,7 @@
 
 			var locationModalService = {};
 
+			// TODO IBP-5633 / IBP-5466
 			locationModalService.openManageLocations = function () {
 				$uibModal.open({
 					templateUrl: '/Fieldbook/static/angular-templates/location/manageLocationsModal.html',
