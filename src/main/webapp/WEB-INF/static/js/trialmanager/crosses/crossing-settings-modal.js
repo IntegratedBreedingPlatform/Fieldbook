@@ -254,6 +254,7 @@
 
 		}
 
+		// TODO IBP-5633 / IBP-5466
 		$scope.openManageLocations = function () {
 			locationModalService.openManageLocations();
 		}

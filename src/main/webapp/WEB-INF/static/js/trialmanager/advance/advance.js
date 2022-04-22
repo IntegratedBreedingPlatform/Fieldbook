@@ -273,6 +273,7 @@
 				});
 			};
 
+			// TODO IBP-5633 / IBP-5466
 			$scope.openManageMethods = function () {
 				methodModalService.openManageMethods();
 			}
