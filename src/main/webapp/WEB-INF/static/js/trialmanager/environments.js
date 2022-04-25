@@ -56,37 +56,41 @@
 
 			$scope.checkVariableIsUsedInCalculatedVariable = function (deleteVariables) {
 				var deferred = $q.defer();
-				var variableIsUsedInOtherCalculatedVariable;
+				if(deleteVariables && deleteVariables.length !== 0) {
+					var variableIsUsedInOtherCalculatedVariable;
 
-				// Retrieve all formula variables in study
-				derivedVariableService.getFormulaVariables(studyContext.measurementDatasetId).then(function (response) {
-					//response is null if study is not yet saved
-					if (response) {
-						var formulaVariables = response.data;
-						// Check if any of the deleted variables are formula variables
-						angular.forEach(formulaVariables, function (formulaVariable) {
-							if (deleteVariables.indexOf(formulaVariable.id) > -1) {
-								variableIsUsedInOtherCalculatedVariable = true;
-							}
-						});
-					}
+					// Retrieve all formula variables in study
+					derivedVariableService.getFormulaVariables(studyContext.measurementDatasetId).then(function (response) {
+						//response is null if study is not yet saved
+						if (response) {
+							var formulaVariables = response.data;
+							// Check if any of the deleted variables are formula variables
+							angular.forEach(formulaVariables, function (formulaVariable) {
+								if (deleteVariables.indexOf(formulaVariable.id) > -1) {
+									variableIsUsedInOtherCalculatedVariable = true;
+								}
+							});
+						}
 
-					if (variableIsUsedInOtherCalculatedVariable) {
-						var modalInstance = $scope.openConfirmModal(removeVariableDependencyConfirmationText, environmentConfirmLabel);
-						modalInstance.result.then(deferred.resolve);
-						modalInstance.result.then((isOK) => {
-							if (isOK) {
-								$scope.detachOrDeleteFilesIfAny(deleteVariables);
-							}
-						});
-					} else {
-						$scope.detachOrDeleteFilesIfAny(deleteVariables).then(deferred.resolve(true));
-					}
-				});
+						if (variableIsUsedInOtherCalculatedVariable) {
+							var modalInstance = $scope.openConfirmModal(removeVariableDependencyConfirmationText, environmentConfirmLabel);
+							modalInstance.result.then((isOK) => {
+								if (isOK) {
+									$scope.detachOrDeleteFilesIfAny(deleteVariables).then(deferred.resolve);
+								} else {
+									deferred.resolve();
+								}
+							});
+						} else {
+							$scope.detachOrDeleteFilesIfAny(deleteVariables).then(deferred.resolve);
+						}
+					});
+				}
 				return deferred.promise;
 			};
 
 			$scope.detachOrDeleteFilesIfAny = async function (variableIds) {
+				var deferred = $q.defer();
 				if ($scope.isFileStorageConfigured) {
 					const fileCountResp = await fileService.getFileCount(variableIds, studyContext.trialDatasetId, null);
 					const fileCount = parseInt(fileCountResp.headers('X-Total-Count'));
@@ -97,19 +101,24 @@
 						try {
 							doRemoveFiles = await modalInstance.result;
 						} catch (e) {
-							return;
+							deferred.resolve();
+							return deferred.promise;
 						}
 						if (doRemoveFiles) {
 							await fileService.removeFiles(variableIds, studyContext.trialDatasetId)
 								.then(async function () {
-									await datasetService.removeVariables(studyContext.trialDatasetId, variableIds);
 									await $scope.updateFilesData();
+									datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
+										$scope.nested.dataTable.rerender();
+									});
 								});
 						} else {
 							await fileService.detachFiles(variableIds, studyContext.trialDatasetId)
 								.then(async function () {
-									await datasetService.removeVariables(studyContext.trialDatasetId, variableIds);
 									await $scope.updateFilesData();
+									datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
+										$scope.nested.dataTable.rerender();
+									});
 								});
 						}
 					} else {
@@ -122,6 +131,8 @@
 						$scope.nested.dataTable.rerender();
 					});
 				}
+				deferred.resolve(true);
+				return deferred.promise;
 			};
 
 			$scope.updateFilesData = async function (instanceId) {
@@ -157,7 +168,7 @@
 								fileVariableIdsMap.get(currentInstanceId) : null;
 						}
 					});
-				}).then($scope.nested.dataTable.rerender());
+				});
 			};
 
 			$scope.onLocationChange = function (data) {
