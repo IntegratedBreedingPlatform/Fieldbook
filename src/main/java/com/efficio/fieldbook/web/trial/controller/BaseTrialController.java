@@ -25,6 +25,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.generationcp.commons.constant.AppConstants;
 import org.generationcp.commons.util.DateUtil;
+import org.generationcp.middleware.api.file.FileMetadataDTO;
+import org.generationcp.middleware.api.file.FileMetadataFilterRequest;
+import org.generationcp.middleware.api.file.FileMetadataService;
 import org.generationcp.middleware.domain.dms.ExperimentDesignType;
 import org.generationcp.middleware.domain.dms.PhenotypicType;
 import org.generationcp.middleware.domain.dms.StandardVariable;
@@ -65,6 +68,9 @@ public abstract class BaseTrialController extends SettingsController {
 
 	@Resource
 	protected UserService userService;
+
+	@Resource
+	private FileMetadataService fileMetadataService;
 
 	private static final Logger LOG = LoggerFactory.getLogger(BaseTrialController.class);
 
@@ -481,6 +487,13 @@ public abstract class BaseTrialController extends SettingsController {
 
 		data.setNumberOfInstances(trialObservations.size());
 
+		final FileMetadataFilterRequest filterRequest = new FileMetadataFilterRequest();
+		filterRequest.setInstanceIds(trialObservations.stream().map(row -> (int)row.getLocationId()).collect(Collectors.toList()));
+		final List<FileMetadataDTO> files = this.fileMetadataService
+			.search(filterRequest, this.contextUtil.getCurrentProgramUUID(), null);
+		final Map<Integer, List<FileMetadataDTO>> filesMap = new HashMap<>();
+
+		files.forEach(file -> filesMap.computeIfAbsent(file.getInstanceId(), k -> new ArrayList<>()).add(file));
 		final List<Instance> instances = new ArrayList<>();
 		for (final MeasurementRow row : trialObservations) {
 			final Instance instance = new Instance();
@@ -488,6 +501,16 @@ public abstract class BaseTrialController extends SettingsController {
 				instance.setInstanceId(row.getLocationId());
 				instance.setStockId(row.getStockId());
 				instance.setExperimentId(row.getExperimentId());
+				final int instanceId = (int)instance.getInstanceId();
+				if (filesMap.containsKey(instanceId)) {
+					instance.setFileCount(filesMap.get(instanceId).size());
+					final Set<String> fileVariableIdsList = filesMap.get(instanceId).stream()
+						.filter(f -> CollectionUtils.isNotEmpty(f.getVariables())).flatMap(f -> f.getVariables().stream())
+						.map(v -> String.valueOf(v.getId())).collect(Collectors.toSet());
+					if(CollectionUtils.isNotEmpty(fileVariableIdsList)) {
+						instance.setFileVariableIds(fileVariableIdsList.toArray(new String[fileVariableIdsList.size()]));
+					}
+				}
 			}
 
 			final Map<String, String> managementDetailValues = new HashMap<>();

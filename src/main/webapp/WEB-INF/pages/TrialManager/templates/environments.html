@@ -63,6 +63,7 @@
 				<thead>
 				<tr>
 					<th data-sortable="false" class="fbk-delete-link"></th>
+					<th ng-show="isFileStorageConfigured" data-sortable="false" th:text="#{study.managesettings.files.label}">Files</th>
 					<th data-sortable="false" th:text="#{study.managesettings.environment.label}">Environment</th>
 					<th data-sortable="false" ng-repeat="key in settings.managementDetails.keys() track by $index"
 						ng-hide="settings.managementDetails.val(key).hidden" data-termid="{{key}}">
@@ -79,12 +80,29 @@
                         <span ng-click="deleteInstance($index, instance.instanceId)" ng-show="instanceInfo.numberOfInstances > 1"
 							  class="glyphicon glyphicon-minus-sign fbk-delete-sign" ng-model-options="{ debounce: 500 }">&nbsp;</span>
 					</td>
+					<td ng-show="isFileStorageConfigured">
+						<div ng-click="showFiles(instance.instanceId)" title="click to open the file manager" class="show-on-hover ng-scope"
+							 ng-show="!instance.fileCount" style="cursor: pointer">
+							<i class="glyphicon glyphicon-duplicate text-info " style="font-size: 1.2em">&nbsp;</i>
+						</div>
+						<div ng-click="showFiles(instance.instanceId)" title="# of files: {{instance.fileCount}}" ng-show="instance.fileCount" style="cursor: pointer">
+							<i class="glyphicon glyphicon-duplicate text-info" style="font-size: 1.2em">&nbsp;</i>
+						</div>
+					</td>
 					<td>{{instance.managementDetailValues[TRIAL_INSTANCE_NO_INDEX]}}</td>
 					<td class="instance-editable-cell" ng-repeat="key in settings.managementDetails.keys() track by $index" ng-hide="settings.managementDetails.val(key).hidden">
 						{{renderDisplayValue(settings.managementDetails.val(key), instance.managementDetailValues[key])}}
+						<i ng-show="showFileIcon(instance.fileVariableIds, settings.managementDetails.val(key).variable.cvTermId)"
+						   ng-click="showFiles(instance.instanceId, settings.managementDetails.val(key).variable.name)"
+							class="glyphicon glyphicon-duplicate text-info"	title="click to see associated files"
+							style="font-size: 1.2em; margin-left: 10px; cursor: pointer"></i>
 					</td>
 					<td class="instance-editable-cell" ng-repeat="key in settings.trialConditionDetails.keys() track by $index">
 						{{renderDisplayValue(settings.trialConditionDetails.val(key), instance.trialDetailValues[key])}}
+						<i ng-show="showFileIcon(instance.fileVariableIds, settings.trialConditionDetails.val(key).variable.cvTermId)"
+						   ng-click="showFiles(instance.instanceId, settings.trialConditionDetails.val(key).variable.name)"
+						   class="glyphicon glyphicon-duplicate text-info"	title="click to see associated files"
+						   style="font-size: 1.2em; margin-left: 10px; cursor: pointer"></i>
 					</td>
 				</tr>
 				</tbody>

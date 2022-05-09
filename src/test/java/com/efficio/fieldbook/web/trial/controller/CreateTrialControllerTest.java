@@ -13,6 +13,7 @@ import com.efficio.fieldbook.service.FieldbookServiceImpl;
 import com.efficio.fieldbook.utils.test.WorkbookDataUtil;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.generationcp.commons.spring.util.ContextUtil;
+import org.generationcp.middleware.api.file.FileMetadataService;
 import org.generationcp.middleware.data.initializer.WorkbookTestDataInitializer;
 import org.generationcp.middleware.domain.dms.PhenotypicType;
 import org.generationcp.middleware.domain.dms.StandardVariable;
@@ -67,6 +68,9 @@ public class CreateTrialControllerTest {
 
 	@Mock
 	private ErrorHandlerService errorHandlerService;
+
+	@Mock
+	private FileMetadataService fileMetadataService;
 
 	@InjectMocks
 	private CreateTrialController controller;

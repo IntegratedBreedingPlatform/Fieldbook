@@ -31,7 +31,10 @@ describe('Location', function () {
     var datasetService = jasmine.createSpyObj('datasetService', ['getDatasetInstances', 'exportDataset']);
     var derivedVariableService=  jasmine.createSpyObj('derivedVariableService', ['getFormulaVariables']);
     var formulaVariables;
-
+    var fileServiceMock = jasmine.createSpyObj('fileService', ['getFileStorageStatus']);
+    var fileStorageMap = {
+        status: false
+    }
     beforeEach(function(){
 
         module(function ($provide) {
@@ -43,8 +46,7 @@ describe('Location', function () {
             $provide.value("derivedVariableService", derivedVariableService);
             $provide.value("TrialManagerDataService", trialDataManagerService);
             $provide.value("UNSPECIFIED_LOCATION_ID", 1);
-
-
+            $provide.value("fileService", fileServiceMock);
         });
 
 
@@ -57,7 +59,6 @@ describe('Location', function () {
         angular.module('derived-variable');
         module('pascalprecht.translate');
         module('manageTrialApp');
-
     });
 
 
@@ -66,7 +67,9 @@ describe('Location', function () {
 
             scope = $rootScope.$new();
             datasetService = $injector.get('datasetService');
+            fileServiceMock = $injector.get('fileService');
             derivedVariableService.getFormulaVariables.and.returnValue($q.resolve(null));
+            fileServiceMock.getFileStorageStatus.and.returnValue($q.resolve(fileStorageMap));
             controller = $controller('EnvironmentCtrl',{
                 $rootScope: rootScope,
                 $scope: scope,
@@ -74,7 +77,8 @@ describe('Location', function () {
                 derivedVariableService: derivedVariableService,
                 TrialManagerDataService: trialDataManagerService,
                 studyInstanceService: { instanceInfo: { numberOfInstances: 1}},
-                LOCATION_ID: 1
+                LOCATION_ID: 1,
+                fileService: fileServiceMock
             });
 
         });

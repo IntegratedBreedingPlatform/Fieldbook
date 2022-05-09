@@ -931,8 +931,7 @@ public class CrossingServiceImplTest {
 		cross2.setMaleParents(Lists.newArrayList(maleParent));
 		cross2.setCross("CROSS 2");
 		cross2.setSource("MALE:2:FEMALE:2");
-		cross2.setDesig(
-			"((G9BC0RL34-1P-5P-2-1P-3P-B/G9BC1TSR8P-1P-1P-5P-3P-1P-1P)-3-1-1-1-B*8/((CML150xCLG2501)-B-31-1-B-1-BBB/CML193-BB)-B-1-BB(NonQ)-B*8)-B((G9BC0RL34-1P-5P-2-1P-3P-B/G9BC1TSR8P-1P-1P-5P-3P-1P-1P)-3-1-1-1-B*8/((CML150xCLG2501)-B-31-1-B-1-BBB/CML193-BB)-B-1-BB(NonQ)-B*8)-B/((G9BC0RL34-1P-5P-2-1P-3P-B/G9BC1TSR8P-1P-1P-5P-3P-1P-1P)-3-1-1-1-B*8/((CML161xCML451)-B-18-1-BBB/CML161");
+		cross2.setDesig(RandomStringUtils.randomAlphabetic(5500));
 		cross2.setEntryNumber(2);
 		return cross2;
 	}

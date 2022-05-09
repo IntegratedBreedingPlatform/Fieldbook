@@ -44,6 +44,7 @@
 
 			var methodModalService = {};
 
+			// TODO IBP-5633 / IBP-5466
 			methodModalService.openManageMethods = function () {
 				$uibModal.open({
 					templateUrl: '/Fieldbook/static/angular-templates/method/manageMethodsModal.html',

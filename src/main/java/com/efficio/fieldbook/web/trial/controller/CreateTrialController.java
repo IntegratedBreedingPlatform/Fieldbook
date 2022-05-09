@@ -230,6 +230,16 @@ public class CreateTrialController extends BaseTrialController {
 		return this.getUnspecifiedLocationId();
 	}
 
+	@ModelAttribute("currentCropUserId")
+	public Integer getCurrentCropUserId() {
+		return this.contextUtil.getCurrentWorkbenchUserId();
+	}
+
+	@ModelAttribute("isSuperAdmin")
+	public Boolean getIsSuperAdmin() {
+		return this.authorizationService.isSuperAdminUser();
+	}
+
 	@RequestMapping(value = "/trialSettings", method = RequestMethod.GET)
 	public String showCreateTrial(final Model model) {
 		return this.showAjaxPage(model, BaseTrialController.URL_SETTINGS);

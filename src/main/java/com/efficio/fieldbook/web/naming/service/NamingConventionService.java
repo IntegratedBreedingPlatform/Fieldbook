@@ -11,16 +11,16 @@
 
 package com.efficio.fieldbook.web.naming.service;
 
-import java.util.List;
-
+import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
 import org.generationcp.commons.parsing.pojo.ImportedCross;
 import org.generationcp.commons.parsing.pojo.ImportedGermplasm;
 import org.generationcp.commons.pojo.AdvancingSource;
+import org.generationcp.commons.pojo.AdvancingSourceList;
 import org.generationcp.commons.ruleengine.RuleException;
 import org.generationcp.middleware.domain.etl.Workbook;
+import org.generationcp.middleware.exceptions.MiddlewareQueryException;
 
-import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
-import org.generationcp.commons.pojo.AdvancingSourceList;
+import java.util.List;
 
 /**
  *
@@ -29,7 +29,8 @@ import org.generationcp.commons.pojo.AdvancingSourceList;
  */
 public interface NamingConventionService {
 
-	void generateAdvanceListNames(List<AdvancingSource> advancingSourceItems, boolean checkForDuplicateName, List<ImportedGermplasm> germplasmList) throws RuleException;
+	void generateAdvanceListNames(List<AdvancingSource> advancingSourceItems, boolean checkForDuplicateName, List<ImportedGermplasm> germplasmList) throws
+		MiddlewareQueryException, RuleException;
 
 	/*
 	* Generated the names for the list of crosses based on on rules setup for the breeding methods
