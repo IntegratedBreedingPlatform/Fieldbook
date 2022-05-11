@@ -566,6 +566,15 @@
 									return full.cross;
 								}
 							});
+						} else if (columnData.termId === 8330) {
+							// GROUPGID
+							columnsDef.push({
+								targets: columns.length - 1,
+								orderable: false,
+								render: function (data, type, full, meta) {
+									return full.groupGid ? full.groupGid : '-';
+								}
+							});
 						} if (columnData.termId === -3) {
 							//ACTIVE LOT
 							columnsDef.push({
