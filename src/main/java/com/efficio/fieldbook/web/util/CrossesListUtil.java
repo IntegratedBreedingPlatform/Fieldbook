@@ -153,7 +153,7 @@ public class CrossesListUtil {
 		tableHeaderList.add(this.getTermNameFromOntology(ColumnLabels.CROSS_MALE_GID));
 		tableHeaderList.add(this.getTermNameFromOntology(ColumnLabels.MALE_PARENT));
 		tableHeaderList.add(this.getTermNameFromOntology(ColumnLabels.BREEDING_METHOD_NAME));
-		tableHeaderList.add(this.getTermNameFromOntology(ColumnLabels.SEED_SOURCE));
+		tableHeaderList.add("GERMPLASM_ORIGIN");
 		tableHeaderList.add(this.getTermNameFromOntology(ColumnLabels.FGID));
 		tableHeaderList.add(this.getTermNameFromOntology(ColumnLabels.MGID));
 		tableHeaderList.add(this.getTermNameFromOntology(ColumnLabels.BREEDING_METHOD_NUMBER));
