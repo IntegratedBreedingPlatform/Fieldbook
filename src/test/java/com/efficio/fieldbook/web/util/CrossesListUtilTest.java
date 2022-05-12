@@ -47,7 +47,7 @@ public class CrossesListUtilTest {
 
 	private final Map<Integer, String> headersMap = new HashMap<>();
 	private final List<TermId> terms = Arrays.asList(TermId.ENTRY_NO, TermId.CROSS, TermId.ENTRY_CODE, TermId.FEMALE_PARENT, TermId.FGID,
-			TermId.MALE_PARENT, TermId.MGID, TermId.SEED_SOURCE);
+			TermId.MALE_PARENT, TermId.MGID);
 
 	@Before
 	public void setUp() {

@@ -125,8 +125,6 @@ public class ExportStudyEntriesControllerTest {
 				.thenReturn(this.createStandardVariable(TermId.GID.getId(), ExportStudyEntriesControllerTest.GID));
 		Mockito.when(this.ontologyService.getStandardVariable(TermId.CROSS.getId(), this.contextUtil.getCurrentProgramUUID()))
 				.thenReturn(this.createStandardVariable(TermId.CROSS.getId(), ExportStudyEntriesControllerTest.PARENTAGE));
-		Mockito.when(this.ontologyService.getStandardVariable(TermId.SEED_SOURCE.getId(), this.contextUtil.getCurrentProgramUUID()))
-				.thenReturn(this.createStandardVariable(TermId.SEED_SOURCE.getId(), ExportStudyEntriesControllerTest.SEED_SOURCE));
 		Mockito.when(this.ontologyService.getStandardVariable(TermId.ENTRY_CODE.getId(), this.contextUtil.getCurrentProgramUUID()))
 				.thenReturn(this.createStandardVariable(TermId.ENTRY_CODE.getId(), ExportStudyEntriesControllerTest.ENTRY_CODE));
 		Mockito.when(
@@ -232,7 +230,6 @@ public class ExportStudyEntriesControllerTest {
 
 		Assert.assertFalse(result.get(String.valueOf(TermId.ENTRY_CODE.getId())));
 		Assert.assertFalse(result.get(String.valueOf(TermId.CROSS.getId())));
-		Assert.assertFalse(result.get(String.valueOf(TermId.SEED_SOURCE.getId())));
 		Assert.assertFalse(result.get(String.valueOf(TermId.ENTRY_NUMBER_STORAGE.getId())));
 
 	}
@@ -250,8 +247,6 @@ public class ExportStudyEntriesControllerTest {
 		Assert.assertTrue(result.get(String.valueOf(TermId.ENTRY_NO.getId())));
 		Assert.assertTrue(result.get(String.valueOf(TermId.CROSS.getId())));
 		Assert.assertTrue(result.get(String.valueOf(TermId.ENTRY_CODE.getId())));
-		Assert.assertTrue(result.get(String.valueOf(TermId.SEED_SOURCE.getId())));
-
 		Assert.assertNull(result.get(String.valueOf(TermId.ENTRY_NUMBER_STORAGE.getId())));
 		Assert.assertNull(result.get(String.valueOf(TermId.ENTRY_TYPE.getId())));
 	}
@@ -269,7 +264,6 @@ public class ExportStudyEntriesControllerTest {
 
 		Assert.assertTrue(result.get(String.valueOf(TermId.ENTRY_CODE.getId())));
 		Assert.assertTrue(result.get(String.valueOf(TermId.CROSS.getId())));
-		Assert.assertTrue(result.get(String.valueOf(TermId.SEED_SOURCE.getId())));
 		Assert.assertTrue(result.get(String.valueOf(TermId.ENTRY_NUMBER_STORAGE.getId())));
 		Assert.assertTrue(result.get(String.valueOf(TermId.ENTRY_TYPE.getId())));
 	}
@@ -292,7 +286,6 @@ public class ExportStudyEntriesControllerTest {
 		visibleColumnMap.put(String.valueOf(TermId.CROSS.getId()), true);
 		visibleColumnMap.put(String.valueOf(TermId.ENTRY_NO.getId()), true);
 		visibleColumnMap.put(String.valueOf(TermId.DESIG.getId()), true);
-		visibleColumnMap.put(String.valueOf(TermId.SEED_SOURCE.getId()), true);
 		visibleColumnMap.put(String.valueOf(TermId.ENTRY_CODE.getId()), true);
 		visibleColumnMap.put(String.valueOf(TermId.ENTRY_NUMBER_STORAGE.getId()), false);
 		visibleColumnMap.put(String.valueOf(TermId.ENTRY_TYPE.getId()), false);

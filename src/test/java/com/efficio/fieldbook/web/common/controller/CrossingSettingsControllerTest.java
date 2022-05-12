@@ -194,7 +194,6 @@ public class CrossingSettingsControllerTest {
 		Mockito.when(this.ontologyDataManager.getTermById(TermId.FGID.getId())).thenReturn(this.getTerm(ColumnLabels.FGID));
 		Mockito.when(this.ontologyDataManager.getTermById(TermId.MALE_PARENT.getId())).thenReturn(this.getTerm(ColumnLabels.MALE_PARENT));
 		Mockito.when(this.ontologyDataManager.getTermById(TermId.MGID.getId())).thenReturn(this.getTerm(ColumnLabels.MGID));
-		Mockito.when(this.ontologyDataManager.getTermById(TermId.SEED_SOURCE.getId())).thenReturn(this.getTerm(ColumnLabels.SEED_SOURCE));
 		Mockito.when(this.ontologyDataManager.getTermById(TermId.CROSS_FEMALE_GID.getId()))
 				.thenReturn(this.getTerm(ColumnLabels.CROSS_FEMALE_GID));
 		Mockito.when(this.ontologyDataManager.getTermById(TermId.CROSS_MALE_GID.getId()))

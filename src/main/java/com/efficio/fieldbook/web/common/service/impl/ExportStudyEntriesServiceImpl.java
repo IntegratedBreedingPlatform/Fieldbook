@@ -259,8 +259,6 @@ public class ExportStudyEntriesServiceImpl implements ExportStudyEntriesService 
 				value = studyEntryDto.getGid().toString();
 			} else if (term.intValue() == TermId.ENTRY_NO.getId()) {
 				value = studyEntryDto.getEntryNumber().toString();
-			} else if (term.intValue() == TermId.SOURCE.getId() || term.intValue() == TermId.GERMPLASM_SOURCE.getId()) {
-				value = studyEntryDto.getStudyEntryPropertyValue(TermId.SEED_SOURCE.getId()).orElse("");
 			} else if (term.intValue() == TermId.CROSS.getId()) {
 				value = studyEntryDto.getStudyEntryPropertyValue(TermId.CROSS.getId()).orElse("");
 			} else if (term.intValue() == TermId.DESIG.getId()) {

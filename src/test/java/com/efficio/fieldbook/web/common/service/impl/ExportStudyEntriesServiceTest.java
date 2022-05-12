@@ -138,8 +138,6 @@ public class ExportStudyEntriesServiceTest {
 			.thenReturn(this.createStandardVariable(TermId.GID.getId(), ExportStudyEntriesServiceTest.GID));
 		Mockito.when(this.ontologyService.getStandardVariable(TermId.CROSS.getId(), this.contextUtil.getCurrentProgramUUID()))
 			.thenReturn(this.createStandardVariable(TermId.CROSS.getId(), ExportStudyEntriesServiceTest.PARENTAGE));
-		Mockito.when(this.ontologyService.getStandardVariable(TermId.SEED_SOURCE.getId(), this.contextUtil.getCurrentProgramUUID()))
-			.thenReturn(this.createStandardVariable(TermId.SEED_SOURCE.getId(), ExportStudyEntriesServiceTest.SEED_SOURCE));
 		Mockito.when(this.ontologyService.getStandardVariable(TermId.ENTRY_CODE.getId(), this.contextUtil.getCurrentProgramUUID()))
 			.thenReturn(this.createStandardVariable(TermId.ENTRY_CODE.getId(), ExportStudyEntriesServiceTest.ENTRY_CODE));
 		Mockito.when(
@@ -264,7 +262,6 @@ public class ExportStudyEntriesServiceTest {
 		final ExportRow row = exportColumnValues.get(0);
 
 		Assert.assertEquals(ExportStudyEntriesServiceTest.DESIG_VALUE, row.getValueForColumn(TermId.DESIG.getId()));
-		Assert.assertEquals(ExportStudyEntriesServiceTest.SOURCE_VALUE, row.getValueForColumn(TermId.SEED_SOURCE.getId()));
 		Assert.assertEquals(ExportStudyEntriesServiceTest.ENTRY_CODE_VALUE, row.getValueForColumn(TermId.ENTRY_CODE.getId()));
 		Assert.assertEquals(ExportStudyEntriesServiceTest.CROSS_VALUE, row.getValueForColumn(TermId.CROSS.getId()));
 		Assert.assertEquals(ExportStudyEntriesServiceTest.ENTRY_NO_VALUE, row.getValueForColumn(TermId.ENTRY_NO.getId()));
@@ -283,7 +280,6 @@ public class ExportStudyEntriesServiceTest {
 		final ExportRow row = exportRows.get(0);
 
 		Assert.assertEquals(ExportStudyEntriesServiceTest.DESIG_VALUE, row.getValueForColumn(TermId.DESIG.getId()));
-		Assert.assertEquals(ExportStudyEntriesServiceTest.SOURCE_VALUE, row.getValueForColumn(TermId.SEED_SOURCE.getId()));
 		Assert.assertEquals(ExportStudyEntriesServiceTest.ENTRY_CODE_VALUE, row.getValueForColumn(TermId.ENTRY_CODE.getId()));
 		Assert.assertEquals(ExportStudyEntriesServiceTest.CROSS_VALUE, row.getValueForColumn(TermId.CROSS.getId()));
 		Assert.assertEquals(ExportStudyEntriesServiceTest.ENTRY_NO_VALUE, row.getValueForColumn(TermId.ENTRY_NO.getId()));
@@ -359,7 +355,6 @@ public class ExportStudyEntriesServiceTest {
 		visibleColumnMap.put(String.valueOf(TermId.CROSS.getId()), true);
 		visibleColumnMap.put(String.valueOf(TermId.ENTRY_NO.getId()), true);
 		visibleColumnMap.put(String.valueOf(TermId.DESIG.getId()), true);
-		visibleColumnMap.put(String.valueOf(TermId.SEED_SOURCE.getId()), true);
 		visibleColumnMap.put(String.valueOf(TermId.ENTRY_CODE.getId()), true);
 		visibleColumnMap.put(String.valueOf(TermId.ENTRY_NUMBER_STORAGE.getId()), false);
 		visibleColumnMap.put(String.valueOf(TermId.ENTRY_TYPE.getId()), false);
@@ -447,7 +442,6 @@ public class ExportStudyEntriesServiceTest {
 		final StudyEntryDto studyEntry = new StudyEntryDto(Integer.valueOf(ExportStudyEntriesServiceTest.ENTRY_NO_VALUE),
 				Integer.valueOf(ExportStudyEntriesServiceTest.ENTRY_NO_VALUE),
 			Integer.valueOf(ExportStudyEntriesServiceTest.GID_VALUE), ExportStudyEntriesServiceTest.DESIG_VALUE);
-		studyEntry.getProperties().put(TermId.SEED_SOURCE.getId(), new StudyEntryPropertyData(ExportStudyEntriesServiceTest.SOURCE_VALUE));
 		studyEntry.getProperties().put(TermId.CROSS.getId(), new StudyEntryPropertyData(ExportStudyEntriesServiceTest.CROSS_VALUE));
 		studyEntries.add(studyEntry);
 		return studyEntries;

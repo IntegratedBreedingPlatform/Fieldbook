@@ -326,13 +326,6 @@ public class WorkbookDataUtil {
 		factors.add(variable);
 
 		variable =
-				new MeasurementVariable(TermId.SEED_SOURCE.getId(), WorkbookDataUtil.SEED_SOURCE, "The seed source of the germplasm",
-						WorkbookDataUtil.NAME, WorkbookDataUtil.SELECTED, WorkbookDataUtil.SEED_SOURCE, WorkbookDataUtil.CHAR,
-						WorkbookDataUtil.STUDY, WorkbookDataUtil.ENTRY);
-		variable.setDataTypeId(TermId.CHARACTER_VARIABLE.getId());
-		factors.add(variable);
-
-		variable =
 				new MeasurementVariable(TermId.PLOT_NO.getId(), WorkbookDataUtil.PLOT, "Plot number ", WorkbookDataUtil.NESTED_NUMBER,
 						WorkbookDataUtil.ENUMERATED, WorkbookDataUtil.FIELD_PLOT, WorkbookDataUtil.NUMERIC, WorkbookDataUtil.NUMERIC_VALUE,
 						WorkbookDataUtil.PLOT);
@@ -434,10 +427,6 @@ public class WorkbookDataUtil {
 
 				data = new MeasurementData(WorkbookDataUtil.CROSS, "-");
 				data.setMeasurementVariable(WorkbookDataUtil.getMeasurementVariable(TermId.CROSS.getId(), workbook.getFactors()));
-				dataList.add(data);
-
-				data = new MeasurementData(WorkbookDataUtil.SOURCE, "-");
-				data.setMeasurementVariable(WorkbookDataUtil.getMeasurementVariable(TermId.SEED_SOURCE.getId(), workbook.getFactors()));
 				dataList.add(data);
 
 				data = new MeasurementData(WorkbookDataUtil.PLOT, String.valueOf(i));
@@ -728,8 +717,6 @@ public class WorkbookDataUtil {
 		visibleColumnMap.put(TermId.ENTRY_NO, true);
 		visibleColumnMap.put(TermId.DESIG, true);
 		visibleColumnMap.put(TermId.ENTRY_CODE, true);
-		visibleColumnMap.put(TermId.SEED_SOURCE, true);
-
 		return visibleColumnMap;
 
 	}

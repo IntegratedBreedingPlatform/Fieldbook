@@ -591,10 +591,6 @@ public class DesignImportServiceImplTest {
 				.createStandardVariable(PhenotypicType.GERMPLASM, TermId.CROSS.getId(), "CROSS", "", "", "",
 						DesignImportTestDataInitializer.CHARACTER_VARIABLE, "C", "", "")).when(this.ontologyService)
 				.getStandardVariable(TermId.CROSS.getId(), DesignImportServiceImplTest.PROGRAM_UUID);
-		Mockito.doReturn(DesignImportTestDataInitializer
-				.createStandardVariable(PhenotypicType.GERMPLASM, TermId.SEED_SOURCE.getId(), "SEED_SOURCE", "", "", "",
-						DesignImportTestDataInitializer.CHARACTER_VARIABLE, "C", "", "")).when(this.ontologyService)
-				.getStandardVariable(TermId.SEED_SOURCE.getId(), DesignImportServiceImplTest.PROGRAM_UUID);
 
 		final Property prop = new Property();
 		final Term term = new Term();
