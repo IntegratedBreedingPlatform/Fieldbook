@@ -309,6 +309,13 @@ public class CrossingSettingsController extends SettingsController {
 					out.put(CrossingSettingsController.ERROR, this.messageSource.getMessage("error.crossing.method.mprgn.equals.one",
 						new String[] {StringUtils.join(methodCodesWithOneMPRGN, ", ")}, LocaleContextHolder.getLocale()));
 				}
+
+				final List<String> methodCodesWithBlankPrefix = generativeBreedingMethodDtos.stream()
+					.filter(dto -> StringUtils.isBlank(dto.getPrefix())).map(BreedingMethodDTO::getCode).collect(Collectors.toList());
+				if (!CollectionUtils.isEmpty(methodCodesWithBlankPrefix)) {
+					out.put(CrossingSettingsController.ERROR, this.messageSource.getMessage("error.crossing.method.blank.prefix",
+						new String[] {StringUtils.join(methodCodesWithBlankPrefix, ", ")}, LocaleContextHolder.getLocale()));
+				}
 			}
 		} else {
 			final Method breedingMethod = this.germplasmDataManager.getMethodByID(breedingMethodId);
@@ -317,6 +324,9 @@ public class CrossingSettingsController extends SettingsController {
 					new String[] {breedingMethod.getMcode()}, LocaleContextHolder.getLocale()));
 			} else if (breedingMethod.getMprgn() == 1 ) {
 				out.put(CrossingSettingsController.ERROR, this.messageSource.getMessage("error.crossing.selected.method.mprgn.equals.one",
+					new String[] {breedingMethod.getMcode()}, LocaleContextHolder.getLocale()));
+			} else if (StringUtils.isBlank(breedingMethod.getPrefix())) {
+				out.put(CrossingSettingsController.ERROR, this.messageSource.getMessage("error.crossing.selected.method.blank.prefix",
 					new String[] {breedingMethod.getMcode()}, LocaleContextHolder.getLocale()));
 			}
 		}
