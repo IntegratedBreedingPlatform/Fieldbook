@@ -169,7 +169,9 @@ public class CrossingTemplateExcelExporter {
 					if (rowIndex == 1) {
 						this.addHeaderToRow(row, methodCellStyle, localname);
 					}
-					PoiUtil.setCellValue(studyListSheet, ++columSheet, rowIndex, gpData.getFactors().findByLocalName(localname).getValue());
+					final Variable factor = gpData.getFactors().findByLocalName(localname);
+					final String value = factor == null ? null : factor.getValue();
+					PoiUtil.setCellValue(studyListSheet, ++columSheet, rowIndex, value);
 				}
 			}
 			rowIndex++;
