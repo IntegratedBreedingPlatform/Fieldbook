@@ -932,8 +932,8 @@ public class ETLServiceTest {
 
 		// Germplasm
 		final LinkedHashMap<String, MeasurementVariable> germplasmMap = new LinkedHashMap<>();
-		germplasmMap.put("SOURCE", MeasurementVariableTestDataInitializer.createMeasurementVariable(
-			TermId.SOURCE.getId(), "SOURCE", PhenotypicType.GERMPLASM, DataType.NUMERIC_VARIABLE.getId()));
+		germplasmMap.put(TermId.IMMEDIATE_SOURCE_NAME.name(), MeasurementVariableTestDataInitializer.createMeasurementVariable(
+			TermId.IMMEDIATE_SOURCE_NAME.getId(), TermId.IMMEDIATE_SOURCE_NAME.name(), PhenotypicType.GERMPLASM, DataType.NUMERIC_VARIABLE.getId()));
 		germplasmMap.put("ENTRY", MeasurementVariableTestDataInitializer.createMeasurementVariable(
 			TermId.ENTRY_NO.getId(), "ENTRY", PhenotypicType.GERMPLASM, DataType.NUMERIC_VARIABLE.getId()));
 		germplasmMap.put("CROSS", MeasurementVariableTestDataInitializer.createMeasurementVariable(TermId.CROSS.getId(),

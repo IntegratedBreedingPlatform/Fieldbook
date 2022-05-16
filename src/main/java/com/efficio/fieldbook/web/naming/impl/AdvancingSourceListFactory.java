@@ -247,7 +247,7 @@ public class AdvancingSourceListFactory {
 		germplasm.setEntryCode(row.getMeasurementDataValue(TermId.ENTRY_CODE.getId()));
 		germplasm.setEntryNumber(this.getIntegerValue(row.getMeasurementDataValue(TermId.ENTRY_NO.getId())));
 		germplasm.setGid(row.getMeasurementDataValue(TermId.GID.getId()));
-		germplasm.setSource(row.getMeasurementDataValue(TermId.SOURCE.getId()));
+		germplasm.setSource(row.getMeasurementDataValue(TermId.IMMEDIATE_SOURCE_NAME.getId()));
 		return germplasm;
 	}
 
