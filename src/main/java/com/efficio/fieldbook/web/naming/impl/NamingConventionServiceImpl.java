@@ -143,6 +143,12 @@ public class NamingConventionServiceImpl implements NamingConventionService {
 						+ " were not configured", LocaleContextHolder.getLocale()));
 			}
 
+			if (StringUtils.isBlank(selectedMethod.getPrefix())) {
+				throw new RulesNotConfiguredException(this.messageSource
+					.getMessage("error.save.cross.method.blank.prefix", new Object[] {selectedMethod.getMname()},
+						LocaleContextHolder.getLocale()));
+			}
+
 			// here, we resolve the breeding method ID stored in the advancing source object into a proper breeding Method object
 			advancingSource.setBreedingMethod(selectedMethod);
 			//default plants selected value to 1 for list of crosses because sequence is not working if plants selected value is not set
