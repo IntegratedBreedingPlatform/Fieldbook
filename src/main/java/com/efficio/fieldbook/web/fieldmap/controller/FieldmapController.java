@@ -11,16 +11,11 @@
 
 package com.efficio.fieldbook.web.fieldmap.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
+import com.efficio.fieldbook.web.AbstractBaseFieldbookController;
+import com.efficio.fieldbook.web.fieldmap.bean.SelectedFieldmapList;
+import com.efficio.fieldbook.web.fieldmap.bean.UserFieldmap;
+import com.efficio.fieldbook.web.fieldmap.form.FieldmapForm;
+import com.efficio.fieldbook.web.util.SessionUtility;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.generationcp.middleware.domain.fieldbook.FieldMapDatasetInfo;
 import org.generationcp.middleware.domain.fieldbook.FieldMapInfo;
@@ -43,11 +38,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.efficio.fieldbook.web.AbstractBaseFieldbookController;
-import com.efficio.fieldbook.web.fieldmap.bean.SelectedFieldmapList;
-import com.efficio.fieldbook.web.fieldmap.bean.UserFieldmap;
-import com.efficio.fieldbook.web.fieldmap.form.FieldmapForm;
-import com.efficio.fieldbook.web.util.SessionUtility;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * The Class FieldmapController.
@@ -96,26 +94,23 @@ public class FieldmapController extends AbstractBaseFieldbookController {
 	/**
 	 * Determine field map navigation.
 	 *
-	 * @param ids the ids
-	 * @param model the model
+	 * @param ids     the ids
+	 * @param model   the model
 	 * @param session the session
 	 * @return the map
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/createFieldmap/{ids}", method = RequestMethod.GET)
 	public Map<String, String> determineFieldMapNavigation(@PathVariable final String ids, final Model model, final HttpServletRequest req,
-			final HttpSession session) {
+		final HttpSession session) {
 
-		SessionUtility.clearSessionData(session, new String[] {SessionUtility.FIELDMAP_SESSION_NAME,
-				SessionUtility.PAGINATION_LIST_SELECTION_SESSION_NAME});
+		SessionUtility.clearSessionData(session, new String[] {
+			SessionUtility.FIELDMAP_SESSION_NAME,
+			SessionUtility.PAGINATION_LIST_SELECTION_SESSION_NAME});
 		final Map<String, String> result = new HashMap<>();
 		String nav = "1";
 		try {
-			final List<Integer> trialIds = new ArrayList<>();
-			final String[] idList = ids.split(",");
-			for (final String id : idList) {
-				trialIds.add(Integer.parseInt(id));
-			}
+			final List<Integer> trialIds = this.getTrialIds(ids);
 			final List<FieldMapInfo> fieldMapInfoList =
 				this.fieldbookMiddlewareService.getFieldMapInfoOfTrial(trialIds, this.crossExpansionProperties);
 
@@ -137,6 +132,15 @@ public class FieldmapController extends AbstractBaseFieldbookController {
 		result.put("nav", nav);
 
 		return result;
+	}
+
+	private List<Integer> getTrialIds(final String ids) {
+		final List<Integer> trialIds = new ArrayList<>();
+		final String[] idList = ids.split(",");
+		for (final String id : idList) {
+			trialIds.add(Integer.parseInt(id));
+		}
+		return trialIds;
 	}
 
 	/**
@@ -184,6 +188,30 @@ public class FieldmapController extends AbstractBaseFieldbookController {
 			result.put("environmentId", environmentId);
 		}
 		return result;
+	}
+
+	/**
+	 * Delete field map.
+	 *
+	 * @param form the form
+	 * @param model the model
+	 * @return the string
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/deleteFieldmap/{ids}", method = RequestMethod.DELETE)
+	public Map<String, String> deleteFieldMap(@PathVariable final String ids) {
+		final List<Integer> trialIds = this.getTrialIds(ids);
+		final Map<String, String> resultsMap = new HashMap<>();
+		try {
+			this.fieldbookMiddlewareService.deleteAllFieldMapsByTrialInstanceIds(trialIds);
+			resultsMap.put("isSuccess", "1");
+		} catch (final MiddlewareQueryException e) {
+			FieldmapController.LOG.error(e.getMessage(), e);
+			resultsMap.put("isSuccess", "0");
+			resultsMap.put("message", e.getMessage());
+		}
+
+		return resultsMap;
 	}
 
 	/**

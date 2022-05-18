@@ -416,7 +416,7 @@ function createRow(id, parentClass, value, realId, withFieldMap, hasOneInstance)
 		} else {
 			// For create new fieldmap
 			hasFieldMap = value.hasFieldMap ? 'Yes' : 'No';
-			disabledString = value.hasFieldMap ? 'disabled' : '';
+			disabledString = value.hasFieldMap && (value.hasGeoJSON || value.hasMeansData) ? 'disabled' : '';
 			var checked = hasOneInstance ? 'checked' : '';
 
 			newRow = '<tr class="data-row trialInstance ' + genClassName + id + ' ' + genParentClassName + '">';
@@ -601,13 +601,30 @@ function showCreateFieldMap() {
 				selectedWithFieldMap = true;
 			}
 		});
-		// This is to disable the 2nd popup
+
+		// Confirm to delete existing fieldmap
 		if (selectedWithFieldMap) {
-			showMessage(hasFieldmapError);
-		} else {
-			// Redirect to step 1
-			redirectToFirstPage();
+			var isConfirmDelete = confirm(confirmDeleteFieldmap);
+			if (!isConfirmDelete) {
+				return;
+			}
+
+			$.ajax({
+				url: '/Fieldbook/Fieldmap/enterFieldDetails/deleteFieldmap/'+ encodeURIComponent(id),
+				type: 'DELETE',
+				data: '',
+				success: function (data) {
+					var node;
+					if (data.isSuccess === '1') {
+						redirectToFirstPage();
+					} else { 
+						showErrorMessage('',hasFieldmapError);
+					}
+				}
+			});
 		}
+
+		redirectToFirstPage();
 	} else {
 		// No study instance is selected
 		showMessage(noSelectedTrialInstance);
