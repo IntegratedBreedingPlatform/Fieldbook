@@ -954,6 +954,15 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				});
 			};
 
+			$scope.exportStudyEntriesPrintingLabels = function () {
+				window.location.href = '/ibpworkbench/controller/jhipster#label-printing' +
+					'?cropName=' + studyContext.cropName +
+					'&programUUID=' + studyContext.programId +
+					'&datasetId=' + studyContext.measurementDatasetId +
+					'&studyId=' + studyContext.studyId +
+					'&printingLabelType=' + LABEL_PRINTING_TYPE.STUDY_ENTRIES;
+			}
+
 			$scope.showGeoJSONModal = function (isViewGeoJSON) {
 				datasetService.getDatasetInstances(studyContext.measurementDatasetId).then((datasetInstances) => {
 					let instances = [];

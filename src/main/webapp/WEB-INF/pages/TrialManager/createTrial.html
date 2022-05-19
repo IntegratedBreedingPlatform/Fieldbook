@@ -159,8 +159,8 @@
 										   th:text="#{study.studydetails.action.import.study}">Import Observations</a>
 									</li>
 									<li ng-show="hasGermplasmListSelected()">
-										<a href="javascript: showExportGermplasmListPopup();" id="export-germplasm-link"
-										   th:text="#{study.studydetails.action.export.germplasm.list}">Export Germplasm List</a>
+										<a ng-click="exportStudyEntriesPrintingLabels()" id="export-germplasm-link"
+										   th:text="#{study.studydetails.action.export.study.entries}">Export study entries</a>
 									</li>
 								</ul>
 							</li>
@@ -759,7 +759,8 @@
 				trialDatasetId: /*[[${trialDatasetId}]]*/ ''
 			}).constant('LABEL_PRINTING_TYPE', {
 				OBSERVATION_DATASET: /*[[${T(org.generationcp.middleware.domain.labelprinting.LabelPrintingType).OBSERVATION_DATASET.getCode()}]]*/ null,
-				SUBOBSERVATION_DATASET: /*[[${T(org.generationcp.middleware.domain.labelprinting.LabelPrintingType).SUBOBSERVATION_DATASET.getCode()}]]*/ null
+				SUBOBSERVATION_DATASET: /*[[${T(org.generationcp.middleware.domain.labelprinting.LabelPrintingType).SUBOBSERVATION_DATASET.getCode()}]]*/ null,
+				STUDY_ENTRIES: /*[[${T(org.generationcp.middleware.domain.labelprinting.LabelPrintingType).STUDY_ENTRIES.getCode()}]]*/ null,
 			}).constant('SEARCH_ORIGIN', {
 				MANAGE_STUDY_SOURCE: /*[[${T(org.generationcp.middleware.domain.inventory.common.SearchOriginCompositeDto.SearchOrigin).MANAGE_STUDY_SOURCE}]]*/ null,
 				MANAGE_STUDY_PLOT: /*[[${T(org.generationcp.middleware.domain.inventory.common.SearchOriginCompositeDto.SearchOrigin).MANAGE_STUDY_PLOT}]]*/ null
