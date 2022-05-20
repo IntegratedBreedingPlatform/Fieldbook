@@ -416,8 +416,9 @@ function createRow(id, parentClass, value, realId, withFieldMap, hasOneInstance)
 		} else {
 			// For create new fieldmap
 			hasFieldMap = value.hasFieldMap ? 'Yes' : 'No';
-			disabledString = value.hasFieldMap && (value.hasGeoJSON || value.hasMeansData) ? 'disabled' : '';
-			var checked = hasOneInstance ? 'checked' : '';
+			var isDisabled = value.hasFieldMap && (value.hasGeoJSON || value.hasMeansData);
+			disabledString = isDisabled ? 'disabled' : '';
+			var checked = hasOneInstance && !isDisabled ? 'checked' : '';
 
 			newRow = '<tr class="data-row trialInstance ' + genClassName + id + ' ' + genParentClassName + '">';
 			checkBox = '<input ' + disabledString + ' class="checkInstance" type="checkbox" id="' + realId + '" ' + checked + ' /> &nbsp;&nbsp;';
