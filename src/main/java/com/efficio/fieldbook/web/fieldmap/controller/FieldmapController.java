@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
@@ -199,11 +200,15 @@ public class FieldmapController extends AbstractBaseFieldbookController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/deleteFieldmap/{ids}", method = RequestMethod.DELETE)
-	public Map<String, String> deleteFieldMap(@PathVariable final String ids) {
+	public Map<String, String> deleteFieldMap(@PathVariable final String ids,
+		@RequestParam(required = false) final String allExistingFieldmapSelected,
+		@RequestParam(required = true) final Integer datasetId) {
 		final List<Integer> trialIds = this.getTrialIds(ids);
+		final boolean isAllExistingFieldmapSelected = "Y".equals(allExistingFieldmapSelected);
+
 		final Map<String, String> resultsMap = new HashMap<>();
 		try {
-			this.fieldbookMiddlewareService.deleteAllFieldMapsByTrialInstanceIds(trialIds);
+			this.fieldbookMiddlewareService.deleteAllFieldMapsByTrialInstanceIds(trialIds, datasetId, isAllExistingFieldmapSelected);
 			resultsMap.put("isSuccess", "1");
 		} catch (final MiddlewareQueryException e) {
 			FieldmapController.LOG.error(e.getMessage(), e);

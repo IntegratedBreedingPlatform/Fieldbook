@@ -414,6 +414,9 @@ function createRow(id, parentClass, value, realId, withFieldMap, hasOneInstance)
 			newCell = '<td>' + value.trialInstanceNo + '</td><td>' + locationName + '</td><td>' + value.entryCount + '</td>';
 			newCell = newCell + '<td>' + value.repCount + '</td><td>' + value.plotCount + '</td>';
 		} else {
+			if (value.hasFieldMap) {
+				instancesWithFieldmap.push(realId);
+			}
 			// For create new fieldmap
 			hasFieldMap = value.hasFieldMap ? 'Yes' : 'No';
 			var isDisabled = value.hasFieldMap && (value.hasGeoJSON || value.hasMeansData);
@@ -583,6 +586,7 @@ function showCreateFieldMap() {
 	if ($('#studyFieldMapTree .checkInstance:checked').attr('id')) {
 		selectedWithFieldMap = false;
 		fieldmapIds = [];
+		instanceIds = [];
 		$('#studyFieldMapTree .checkInstance:checked').each(function () {
 			id = this.id;
 			if (id.indexOf('|') > -1) {
@@ -597,7 +601,7 @@ function showCreateFieldMap() {
 			hasFieldMap = $(this).parent().next().next().next().next().next().html();
 			// Build id list of selected trials instances
 			fieldmapIds.push(studyId + '|' + datasetId + '|' + id);
-
+			instanceIds.push(parseInt(id));
 			if (hasFieldMap == 'Yes') {
 				selectedWithFieldMap = true;
 			}
@@ -609,11 +613,11 @@ function showCreateFieldMap() {
 			if (!isConfirmDelete) {
 				return;
 			}
-
+			var allExistingFieldmapSelected = instancesWithFieldmap.every(val => instanceIds.includes(val))? 'Y' : 'N';
 			$.ajax({
-				url: '/Fieldbook/Fieldmap/enterFieldDetails/deleteFieldmap/'+ encodeURIComponent(id),
+				url: '/Fieldbook/Fieldmap/enterFieldDetails/deleteFieldmap/'+ encodeURIComponent(instanceIds.join())
+					+'?allExistingFieldmapSelected=' + allExistingFieldmapSelected + '&datasetId=' + datasetId,
 				type: 'DELETE',
-				data: '',
 				success: function (data) {
 					var node;
 					if (data.isSuccess === '1') {
