@@ -19,6 +19,7 @@
 				$scope.addVariable = !studyStateService.hasGeneratedDesign() && TrialManagerDataService.applicationData.germplasmListSelected;
 				$scope.selectedItems = [];
 				$scope.numberOfEntries = 0;
+				$scope.entryTableColumns = [];
 
 				var initResolve;
 				$scope.initPromise = new Promise(function (resolve) {
@@ -42,10 +43,17 @@
 				$scope.generationLevels = Array.from(Array(10).keys()).map((k) => k + 1);
 
 				loadTable();
+				loadStudyEntryColumns();
 
 				$rootScope.$on("reloadStudyEntryTableData", function(setShowValues){
 					$scope.reloadStudyEntryTableData(setShowValues);
 				});
+
+				function loadStudyEntryColumns() {
+					studyEntryService.getStudyEntriesColumns().then(function (columnsData) {
+						$scope.entryTableColumns = columnsData;
+					});
+				}
 
 				function table() {
 					return $scope.nested.dtInstance.DataTable;
@@ -444,7 +452,7 @@
 					$scope.dtColumnDefs = dtColumnDefsPromise.promise;
 					$scope.dtOptions = null;
 
-					return loadColumns().then(function (columnsObj) {
+					return loadTableHeader().then(function (columnsObj) {
 						$scope.selectedItems = [];
 						$scope.dtOptions = getDtOptions();
 						dtColumnsPromise.resolve(columnsObj.columns);
@@ -1162,6 +1170,10 @@
 
 						});
 				};
+
+				$scope.selectEntryTableColumns = function() {
+					console.log('selectEntryTableColumns');
+				}
 
 			}]);
 
