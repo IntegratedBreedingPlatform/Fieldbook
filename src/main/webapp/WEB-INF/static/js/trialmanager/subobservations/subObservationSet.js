@@ -326,7 +326,7 @@
 							windowClass: 'modal-large',
 							resolve: {
 								searchResultDbId: function () {
-									return searchDto.result.searchResultDbId;
+									return searchDto.searchResultDbId;
 								},
 								searchOrigin: function () {
 									return SEARCH_ORIGIN.MANAGE_STUDY_PLOT.$name;
