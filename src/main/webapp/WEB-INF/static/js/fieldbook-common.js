@@ -614,17 +614,25 @@ function showCreateFieldMap() {
 				return;
 			}
 			var allExistingFieldmapSelected = instancesWithFieldmap.every(val => instanceIds.includes(val))? 'Y' : 'N';
+			var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
 			$.ajax({
-				url: '/Fieldbook/Fieldmap/enterFieldDetails/deleteFieldmap/'+ encodeURIComponent(instanceIds.join())
-					+'?allExistingFieldmapSelected=' + allExistingFieldmapSelected + '&datasetId=' + datasetId,
+				url: '/bmsapi/crops/' + cropName + '/programs/' + currentProgramId + '/studies/' + studyId + '/deleteFieldmap/'
+					+ encodeURIComponent(instanceIds.join())
+					+'?allExistingFieldmapSelected=' + allExistingFieldmapSelected
+					+ '&datasetId=' + datasetId,
 				type: 'DELETE',
+				beforeSend: function(xhr) {
+					xhr.setRequestHeader('X-Auth-Token', xAuthToken);
+				},
 				success: function (data) {
-					var node;
-					if (data.isSuccess === '1') {
-						redirectToFirstPage();
-					} else { 
-						showErrorMessage('',hasFieldmapError);
+					redirectToFirstPage();
+				},
+				error: function (jqxhr, textStatus, error) {
+					if (jqxhr.status == 401) {
+						bmsAuth.handleReAuthentication();
 					}
+					showErrorMessage('', hasFieldmapError);
+
 				}
 			});
 		}

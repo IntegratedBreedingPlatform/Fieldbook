@@ -36,13 +36,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,7 +111,7 @@ public class FieldmapController extends AbstractBaseFieldbookController {
 		final Map<String, String> result = new HashMap<>();
 		String nav = "1";
 		try {
-			final List<Integer> trialIds = this.getTrialIds(ids);
+			final List<Integer> trialIds = Arrays.stream(ids.split(",")).map(Integer::valueOf).collect(Collectors.toList());
 			final List<FieldMapInfo> fieldMapInfoList =
 				this.fieldbookMiddlewareService.getFieldMapInfoOfTrial(trialIds, this.crossExpansionProperties);
 
@@ -133,15 +133,6 @@ public class FieldmapController extends AbstractBaseFieldbookController {
 		result.put("nav", nav);
 
 		return result;
-	}
-
-	private List<Integer> getTrialIds(final String ids) {
-		final List<Integer> trialIds = new ArrayList<>();
-		final String[] idList = ids.split(",");
-		for (final String id : idList) {
-			trialIds.add(Integer.parseInt(id));
-		}
-		return trialIds;
 	}
 
 	/**
@@ -189,34 +180,6 @@ public class FieldmapController extends AbstractBaseFieldbookController {
 			result.put("environmentId", environmentId);
 		}
 		return result;
-	}
-
-	/**
-	 * Delete field map.
-	 *
-	 * @param form the form
-	 * @param model the model
-	 * @return the string
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/deleteFieldmap/{ids}", method = RequestMethod.DELETE)
-	public Map<String, String> deleteFieldMap(@PathVariable final String ids,
-		@RequestParam(required = false) final String allExistingFieldmapSelected,
-		@RequestParam(required = true) final Integer datasetId) {
-		final List<Integer> trialIds = this.getTrialIds(ids);
-		final boolean isAllExistingFieldmapSelected = "Y".equals(allExistingFieldmapSelected);
-
-		final Map<String, String> resultsMap = new HashMap<>();
-		try {
-			this.fieldbookMiddlewareService.deleteAllFieldMapsByTrialInstanceIds(trialIds, datasetId, isAllExistingFieldmapSelected);
-			resultsMap.put("isSuccess", "1");
-		} catch (final MiddlewareQueryException e) {
-			FieldmapController.LOG.error(e.getMessage(), e);
-			resultsMap.put("isSuccess", "0");
-			resultsMap.put("message", e.getMessage());
-		}
-
-		return resultsMap;
 	}
 
 	/**
