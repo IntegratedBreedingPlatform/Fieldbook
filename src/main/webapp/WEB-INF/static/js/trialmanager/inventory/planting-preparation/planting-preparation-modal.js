@@ -246,6 +246,10 @@
 				};
 			}
 
+			$scope.withdrawalCalculator = function (amount, packets) {
+				return (Math.round(isNaN(amount) ? 0 : amount * 1000) * packets) / 1000;
+			}
+
 			function onError(response) {
 				if (response.errors && response.errors.length) {
 					showErrorMessage('', response.errors[0].message);

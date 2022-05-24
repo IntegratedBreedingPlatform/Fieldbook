@@ -78,8 +78,8 @@
 					<td>{{::entry.numberOfPackets}}</td>
 					<td>{{units[entry.stockSelected.unitId].unitName}}</td>
 					<td>{{(units[entry.stockSelected.unitId].withdrawAll && entry.stockSelected.availableBalance)
-						|| units[entry.stockSelected.unitId].amountPerPacket * entry.numberOfPackets
-						|| 0}}</td>
+						|| withdrawalCalculator(units[entry.stockSelected.unitId].amountPerPacket, entry.numberOfPackets)}}
+					</td>
 					<td style="font-size: 2rem">
 						<span class="glyphicon glyphicon-ok-circle text-success" ng-if="entry.valid"></span>
 						<span class="glyphicon glyphicon-ban-circle text-danger" ng-if="!entry.valid"></span>
