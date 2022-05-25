@@ -12,6 +12,7 @@
 package com.efficio.fieldbook.web.fieldmap.controller;
 
 import com.efficio.fieldbook.web.AbstractBaseFieldbookController;
+import com.efficio.fieldbook.web.fieldmap.bean.FieldmapRequestDto;
 import com.efficio.fieldbook.web.fieldmap.bean.SelectedFieldmapList;
 import com.efficio.fieldbook.web.fieldmap.bean.UserFieldmap;
 import com.efficio.fieldbook.web.fieldmap.form.FieldmapForm;
@@ -28,12 +29,16 @@ import org.generationcp.middleware.service.api.FieldbookService;
 import org.generationcp.middleware.util.CrossExpansionProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -655,6 +660,37 @@ public class FieldmapController extends AbstractBaseFieldbookController {
 		}
 
 		return result;
+	}
+
+	/**
+	 * Delete field map.
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/deletion", method = RequestMethod.POST,
+		produces = "application/json; charset=utf-8")
+	@PreAuthorize("hasAnyAuthority('ADMIN','STUDIES','MANAGE_STUDIES')")
+	public ResponseEntity<Void> deleteFieldMap(
+		@RequestBody final FieldmapRequestDto requestDto) {
+		this.fieldbookMiddlewareService.deleteAllFieldMapsByTrialInstanceIds(
+			requestDto.getInstanceIds(), requestDto.getDatasetId(), requestDto.isAllExistingFieldmapSelected());
+
+		this.userFieldmap.getFieldMapInfo().stream().forEach(fieldMapInfo -> {
+			for (final FieldMapDatasetInfo dataset : fieldMapInfo.getDatasets()) {
+				for (final FieldMapTrialInstanceInfo trial : dataset.getTrialInstances()) {
+					if (requestDto.getInstanceIds().contains(trial.getInstanceId())) {
+						trial.setHasFieldMap(false);
+						if (trial.getFieldMapLabels() != null) {
+							for (final FieldMapLabel label : trial.getFieldMapLabels()) {
+								label.setColumn(null);
+								label.setRange(null);
+							}
+						}
+					}
+				}
+			}
+		});
+
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	/**

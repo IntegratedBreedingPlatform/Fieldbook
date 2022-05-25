@@ -621,8 +621,7 @@ function showCreateFieldMap() {
 				datasetId: datasetId
 			}
 			$.ajax({
-				url: '/bmsapi/crops/' + cropName + '/programs/' + currentProgramId + '/studies/' + studyId
-					+ '/Fieldmap/deletion',
+				url: '/Fieldbook/Fieldmap/enterFieldDetails/deletion',
 				data: JSON.stringify(params),
 				contentType: 'application/json',
 				type: 'POST',
@@ -640,9 +639,10 @@ function showCreateFieldMap() {
 
 				}
 			});
+		} else {
+			redirectToFirstPage();
 		}
 
-		redirectToFirstPage();
 	} else {
 		// No study instance is selected
 		showMessage(noSelectedTrialInstance);
