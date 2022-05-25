@@ -14,6 +14,8 @@ import com.efficio.fieldbook.utils.test.WorkbookDataUtil;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.generationcp.commons.spring.util.ContextUtil;
 import org.generationcp.middleware.api.file.FileMetadataService;
+import org.generationcp.middleware.api.location.LocationDTO;
+import org.generationcp.middleware.api.location.LocationService;
 import org.generationcp.middleware.data.initializer.WorkbookTestDataInitializer;
 import org.generationcp.middleware.domain.dms.PhenotypicType;
 import org.generationcp.middleware.domain.dms.StandardVariable;
@@ -80,6 +82,9 @@ public class CreateTrialControllerTest {
 	@Mock
 	private FieldbookServiceImpl fieldbookServiceImpl;
 
+	@Mock
+	private LocationService locationService;
+
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
@@ -87,6 +92,9 @@ public class CreateTrialControllerTest {
 		this.defaultLocationId = Math.abs(new Random().nextInt());
 		Mockito.doReturn(Arrays.asList(new Location(this.defaultLocationId))).when(this.locationDataManager)
 				.getLocationsByName(Location.UNSPECIFIED_LOCATION, Operation.EQUAL);
+		final LocationDTO locationDTO = new LocationDTO();
+		locationDTO.setId(this.defaultLocationId);
+		Mockito.doReturn(locationDTO).when(this.locationService).getDefaultLocation(CreateTrialControllerTest.PROGRAM_UUID);
 
 	}
 
@@ -257,6 +265,7 @@ public class CreateTrialControllerTest {
 			.getStandardVariable(ArgumentMatchers.anyInt(), ArgumentMatchers.eq(CreateTrialControllerTest.PROGRAM_UUID));
 		Mockito.doReturn(new ArrayList<>()).when(this.locationDataManager)
 			.getLocationsByName(Location.UNSPECIFIED_LOCATION, Operation.EQUAL);
+		Mockito.doReturn(null).when(this.locationService).getDefaultLocation(CreateTrialControllerTest.PROGRAM_UUID);
 
 		final TabInfo tabInfo = this.controller.prepareEnvironmentsTabInfo(true);
 		final InstanceInfo instanceInfo = (InstanceInfo) tabInfo.getData();
