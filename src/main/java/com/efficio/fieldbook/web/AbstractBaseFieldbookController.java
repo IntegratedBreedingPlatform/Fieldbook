@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2013, All Rights Reserved.
- * 
+ *
  * Generation Challenge Programme (GCP)
- * 
- * 
+ *
+ *
  * This software is licensed for use under the terms of the GNU General Public License (http://bit.ly/8Ztv8M) and the provisions of Part F
  * of the Generation Challenge Programme Amended Consortium Agreement (http://bit.ly/KQX1nL)
- * 
+ *
  *******************************************************************************/
 
 package com.efficio.fieldbook.web;
@@ -17,17 +17,14 @@ import com.efficio.fieldbook.web.util.FieldbookProperties;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.generationcp.commons.security.AuthorizationService;
 import org.generationcp.commons.spring.util.ContextUtil;
+import org.generationcp.middleware.api.location.LocationDTO;
+import org.generationcp.middleware.api.location.LocationService;
 import org.generationcp.middleware.domain.dms.ValueReference;
-import org.generationcp.middleware.domain.etl.MeasurementVariable;
-import org.generationcp.middleware.domain.etl.Workbook;
 import org.generationcp.middleware.domain.gms.SystemDefinedEntryType;
 import org.generationcp.middleware.domain.oms.TermId;
-import org.generationcp.middleware.domain.ontology.VariableType;
 import org.generationcp.middleware.exceptions.MiddlewareQueryException;
-import org.generationcp.middleware.manager.Operation;
 import org.generationcp.middleware.manager.api.LocationDataManager;
 import org.generationcp.middleware.manager.ontology.api.OntologyVariableDataManager;
-import org.generationcp.middleware.pojos.Location;
 import org.generationcp.middleware.pojos.workbench.Project;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +33,6 @@ import org.springframework.ui.Model;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -71,6 +67,9 @@ public abstract class AbstractBaseFieldbookController {
 
 	@Resource
 	protected FieldbookService fieldbookService;
+
+	@Resource
+	protected LocationService locationService;
 
 	/**
 	 * Implemented by the sub controllers to specify the html view that they render into the base template.
@@ -177,13 +176,13 @@ public abstract class AbstractBaseFieldbookController {
 		this.paginationListSelection = paginationListSelection;
 	}
 
-	protected Integer getUnspecifiedLocationId() {
-		//FIXME Should return default breeding location id when it is implemented
-		final List<Location> locations = this.locationDataManager.getLocationsByName(Location.UNSPECIFIED_LOCATION, Operation.EQUAL);
-		if (!locations.isEmpty()) {
-			return locations.get(0).getLocid();
+	protected Integer getProgramDefaultLocationId() {
+		final LocationDTO defaultLocation = this.locationService.getDefaultLocation(this.contextUtil.getCurrentProgramUUID());
+		if (defaultLocation != null) {
+			return defaultLocation.getId();
+		} else {
+			return 0;
 		}
-		return 0;
 	}
 
 	protected List<String> getAllCheckEntryTypeIds() {

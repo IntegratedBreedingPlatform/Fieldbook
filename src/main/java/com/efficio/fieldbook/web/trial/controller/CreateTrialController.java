@@ -222,9 +222,9 @@ public class CreateTrialController extends BaseTrialController {
 		return this.buildVariableIDList(AppConstants.HIDE_STUDY_ENVIRONMENT_FIELDS.getString());
 	}
 
-	@ModelAttribute("unspecifiedLocationId")
-	public Integer unspecifiedLocationId() {
-		return this.getUnspecifiedLocationId();
+	@ModelAttribute("programDefaultLocationId")
+	public Integer programDefaultLocationId() {
+		return this.getProgramDefaultLocationId();
 	}
 
 	@ModelAttribute("currentCropUserId")
@@ -364,12 +364,12 @@ public class CreateTrialController extends BaseTrialController {
 		data.setNumberOfInstances(noOfEnvironments);
 		info.setData(data);
 
-		final Integer unspecifiedLocationid = this.unspecifiedLocationId();
+		final Integer programDefaultLocationId = this.getProgramDefaultLocationId();
 		for (int i = 0; i < noOfEnvironments; i++) {
-			if (unspecifiedLocationid > 0) {
+			if (programDefaultLocationId > 0) {
 				// Create an environment with default location ONLY IF the system found a default location
-				// If unspecifiedLocationid is more than 0, it means the default location exists.
-				data.getInstances().add(this.createEnvironmentWithDefaultLocation(unspecifiedLocationid));
+				// If programDefaultLocationId is more than 0, it means the default location exists.
+				data.getInstances().add(this.createEnvironmentWithDefaultLocation(programDefaultLocationId));
 			} else {
 				data.getInstances().add(new Instance());
 			}

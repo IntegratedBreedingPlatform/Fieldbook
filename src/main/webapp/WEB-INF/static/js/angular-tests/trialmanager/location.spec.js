@@ -45,7 +45,7 @@ describe('Location', function () {
             $provide.value("DATASET_TYPES", {});
             $provide.value("derivedVariableService", derivedVariableService);
             $provide.value("TrialManagerDataService", trialDataManagerService);
-            $provide.value("UNSPECIFIED_LOCATION_ID", 1);
+            $provide.value("PROGRAM_DEFAULT_LOCATION_ID", 1);
             $provide.value("fileService", fileServiceMock);
         });
 
