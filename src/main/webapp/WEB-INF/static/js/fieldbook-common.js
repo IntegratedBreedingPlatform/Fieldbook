@@ -613,14 +613,19 @@ function showCreateFieldMap() {
 			if (!isConfirmDelete) {
 				return;
 			}
-			var allExistingFieldmapSelected = instancesWithFieldmap.every(val => instanceIds.includes(val))? 'Y' : 'N';
+			var allExistingFieldmapSelected = instancesWithFieldmap.every(val => instanceIds.includes(val))? true : false;
 			var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
+			var params = {
+				allExistingFieldmapSelected: allExistingFieldmapSelected,
+				instanceIds: instanceIds,
+				datasetId: datasetId
+			}
 			$.ajax({
-				url: '/bmsapi/crops/' + cropName + '/programs/' + currentProgramId + '/studies/' + studyId + '/deleteFieldmap/'
-					+ encodeURIComponent(instanceIds.join())
-					+'?allExistingFieldmapSelected=' + allExistingFieldmapSelected
-					+ '&datasetId=' + datasetId,
-				type: 'DELETE',
+				url: '/bmsapi/crops/' + cropName + '/programs/' + currentProgramId + '/studies/' + studyId
+					+ '/Fieldmap/deletion',
+				data: JSON.stringify(params),
+				contentType: 'application/json',
+				type: 'POST',
 				beforeSend: function(xhr) {
 					xhr.setRequestHeader('X-Auth-Token', xAuthToken);
 				},
