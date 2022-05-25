@@ -44,7 +44,7 @@
 		};
 
 		$scope.targetkey = 'selectedLocation';
-		$scope.valuecontainer = {selectedLocation: 1};
+		$scope.valuecontainer = {selectedLocation: null};
 
 		function init() {
 			$scope.settingObject.crossNameSetting.addSpaceBetweenSuffixAndCode = false;

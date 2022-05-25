@@ -89,15 +89,17 @@
 				$scope.init = function () {
 					// Get the default location in the program
 					// and set it as default selected item in the dropdown.
-					locationService.getDefaultLocation().then((response) => {
-						if (response && response.data) {
-							$scope.defaultLocation = response.data;
-							$scope.$applyAsync(function () {
-								// Use applyAsync so that the model is updated
-								$scope.valuecontainer[$scope.targetkey] = $scope.defaultLocation.id;
-							});
-						}
-					});
+					if ($scope.valuecontainer[$scope.targetkey] === null) {
+						locationService.getDefaultLocation().then((response) => {
+							if (response && response.data) {
+								$scope.defaultLocation = response.data;
+								$scope.$applyAsync(function () {
+									// Use applyAsync so that the model is updated
+									$scope.valuecontainer[$scope.targetkey] = $scope.defaultLocation.id;
+								});
+							}
+						});
+					}
 				};
 
 				$scope.fetch = function ($select, $event) {
