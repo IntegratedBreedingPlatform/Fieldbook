@@ -181,7 +181,7 @@ public abstract class AbstractBaseFieldbookController {
 		if (defaultLocation != null) {
 			return defaultLocation.getId();
 		} else {
-			return 0;
+			return null;
 		}
 	}
 

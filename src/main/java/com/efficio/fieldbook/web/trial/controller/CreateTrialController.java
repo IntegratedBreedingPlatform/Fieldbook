@@ -366,7 +366,7 @@ public class CreateTrialController extends BaseTrialController {
 
 		final Integer programDefaultLocationId = this.getProgramDefaultLocationId();
 		for (int i = 0; i < noOfEnvironments; i++) {
-			if (programDefaultLocationId > 0) {
+			if (programDefaultLocationId != null) {
 				// Create an environment with default location ONLY IF the system found a default location
 				// If programDefaultLocationId is more than 0, it means the default location exists.
 				data.getInstances().add(this.createEnvironmentWithDefaultLocation(programDefaultLocationId));

@@ -344,7 +344,7 @@
 			}
 
 			$scope.settingObject.additionalDetailsSetting.harvestLocationId = $scope.valuecontainer.selectedLocation;
-			if (!$scope.settingObject.additionalDetailsSetting.harvestLocationId || $scope.settingObject.additionalDetailsSetting.harvestLocationId === '') {
+			if ($scope.settingObject.additionalDetailsSetting.harvestLocationId === null || $scope.settingObject.additionalDetailsSetting.harvestLocationId === '') {
 				showErrorMessage('', $.fieldbookMessages.errorNoHarvestLocation);
 				return false;
 			}

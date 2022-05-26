@@ -365,8 +365,8 @@
 				saveCurrentData: function() {
 
 					var missingLocations = service.currentData.instanceInfo.instances.some(function (instance) {
-						return !instance.managementDetailValues ||
-							(!instance.managementDetailValues[8190] && instance.managementDetailValues[8190] !== 0);
+						return !instance.managementDetailValues || instance.managementDetailValues[8190] === null
+							|| instance.managementDetailValues[8190] === '';
 					});
 
 					if (missingLocations) {
