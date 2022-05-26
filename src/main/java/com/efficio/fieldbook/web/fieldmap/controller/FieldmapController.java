@@ -668,7 +668,6 @@ public class FieldmapController extends AbstractBaseFieldbookController {
 	@ResponseBody
 	@RequestMapping(value = "/deletion", method = RequestMethod.POST,
 		produces = "application/json; charset=utf-8")
-	@PreAuthorize("hasAnyAuthority('ADMIN','STUDIES','MANAGE_STUDIES')")
 	public ResponseEntity<Void> deleteFieldMap(
 		@RequestBody final FieldmapRequestDto requestDto) {
 		this.fieldbookMiddlewareService.deleteAllFieldMapsByTrialInstanceIds(
