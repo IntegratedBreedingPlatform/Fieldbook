@@ -11,7 +11,6 @@
 			function ($scope, $rootScope, $q, $compile, TrialManagerDataService, DTOptionsBuilder, studyStateService, studyEntryService, germplasmStudySourceService,
 					  datasetService, $timeout, $uibModal, germplasmDetailsModalService, studyEntryObservationService, DATASET_TYPES, VARIABLE_TYPES, $http, studyContext) {
 
-				$scope.settings = TrialManagerDataService.settings.germplasm;
 				$scope.entryDetails = TrialManagerDataService.settings.entryDetails;
 				$scope.isLockedStudy = TrialManagerDataService.isLockedStudy;
 				$scope.trialMeasurement = {hasMeasurement: studyStateService.hasGeneratedDesign()};
