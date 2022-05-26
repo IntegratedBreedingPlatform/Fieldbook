@@ -17,6 +17,7 @@
 				$scope.trialMeasurement = {hasMeasurement: studyStateService.hasGeneratedDesign()};
 				$scope.isHideDelete = studyStateService.hasGeneratedDesign();
 				$scope.addVariable = !studyStateService.hasGeneratedDesign() && TrialManagerDataService.applicationData.germplasmListSelected;
+				$scope.showAddColumns = TrialManagerDataService.applicationData.germplasmListSelected;
 				$scope.selectedItems = [];
 				$scope.numberOfEntries = 0;
 				$scope.entryTableColumns = [];
@@ -461,7 +462,7 @@
 					});
 				}
 
-				function loadColumns() {
+				function loadTableHeader() {
 					return studyEntryService.getEntryTableColumns().then(function (columnsData) {
 						$scope.columnsData = addCheckBoxColumn(columnsData);
 
@@ -1172,7 +1173,10 @@
 				};
 
 				$scope.selectEntryTableColumns = function() {
-					console.log('selectEntryTableColumns');
+					var selectedPropertyIds = this.entryTableColumns.filter((column) => column.selected).map((column) => column.id);
+					datasetService.updateDatasetProperties(selectedPropertyIds).then(function () {
+						$rootScope.navigateToTab('germplasm', {reload: true});
+					});
 				}
 
 			}]);
