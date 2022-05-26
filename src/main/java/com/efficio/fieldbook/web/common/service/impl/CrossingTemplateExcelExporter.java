@@ -141,9 +141,15 @@ public class CrossingTemplateExcelExporter {
 				final int entryType = Integer.parseInt(gpData.getFactors().findById(TermId.ENTRY_TYPE).getValue());
 				PoiUtil.setCellValue(studyListSheet, 2, rowIndex, this.getEntryTypeName(entryType));
 			}
-			PoiUtil.setCellValue(studyListSheet, 3, rowIndex, gpData.getFactors().findById(TermId.GID).getValue());
-			PoiUtil.setCellValue(studyListSheet, 4, rowIndex, gpData.getFactors().findById(TermId.GID).getValue());
-			PoiUtil.setCellValue(studyListSheet, 5, rowIndex, gpData.getFactors().findById(TermId.DESIG).getValue());
+
+			if (gpData.getFactors().findById(TermId.GID) != null) {
+				PoiUtil.setCellValue(studyListSheet, 3, rowIndex, gpData.getFactors().findById(TermId.GID).getValue());
+				PoiUtil.setCellValue(studyListSheet, 4, rowIndex, gpData.getFactors().findById(TermId.GID).getValue());
+			}
+
+			if (gpData.getFactors().findById(TermId.DESIG) != null) {
+				PoiUtil.setCellValue(studyListSheet, 5, rowIndex, gpData.getFactors().findById(TermId.DESIG).getValue());
+			}
 
 			if (gpData.getFactors().findById(TermId.CROSS) != null) {
 				PoiUtil.setCellValue(studyListSheet, 6, rowIndex, gpData.getFactors().findById(TermId.CROSS).getValue());
