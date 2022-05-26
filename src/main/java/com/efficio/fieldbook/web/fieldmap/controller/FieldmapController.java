@@ -11,16 +11,12 @@
 
 package com.efficio.fieldbook.web.fieldmap.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
+import com.efficio.fieldbook.web.AbstractBaseFieldbookController;
+import com.efficio.fieldbook.web.fieldmap.bean.FieldmapRequestDto;
+import com.efficio.fieldbook.web.fieldmap.bean.SelectedFieldmapList;
+import com.efficio.fieldbook.web.fieldmap.bean.UserFieldmap;
+import com.efficio.fieldbook.web.fieldmap.form.FieldmapForm;
+import com.efficio.fieldbook.web.util.SessionUtility;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.generationcp.middleware.domain.fieldbook.FieldMapDatasetInfo;
 import org.generationcp.middleware.domain.fieldbook.FieldMapInfo;
@@ -33,21 +29,29 @@ import org.generationcp.middleware.service.api.FieldbookService;
 import org.generationcp.middleware.util.CrossExpansionProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.efficio.fieldbook.web.AbstractBaseFieldbookController;
-import com.efficio.fieldbook.web.fieldmap.bean.SelectedFieldmapList;
-import com.efficio.fieldbook.web.fieldmap.bean.UserFieldmap;
-import com.efficio.fieldbook.web.fieldmap.form.FieldmapForm;
-import com.efficio.fieldbook.web.util.SessionUtility;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * The Class FieldmapController.
@@ -96,26 +100,23 @@ public class FieldmapController extends AbstractBaseFieldbookController {
 	/**
 	 * Determine field map navigation.
 	 *
-	 * @param ids the ids
-	 * @param model the model
+	 * @param ids     the ids
+	 * @param model   the model
 	 * @param session the session
 	 * @return the map
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/createFieldmap/{ids}", method = RequestMethod.GET)
 	public Map<String, String> determineFieldMapNavigation(@PathVariable final String ids, final Model model, final HttpServletRequest req,
-			final HttpSession session) {
+		final HttpSession session) {
 
-		SessionUtility.clearSessionData(session, new String[] {SessionUtility.FIELDMAP_SESSION_NAME,
-				SessionUtility.PAGINATION_LIST_SELECTION_SESSION_NAME});
+		SessionUtility.clearSessionData(session, new String[] {
+			SessionUtility.FIELDMAP_SESSION_NAME,
+			SessionUtility.PAGINATION_LIST_SELECTION_SESSION_NAME});
 		final Map<String, String> result = new HashMap<>();
 		String nav = "1";
 		try {
-			final List<Integer> trialIds = new ArrayList<>();
-			final String[] idList = ids.split(",");
-			for (final String id : idList) {
-				trialIds.add(Integer.parseInt(id));
-			}
+			final List<Integer> trialIds = Arrays.stream(ids.split(",")).map(Integer::valueOf).collect(Collectors.toList());
 			final List<FieldMapInfo> fieldMapInfoList =
 				this.fieldbookMiddlewareService.getFieldMapInfoOfTrial(trialIds, this.crossExpansionProperties);
 
@@ -409,12 +410,7 @@ public class FieldmapController extends AbstractBaseFieldbookController {
 			for (final FieldMapInfo info : this.userFieldmap.getSelectedFieldMapsToBeAdded()) {
 				for (final FieldMapDatasetInfo dataset : info.getDatasets()) {
 					for (final FieldMapTrialInstanceInfo trial : dataset.getTrialInstances()) {
-						if (trial.getFieldMapLabels() != null) {
-							for (final FieldMapLabel label : trial.getFieldMapLabels()) {
-								label.setColumn(null);
-								label.setRange(null);
-							}
-						}
+						trial.clearColumnRangeIfExists();
 					}
 				}
 			}
@@ -659,6 +655,32 @@ public class FieldmapController extends AbstractBaseFieldbookController {
 		}
 
 		return result;
+	}
+
+	/**
+	 * Delete field map.
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/deletion", method = RequestMethod.POST,
+		produces = "application/json; charset=utf-8")
+	public ResponseEntity<Void> deleteFieldMap(
+		@RequestBody final FieldmapRequestDto requestDto) {
+		this.fieldbookMiddlewareService.deleteAllFieldMapsByTrialInstanceIds(
+			requestDto.getInstanceIds(), requestDto.getDatasetId(), requestDto.isAllExistingFieldmapSelected());
+
+		final List<FieldMapDatasetInfo> datasets = this.userFieldmap.getFieldMapInfo().stream().flatMap(x -> x.getDatasets().stream())
+			.collect(Collectors.toList());
+		final List<FieldMapTrialInstanceInfo> instances = datasets.stream().flatMap(x -> x.getTrialInstances().stream())
+			.collect(Collectors.toList());
+		final List<FieldMapTrialInstanceInfo> filteredInstances = instances.stream().filter
+			(trial -> requestDto.getInstanceIds().contains(trial.getInstanceId())).collect(Collectors.toList());
+
+		filteredInstances.forEach(trial -> {
+			trial.setHasFieldMap(false);
+			trial.clearColumnRangeIfExists();
+		});
+
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	/**
