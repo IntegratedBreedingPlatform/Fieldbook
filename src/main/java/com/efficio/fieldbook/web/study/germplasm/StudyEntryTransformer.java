@@ -50,19 +50,19 @@ public class StudyEntryTransformer {
 					importedGermplasm.setEntryTypeValue(entryType.get());
 					importedGermplasm.setEntryTypeCategoricalID(entryTypeCategoricalId);
 				}
-				importedGermplasm.setCross(studyEntryDto.getStudyEntryPropertyValue(TermId.CROSS.getId()).orElse(""));
+				importedGermplasm.setCross(studyEntryDto.getCross());
 				importedGermplasm.setDesig(studyEntryDto.getDesignation());
-				// TODO: should get entry code from properties?
-//				importedGermplasm.setEntryCode(studyEntryDto.getEntryCode());
+				importedGermplasm.setEntryCode(studyEntryDto.getStudyEntryPropertyValue(TermId.ENTRY_CODE.getId()).orElse(""));
 				importedGermplasm.setEntryNumber(studyEntryDto.getEntryNumber());
 				importedGermplasm.setGid(studyEntryDto.getGid().toString());
-				final Optional<String> groupGid = studyEntryDto.getStudyEntryPropertyValue(TermId.GROUPGID.getId());
+				final Optional<Integer> groupGid =  Optional.of(studyEntryDto.getGroupGid());
 				if (groupGid.isPresent()) {
 					final Integer mgid = Integer.valueOf(groupGid.get());
 					importedGermplasm.setMgid(mgid);
 					importedGermplasm.setGroupId(mgid);
 				}
-				importedGermplasm.setGroupName(studyEntryDto.getStudyEntryPropertyValue(TermId.CROSS.getId()).orElse(""));
+				//FIXME: The GroupName is the Preferred Name of the groupGID
+				//importedGermplasm.setGroupName(studyEntryDto.getStudyEntryPropertyValue(TermId.CROSS.getId()).orElse("")); //
 				importedGermplasm.setIndex(studyEntryDto.getEntryNumber());
 				importedGermplasmList.add(importedGermplasm);
 			}
