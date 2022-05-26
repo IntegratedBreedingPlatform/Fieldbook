@@ -410,12 +410,7 @@ public class FieldmapController extends AbstractBaseFieldbookController {
 			for (final FieldMapInfo info : this.userFieldmap.getSelectedFieldMapsToBeAdded()) {
 				for (final FieldMapDatasetInfo dataset : info.getDatasets()) {
 					for (final FieldMapTrialInstanceInfo trial : dataset.getTrialInstances()) {
-						if (trial.getFieldMapLabels() != null) {
-							for (final FieldMapLabel label : trial.getFieldMapLabels()) {
-								label.setColumn(null);
-								label.setRange(null);
-							}
-						}
+						trial.clearColumnRangeIfExists();
 					}
 				}
 			}
@@ -673,20 +668,16 @@ public class FieldmapController extends AbstractBaseFieldbookController {
 		this.fieldbookMiddlewareService.deleteAllFieldMapsByTrialInstanceIds(
 			requestDto.getInstanceIds(), requestDto.getDatasetId(), requestDto.isAllExistingFieldmapSelected());
 
-		this.userFieldmap.getFieldMapInfo().stream().forEach(fieldMapInfo -> {
-			for (final FieldMapDatasetInfo dataset : fieldMapInfo.getDatasets()) {
-				for (final FieldMapTrialInstanceInfo trial : dataset.getTrialInstances()) {
-					if (requestDto.getInstanceIds().contains(trial.getInstanceId())) {
-						trial.setHasFieldMap(false);
-						if (trial.getFieldMapLabels() != null) {
-							for (final FieldMapLabel label : trial.getFieldMapLabels()) {
-								label.setColumn(null);
-								label.setRange(null);
-							}
-						}
-					}
-				}
-			}
+		final List<FieldMapDatasetInfo> datasets = this.userFieldmap.getFieldMapInfo().stream().flatMap(x -> x.getDatasets().stream())
+			.collect(Collectors.toList());
+		final List<FieldMapTrialInstanceInfo> instances = datasets.stream().flatMap(x -> x.getTrialInstances().stream())
+			.collect(Collectors.toList());
+		final List<FieldMapTrialInstanceInfo> filteredInstances = instances.stream().filter
+			(trial -> requestDto.getInstanceIds().contains(trial.getInstanceId())).collect(Collectors.toList());
+
+		filteredInstances.forEach(trial -> {
+			trial.setHasFieldMap(false);
+			trial.clearColumnRangeIfExists();
 		});
 
 		return new ResponseEntity<>(HttpStatus.OK);
