@@ -321,6 +321,7 @@ public abstract class BaseTrialController extends SettingsController {
 				} else {
 					detail.setDeletable(true);
 				}
+				detail.getVariable().setOperation(Operation.UPDATE);
 				return detail;
 			})
 			.collect(Collectors.toList());
