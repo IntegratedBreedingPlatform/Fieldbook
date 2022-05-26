@@ -3,17 +3,20 @@ function validateEnterFieldPage() {
 
 	var totalNoOfPlots;
 
-	if ($('#' + getJquerySafeId('userFieldmap.fieldLocationId')).val() == 0) {
+	if ($('#' + getJquerySafeId('userFieldmap.fieldLocationId')).val() === null ||
+		$('#' + getJquerySafeId('userFieldmap.fieldLocationId')).val() === '') {
 		showInvalidInputMessage(msgLocation);
 		return false;
 	}
 
-	if ($('#' + getJquerySafeId('userFieldmap.fieldId')).val() == '') {
+	if ($('#' + getJquerySafeId('userFieldmap.fieldId')).val() === null
+		|| $('#' + getJquerySafeId('userFieldmap.fieldId')).val() === '') {
 		showInvalidInputMessage(msgFieldName);
 		return false;
 	}
 
-	if ($('#' + getJquerySafeId('userFieldmap.blockId')).val() == '') {
+	if ($('#' + getJquerySafeId('userFieldmap.blockId')).val() === null
+		|| $('#' + getJquerySafeId('userFieldmap.blockId')).val() === '') {
 		showInvalidInputMessage(msgBlockName);
 		return false;
 	}
