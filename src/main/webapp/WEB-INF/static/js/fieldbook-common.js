@@ -414,10 +414,14 @@ function createRow(id, parentClass, value, realId, withFieldMap, hasOneInstance)
 			newCell = '<td>' + value.trialInstanceNo + '</td><td>' + locationName + '</td><td>' + value.entryCount + '</td>';
 			newCell = newCell + '<td>' + value.repCount + '</td><td>' + value.plotCount + '</td>';
 		} else {
+			if (value.hasFieldMap) {
+				instancesWithFieldmap.push(realId);
+			}
 			// For create new fieldmap
 			hasFieldMap = value.hasFieldMap ? 'Yes' : 'No';
-			disabledString = value.hasFieldMap ? 'disabled' : '';
-			var checked = hasOneInstance ? 'checked' : '';
+			var isDisabled = value.hasFieldMap && (value.hasGeoJSON || value.hasMeansData);
+			disabledString = isDisabled ? 'disabled' : '';
+			var checked = hasOneInstance && !isDisabled ? 'checked' : '';
 
 			newRow = '<tr class="data-row trialInstance ' + genClassName + id + ' ' + genParentClassName + '">';
 			checkBox = '<input ' + disabledString + ' class="checkInstance" type="checkbox" id="' + realId + '" ' + checked + ' /> &nbsp;&nbsp;';
@@ -582,6 +586,7 @@ function showCreateFieldMap() {
 	if ($('#studyFieldMapTree .checkInstance:checked').attr('id')) {
 		selectedWithFieldMap = false;
 		fieldmapIds = [];
+		instanceIds = [];
 		$('#studyFieldMapTree .checkInstance:checked').each(function () {
 			id = this.id;
 			if (id.indexOf('|') > -1) {
@@ -596,18 +601,48 @@ function showCreateFieldMap() {
 			hasFieldMap = $(this).parent().next().next().next().next().next().html();
 			// Build id list of selected trials instances
 			fieldmapIds.push(studyId + '|' + datasetId + '|' + id);
-
+			instanceIds.push(parseInt(id));
 			if (hasFieldMap == 'Yes') {
 				selectedWithFieldMap = true;
 			}
 		});
-		// This is to disable the 2nd popup
+
+		// Confirm to delete existing fieldmap
 		if (selectedWithFieldMap) {
-			showMessage(hasFieldmapError);
+			var isConfirmDelete = confirm(confirmDeleteFieldmap);
+			if (!isConfirmDelete) {
+				return;
+			}
+			var allExistingFieldmapSelected = instancesWithFieldmap.every(val => instanceIds.includes(val))? true : false;
+			var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
+			var params = {
+				allExistingFieldmapSelected: allExistingFieldmapSelected,
+				instanceIds: instanceIds,
+				datasetId: datasetId
+			}
+			$.ajax({
+				url: '/Fieldbook/Fieldmap/enterFieldDetails/deletion',
+				data: JSON.stringify(params),
+				contentType: 'application/json',
+				type: 'POST',
+				beforeSend: function(xhr) {
+					xhr.setRequestHeader('X-Auth-Token', xAuthToken);
+				},
+				success: function (data) {
+					redirectToFirstPage();
+				},
+				error: function (jqxhr, textStatus, error) {
+					if (jqxhr.status == 401) {
+						bmsAuth.handleReAuthentication();
+					}
+					showErrorMessage('', hasFieldmapError);
+
+				}
+			});
 		} else {
-			// Redirect to step 1
 			redirectToFirstPage();
 		}
+
 	} else {
 		// No study instance is selected
 		showMessage(noSelectedTrialInstance);
