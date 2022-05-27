@@ -609,36 +609,7 @@ function showCreateFieldMap() {
 
 		// Confirm to delete existing fieldmap
 		if (selectedWithFieldMap) {
-			var isConfirmDelete = confirm(confirmDeleteFieldmap);
-			if (!isConfirmDelete) {
-				return;
-			}
-			var allExistingFieldmapSelected = instancesWithFieldmap.every(val => instanceIds.includes(val))? true : false;
-			var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
-			var params = {
-				allExistingFieldmapSelected: allExistingFieldmapSelected,
-				instanceIds: instanceIds,
-				datasetId: datasetId
-			}
-			$.ajax({
-				url: '/Fieldbook/Fieldmap/enterFieldDetails/deletion',
-				data: JSON.stringify(params),
-				contentType: 'application/json',
-				type: 'POST',
-				beforeSend: function(xhr) {
-					xhr.setRequestHeader('X-Auth-Token', xAuthToken);
-				},
-				success: function (data) {
-					redirectToFirstPage();
-				},
-				error: function (jqxhr, textStatus, error) {
-					if (jqxhr.status == 401) {
-						bmsAuth.handleReAuthentication();
-					}
-					showErrorMessage('', hasFieldmapError);
-
-				}
-			});
+			openDeleteFieldmapConfirmation(instanceIds, datasetId);
 		} else {
 			redirectToFirstPage();
 		}
@@ -647,6 +618,47 @@ function showCreateFieldMap() {
 		// No study instance is selected
 		showMessage(noSelectedTrialInstance);
 	}
+}
+
+function openDeleteFieldmapConfirmation(instanceIds, datasetId) {
+	'use strict';
+
+	$('#deleteFieldmapModal').modal({backdrop: 'static', keyboard: true});
+	$('#delete-fieldmap-confirmation').html(confirmDeleteFieldmap);
+	$('#selectedInstanceIds').val(JSON.stringify(instanceIds));
+	$('#datasetId').val(datasetId);
+}
+
+function deleteFieldmap() {
+	'use strict';
+	var instanceIds = JSON.parse($('#selectedInstanceIds').val());
+	var datasetId = $('#datasetId').val();
+	var allExistingFieldmapSelected = instancesWithFieldmap.every(val => instanceIds.includes(val))? true : false;
+	var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
+	var params = {
+		allExistingFieldmapSelected: allExistingFieldmapSelected,
+		instanceIds: instanceIds,
+		datasetId: datasetId
+	}
+	$.ajax({
+		url: '/Fieldbook/Fieldmap/enterFieldDetails/deletion',
+		data: JSON.stringify(params),
+		contentType: 'application/json',
+		type: 'POST',
+		beforeSend: function(xhr) {
+			xhr.setRequestHeader('X-Auth-Token', xAuthToken);
+		},
+		success: function (data) {
+			redirectToFirstPage();
+		},
+		error: function (jqxhr, textStatus, error) {
+			if (jqxhr.status == 401) {
+				bmsAuth.handleReAuthentication();
+			}
+			showErrorMessage('', hasFieldmapError);
+
+		}
+	});
 }
 
 function redirectToFirstPage() {

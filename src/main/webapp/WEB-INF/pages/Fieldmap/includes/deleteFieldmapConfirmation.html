@@ -1,0 +1,32 @@
+<div class="modal fade" id="deleteFieldmapModal" role="dialog" aria-labelledby="deleteFieldmapModal" aria-hidden="true" style="overflow: hidden">
+	<div class="modal-dialog modal-extra-small">
+		<div class="modal-content">			
+			<div class="modal-body" id="manageCheckTypesModalBody">
+				<div class="row form-group">
+					<div class="col-xs-11 col-md-11">					
+						<label class="modal-title fbk-modal-title" id="delete-fieldmap-heading-modal">Delete Fieldmap</label>
+					</div>
+					<div class="col-xs-1 col-md-1">
+						<button  id="closeDeleteFieldmapModal" type="button" class="close  pull-right glyphicon glyphicon-remove" onclick="javascript: closeModal('deleteFieldmapModal')"/>
+					</div>										
+				</div>
+				<div class="row">
+					<div id="page-delete-fieldmap-message-modal" class="col-xs-12 col-md-12">
+					</div>
+				</div>
+				<div class="row form-group">
+						<div class="col-xs-12 col-md-12 add_top_padding">
+							<label class="control-label" id="delete-fieldmap-confirmation"></label>
+						</div>
+				</div>
+
+			</div>
+			<input type="hidden" id="selectedInstanceIds" />
+			<input type="hidden" id="datasetId" />
+			<div class="modal-footer addVariable-footer">
+				<button type="button" class="btn btn-default" onclick="javascript: closeModal('deleteFieldmapModal')" th:text="#{common.form.no.text}">Cancel</button>
+				<button type="button" class="btn btn-primary" aria-hidden="true" th:text="#{common.form.yes.text}" onclick="javascript: deleteFieldmap();">Ok</button>
+			</div>
+		</div>
+	</div>
+</div>
