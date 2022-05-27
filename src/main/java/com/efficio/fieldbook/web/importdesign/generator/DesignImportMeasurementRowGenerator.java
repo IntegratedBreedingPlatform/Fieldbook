@@ -95,8 +95,8 @@ public class DesignImportMeasurementRowGenerator {
 		this.addTrialEnvironmentVariablesToDataList(rowValues, dataList);
 		LOG.debug("Added Environment Variables to MeasurementDataList : size=" + dataList.size());
 
-		this.addGermplasmVariablesToDataList(rowValues, dataList);
-		LOG.debug("Added Germplasm Variables to MeasurementDataList : size=" + dataList.size());
+		this.addEntryDetailsVariablesToDataList(rowValues, dataList);
+		LOG.debug("Added Entry Details Variables to MeasurementDataList : size=" + dataList.size());
 
 		this.addTrialDesignAndVariatesToDataList(rowValues, dataList);
 		LOG.debug("Added TrialDesign and Variates to MeasurementDataList : size=" + dataList.size());
@@ -140,10 +140,10 @@ public class DesignImportMeasurementRowGenerator {
 		}
 	}
 
-	private void addGermplasmVariablesToDataList(final List<String> rowValues, final List<MeasurementData> dataList) {
 
-		final Map<Integer, DesignHeaderItem> germplasmHeaders = this.mappedHeaders.get(PhenotypicType.GERMPLASM);
+	private void addEntryDetailsVariablesToDataList(final List<String> rowValues, final List<MeasurementData> dataList) {
 
+		final Map<Integer, DesignHeaderItem> germplasmHeaders = this.mappedHeaders.get(PhenotypicType.ENTRY_DETAIL);
 		// ENTRY_TYPE or CHECK
 		boolean hasEntryTypeColumnFromTheImport = false;
 		final DesignHeaderItem entryTypeHeaderItem = germplasmHeaders.get(TermId.ENTRY_TYPE.getId());
@@ -159,9 +159,8 @@ public class DesignImportMeasurementRowGenerator {
 		if (entryNoHeaderItem != null) {
 			final Integer entryNo = Integer.parseInt(rowValues.get(entryNoHeaderItem.getColumnIndex()));
 			this.addGermplasmDetailsToDataList(this.importedGermplasm, this.germplasmStandardVariables, dataList, entryNo,
-					hasEntryTypeColumnFromTheImport);
+				hasEntryTypeColumnFromTheImport);
 		}
-
 	}
 
 	protected void addGermplasmDetailsToDataList(final Map<Integer, ImportedGermplasm> importedGermplasm,

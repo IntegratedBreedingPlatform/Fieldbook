@@ -89,6 +89,8 @@ public class DesignImportController extends SettingsController {
 
 	private static final String MAPPED_TRAITS = "mappedTraits";
 
+	private static final String MAPPED_ENTRY_DETAILS = "mappeEntryDetails";
+
 	public static final String IS_SUCCESS = "isSuccess";
 
 	public static final String ERROR = "error";
@@ -277,7 +279,8 @@ public class DesignImportController extends SettingsController {
 				this.userSelection.getDesignImportData().getMappedHeaders().get(PhenotypicType.GERMPLASM));
 		mappingData.put(DesignImportController.MAPPED_TRAITS,
 				this.userSelection.getDesignImportData().getMappedHeaders().get(PhenotypicType.VARIATE));
-
+		mappingData.put(DesignImportController.MAPPED_ENTRY_DETAILS,
+			this.userSelection.getDesignImportData().getMappedHeaders().get(PhenotypicType.ENTRY_DETAIL));
 		return mappingData;
 	}
 
@@ -431,6 +434,9 @@ public class DesignImportController extends SettingsController {
 				case DesignImportController.MAPPED_TRAITS:
 					newMappingResults.put(PhenotypicType.VARIATE, item.getValue());
 					break;
+				case DesignImportController.MAPPED_ENTRY_DETAILS:
+					newMappingResults.put(PhenotypicType.ENTRY_DETAIL, item.getValue());
+					break;
 				default:
 
 			}
@@ -452,6 +458,8 @@ public class DesignImportController extends SettingsController {
 					case DesignImportController.MAPPED_TRAITS:
 						stdVar.setPhenotypicType(PhenotypicType.VARIATE);
 						break;
+					case DesignImportController.MAPPED_ENTRY_DETAILS:
+						stdVar.setPhenotypicType(PhenotypicType.ENTRY_DETAIL);
 					default:
 
 				}
@@ -755,8 +763,8 @@ public class DesignImportController extends SettingsController {
 		final Dataset dataset = (Dataset) SettingsUtil
 			.convertPojoToXmlDataset(this.fieldbookMiddlewareService, name, combinedList, this.userSelection.getPlotsLevelList(),
 				variatesList, this.userSelection.getTrialLevelVariableList(), this.userSelection.getTreatmentFactors(),
-				null, null, this.userSelection.getStudyConditions(), this.contextUtil.getCurrentProgramUUID(), description, startDate,
-				endDate, studyUpdate);
+				null, this.userSelection.getStudyConditions(), null, this.userSelection.getEntryDetails(),
+				this.contextUtil.getCurrentProgramUUID(), description, startDate, endDate, studyUpdate);
 
 		workbook = SettingsUtil.convertXmlDatasetToWorkbook(dataset, this.contextUtil.getCurrentProgramUUID());
 

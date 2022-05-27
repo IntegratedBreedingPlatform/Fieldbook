@@ -53,7 +53,7 @@ public class DesignImportValidator {
 			.validateIfStandardVariableExists(mappedHeadersWithDesignHeaderItemsMappedToStdVarId.get(PhenotypicType.TRIAL_ENVIRONMENT),
 				"design.import.error.trial.is.required", TermId.TRIAL_INSTANCE_FACTOR);
 		final DesignHeaderItem entryNoDesignHeaderItem = this.designImportService
-			.validateIfStandardVariableExists(mappedHeadersWithDesignHeaderItemsMappedToStdVarId.get(PhenotypicType.GERMPLASM),
+			.validateIfStandardVariableExists(mappedHeadersWithDesignHeaderItemsMappedToStdVarId.get(PhenotypicType.ENTRY_DETAIL),
 				"design.import.error.entry.no.is.required", TermId.ENTRY_NO);
 		this.designImportService
 			.validateIfStandardVariableExists(mappedHeadersWithDesignHeaderItemsMappedToStdVarId.get(PhenotypicType.TRIAL_DESIGN),

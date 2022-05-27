@@ -98,6 +98,7 @@ public class DesignImportServiceImpl implements DesignImportService {
 		final Map<Integer, StandardVariable> germplasmStandardVariables =
 				this.convertToStandardVariables(workbook.getGermplasmFactors(), PhenotypicType.GERMPLASM);
 
+		germplasmStandardVariables.putAll(this.convertToStandardVariables(workbook.getEntryDetails(), PhenotypicType.ENTRY_DETAIL));
 		final Map<PhenotypicType, Map<Integer, DesignHeaderItem>> mappedHeadersWithStdVarId =
 				designImportData.getMappedHeadersWithDesignHeaderItemsMappedToStdVarId();
 
@@ -233,6 +234,9 @@ public class DesignImportServiceImpl implements DesignImportService {
 		// Add the variates that exist from csv file header
 		measurementVariables.addAll(this.extractMeasurementVariable(PhenotypicType.VARIATE, mappedHeaders));
 
+		// Add the entry details that exist from csv file header
+		measurementVariables.addAll(this.extractMeasurementVariable(PhenotypicType.ENTRY_DETAIL, mappedHeaders));
+
 		// Add the variates from the added traits in workbook
 		measurementVariables.addAll(workbook.getVariates());
 
@@ -329,6 +333,7 @@ public class DesignImportServiceImpl implements DesignImportService {
 		mappedDesignHeaders.put(PhenotypicType.TRIAL_DESIGN, new ArrayList<DesignHeaderItem>());
 		mappedDesignHeaders.put(PhenotypicType.GERMPLASM, new ArrayList<DesignHeaderItem>());
 		mappedDesignHeaders.put(PhenotypicType.VARIATE, new ArrayList<DesignHeaderItem>());
+		mappedDesignHeaders.put(PhenotypicType.ENTRY_DETAIL, new ArrayList<DesignHeaderItem>());
 
 		final Map<String, List<StandardVariable>> variables =
 				this.ontologyDataManager.getStandardVariablesInProjects(headers, this.contextUtil.getCurrentProgramUUID());
@@ -336,7 +341,7 @@ public class DesignImportServiceImpl implements DesignImportService {
 		// ok, so these variables dont have Phenotypic information, we need to
 		// assign it via proj-prop or cvtermid
 		final Set<PhenotypicType> designImportRoles = new HashSet<>(
-			Arrays.asList(PhenotypicType.TRIAL_ENVIRONMENT, PhenotypicType.TRIAL_DESIGN, PhenotypicType.GERMPLASM, PhenotypicType.VARIATE));
+			Arrays.asList(PhenotypicType.TRIAL_ENVIRONMENT, PhenotypicType.TRIAL_DESIGN, PhenotypicType.GERMPLASM, PhenotypicType.VARIATE, PhenotypicType.ENTRY_DETAIL));
 		for (final Entry<String, List<StandardVariable>> entryVar : variables.entrySet()) {
 			for (final StandardVariable sv : entryVar.getValue()) {
 				for (final VariableType variableType : sv.getVariableTypes()) {

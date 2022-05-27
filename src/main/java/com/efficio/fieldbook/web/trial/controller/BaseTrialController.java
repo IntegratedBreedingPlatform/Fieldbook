@@ -328,7 +328,7 @@ public abstract class BaseTrialController extends SettingsController {
 
 		final TabInfo tabInfo = new TabInfo();
 		tabInfo.setSettings(settings);
-
+		this.userSelection.setEntryDetails(settings);
 		return tabInfo;
 	}
 
