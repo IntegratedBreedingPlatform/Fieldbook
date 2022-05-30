@@ -5,11 +5,11 @@
 	'use strict';
 	angular.module('manageTrialApp').service('TrialManagerDataService', ['GERMPLASM_LIST_SIZE','GERMPLASM_CHECKS_SIZE', 'TRIAL_SETTINGS_INITIAL_DATA',
 		'SAMPLE_LIST_DATA','ENVIRONMENTS_INITIAL_DATA', 'GERMPLASM_INITIAL_DATA', 'EXPERIMENTAL_DESIGN_INITIAL_DATA',
-		'EXPERIMENTAL_DESIGN_SPECIAL_DATA', 'TREATMENT_FACTORS_INITIAL_DATA', 'BASIC_DETAILS_DATA', '$http', '$resource', 'TRIAL_MANAGEMENT_MODE', 'UNSPECIFIED_LOCATION_ID', 'BREEDING_METHOD_CODE', '$q',
+		'EXPERIMENTAL_DESIGN_SPECIAL_DATA', 'TREATMENT_FACTORS_INITIAL_DATA', 'BASIC_DETAILS_DATA', '$http', '$resource', 'TRIAL_MANAGEMENT_MODE', 'PROGRAM_DEFAULT_LOCATION_ID', 'BREEDING_METHOD_CODE', '$q',
 		'TrialSettingsManager','studyStateService', '_', '$localStorage','$rootScope', 'studyContext', 'derivedVariableService', 'experimentDesignService',
 		function(GERMPLASM_LIST_SIZE, GERMPLASM_CHECKS_SIZE, TRIAL_SETTINGS_INITIAL_DATA, SAMPLE_LIST_DATA, ENVIRONMENTS_INITIAL_DATA, GERMPLASM_INITIAL_DATA,
 					EXPERIMENTAL_DESIGN_INITIAL_DATA, EXPERIMENTAL_DESIGN_SPECIAL_DATA, TREATMENT_FACTORS_INITIAL_DATA, BASIC_DETAILS_DATA, $http, $resource,
-					TRIAL_MANAGEMENT_MODE, UNSPECIFIED_LOCATION_ID, BREEDING_METHOD_CODE, $q, TrialSettingsManager, studyStateService, _, $localStorage, $rootScope, studyContext, derivedVariableService, experimentDesignService) {
+					TRIAL_MANAGEMENT_MODE, PROGRAM_DEFAULT_LOCATION_ID, BREEDING_METHOD_CODE, $q, TrialSettingsManager, studyStateService, _, $localStorage, $rootScope, studyContext, derivedVariableService, experimentDesignService) {
 
 
 			// TODO: clean up data service, at the very least arrange the functions in alphabetical order
@@ -365,8 +365,8 @@
 				saveCurrentData: function() {
 
 					var missingLocations = service.currentData.instanceInfo.instances.some(function (instance) {
-						return !instance.managementDetailValues ||
-							(!instance.managementDetailValues[8190] && instance.managementDetailValues[8190] !== 0);
+						return !instance.managementDetailValues || instance.managementDetailValues[8190] === null
+							|| instance.managementDetailValues[8190] === '';
 					});
 
 					if (missingLocations) {

@@ -134,7 +134,7 @@ describe('Measurement Controller', function () {
 				TrialManagerDataService: trialManagerServiceMock,
 				studyInstanceService: studyInstanceServiceMock,
 				LOCATION_ID: 1,
-				UNSPECIFIED_LOCATION_ID: 0,
+				PROGRAM_DEFAULT_LOCATION_ID: 0,
 				derivedVariableService: derivedVariableService,
 				fileService: fileServiceMock
 			});

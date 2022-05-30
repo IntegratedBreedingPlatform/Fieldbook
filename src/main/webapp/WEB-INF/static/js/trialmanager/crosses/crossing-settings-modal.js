@@ -44,15 +44,11 @@
 		};
 
 		$scope.targetkey = 'selectedLocation';
-		$scope.valuecontainer = {selectedLocation: 1};
+		$scope.valuecontainer = {selectedLocation: null};
 
 		function init() {
 			$scope.settingObject.crossNameSetting.addSpaceBetweenSuffixAndCode = false;
 			$scope.settingObject.crossNameSetting.addSpaceBetweenPrefixAndCode = false;
-			retrieveLocationIdFromFirstEnviroment().done(function (locationId) {
-				$scope.valuecontainer.selectedLocation = locationId;
-				$scope.settingObject.additionalDetailsSetting.harvestLocationId = locationId;
-			});
 		}
 
 		init();
@@ -274,22 +270,6 @@
 			});
 		}
 
-		function retrieveLocationIdFromFirstEnviroment() {
-			return $.ajax({
-				url: '/Fieldbook/crosses/getLocationIdFromFirstEnviroment',
-				type: 'GET',
-				cache: false,
-				async: false,
-				success: function (data) {
-				},
-				error: function (jqXHR, textStatus, errorThrown) {
-					console.log('The following error occurred: ' + textStatus, errorThrown);
-				},
-				complete: function () {
-				}
-			});
-		}
-
 		function validateStartingSequenceNumber(value) {
 			'use strict';
 			if (value !== null && value !== '' && (!isInt(value))) {
@@ -363,7 +343,8 @@
 				return false;
 			}
 
-			if (!$scope.settingObject.additionalDetailsSetting.harvestLocationId || $scope.settingObject.additionalDetailsSetting.harvestLocationId === '') {
+			$scope.settingObject.additionalDetailsSetting.harvestLocationId = $scope.valuecontainer.selectedLocation;
+			if ($scope.settingObject.additionalDetailsSetting.harvestLocationId === null || $scope.settingObject.additionalDetailsSetting.harvestLocationId === '') {
 				showErrorMessage('', $.fieldbookMessages.errorNoHarvestLocation);
 				return false;
 			}
