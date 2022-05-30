@@ -318,12 +318,6 @@
 		<aop:scoped-proxy />
 	</bean>
 
-	<bean id="locationService" factory-bean="managerFactory"
-		  factory-method="getLocationService" scope="request">
-		<aop:scoped-proxy />
-	</bean>
-
-
 	<bean id="dataImportService" factory-bean="managerFactory"
 		factory-method="getDataImportService" scope="request">
 		<aop:scoped-proxy />
@@ -595,6 +589,11 @@
 		  scope="request">
 		<aop:scoped-proxy/>
 	</bean>
+
+	<bean id="locationService" factory-bean="managerFactory"
+		  factory-method="getLocationService" scope="request">
+		<aop:scoped-proxy />
+    </bean>
 
 	<!-- Data Source and Transaction Configuration -->
 

@@ -142,9 +142,9 @@ public class OpenTrialController extends BaseTrialController {
 		return this.buildVariableIDList(AppConstants.HIDE_STUDY_ENVIRONMENT_FIELDS.getString());
 	}
 
-	@ModelAttribute("unspecifiedLocationId")
-	public Integer unspecifiedLocationId() {
-		return this.getUnspecifiedLocationId();
+	@ModelAttribute("programDefaultLocationId")
+	public Integer programDefaultLocationId() {
+		return this.getProgramDefaultLocationId();
 	}
 
 	@ModelAttribute("breedingMethodCodeScale")

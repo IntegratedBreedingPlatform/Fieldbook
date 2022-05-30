@@ -30,6 +30,13 @@
 				}), failureHandler);
 			};
 
+			locationService.getDefaultLocation = function () {
+				var request = $http.get(BASE_URL + '/programs/' + studyContext.programId + '/locations/default');
+				return request.then(((response) => {
+					return response;
+				}), failureHandler);
+			}
+
 			return locationService;
 
 		}]);
@@ -77,12 +84,32 @@
 				$scope.locationPage = 0;
 				$scope.loadMore = true;
 				$scope.localData = {locationLookup: 1, useFavorites: false};
+				$scope.defaultLocation = null;
+
+				$scope.init = function () {
+					// Get the default location in the program
+					// and set it as default selected item in the dropdown.
+					if ($scope.valuecontainer[$scope.targetkey] === null) {
+						locationService.getDefaultLocation().then((response) => {
+							if (response && response.data) {
+								$scope.defaultLocation = response.data;
+								$scope.$applyAsync(function () {
+									// Use applyAsync so that the model is updated
+									$scope.valuecontainer[$scope.targetkey] = $scope.defaultLocation.id;
+								});
+							}
+						});
+					}
+				};
 
 				$scope.fetch = function ($select, $event) {
 					// no event means first load!
 					if (!$event) {
 						$scope.locationPage = 0;
 						$scope.locationItems = [];
+						if ($scope.defaultLocation) {
+							$scope.locationItems.push($scope.defaultLocation);
+						}
 					} else {
 						$event.stopPropagation();
 						$event.preventDefault();
@@ -93,7 +120,9 @@
 						$scope.locationItems = $scope.locationItems.concat(response.data);
 						$scope.loadMore = ($scope.locationPage + 1) * 500 < response.headers()['x-total-count'];
 					});
-				}
+				};
+
+				$scope.init();
 			}]
 		};
 	}]);

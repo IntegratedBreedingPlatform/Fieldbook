@@ -555,7 +555,7 @@ public abstract class BaseTrialController extends SettingsController {
 		if (data.getNumberOfInstances() == 0) {
 			data.setNumberOfInstances(1);
 			if (isUsePrevious) {
-				instances.add(this.createEnvironmentWithDefaultLocation(this.getUnspecifiedLocationId()));
+				instances.add(this.createEnvironmentWithDefaultLocation(this.getProgramDefaultLocationId()));
 			}
 		}
 

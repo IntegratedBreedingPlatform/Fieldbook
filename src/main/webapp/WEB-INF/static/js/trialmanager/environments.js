@@ -3,9 +3,9 @@
 	'use strict';
 
 	angular.module('manageTrialApp').controller('EnvironmentCtrl', ['$scope', '$q', 'TrialManagerDataService', '$uibModal', '$stateParams',
-		'$http', 'DTOptionsBuilder', 'LOCATION_ID', 'UNSPECIFIED_LOCATION_ID', '$timeout', 'studyInstanceService', 'studyStateService', 'derivedVariableService', 'studyContext',
+		'$http', 'DTOptionsBuilder', 'LOCATION_ID', 'PROGRAM_DEFAULT_LOCATION_ID', '$timeout', 'studyInstanceService', 'studyStateService', 'derivedVariableService', 'studyContext',
 		'datasetService', 'locationModalService', '$compile', 'fileService',
-		function ($scope, $q, TrialManagerDataService, $uibModal, $stateParams, $http, DTOptionsBuilder, LOCATION_ID, UNSPECIFIED_LOCATION_ID, $timeout, studyInstanceService,
+		function ($scope, $q, TrialManagerDataService, $uibModal, $stateParams, $http, DTOptionsBuilder, LOCATION_ID, PROGRAM_DEFAULT_LOCATION_ID, $timeout, studyInstanceService,
 				  studyStateService, derivedVariableService, studyContext, datasetService, locationModalService, $compile, fileService) {
 
 			var ctrl = this;
@@ -424,7 +424,7 @@
 					trialConditionDataIdMap: {},
 					experimentId: studyInstance.experimentId
 				};
-				instance.managementDetailValues[LOCATION_ID] = UNSPECIFIED_LOCATION_ID;
+				instance.managementDetailValues[LOCATION_ID] = PROGRAM_DEFAULT_LOCATION_ID;
 				instance.managementDetailValues[$scope.TRIAL_INSTANCE_NO_INDEX] = studyInstance.instanceNumber;
 				$scope.instanceInfo.instances.push(instance);
 			};
@@ -744,7 +744,7 @@
 					event.stopPropagation();
 				});
 			},
-			controller: function ($scope, LOCATION_ID, UNSPECIFIED_LOCATION_ID, BREEDING_METHOD_ID, BREEDING_METHOD_CODE, $http, locationService) {
+			controller: function ($scope, LOCATION_ID, PROGRAM_DEFAULT_LOCATION_ID, BREEDING_METHOD_ID, BREEDING_METHOD_CODE, $http, locationService) {
 				$scope.localData = {};
 				$scope.variableDefinition = $scope.settings.val($scope.settingkey);
 				$scope.widgetType = $scope.variableDefinition.variable.widgetType.$name ?
