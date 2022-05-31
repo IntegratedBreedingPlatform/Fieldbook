@@ -55,7 +55,7 @@ public class StudyEntryTransformer {
 				importedGermplasm.setEntryCode(studyEntryDto.getStudyEntryPropertyValue(TermId.ENTRY_CODE.getId()).orElse(""));
 				importedGermplasm.setEntryNumber(studyEntryDto.getEntryNumber());
 				importedGermplasm.setGid(studyEntryDto.getGid().toString());
-				final Optional<Integer> groupGid =  Optional.of(studyEntryDto.getGroupGid());
+				final Optional<Integer> groupGid =  Optional.ofNullable(studyEntryDto.getGroupGid());
 				if (groupGid.isPresent()) {
 					final Integer mgid = Integer.valueOf(groupGid.get());
 					importedGermplasm.setMgid(mgid);
