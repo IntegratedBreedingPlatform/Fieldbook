@@ -583,6 +583,15 @@
 									return full.groupGid ? full.groupGid : '-';
 								}
 							});
+						} else if (columnData.termId === 8235) {
+							// GUID
+							columnsDef.push({
+								targets: columns.length - 1,
+								orderable: false,
+								render: function (data, type, full, meta) {
+									return full.guid;
+								}
+							});
 						} if (columnData.termId === -3) {
 							//ACTIVE LOT
 							columnsDef.push({
