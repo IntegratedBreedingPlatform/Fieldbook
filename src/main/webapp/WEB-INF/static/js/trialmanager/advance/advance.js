@@ -68,8 +68,8 @@
 	]);
 
 	manageTrialApp.controller('advanceStudyModalController', ['$scope', '$uibModalInstance', 'studyContext', 'advanceType', 'advanceStudyModalService', 'locationsSelected',
-		'datasetService', 'trialInstances', 'noOfReplications', 'values', 'methodModalService',
-		function ($scope, $uibModalInstance, studyContext, advanceType, advanceStudyModalService, locationsSelected, datasetService, trialInstances, noOfReplications, values, methodModalService) {
+		'datasetService', 'trialInstances', 'noOfReplications', 'values',
+		function ($scope, $uibModalInstance, studyContext, advanceType, advanceStudyModalService, locationsSelected, datasetService, trialInstances, noOfReplications, values) {
 
 
 			if (values) {
@@ -272,11 +272,6 @@
 					repOption.selected = $scope.valueContainer.checkall;
 				});
 			};
-
-			// TODO IBP-5633 / IBP-5466
-			$scope.openManageMethods = function () {
-				methodModalService.openManageMethods();
-			}
 
 			$scope.init = function () {
 				const SELECTION_VARIABLE_TYPE = 1807;

@@ -4,8 +4,8 @@
 
 	var manageTrialApp = angular.module('manageTrialApp');
 
-	manageTrialApp.controller('CrossingBreedingMethodModalCtrl', ['$scope', '$rootScope', 'methodService', 'methodModalService', function ($scope, $rootScope,
-		methodService, methodModalService) {
+	manageTrialApp.controller('CrossingBreedingMethodModalCtrl', ['$scope', '$rootScope', 'methodService', function ($scope, $rootScope,
+		methodService) {
 
 			$scope.isCrossesImport = true;
 			$scope.targetkey = 'methodCode';
@@ -132,8 +132,5 @@
 				}
 			};
 
-			$scope.openManageMethods = function () {
-				methodModalService.openManageMethods();
-			}
 		}]);
 })();

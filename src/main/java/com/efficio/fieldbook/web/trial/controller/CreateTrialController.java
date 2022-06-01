@@ -195,11 +195,6 @@ public class CreateTrialController extends BaseTrialController {
 		return form;
 	}
 
-	@ModelAttribute("programLocationURL")
-	public String getProgramLocation() {
-		return this.fieldbookProperties.getProgramLocationsUrl();
-	}
-
 	@ModelAttribute("projectID")
 	public String getProgramID() {
 		return this.getCurrentProjectId();
