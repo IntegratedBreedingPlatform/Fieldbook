@@ -39,31 +39,6 @@
 
 		}]);
 
-	angular.module('manageTrialApp').factory('methodModalService', ['studyContext', '$uibModal',
-		function (studyContext, $uibModal) {
-
-			var methodModalService = {};
-
-			// TODO IBP-5633 / IBP-5466
-			methodModalService.openManageMethods = function () {
-				$uibModal.open({
-					templateUrl: '/Fieldbook/static/angular-templates/method/manageMethodsModal.html',
-					windowClass: 'force-zindex', // make sure that the modal is always in front of all modals
-					controller: function ($scope, $uibModalInstance) {
-						$scope.iframeUrl = '/ibpworkbench/content/ProgramMethods?programId=' + studyContext.programId;
-
-						$scope.close = function () {
-							$uibModalInstance.close();
-						}
-					},
-					size: 'window-width'
-				});
-			};
-
-			return methodModalService;
-
-		}]);
-
 	angular.module('manageTrialApp').directive('methodsSelect', ['methodService', function (methodService) {
 		return {
 			restrict: 'EA',

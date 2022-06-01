@@ -117,11 +117,6 @@ public class OpenTrialController extends BaseTrialController {
 		return this.fieldbookProperties.getStaBrappUrl();
 	}
 
-	@ModelAttribute("programLocationURL")
-	public String getProgramLocation() {
-		return this.fieldbookProperties.getProgramLocationsUrl();
-	}
-
 	@ModelAttribute("projectID")
 	public String getProgramID() {
 		return this.getCurrentProjectId();
@@ -140,11 +135,6 @@ public class OpenTrialController extends BaseTrialController {
 	@ModelAttribute("currentProgramId")
 	public String getCurrentProgramId() {
 		return this.contextUtil.getProjectInContext().getUniqueID();
-	}
-
-	@ModelAttribute("programMethodURL")
-	public String getProgramMethod() {
-		return this.fieldbookProperties.getProgramBreedingMethodsUrl();
 	}
 
 	@ModelAttribute("trialEnvironmentHiddenFields")
