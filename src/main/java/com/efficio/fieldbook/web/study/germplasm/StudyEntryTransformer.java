@@ -1,14 +1,11 @@
 package com.efficio.fieldbook.web.study.germplasm;
 
-import org.apache.commons.lang.StringUtils;
 import org.generationcp.commons.parsing.pojo.ImportedGermplasm;
 import org.generationcp.commons.spring.util.ContextUtil;
 import org.generationcp.middleware.domain.dms.Enumeration;
 import org.generationcp.middleware.domain.oms.TermId;
-import org.generationcp.middleware.interfaces.GermplasmExportSource;
 import org.generationcp.middleware.service.api.OntologyService;
 import org.generationcp.middleware.service.api.study.StudyEntryDto;
-import org.generationcp.middleware.service.api.study.StudyEntryPropertyData;
 import org.springframework.beans.factory.annotation.Configurable;
 
 import javax.annotation.Resource;
