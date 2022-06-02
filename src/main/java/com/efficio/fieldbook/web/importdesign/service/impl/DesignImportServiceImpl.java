@@ -241,14 +241,6 @@ public class DesignImportServiceImpl implements DesignImportService {
 		// Add the variates that exist from csv file header
 		measurementVariables.addAll(this.extractMeasurementVariable(PhenotypicType.VARIATE, mappedHeaders));
 
-		// Add the entry details that exist from csv file header
-		measurementVariables.addAll(this.extractMeasurementVariable(PhenotypicType.ENTRY_DETAIL, mappedHeaders));
-
-		// Add the variates from the added traits in workbook
-		measurementVariables.addAll(workbook.getVariates());
-
-		measurementVariables.addAll(workbook.getFactors());
-
 		return measurementVariables;
 	}
 
