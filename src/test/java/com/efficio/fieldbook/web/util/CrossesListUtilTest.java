@@ -146,7 +146,6 @@ public class CrossesListUtilTest {
 	public void testConvertGermplasmListDataToImportedCrosses() {
 		final GermplasmListData germplasmListData = new GermplasmListData();
 		germplasmListData.setEntryId(CrossesListUtilTest.TEST_ENTRY_ID_VALUE);
-		germplasmListData.setEntryCode(CrossesListUtilTest.TEST_ENTRY_CODE_VALUE);
 		germplasmListData.setFemaleParent(new GermplasmParent(CrossesListUtilTest.TEST_FGID_VALUE, CrossesListUtilTest.TEST_FEMALE_PARENT_VALUE, CrossesListUtilTest.UNKNOWN_PEDIGREE));
 		germplasmListData.addMaleParent(new GermplasmParent(CrossesListUtilTest.TEST_MGID1_VALUE, CrossesListUtilTest.TEST_MALE_PARENT1_VALUE, CrossesListUtilTest.UNKNOWN_PEDIGREE));
 		germplasmListData.setSeedSource(CrossesListUtilTest.TEST_SEED_SOURCE_VALUE);
@@ -171,7 +170,6 @@ public class CrossesListUtilTest {
 	public void testConvertGermplasmListDataToImportedCrossesWhenMultipleMaleParents() {
 		final GermplasmListData germplasmListData = new GermplasmListData();
 		germplasmListData.setEntryId(CrossesListUtilTest.TEST_ENTRY_ID_VALUE);
-		germplasmListData.setEntryCode(CrossesListUtilTest.TEST_ENTRY_CODE_VALUE);
 		germplasmListData.setFemaleParent(new GermplasmParent(CrossesListUtilTest.TEST_FGID_VALUE, CrossesListUtilTest.TEST_FEMALE_PARENT_VALUE, CrossesListUtilTest.UNKNOWN_PEDIGREE));
 		final String malePedigree1 = RandomStringUtils.random(25);
 		germplasmListData.addMaleParent(new GermplasmParent(CrossesListUtilTest.TEST_MGID1_VALUE, CrossesListUtilTest.TEST_MALE_PARENT1_VALUE, malePedigree1));

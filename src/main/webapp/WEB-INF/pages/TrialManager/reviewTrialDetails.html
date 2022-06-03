@@ -154,47 +154,8 @@
         </div>
         <br/>
 
-
         <div class="col-xs-12 col-md-12">
-            <!-- Display Header: GERMPLASM DESCRIPTORS -->
-            <label  class="control-label section-toggle toggle-icon" data-target=".germplasmDescriptors">
-                <span class="bms-factors fbk-trial-summary-icons"></span>
-                <img style="margin-left: -10px; display:none;" class="section-expanded" th:src="@{/static/img/expanded-arrow.png}" />
-                <img style="margin-left: -7px" class="section-collapsed" th:src="@{/static/img/collapsed-arrow.png}" />
-                <strong class="sub-content-heading" th:text="#{study.studydetails.germplasm.descriptors}">GERMPLASM DESCRIPTORS</strong>
-            </label>
-        </div>
-        <div class="col-md-12 sectionContainer collapse germplasmDescriptors">
-            <div class="col-md-6">
-                <!-- Display GERMPLASM DESCRIPTORS Section in tabular form -->
-                <table style="table-layout: fixed;" class="my-class table table-curved table-condensed traits-table"
-                       id="germplasmDescriptors">
-                    <thead>
-                    <tr>
-                        <th width="45%" th:utext="#{study.studydetails.column.name}">.Name</th>
-                        <th width="55%" th:utext="#{study.studydetails.column.description}">.Description</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <!-- Passing Germplasm Descriptor type id 1804 which will fetch & display particular germplasm descriptor's details, valid values & usage in popup -->
-                    <tr th:each="germplasmDescriptor, rowStat : *{germplasmDescriptors}">
-                        <td width="45%" th:class="${rowStat.even}? 'even' : 'odd'">
-                            <a href="javascript: void(0);" th:onclick="'javascript:showBaselineTraitDetailsModal(\'' +
-                            *{germplasmDescriptors[__${rowStat.index}__].variable.cvTermId} + '\');'"
-                               th:text="${germplasmDescriptor.variable.name}"></a>
-                        </td>
-                        <td width="55%" th:class="${rowStat.even}? 'even' : 'odd'"
-                            th:text="${germplasmDescriptor.variable.description}"></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-md-6"></div>
-        </div>
-        <br/>
-
-        <div class="col-xs-12 col-md-12">
-            <!-- Display Header: GERMPLASM DESCRIPTORS -->
+            <!-- Display Header: ENTRY DETAILS -->
             <label  class="control-label section-toggle toggle-icon" data-target=".entryDetails">
                 <span class="bms-factors fbk-trial-summary-icons"></span>
                 <img style="margin-left: -10px; display:none;" class="section-expanded" th:src="@{/static/img/expanded-arrow.png}" />

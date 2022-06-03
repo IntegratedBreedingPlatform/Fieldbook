@@ -35,6 +35,7 @@ import org.springframework.context.MessageSource;
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 public class DesignImportServiceImpl implements DesignImportService {
 
@@ -225,22 +226,20 @@ public class DesignImportServiceImpl implements DesignImportService {
 		// Add the germplasm factors that exist from csv file header
 		measurementVariables.addAll(this.extractMeasurementVariable(PhenotypicType.GERMPLASM, mappedHeaders));
 
-		// Add the germplasm factors from the selected germplasm in workbook
-		measurementVariables.addAll(workbook.getGermplasmFactors());
+		// Add the germplasm factors excluding OBS_UNIT_ID
+		measurementVariables.addAll(
+			workbook.getGermplasmFactors().stream().filter(measurementVariable ->
+				TermId.OBS_UNIT_ID.getId() != measurementVariable.getTermId()
+			).collect(Collectors.toList()));
+
+		// Add the entry details that exist from csv file header
+		measurementVariables.addAll(this.extractMeasurementVariable(PhenotypicType.ENTRY_DETAIL, mappedHeaders));
 
 		// Add the design factors that exists from csv file header
 		measurementVariables.addAll(this.extractMeasurementVariable(PhenotypicType.TRIAL_DESIGN, mappedHeaders));
 
 		// Add the variates that exist from csv file header
 		measurementVariables.addAll(this.extractMeasurementVariable(PhenotypicType.VARIATE, mappedHeaders));
-
-		// Add the entry details that exist from csv file header
-		measurementVariables.addAll(this.extractMeasurementVariable(PhenotypicType.ENTRY_DETAIL, mappedHeaders));
-
-		// Add the variates from the added traits in workbook
-		measurementVariables.addAll(workbook.getVariates());
-
-		measurementVariables.addAll(workbook.getFactors());
 
 		return measurementVariables;
 	}

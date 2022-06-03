@@ -51,7 +51,6 @@ public class CrossesListUtil {
 		importedCross.setId(crossesData.getId());
 		importedCross.setEntryNumber(crossesData.getEntryId());
 		importedCross.setGid(crossesData.getGid() != null ? Integer.toString(crossesData.getGid()) : null);
-		importedCross.setEntryCode(crossesData.getEntryCode());
 		importedCross.setSource(crossesData.getSeedSource());
 
 		final GermplasmParent femaleParentFromDB = crossesData.getFemaleParent();
