@@ -225,7 +225,6 @@ public class FieldmapController extends AbstractBaseFieldbookController {
 		} catch (final NumberFormatException e) {
 			FieldmapController.LOG.error(e.toString());
 		}
-		form.setProgramLocationUrl(this.fieldbookProperties.getProgramLocationsUrl());
 		return super.show(model);
 	}
 
@@ -384,7 +383,6 @@ public class FieldmapController extends AbstractBaseFieldbookController {
 		} catch (final NumberFormatException e) {
 			FieldmapController.LOG.error(e.toString());
 		}
-		form.setProgramLocationUrl(this.fieldbookProperties.getProgramLocationsUrl());
 		form.getUserFieldmap().setStudyId(studyId);
 		return super.show(model);
 	}
@@ -727,11 +725,6 @@ public class FieldmapController extends AbstractBaseFieldbookController {
 			this.userFieldmap.setFieldMapLabels(null);
 			this.userFieldmap.setFieldmap(null);
 		}
-	}
-
-	@ModelAttribute("programLocationURL")
-	public String getProgramLocation() {
-		return this.fieldbookProperties.getProgramLocationsUrl();
 	}
 
 	@ModelAttribute("projectID")

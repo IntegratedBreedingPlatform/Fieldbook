@@ -4,9 +4,9 @@
 
 	angular.module('manageTrialApp').controller('EnvironmentCtrl', ['$scope', '$q', 'TrialManagerDataService', '$uibModal', '$stateParams',
 		'$http', 'DTOptionsBuilder', 'LOCATION_ID', 'PROGRAM_DEFAULT_LOCATION_ID', '$timeout', 'studyInstanceService', 'studyStateService', 'derivedVariableService', 'studyContext',
-		'datasetService', 'locationModalService', '$compile', 'fileService',
+		'datasetService', '$compile', 'fileService',
 		function ($scope, $q, TrialManagerDataService, $uibModal, $stateParams, $http, DTOptionsBuilder, LOCATION_ID, PROGRAM_DEFAULT_LOCATION_ID, $timeout, studyInstanceService,
-				  studyStateService, derivedVariableService, studyContext, datasetService, locationModalService, $compile, fileService) {
+				  studyStateService, derivedVariableService, studyContext, datasetService, $compile, fileService) {
 
 			var ctrl = this;
 			var tableId = '#environment-table';
@@ -427,10 +427,6 @@
 				instance.managementDetailValues[LOCATION_ID] = PROGRAM_DEFAULT_LOCATION_ID;
 				instance.managementDetailValues[$scope.TRIAL_INSTANCE_NO_INDEX] = studyInstance.instanceNumber;
 				$scope.instanceInfo.instances.push(instance);
-			};
-
-			$scope.initiateManageLocationModal = function () {
-				locationModalService.openManageLocations();
 			};
 
 			$scope.showFileDeletionOptions = function (fileCount) {

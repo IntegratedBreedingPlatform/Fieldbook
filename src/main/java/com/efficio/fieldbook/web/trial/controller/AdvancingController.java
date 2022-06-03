@@ -158,11 +158,6 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 		return "StudyManager/advanceStudyModal";
 	}
 
-	@ModelAttribute("programLocationURL")
-	public String getProgramLocation() {
-		return this.fieldbookProperties.getProgramLocationsUrl();
-	}
-
 	@ModelAttribute("projectID")
 	public String getProgramID() {
 		return this.getCurrentProjectId();

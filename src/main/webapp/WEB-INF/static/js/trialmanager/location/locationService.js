@@ -41,31 +41,6 @@
 
 		}]);
 
-	angular.module('manageTrialApp').factory('locationModalService', ['$http', 'studyContext', '$uibModal',
-		function ($http, studyContext, $uibModal) {
-
-			var locationModalService = {};
-
-			// TODO IBP-5633 / IBP-5466
-			locationModalService.openManageLocations = function () {
-				$uibModal.open({
-					templateUrl: '/Fieldbook/static/angular-templates/location/manageLocationsModal.html',
-					windowClass: 'force-zindex', // make sure that the modal is always in front of all modals
-					controller: function ($scope, $uibModalInstance) {
-						$scope.iframeUrl = '/ibpworkbench/content/ProgramLocations?programId=' + studyContext.programId;
-
-						$scope.close = function () {
-							$uibModalInstance.close();
-						}
-					},
-					size: 'window-width'
-				});
-			};
-
-			return locationModalService;
-
-		}]);
-
 	angular.module('manageTrialApp').directive('locationsSelect', ['locationService', function (locationService) {
 		return {
 			restrict: 'EA',

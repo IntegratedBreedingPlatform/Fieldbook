@@ -34,8 +34,6 @@
 			<form id="enterFieldDetailsForm" role="form-horizontal" class="form-horizontal" action="#"
 			th:action="@{/Fieldmap/enterFieldDetails}" method="post" th:object="${fieldmapForm}" enctype="multipart/form-data">
 
-			<input type="hidden" th:field="*{programLocationUrl}"/>
-
 			<div class="form-group col-xs-12 col-md-12" >
 				<strong class="sub-heading col-xs-12 col-md-12" th:text="#{fieldmap.study.to.be.mapped}">STUDY TO BE MAPPED:</strong>
 			</div>

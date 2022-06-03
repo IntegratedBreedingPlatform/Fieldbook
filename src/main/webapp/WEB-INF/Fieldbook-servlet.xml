@@ -108,8 +108,6 @@
 
 	<!-- This bean is singleton (default) scoped because there nothing that it represents which is request scoped. -->
 	<bean id="fieldbookProperties" class="com.efficio.fieldbook.web.util.FieldbookProperties">
-		<property name="programLocationsUrl" value="${url.program.locations}" />
-		<property name="programBreedingMethodsUrl" value="${url.program.breeding.methods}" />
 		<property name="uploadDirectory" value="${upload.directory}" />
 		<property name="maxNumOfSubObsSetsPerStudy" value="${maximum.number.of.sub.observation.sets}" />
 		<property name="maxNumOfSubObsPerParentUnit" value="${maximum.number.of.sub.observation.parent.unit}" />
@@ -608,6 +606,11 @@
 		<aop:scoped-proxy />
     </bean>
 
+	<bean id="programServiceMw"
+			  class="org.generationcp.middleware.api.program.ProgramServiceImpl">
+        <constructor-arg ref="workbenchHibernateSessionProvider"/>
+    </bean>
+
 	<!-- Data Source and Transaction Configuration -->
 
 	<bean id="xaDataSources" class="org.generationcp.middleware.hibernate.XADataSources" />
@@ -642,7 +645,7 @@
 
 	<bean id="managerFactoryProvider"
 		class="org.generationcp.commons.hibernate.DynamicManagerFactoryProviderConcurrency">
-		<constructor-arg ref="workbenchDataManager" />
+		<constructor-arg ref="programServiceMw" />
 		<property name="pedigreeProfile" value="${pedigree.profile}"/>
 	</bean>
 
