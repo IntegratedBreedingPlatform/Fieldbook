@@ -593,6 +593,11 @@
 		<aop:scoped-proxy />
     </bean>
 
+	<bean id="programServiceMw"
+			  class="org.generationcp.middleware.api.program.ProgramServiceImpl">
+        <constructor-arg ref="workbenchHibernateSessionProvider"/>
+    </bean>
+
 	<!-- Data Source and Transaction Configuration -->
 
 	<bean id="xaDataSources" class="org.generationcp.middleware.hibernate.XADataSources" />
@@ -627,7 +632,7 @@
 
 	<bean id="managerFactoryProvider"
 		class="org.generationcp.commons.hibernate.DynamicManagerFactoryProviderConcurrency">
-		<constructor-arg ref="workbenchDataManager" />
+		<constructor-arg ref="programServiceMw" />
 		<property name="pedigreeProfile" value="${pedigree.profile}"/>
 	</bean>
 
