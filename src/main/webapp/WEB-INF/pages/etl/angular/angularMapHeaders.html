@@ -16,6 +16,7 @@
 		var germplasmList = /*[[${germplasmList}]]*/ '';
 		var trialDesignList = /*[[${trialDesignList}]]*/ '';
 		var variateList = /*[[${variateList}]]*/ '';
+        var entryDetailList = /*[[${entryDetailList}]]*/ '';
 		var roleList = /*[[${roleList}]]*/ '';
 		var dsType = /*[[${datasetType}]]*/ '';
 		var errorUnmappedVariables = /*[[#{error.unmapped.variables}]]*/ '';
@@ -249,6 +250,35 @@
                 </div>
                 <div class="panel-collapse collapse in list-group" id="collapseFour" ui-multi-sortable="" ui-options="uiSortOptsExt" ng:model="mappingdata" data-phenotype="variate" model-subset="variate">
                     <div class="list-group-item" ng:class="{'list-group-item-danger' : header.hasError }" ng:repeat="header in mappingdata.variate" data-empty="{{previewMode}}">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h3 class="list-group-item-heading pull-left">{{header.headerName}} <span class="glyphicon glyphicon-arrow-right"></span> {{ header.alias || header.variable}} <small class="text-info">{{getOntologySuffix(header.id)}}</small></h3>
+                                <a class="btn btn-primary btn-xs pull-right" ng:show="!previewMode" ng:click="performRemap(header, 'variate')" ng:class="{'btn-info' : header.variable &amp;&amp; !header.hasError, 'btn-danger' : !header.variable || header.hasError}" ><span ng:class="{'glyphicon glyphicon-link' : header.variable &amp;&amp; !header.hasError, 'fa fa-warning' : !header.variable || header.hasError}"></span>&nbsp;<span ng:bind="computeButtonLabel(header)">Re-map</span></a>
+                            </div>
+                        </div>
+                        <div class="row list-group-item-text">
+                            <div class="col-sm-4">
+                                <b>Property: </b> {{header.property}} <small class="text-info">{{getOntologySuffix(header.propertyId)}}</small>
+                            </div>
+                            <div class="col-sm-4">
+                                <b>Scale: </b> {{header.scale}} <small class="text-info">{{getOntologySuffix(header.scaleId)}}</small>
+                            </div>
+                            <div class="col-sm-4">
+                                <b>Method: </b>{{header.method}} <small class="text-info">{{getOntologySuffix(header.methodId)}}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <b class="panel-title">
+                        <a data-toggle="collapse" href="#collapseFour">Entry details</a>
+                        <span class="badge-info counter" style="float:right">{{mappingdata.entryDetail.length}}</span>
+                    </b>
+                </div>
+                <div class="panel-collapse collapse in list-group" id="collapseFour" ui-multi-sortable="" ui-options="uiSortOptsExt" ng:model="entryDetail" data-phenotype="entryDetail" model-subset="entryDetail">
+                    <div class="list-group-item" ng:class="{'list-group-item-danger' : header.hasError }" ng:repeat="header in mappingdata.entryDetail" data-empty="{{previewMode}}">
                         <div class="row">
                             <div class="col-sm-12">
                                 <h3 class="list-group-item-heading pull-left">{{header.headerName}} <span class="glyphicon glyphicon-arrow-right"></span> {{ header.alias || header.variable}} <small class="text-info">{{getOntologySuffix(header.id)}}</small></h3>

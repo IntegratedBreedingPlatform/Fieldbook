@@ -137,11 +137,13 @@ public class ETLServiceImpl implements ETLService {
 		phenoTypicKey.add(PhenotypicType.GERMPLASM);
 		phenoTypicKey.add(PhenotypicType.TRIAL_DESIGN);
 		phenoTypicKey.add(PhenotypicType.VARIATE);
+		phenoTypicKey.add(PhenotypicType.ENTRY_DETAIL);
 		final Iterator<PhenotypicType> iter = phenoTypicKey.iterator();
 
 		final List<MeasurementVariable> conditions = new ArrayList<>();
 		final List<MeasurementVariable> factors = new ArrayList<>();
 		final List<MeasurementVariable> variates = new ArrayList<>();
+		final List<MeasurementVariable> entryDetails = new ArrayList<>();
 
 		// loop to all phenotypickeys in the giant Hashmap
 		while (iter.hasNext()) {
@@ -168,6 +170,8 @@ public class ETLServiceImpl implements ETLService {
 					factors.add(mv);
 				} else if (PhenotypicType.VARIATE.compareTo(pheno) == 0) {
 					variates.add(mv);
+				} else if (PhenotypicType.ENTRY_DETAIL.compareTo(pheno) == 0) {
+					entryDetails.add(mv);
 				}
 			}
 		}
@@ -175,6 +179,7 @@ public class ETLServiceImpl implements ETLService {
 		wb.setConditions(conditions);
 		wb.setFactors(factors);
 		wb.setVariates(variates);
+		wb.setEntryDetails(entryDetails);
 
 		wb.setConstants(null);
 
@@ -378,10 +383,11 @@ public class ETLServiceImpl implements ETLService {
 		final Map<PhenotypicType, List<VariableDTO>> returnVal = new HashMap<>();
 		// initialize return variable to ensure non null lists
 		returnVal.put(null, new ArrayList<VariableDTO>());
-		returnVal.put(PhenotypicType.TRIAL_ENVIRONMENT, new ArrayList<VariableDTO>());
-		returnVal.put(PhenotypicType.TRIAL_DESIGN, new ArrayList<VariableDTO>());
-		returnVal.put(PhenotypicType.GERMPLASM, new ArrayList<VariableDTO>());
-		returnVal.put(PhenotypicType.VARIATE, new ArrayList<VariableDTO>());
+		returnVal.put(PhenotypicType.TRIAL_ENVIRONMENT, new ArrayList<>());
+		returnVal.put(PhenotypicType.TRIAL_DESIGN, new ArrayList<>());
+		returnVal.put(PhenotypicType.GERMPLASM, new ArrayList<>());
+		returnVal.put(PhenotypicType.VARIATE, new ArrayList<>());
+		returnVal.put(PhenotypicType.ENTRY_DETAIL, new ArrayList<>());
 
 		try {
 			final Map<String, List<StandardVariable>> variables = this.ontologyDataManager

@@ -139,6 +139,9 @@ public class VariableDTO {
 				case VARIATE:
 					mappedPhenotype = AppConstants.TYPE_VARIATE;
 					break;
+				case ENTRY_DETAIL:
+					mappedPhenotype = AppConstants.TYPE_ENTRY_DETAIL;
+					break;
 				default:
 					break;
 			}
@@ -283,6 +286,8 @@ public class VariableDTO {
 				return PhenotypicType.GERMPLASM;
 			} else if (AppConstants.TYPE_VARIATE.equals(this.phenotype)) {
 				return PhenotypicType.VARIATE;
+			} else if (AppConstants.TYPE_ENTRY_DETAIL.equals(this.phenotype)) {
+				return PhenotypicType.ENTRY_DETAIL;
 			}
 		}
 		return null;

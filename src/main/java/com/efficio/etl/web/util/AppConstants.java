@@ -15,4 +15,6 @@ public class AppConstants {
 	public static final String TYPE_TRIAL_DESIGN = "trialDesign";
 	public static final String TYPE_VARIATE = "variate";
 	public static final String TYPE_GERMPLASM_ENTRY = "germplasmEntry";
+	public static final String TYPE_ENTRY_DETAIL = "entryDetail";
+
 }

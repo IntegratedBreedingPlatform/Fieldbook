@@ -16,6 +16,7 @@
 			$scope.mappingdata.germplasm = germplasmList;
 			$scope.mappingdata.trialDesign = trialDesignList;
 			$scope.mappingdata.variate = variateList;
+			$scope.mappingdata.entryDetail = entryDetailList;
 			$scope.serverMessages = [];
 			$scope.errorMessages = {};
 			$scope.errorMessages.CONTAINS_UNMAPPED = errorUnmappedVariables;
@@ -170,7 +171,10 @@
 
 				$scope.serverMessages = [];
 
-				var postData = $scope.mappingdata.germplasm.concat($scope.mappingdata.trialDesign).concat($scope.mappingdata.trialEnvironment).concat($scope.mappingdata.variate);
+				var postData = $scope.mappingdata.germplasm.concat($scope.mappingdata.trialDesign)
+					.concat($scope.mappingdata.trialEnvironment)
+					.concat($scope.mappingdata.variate)
+					.concat($scope.mappingdata.entryDetail);
 
 				myHttp.post(APPLICATION_BASE + '/etl/workbook/mapOntology', postData).then(function (response) {
 					$scope.previewMode = true;
