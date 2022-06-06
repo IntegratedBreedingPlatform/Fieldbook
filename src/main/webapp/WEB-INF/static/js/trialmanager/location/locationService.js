@@ -31,7 +31,7 @@
 			};
 
 			locationService.getBreedingLocationDefault = function () {
-				var request = $http.get(BASE_URL + '/programs/' + studyContext.programId + '/locations/breeding-location-default');
+				var request = $http.get(BASE_URL + '/programs/' + studyContext.programId + '/locations/default/BREEDING_LOCATION');
 				return request.then(((response) => {
 					return response;
 				}), failureHandler);

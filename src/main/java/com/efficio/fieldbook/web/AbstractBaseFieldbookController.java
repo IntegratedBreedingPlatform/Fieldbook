@@ -177,7 +177,7 @@ public abstract class AbstractBaseFieldbookController {
 	}
 
 	protected Integer getProgramDefaultLocationId() {
-		final LocationDTO defaultLocation = this.locationService.getBreedingLocationDefault(this.contextUtil.getCurrentProgramUUID());
+		final LocationDTO defaultLocation = this.locationService.getDefaultBreedingLocation(this.contextUtil.getCurrentProgramUUID());
 		if (defaultLocation != null) {
 			return defaultLocation.getId();
 		} else {

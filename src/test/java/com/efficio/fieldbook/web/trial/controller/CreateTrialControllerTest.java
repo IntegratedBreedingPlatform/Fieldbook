@@ -94,7 +94,7 @@ public class CreateTrialControllerTest {
 				.getLocationsByName(Location.UNSPECIFIED_LOCATION, Operation.EQUAL);
 		final LocationDTO locationDTO = new LocationDTO();
 		locationDTO.setId(this.defaultLocationId);
-		Mockito.doReturn(locationDTO).when(this.locationService).getBreedingLocationDefault(CreateTrialControllerTest.PROGRAM_UUID);
+		Mockito.doReturn(locationDTO).when(this.locationService).getDefaultBreedingLocation(CreateTrialControllerTest.PROGRAM_UUID);
 
 	}
 
@@ -265,7 +265,7 @@ public class CreateTrialControllerTest {
 			.getStandardVariable(ArgumentMatchers.anyInt(), ArgumentMatchers.eq(CreateTrialControllerTest.PROGRAM_UUID));
 		Mockito.doReturn(new ArrayList<>()).when(this.locationDataManager)
 			.getLocationsByName(Location.UNSPECIFIED_LOCATION, Operation.EQUAL);
-		Mockito.doReturn(null).when(this.locationService).getBreedingLocationDefault(CreateTrialControllerTest.PROGRAM_UUID);
+		Mockito.doReturn(null).when(this.locationService).getDefaultBreedingLocation(CreateTrialControllerTest.PROGRAM_UUID);
 
 		final TabInfo tabInfo = this.controller.prepareEnvironmentsTabInfo(true);
 		final InstanceInfo instanceInfo = (InstanceInfo) tabInfo.getData();
