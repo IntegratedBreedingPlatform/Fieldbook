@@ -73,6 +73,7 @@ public class StandardVariableRESTController {
 		StandardVariableRESTController.PLOT_DATA_VARIABLE_FILTER.addVariableType(VariableType.ENVIRONMENT_CONDITION);
 		StandardVariableRESTController.PLOT_DATA_VARIABLE_FILTER.addVariableType(VariableType.SELECTION_METHOD);
 		StandardVariableRESTController.PLOT_DATA_VARIABLE_FILTER.addVariableType(VariableType.TRAIT);
+		StandardVariableRESTController.PLOT_DATA_VARIABLE_FILTER.addVariableType(VariableType.ENTRY_DETAIL);
 
 		StandardVariableRESTController.VARIABLE_FILTER_MAP.put(
 			DatasetTypeEnum.MEANS_DATA.getId(),

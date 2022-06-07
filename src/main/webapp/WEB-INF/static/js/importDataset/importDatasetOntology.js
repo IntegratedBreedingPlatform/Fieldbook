@@ -271,6 +271,8 @@
 					return $scope.mappingdata.variate;
 				} else if (phenotypicType === 'germplasmEntry') {
 					return $scope.mappingdata.germplasm;
+				} else if (phenotypicType === 'entryDetail') {
+					return $scope.mappingdata.entryDetail;
 				}
 			};
 
@@ -528,8 +530,6 @@
 
 				// ONTOLOGY INTEGRATION CALLBACKS
 				$scope.performOntologyVariableUpdate = function (standardVariable) {
-					console.log("IM HERE>> $scope.performOntologyVariableUpdate");
-
 					if (standardVariable === undefined || standardVariable.status === undefined) return;
 					switch (standardVariable.status) {
 						case "ADD":
@@ -602,6 +602,9 @@
 								case "TRIAL_ENVIRONMENT":
 									phenotype = "trialEnvironment";
 									break;
+								case "ENTRY_DETAIL":
+									phenotype = "entryDetail";
+									break;
 							}
 							return false;
 						}
@@ -613,14 +616,9 @@
 				}
 
 				var applyOntologyManageVariableUpdate = function (standardVariable, options) {
-					console.log("I am called!");
-
 					// access angularJS MapHeadersJSController scope
 					if ($("#mappingForm").length > 0)
 						window.angular.element("#mappingForm").scope().$parent.$apply(function (_scope) {
-							console.log("apply is called");
-							console.log(standardVariable);
-
 							_scope.performOntologyVariableUpdate(standardVariable);
 
 						});
@@ -644,7 +642,8 @@
 						{name: 'Trial Environment', value: 'trialEnvironment'},
 						{name: 'Germplasm Entry', value: 'germplasmEntry'},
 						{name: 'Trial Design', value: 'trialDesign'},
-						{name: 'Variate', value: 'variate'}
+						{name: 'Variate', value: 'variate'},
+						{name: 'Entry Detail', value: 'entryDetail'}
 					]
 				},
 
