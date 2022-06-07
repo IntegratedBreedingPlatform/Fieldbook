@@ -240,7 +240,10 @@
 			$scope.performSaveOntologyHeaderMapping = function () {
 				$scope.serverMessages = [];
 
-				var postData = $scope.mappingdata.germplasm.concat($scope.mappingdata.trialDesign).concat($scope.mappingdata.trialEnvironment).concat($scope.mappingdata.variate);
+				var postData = $scope.mappingdata.germplasm.concat($scope.mappingdata.trialDesign)
+					.concat($scope.mappingdata.trialEnvironment)
+					.concat($scope.mappingdata.variate)
+					.concat($scope.mappingdata.entryDetail);
 
 				myHttp.post(APPLICATION_BASE + "/etl/workbook/mapOntology/confirm/" + $scope.advancedOptions.maintainHeaderNaming, postData).then(function (response) {
 					if (response.data.success) {
