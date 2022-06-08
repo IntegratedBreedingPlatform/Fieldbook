@@ -181,7 +181,7 @@
 								function doAjaxUpdate() {
 									if ((!$scope.isPendingView && cellData.value === $inlineScope.observation.value)
 										|| ($scope.isPendingView && cellData.draftValue === $inlineScope.observation.value)) {
-										return $q.resolve(cellData);
+										return $q.resolve(cellData ? cellData.studyEntryPropertyId : null);
 									}
 
 									var value = cellData.value;
@@ -205,7 +205,7 @@
 										return confirmOutOfBoundData(value, columnData).then(function (doContinue) {
 											if (!doContinue) {
 												$inlineScope.observation.value = cellData.value;
-												return {studyEntryPropertyId: cellData.studyEntryPropertyId};
+												return cellData.studyEntryPropertyId;
 											}
 											return studyEntryObservationService.updateObservation({
 												stockId: rowData.entryId,
@@ -220,8 +220,7 @@
 										return confirmOutOfBoundData(value, columnData).then(function (doContinue) {
 											if (!doContinue) {
 												$inlineScope.observation.value = cellData.value;
-												$inlineScope.observation.value = cellData.value;
-												return {observationId: cellData.observationId};
+												return cellData.studyEntryPropertyId;
 											}
 											return studyEntryObservationService.addObservation({
 												stockId: rowData.entryId,
@@ -237,7 +236,7 @@
 
 								var promise = doAjaxUpdate();
 
-								promise.then(function (data) {
+								promise.then(function (studyEntryPropertyId) {
 									var valueChanged = false;
 									if (cellData.value !== $inlineScope.observation.value) {
 										valueChanged = true;
@@ -249,8 +248,7 @@
 										cellData.value = $inlineScope.observation.value;
 									}
 
-									cellData.observationId = data.observationId;
-									cellData.status = data.status;
+									cellData.studyEntryPropertyId = Number.isFinite(studyEntryPropertyId) ? studyEntryPropertyId : undefined;
 
 									$inlineScope.$destroy();
 									editor.remove();
