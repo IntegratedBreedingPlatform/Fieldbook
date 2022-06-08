@@ -112,7 +112,6 @@ public class StudyEntryTransformer {
 						return studyEntryDto.getStudyEntryPropertyValue(TermId.SEED_SOURCE.getId()).orElse("");
 					}
 
-					@Override
 					public String getDesignation() {
 						return studyEntryDto.getDesignation();
 					}
