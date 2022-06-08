@@ -573,7 +573,6 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 			// Create list data items to save - Map<Germplasm,
 			// GermplasmListData>
 			final String seedSource = importedCross.getSource();
-			final String designation = importedCross.getDesig();
 			final String notes = importedCross.getNotes();
 			final Integer crossingDate = importedCross.getCrossingDate();
 			String groupName = importedCross.getCross();

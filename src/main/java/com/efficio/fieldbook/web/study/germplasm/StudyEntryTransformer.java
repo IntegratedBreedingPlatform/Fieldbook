@@ -94,7 +94,7 @@ public class StudyEntryTransformer {
 
 					@Override
 					public String getCheckTypeDescription() {
-						return checkTypesDescriptionMap.getOrDefault(getCheckType(), "");
+						return checkTypesDescriptionMap.getOrDefault(this.getCheckType(), "");
 					}
 
 					@Override
