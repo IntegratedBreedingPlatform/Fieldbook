@@ -39,7 +39,7 @@
 					tableRenderedResolve = resolve;
 				});
 
-				$scope.generationLevel = TrialManagerDataService.generationLevel() ? TrialManagerDataService.generationLevel() : 1;
+				$scope.generationLevel = getGenerationLevel();
 				$scope.generationLevels = Array.from(Array(10).keys()).map((k) => k + 1);
 
 				loadTable();
@@ -48,6 +48,12 @@
 				$rootScope.$on("reloadStudyEntryTableData", function(setShowValues){
 					$scope.reloadStudyEntryTableData(setShowValues);
 				});
+
+				function getGenerationLevel() {
+					studyEntryService.getCrossLevelGeneration().then(function (level) {
+						$scope.generationLevel = level ? level : 1;
+					});
+				}
 
 				function loadStudyEntryColumns() {
 					studyEntryService.getStudyEntriesColumns().then(function (columnsData) {

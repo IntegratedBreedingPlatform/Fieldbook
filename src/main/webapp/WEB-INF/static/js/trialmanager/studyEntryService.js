@@ -86,6 +86,11 @@
 			return request.then(successHandler, failureHandler);
 		};
 
+		studyEntryService.getCrossLevelGeneration = function (generationLevel) {
+			var request = $http.get(BASE_STUDY_URL + studyContext.studyId + '/pedigree-generation-level');
+			return request.then(successHandler, failureHandler);
+		};
+
 		studyEntryService.getStudyEntriesColumns = function() {
 			var request = $http.get(BASE_STUDY_URL + studyContext.studyId + '/entries/columns');
 			return request.then(successHandler, failureHandler);

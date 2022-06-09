@@ -28,7 +28,6 @@ public class BasicDetails implements TabInfoBean {
 	private String studyName;
 	private String createdBy;  
 	private Boolean isLocked;
-	private Integer generationLevel;
 
 	public BasicDetails() {
 		this.basicDetails = new HashMap<>();
@@ -165,11 +164,4 @@ public class BasicDetails implements TabInfoBean {
 		this.isLocked = isLocked;
 	}
 
-	public Integer getGenerationLevel() {
-		return generationLevel;
-	}
-
-	public void setGenerationLevel(final Integer generationLevel) {
-		this.generationLevel = generationLevel;
-	}
 }
