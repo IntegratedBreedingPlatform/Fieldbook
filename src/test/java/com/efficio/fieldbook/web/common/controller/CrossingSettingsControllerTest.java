@@ -492,8 +492,7 @@ public class CrossingSettingsControllerTest {
 		final List<GermplasmListData> germplasmListDatas = new ArrayList<>();
 		final GermplasmList germplasmList = new GermplasmList();
 		final GermplasmListData germplasmListData = new GermplasmListData(771, germplasmList, 45, CrossingSettingsControllerTest.ENTRY_ID,
-				CrossingSettingsControllerTest.TEST_ENTRY_CODE, CrossingSettingsControllerTest.TEST_SEED_SOURCE, "testDesignation",
-				"testGroupName", 0, 5);
+				CrossingSettingsControllerTest.TEST_ENTRY_CODE, CrossingSettingsControllerTest.TEST_SEED_SOURCE,"testGroupName", 0, 5);
 		germplasmListData.addMaleParent(new GermplasmParent(CrossingSettingsControllerTest.MGID1, CrossingSettingsControllerTest.TEST_MALE_PARENT1, CrossingSettingsControllerTest.MALE_PEDIGREE1));
 		germplasmListData.setFemaleParent(new GermplasmParent(CrossingSettingsControllerTest.FGID, CrossingSettingsControllerTest.TEST_FEMALE_PARENT, CrossingSettingsControllerTest.FEMALE_PEDIGREE));
 

@@ -265,6 +265,11 @@
 		<aop:scoped-proxy />
 	</bean>
 
+	<bean id="germplasmNameService" factory-bean="managerFactory"
+		  factory-method="getGermplasmNameService" scope="request">
+		<aop:scoped-proxy />
+	</bean>
+
 	<bean id="termDataManager" factory-bean="managerFactory"
 		factory-method="getTermDataManager" scope="request">
 		<aop:scoped-proxy />
