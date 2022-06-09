@@ -143,12 +143,12 @@ public class ReviewStudyDetailsControllerTest extends AbstractBaseIntegrationTes
 		final CreateTrialForm form = new CreateTrialForm();
 		final Model model = new ExtendedModelMap();
 		final List<ValueReference> allEntries = this.getAllEntries(5, 3, 5);
-		final List<String> checksEntries = this.getAllCheckEntryTypeIds(allEntries);
+		final List<Integer> checksEntries = this.getAllCheckEntryTypeIds(allEntries);
 
 		Mockito.when(this.fieldbookService.getAllPossibleValues(TermId.ENTRY_TYPE.getId(), true)).thenReturn(allEntries);
 		Mockito.doReturn(5L).when(this.studyEntryService).countStudyGermplasmByEntryTypeIds(id, checksEntries);
 		Mockito.doReturn(3L).when(this.studyEntryService).countStudyGermplasmByEntryTypeIds(id,
-				Collections.singletonList(String.valueOf(SystemDefinedEntryType.NON_REPLICATED_ENTRY.getEntryTypeCategoricalId())));
+				Collections.singletonList(Integer.valueOf(SystemDefinedEntryType.NON_REPLICATED_ENTRY.getEntryTypeCategoricalId())));
 		this.reviewStudyDetailsController.show(id, form, model);
 
 		final StudyDetails details = (StudyDetails) model.asMap().get("trialDetails");
@@ -177,7 +177,7 @@ public class ReviewStudyDetailsControllerTest extends AbstractBaseIntegrationTes
 		final CreateTrialForm form = new CreateTrialForm();
 		final Model model = new ExtendedModelMap();
 		final List<ValueReference> allEntries = this.getAllEntries(5, 0, 5);
-		final List<String> checksEntries = this.getAllCheckEntryTypeIds(allEntries);
+		final List<Integer> checksEntries = this.getAllCheckEntryTypeIds(allEntries);
 
 		Mockito.when(this.fieldbookService.getAllPossibleValues(TermId.ENTRY_TYPE.getId(), true)).thenReturn(allEntries);
 		Mockito.doReturn(5L).when(this.studyEntryService).countStudyGermplasmByEntryTypeIds(id, checksEntries);
@@ -252,12 +252,12 @@ public class ReviewStudyDetailsControllerTest extends AbstractBaseIntegrationTes
 		final CreateTrialForm form = new CreateTrialForm();
 		final Model model = new ExtendedModelMap();
 		final List<ValueReference> allEntries = this.getAllEntries(5, 3, 5);
-		final List<String> checksEntries = this.getAllCheckEntryTypeIds(allEntries);
+		final List<Integer> checksEntries = this.getAllCheckEntryTypeIds(allEntries);
 
 		Mockito.when(this.fieldbookService.getAllPossibleValues(TermId.ENTRY_TYPE.getId(), true)).thenReturn(allEntries);
 		Mockito.doReturn(5L).when(this.studyEntryService).countStudyGermplasmByEntryTypeIds(id, checksEntries);
 		Mockito.doReturn(3L).when(this.studyEntryService).countStudyGermplasmByEntryTypeIds(id,
-				Collections.singletonList(String.valueOf(SystemDefinedEntryType.NON_REPLICATED_ENTRY.getEntryTypeCategoricalId())));
+				Collections.singletonList(Integer.valueOf(SystemDefinedEntryType.NON_REPLICATED_ENTRY.getEntryTypeCategoricalId())));
 		this.reviewStudyDetailsController.show(id, form, model);
 
 		final StudyDetails details = (StudyDetails) model.asMap().get("trialDetails");
@@ -324,11 +324,11 @@ public class ReviewStudyDetailsControllerTest extends AbstractBaseIntegrationTes
 		return references;
 	}
 
-	private List<String> getAllCheckEntryTypeIds(final List<ValueReference> valueReferences) {
-		final ArrayList<String> ids = new ArrayList<>();
+	private List<Integer> getAllCheckEntryTypeIds(final List<ValueReference> valueReferences) {
+		final ArrayList<Integer> ids = new ArrayList<>();
 		for (final ValueReference valueReference : valueReferences) {
 			if (SystemDefinedEntryType.TEST_ENTRY.getEntryTypeCategoricalId() != valueReference.getId()) {
-				ids.add(String.valueOf(valueReference.getId()));
+				ids.add(valueReference.getId());
 			}
 		}
 		return ids;

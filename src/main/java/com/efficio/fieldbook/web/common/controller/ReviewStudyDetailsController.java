@@ -307,7 +307,7 @@ public class ReviewStudyDetailsController extends AbstractBaseFieldbookControlle
 	private Optional<Long> getNonReplicatedEntriesCount(final StudyDetails studyDetails) {
 		if (TermId.P_REP.getId() == this.getExperimentalDesignValue(studyDetails)) {
 			return Optional.of(this.studyEntryService.countStudyGermplasmByEntryTypeIds(studyDetails.getId(),
-					Collections.singletonList(String.valueOf(SystemDefinedEntryType.NON_REPLICATED_ENTRY.getEntryTypeCategoricalId()))));
+					Collections.singletonList(Integer.valueOf(SystemDefinedEntryType.NON_REPLICATED_ENTRY.getEntryTypeCategoricalId()))));
 		}
 		return Optional.empty();
 	}
