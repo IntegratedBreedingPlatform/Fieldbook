@@ -185,12 +185,12 @@ public abstract class AbstractBaseFieldbookController {
 		}
 	}
 
-	protected List<String> getAllCheckEntryTypeIds() {
+	protected List<Integer> getAllCheckEntryTypeIds() {
 		final List<ValueReference> entryTypes = this.fieldbookService.getAllPossibleValues(TermId.ENTRY_TYPE.getId(), true);
-		final List<String> checkEntryTypeIds = new ArrayList<>();
+		final List<Integer> checkEntryTypeIds = new ArrayList<>();
 		for (final ValueReference entryType : entryTypes) {
 			if (SystemDefinedEntryType.TEST_ENTRY.getEntryTypeCategoricalId() != entryType.getId()) {
-				checkEntryTypeIds.add(entryType.getId().toString());
+				checkEntryTypeIds.add(entryType.getId());
 			}
 		}
 		return checkEntryTypeIds;
