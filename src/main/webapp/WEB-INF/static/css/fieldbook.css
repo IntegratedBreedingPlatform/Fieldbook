@@ -240,12 +240,16 @@ table.dataTable.table-sorted thead th.sorting_desc {
     background: #c8c6c6 url('../img/datatable/sort_desc.png') no-repeat center right;
 }
 
+#entriesTableContainer table.dataTable.table-sorted thead th,
 #subObservationTableContainer table.dataTable.table-sorted thead th.factors.sorting,
 #subObservationTableContainer table.dataTable.table-sorted thead th.factors.sorting_asc,
 #subObservationTableContainer table.dataTable.table-sorted thead th.factors.sorting_desc {
     background-color: #a4a4a4;
 }
 
+#entriesTableContainer table.dataTable.table-sorted thead th.editable {
+    background-color: #c2c3c4;
+}
 
 .pagination {
     font-size: 10px;
