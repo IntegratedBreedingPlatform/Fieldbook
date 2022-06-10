@@ -573,7 +573,6 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 			// Create list data items to save - Map<Germplasm,
 			// GermplasmListData>
 			final String seedSource = importedCross.getSource();
-			final String designation = importedCross.getDesig();
 			final String notes = importedCross.getNotes();
 			final Integer crossingDate = importedCross.getCrossingDate();
 			String groupName = importedCross.getCross();
@@ -596,7 +595,7 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 			}
 
 			final GermplasmListData listData =
-				this.createGermplasmListData(germplasmList, gid, entryNumber, String.valueOf(entryNumber), seedSource, designation, notes,
+				this.createGermplasmListData(germplasmList, gid, entryNumber, String.valueOf(entryNumber), seedSource, notes,
 					crossingDate,
 					groupName, listDataId, listDataStatus, localRecordId);
 
@@ -611,9 +610,9 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 	}
 
 	private GermplasmListData createGermplasmListData(final GermplasmList germplasmList, final Integer gid, final Integer entryId,
-		final String entryCode, final String seedSource, final String designation, final String notes, final Integer crossingDate,
+		final String entryCode, final String seedSource, final String notes, final Integer crossingDate,
 		final String groupName, final Integer listDataId, final Integer listDataStatus, final Integer localRecordId) {
-		return new GermplasmListData(listDataId, germplasmList, gid, entryId, entryCode, seedSource, designation, groupName, listDataStatus,
+		return new GermplasmListData(listDataId, germplasmList, gid, entryId, entryCode, seedSource, groupName, listDataStatus,
 			localRecordId, notes, crossingDate);
 	}
 
@@ -703,7 +702,7 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 
 			final GermplasmListData listData =
 				new GermplasmListData(listDataId, germplasmList, gid, importedGermplasm.getEntryNumber(), importedGermplasm.getEntryCode(),
-					importedGermplasm.getSource(), importedGermplasm.getDesig(), groupName, 0, 0);
+					importedGermplasm.getSource(), groupName, 0, 0);
 
 			listDataItems.add(new ImmutablePair<>(germplasm, listData));
 

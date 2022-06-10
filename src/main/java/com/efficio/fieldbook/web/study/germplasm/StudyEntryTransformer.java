@@ -94,7 +94,7 @@ public class StudyEntryTransformer {
 
 					@Override
 					public String getCheckTypeDescription() {
-						return checkTypesDescriptionMap.getOrDefault(getCheckType(), "");
+						return checkTypesDescriptionMap.getOrDefault(this.getCheckType(), "");
 					}
 
 					@Override
@@ -112,7 +112,6 @@ public class StudyEntryTransformer {
 						return studyEntryDto.getStudyEntryPropertyValue(TermId.SEED_SOURCE.getId()).orElse("");
 					}
 
-					@Override
 					public String getDesignation() {
 						return studyEntryDto.getDesignation();
 					}
