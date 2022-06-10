@@ -504,9 +504,11 @@
 								columnData.possibleValuesById[possibleValue.id] = possibleValue;
 							});
 							// waiting for https://github.com/angular-ui/ui-select/issues/152
-							columnData.possibleValues.unshift({
-								name: '', displayValue: 'Please Choose', displayDescription: 'Please Choose'
-							});
+							if (columnData.termId !== 8255) {
+								columnData.possibleValues.unshift({
+									name: '', displayValue: 'Please Choose', displayDescription: 'Please Choose'
+								});
+							}
 						}
 						columnData.index = index;
 
