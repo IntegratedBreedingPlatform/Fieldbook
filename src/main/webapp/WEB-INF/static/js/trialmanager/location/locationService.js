@@ -30,8 +30,8 @@
 				}), failureHandler);
 			};
 
-			locationService.getDefaultLocation = function () {
-				var request = $http.get(BASE_URL + '/programs/' + studyContext.programId + '/locations/default');
+			locationService.getDefaultBreedingLocation = function () {
+				var request = $http.get(BASE_URL + '/programs/' + studyContext.programId + '/locations/default/BREEDING_LOCATION');
 				return request.then(((response) => {
 					return response;
 				}), failureHandler);
@@ -65,7 +65,7 @@
 					// Get the default location in the program
 					// and set it as default selected item in the dropdown.
 					if ($scope.valuecontainer[$scope.targetkey] === null) {
-						locationService.getDefaultLocation().then((response) => {
+						locationService.getDefaultBreedingLocation().then((response) => {
 							if (response && response.data) {
 								$scope.defaultLocation = response.data;
 								$scope.$applyAsync(function () {
