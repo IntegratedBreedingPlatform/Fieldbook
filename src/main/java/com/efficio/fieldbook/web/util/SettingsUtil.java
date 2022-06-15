@@ -1584,9 +1584,11 @@ public class SettingsUtil {
 	private static void removeTrialConditions(final List<Integer> ids, final Workbook workbook) {
 
 		if (workbook.getTrialConditions() != null && !workbook.getTrialConditions().isEmpty()) {
-			for (final MeasurementVariable var : workbook.getConditions()) {
-				if (ids.contains(var.getTermId())) {
-					var.setOperation(Operation.DELETE);
+			Iterator<MeasurementVariable> iter = workbook.getConditions().iterator();
+			while (iter.hasNext()) {
+				final MeasurementVariable measurementVariable = iter.next();
+				if (ids.contains(measurementVariable.getTermId())) {
+					iter.remove();
 				}
 			}
 		}
