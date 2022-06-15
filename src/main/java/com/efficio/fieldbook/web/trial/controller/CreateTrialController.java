@@ -363,6 +363,8 @@ public class CreateTrialController extends BaseTrialController {
 			try {
 				final SettingDetail detail =
 					this.createSettingDetail(initialSettingID, null, VariableType.ENTRY_DETAIL.getRole().name());
+				detail.setDeletable(false);
+				detail.getVariable().setOperation(Operation.UPDATE);
 				initialDetailList.add(detail);
 			} catch (final MiddlewareException e) {
 				CreateTrialController.LOG.error(e.getMessage(), e);
