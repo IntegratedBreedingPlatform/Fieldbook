@@ -33,9 +33,17 @@ import org.generationcp.middleware.service.api.study.StudyEntryService;
 import org.springframework.context.MessageSource;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 public class DesignImportServiceImpl implements DesignImportService {
 
@@ -223,23 +231,22 @@ public class DesignImportServiceImpl implements DesignImportService {
 			}
 		}
 
-		// Add the germplasm factors that exist from csv file header
-		measurementVariables.addAll(this.extractMeasurementVariable(PhenotypicType.GERMPLASM, mappedHeaders));
+		// Add the variates from the added traits in workbook
+		measurementVariables.addAll(workbook.getVariates());
 
-		// Add the germplasm factors excluding OBS_UNIT_ID
-		measurementVariables.addAll(
-			workbook.getGermplasmFactors().stream().filter(measurementVariable ->
-				TermId.OBS_UNIT_ID.getId() != measurementVariable.getTermId()
-			).collect(Collectors.toList()));
+		measurementVariables.addAll(workbook.getFactors());
+
+		// Add the germplasm factors that exist from csv file header
+		this.extractMeasurementVariable(measurementVariables, PhenotypicType.GERMPLASM, mappedHeaders);
 
 		// Add the entry details that exist from csv file header
-		measurementVariables.addAll(this.extractMeasurementVariable(PhenotypicType.ENTRY_DETAIL, mappedHeaders));
+		this.extractMeasurementVariable(measurementVariables, PhenotypicType.ENTRY_DETAIL, mappedHeaders);
 
 		// Add the design factors that exists from csv file header
-		measurementVariables.addAll(this.extractMeasurementVariable(PhenotypicType.TRIAL_DESIGN, mappedHeaders));
+		this.extractMeasurementVariable(measurementVariables, PhenotypicType.TRIAL_DESIGN, mappedHeaders);
 
 		// Add the variates that exist from csv file header
-		measurementVariables.addAll(this.extractMeasurementVariable(PhenotypicType.VARIATE, mappedHeaders));
+		this.extractMeasurementVariable(measurementVariables, PhenotypicType.VARIATE, mappedHeaders);
 
 		return measurementVariables;
 	}
@@ -422,6 +429,17 @@ public class DesignImportServiceImpl implements DesignImportService {
 		}
 
 		return measurementVariables;
+	}
+
+	public void extractMeasurementVariable(final Set<MeasurementVariable> measurementVariables, final PhenotypicType phenotypicType,
+		final Map<PhenotypicType, List<DesignHeaderItem>> mappedHeaders) {
+		for (final DesignHeaderItem designHeaderItem : mappedHeaders.get(phenotypicType)) {
+			final MeasurementVariable measurementVariable = ExpDesignUtil.convertStandardVariableToMeasurementVariable(designHeaderItem.getVariable(), Operation.ADD, this.fieldbookService);
+			measurementVariable.setName(designHeaderItem.getName());
+			if (!measurementVariables.contains(measurementVariable)) {
+				measurementVariables.add(measurementVariable);
+			}
+		}
 	}
 
 	protected Map<Integer, StandardVariable> convertToStandardVariables(final List<MeasurementVariable> list,
