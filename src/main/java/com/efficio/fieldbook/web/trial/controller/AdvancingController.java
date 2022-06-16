@@ -603,20 +603,6 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 		return tableHeaderList;
 	}
 
-	private List<StandardVariableReference> filterVariablesByProperty(final List<SettingDetail> variables, final String propertyName) {
-		final List<StandardVariableReference> list = new ArrayList<>();
-		if (variables != null && !variables.isEmpty()) {
-			for (final SettingDetail detail : variables) {
-				if (detail.getVariable() != null && detail.getVariable().getProperty() != null
-					&& propertyName.equalsIgnoreCase(detail.getVariable().getProperty())) {
-					list.add(new StandardVariableReference(detail.getVariable().getCvTermId(), detail.getVariable().getName(), detail
-						.getVariable().getDescription()));
-				}
-			}
-		}
-		return list;
-	}
-
 	@ResponseBody
 	@RequestMapping(value = "/countPlots/{ids}", method = RequestMethod.GET)
 	public int countPlots(@PathVariable final String ids) throws MiddlewareQueryException {
