@@ -696,7 +696,12 @@
 		  class="com.efficio.fieldbook.web.trial.controller.AdvancingController">
 		<property name="advanceLinesThreshold" value="${advancing.lines.warning.threshold}"/>
 	</bean>
-    <!-- Nested <beans> elements can only be at the end. -->
 
+	<bean id="germplasmListDataService" factory-bean="managerFactory"
+			  factory-method="getGermplasmListDataService" scope="request">
+		<aop:scoped-proxy />
+    </bean>
+
+    <!-- Nested <beans> elements can only be at the end. -->
 
 </beans>
