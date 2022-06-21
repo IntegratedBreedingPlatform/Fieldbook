@@ -155,6 +155,7 @@ public class DesignImportController extends SettingsController {
 		final Map<String, Object> resultsMap = new HashMap<>();
 
 		try {
+			this.reloadWorkbook();
 			this.initializeTemporaryWorkbook();
 
 			final DesignImportData designImportData = this.designImportParser.parseFile(form.getFileType(),
@@ -186,6 +187,25 @@ public class DesignImportController extends SettingsController {
 
 		// we return string instead of json to fix IE issue rel. DataTable
 		return this.convertObjectToJson(resultsMap);
+	}
+
+ //TODO:  This method is used as a fix to reload the workbook and set the userSelection from the DB,
+ // avoiding loaded the same variable with different operations like ADD and UPDATE.
+ 	private void reloadWorkbook() {
+		final Workbook workbook = this.fieldbookMiddlewareService.getStudyDataSet(this.userSelection.getWorkbook().getStudyDetails().getId());
+		this.userSelection.setConstantsWithLabels(workbook.getConstants());
+		this.userSelection.setWorkbook(workbook);
+		this.userSelection.setExperimentalDesignVariables(WorkbookUtil.getExperimentalDesignVariables(workbook.getConditions()));
+		this.userSelection
+			.setExpDesignParams(SettingsUtil.convertToExpDesignParamsUi(this.userSelection.getExperimentalDesignVariables()));
+		this.userSelection.setTemporaryWorkbook(null);
+		this.userSelection.setMeasurementRowList(workbook.getObservations());
+
+		this.fieldbookMiddlewareService
+			.setTreatmentFactorValues(workbook.getTreatmentFactors(), workbook.getMeasurementDatesetId());
+		this.userSelection.setPlotsLevelList(this.getPlotsLevelsDetails(workbook.getFactors(), true));
+		this.userSelection.setEntryDetails(this.getEntryDetails(workbook.getEntryDetails()));
+
 	}
 
 	/**
