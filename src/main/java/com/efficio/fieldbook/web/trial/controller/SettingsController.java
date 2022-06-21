@@ -57,6 +57,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 /**
  * The Class SettingsController.
@@ -762,5 +763,81 @@ public abstract class SettingsController extends AbstractBaseFieldbookController
 				detail.setValue(values.get(detail.getVariable().getCvTermId().toString()));
 			}
 		}
+	}
+
+	protected List<SettingDetail> getEntryDetails(final List<MeasurementVariable> entryDetails) {
+		final List<Integer> requiredIDList = this.buildVariableIDList(AppConstants.CREATE_STUDY_ENTRY_DETAILS_REQUIRED_FIELDS.getString());
+
+		return entryDetails.stream()
+			.map(variable -> {
+				final SettingDetail detail = this.createSettingDetail(
+					variable.getTermId(),
+					variable.getName(),
+					variable.getVariableType().getRole().name()
+				);
+				if (requiredIDList.contains(variable.getTermId())) {
+					detail.setDeletable(false);
+				} else {
+					detail.setDeletable(true);
+				}
+				detail.getVariable().setOperation(Operation.UPDATE);
+				return detail;
+			})
+			.collect(Collectors.toList());
+
+	}
+	protected List<SettingDetail> getPlotsLevelsDetails(final List<MeasurementVariable> measurementVariables, final boolean isUsePrevious){
+		final List<SettingDetail> detailList = new ArrayList<>();
+		final List<Integer> requiredIDList = this.buildVariableIDList(AppConstants.CREATE_STUDY_PLOT_REQUIRED_FIELDS.getString());
+
+		for (final MeasurementVariable measurementVariable : measurementVariables) {
+			// this condition is required so that treatment factors are not
+			// included in the list of factors for the germplasm tab
+			if (measurementVariable.getTreatmentLabel() != null && !measurementVariable.getTreatmentLabel().isEmpty()
+				|| this.inRequiredExpDesignVar(measurementVariable.getTermId()) && isUsePrevious) {
+				continue;
+			}
+
+			final SettingDetail detail =
+				this.createSettingDetail(measurementVariable.getTermId(), measurementVariable.getName(), VariableType.GERMPLASM_DESCRIPTOR.getRole().name());
+
+			if (measurementVariable.getRole() != null) {
+				detail.setRole(measurementVariable.getRole());
+				detail.getVariable().setRole(measurementVariable.getRole().name());
+			}
+
+			if (requiredIDList.contains(measurementVariable.getTermId())) {
+				detail.setDeletable(false);
+			} else {
+				detail.setDeletable(true);
+			}
+
+			// set all variables with trial design role to hidden
+			if (measurementVariable.getRole() == PhenotypicType.TRIAL_DESIGN) {
+				detail.setHidden(true);
+				// BMS-1048
+				if (measurementVariable.getTermId() == TermId.COLUMN_NO.getId() || measurementVariable.getTermId() == TermId.RANGE_NO.getId()) {
+					detail.setDeletable(false);
+					detail.setHidden(false);
+				}
+			} else {
+				detail.setHidden(false);
+			}
+
+			detail.getVariable().setOperation(Operation.UPDATE);
+			detailList.add(detail);
+		}
+		return detailList;
+	}
+
+	boolean inRequiredExpDesignVar(final int termId) {
+		final StringTokenizer token = new StringTokenizer(AppConstants.EXP_DESIGN_REQUIRED_VARIABLES.getString(), ",");
+
+		while (token.hasMoreTokens()) {
+			if (Integer.parseInt(token.nextToken()) == termId) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
