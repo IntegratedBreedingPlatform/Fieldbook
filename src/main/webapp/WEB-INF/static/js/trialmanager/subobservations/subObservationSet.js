@@ -1715,7 +1715,8 @@
 									return renderCategoricalValue(data.value, columnData);
 								}
 
-								return EscapeHTML.escape(data.value);
+								var escapedValue = EscapeHTML.escape(data.value);
+								return '<span class="text-ellipsis" title="' + escapedValue + '">' + escapedValue + '</span>';
 							}
 						});
 					}

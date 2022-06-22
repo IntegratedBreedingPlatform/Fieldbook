@@ -653,7 +653,8 @@
 										} else if (columnData.dataTypeId === 1110) {
 											return getDisplayValueForNumericalValue(value);
 										} else {
-											return EscapeHTML.escape(value);
+											var escapedValue = EscapeHTML.escape(value);
+											return '<span class="text-ellipsis" title="' + escapedValue + '">' + escapedValue + '</span>';
 										}
 									}
 

@@ -2563,3 +2563,11 @@ div.dt-button-collection {
 .show-on-hover:hover {
     opacity: 0.5;
 }
+
+.text-ellipsis {
+    display: block;
+    white-space: nowrap;
+    max-width: 125px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
