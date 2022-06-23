@@ -231,7 +231,7 @@ public class ManageSettingsController extends SettingsController {
 				for (final SettingVariable settingVariable : selectedVariables) {
 					final Operation operation;
 
-					if (VariableType.GERMPLASM_DESCRIPTOR.getId().equals(mode)) {
+					if (VariableType.GERMPLASM_DESCRIPTOR.getId().equals(mode) || VariableType.ENTRY_DETAIL.getId().equals(mode)) {
 						operation = Operation.UPDATE;
 					} else {
 						operation = this.removeVarFromDeletedList(settingVariable, mode);
