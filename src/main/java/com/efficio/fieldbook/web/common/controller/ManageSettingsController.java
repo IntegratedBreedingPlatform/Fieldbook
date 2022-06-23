@@ -4,7 +4,6 @@ import com.efficio.fieldbook.service.api.SettingsService;
 import com.efficio.fieldbook.web.common.bean.PropertyTreeSummary;
 import com.efficio.fieldbook.web.common.bean.SettingDetail;
 import com.efficio.fieldbook.web.common.bean.SettingVariable;
-import com.efficio.fieldbook.web.ontology.form.OntologyDetailsForm;
 import com.efficio.fieldbook.web.trial.controller.SettingsController;
 import com.efficio.fieldbook.web.trial.form.CreateTrialForm;
 import com.efficio.fieldbook.web.util.SettingsUtil;
@@ -32,8 +31,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,6 +40,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -62,6 +60,8 @@ import java.util.Set;
 public class ManageSettingsController extends SettingsController {
 
 	public static final String URL = "/manageSettings";
+
+	private static final List<Integer> GERMPLASM_DESCRIPTOR_VARIABLE_IDS_ALLOWED = Arrays.asList(8377, 8250, 8240, 8330, 8340, 8235, 8378, 8201);
 
 	/**
 	 * The Constant LOG.
@@ -149,7 +149,13 @@ public class ManageSettingsController extends SettingsController {
 					continue;
 				}
 
+				List variableToRemove = new ArrayList<>();
 				for (final Variable variable : ontologyList) {
+					if (selectedVariableTypes.contains(VariableType.GERMPLASM_DESCRIPTOR) && !ManageSettingsController.GERMPLASM_DESCRIPTOR_VARIABLE_IDS_ALLOWED.contains(variable.getId())) {
+						variableToRemove.add(variable);
+						continue;
+					}
+
 					final FormulaDto formula = variable.getFormula();
 					if (formula != null) {
 						final Map<String, FormulaVariable> formulaVariableMap =
@@ -165,6 +171,11 @@ public class ManageSettingsController extends SettingsController {
 					}
 				}
 
+				ontologyList.removeAll(variableToRemove);
+
+				if (ontologyList.isEmpty()) {
+					continue;
+				}
 				if (selectedVariableTypes.contains(VariableType.TREATMENT_FACTOR)) {
 					ontologyVariableDataManager.processTreatmentFactorHasPairValue(ontologyList,
 							AppConstants.CREATE_STUDY_REMOVE_TREATMENT_FACTOR_IDS.getIntegerList());

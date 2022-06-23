@@ -49,6 +49,8 @@ public class DesignImportServiceImpl implements DesignImportService {
 
 	private static final String ADDTL_PARAMS_NO_OF_ADDED_ENVIRONMENTS = "noOfAddedEnvironments";
 
+	private static final List<Integer> GERMPLASM_DESCRIPTOR_VARIABLE_IDS_ALLOWED = Arrays.asList(8377, 8250, 8240, 8330, 8340, 8235, 8378, 8201);
+
 	public static final String ZERO = "0";
 
 	public static final String ENTRY_TYPE = "ENTRY_TYPE";
@@ -350,6 +352,11 @@ public class DesignImportServiceImpl implements DesignImportService {
 			Arrays.asList(PhenotypicType.TRIAL_ENVIRONMENT, PhenotypicType.TRIAL_DESIGN, PhenotypicType.GERMPLASM, PhenotypicType.VARIATE, PhenotypicType.ENTRY_DETAIL));
 		for (final Entry<String, List<StandardVariable>> entryVar : variables.entrySet()) {
 			for (final StandardVariable sv : entryVar.getValue()) {
+				if (sv.getVariableTypes().contains(VariableType.GERMPLASM_DESCRIPTOR) &&
+					!DesignImportServiceImpl.GERMPLASM_DESCRIPTOR_VARIABLE_IDS_ALLOWED.contains(sv.getId())) {
+					entryVar.setValue(new ArrayList<>());
+					continue;
+				}
 				for (final VariableType variableType : sv.getVariableTypes()) {
 					if (designImportRoles.contains(variableType.getRole())) {
 						sv.setPhenotypicType(variableType.getRole());

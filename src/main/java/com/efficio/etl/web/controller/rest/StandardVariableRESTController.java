@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,7 @@ import java.util.Set;
 @RequestMapping(value = StandardVariableRESTController.URL)
 public class StandardVariableRESTController {
 
+	private static final List<Integer> GERMPLASM_DESCRIPTOR_VARIABLE_IDS_ALLOWED = Arrays.asList(8377, 8250, 8240, 8330, 8340, 8235, 8378, 8201);
 	private static final Logger LOG = LoggerFactory.getLogger(StandardVariableRESTController.class);
 
 	public static final String URL = "etl/api/standardVariable";
@@ -170,6 +172,10 @@ public class StandardVariableRESTController {
 		middlewareVariableFilter.setProgramUuid(this.contextUtil.getCurrentProgramUUID());
 		final List<Variable> variables = this.ontologyVariableDataManager.getWithFilter(middlewareVariableFilter);
 		for (final Variable variable : variables) {
+			if (variable.getVariableTypes().contains(VariableType.GERMPLASM_DESCRIPTOR) &&
+				!StandardVariableRESTController.GERMPLASM_DESCRIPTOR_VARIABLE_IDS_ALLOWED.contains(variable.getId())) {
+				continue;
+			}
 			returnVal.add(new VariableDTO(variable));
 		}
 		return returnVal;
