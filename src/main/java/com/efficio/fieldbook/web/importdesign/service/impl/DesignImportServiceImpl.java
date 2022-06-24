@@ -296,6 +296,9 @@ public class DesignImportServiceImpl implements DesignImportService {
 		// Add the germplasm factors that exist from csv file header
 		measurementVariables.addAll(this.extractMeasurementVariable(PhenotypicType.GERMPLASM, mappedHeaders));
 
+		// Add the entry Details that exist from csv file header
+		measurementVariables.addAll(this.extractMeasurementVariable(PhenotypicType.ENTRY_DETAIL, mappedHeaders));
+
 		// Add the design factors that exists from csv file header
 		measurementVariables.addAll(this.extractMeasurementVariable(PhenotypicType.TRIAL_DESIGN, mappedHeaders));
 
