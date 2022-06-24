@@ -153,7 +153,6 @@ public class CrossesListUtilTest {
 		final ImportedCross
 			testImportedCross = this.crossesListUtil.convertGermplasmListDataToImportedCrosses(germplasmListData, RandomStringUtils.random(20), Collections.emptyMap());
 		Assert.assertEquals(Integer.valueOf(CrossesListUtilTest.TEST_ENTRY_ID_VALUE), testImportedCross.getEntryNumber());
-		Assert.assertEquals(CrossesListUtilTest.TEST_ENTRY_CODE_VALUE, testImportedCross.getEntryCode());
 		Assert.assertEquals(CrossesListUtilTest.TEST_FEMALE_PARENT_VALUE, testImportedCross.getFemaleDesignation());
 		Assert.assertEquals(String.valueOf(CrossesListUtilTest.TEST_FGID_VALUE), testImportedCross.getFemaleGid());
 		Assert.assertEquals(CrossesListUtilTest.TEST_MALE_PARENT1_VALUE, testImportedCross.getMaleDesignationsAsString());
@@ -180,7 +179,6 @@ public class CrossesListUtilTest {
 		final String studyName = RandomStringUtils.random(20);
 		final ImportedCross testImportedCross = this.crossesListUtil.convertGermplasmListDataToImportedCrosses(germplasmListData, studyName, Collections.emptyMap());
 		Assert.assertEquals(Integer.valueOf(CrossesListUtilTest.TEST_ENTRY_ID_VALUE), testImportedCross.getEntryNumber());
-		Assert.assertEquals(CrossesListUtilTest.TEST_ENTRY_CODE_VALUE, testImportedCross.getEntryCode());
 		Assert.assertEquals(CrossesListUtilTest.TEST_FEMALE_PARENT_VALUE, testImportedCross.getFemaleDesignation());
 		Assert.assertEquals(String.valueOf(CrossesListUtilTest.TEST_FGID_VALUE), testImportedCross.getFemaleGid());
 		final String concatenatedMaleDesignations = CrossesListUtil.MULTIPARENT_BEGIN_CHAR + CrossesListUtilTest.TEST_MALE_PARENT1_VALUE + ","

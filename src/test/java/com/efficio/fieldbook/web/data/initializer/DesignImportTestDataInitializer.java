@@ -76,8 +76,8 @@ public class DesignImportTestDataInitializer {
 		siteNameDesignHeaderItem.setName("SITE_NAME_LOCAL_NAME");
 		trialEvironmentItems.add(siteNameDesignHeaderItem);
 
-		final List<DesignHeaderItem> germplasmItems = new ArrayList<>();
-		germplasmItems.add(createDesignHeaderItem(PhenotypicType.GERMPLASM, TermId.ENTRY_NO.getId(), "ENTRY_NO", 2, NUMERIC_VARIABLE));
+		final List<DesignHeaderItem> entryDetailItems = new ArrayList<>();
+		entryDetailItems.add(createDesignHeaderItem(PhenotypicType.ENTRY_DETAIL, TermId.ENTRY_NO.getId(), "ENTRY_NO", 2, NUMERIC_VARIABLE));
 
 		final List<DesignHeaderItem> trialDesignItems = new ArrayList<>();
 		trialDesignItems.add(createDesignHeaderItem(PhenotypicType.TRIAL_DESIGN, TermId.PLOT_NO.getId(), "PLOT_NO", 3, NUMERIC_VARIABLE));
@@ -87,8 +87,9 @@ public class DesignImportTestDataInitializer {
 		final List<DesignHeaderItem> variateItems = new ArrayList<>();
 		variateItems.add(createDesignHeaderItem(PhenotypicType.VARIATE, AFLAVER_5_ID, AFLAVER_5_NAME, 6, CATEGORICAL_VARIABLE));
 
+		mappedHeaders.put(PhenotypicType.ENTRY_DETAIL, entryDetailItems);
 		mappedHeaders.put(PhenotypicType.TRIAL_ENVIRONMENT, trialEvironmentItems);
-		mappedHeaders.put(PhenotypicType.GERMPLASM, germplasmItems);
+		mappedHeaders.put(PhenotypicType.GERMPLASM, new ArrayList<>());
 		mappedHeaders.put(PhenotypicType.TRIAL_DESIGN, trialDesignItems);
 		mappedHeaders.put(PhenotypicType.VARIATE, variateItems);
 

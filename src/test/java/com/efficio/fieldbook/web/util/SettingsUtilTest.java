@@ -91,7 +91,7 @@ public class SettingsUtilTest {
 		dataset.getConditions().add(new Condition("CONDITION1", "CONDITION1", "PERSON", "DBCV", "ASSIGNED",
 				PhenotypicType.STUDY.toString(), "C", "Meeh", null, null, null));
 		dataset.getFactors().add(new Factor("FACTOR1", "FACTOR1", "GERMPLASM ENTRY", "NUMBER", "ENUMERATED",
-				PhenotypicType.GERMPLASM.toString(), "N", 0));
+				PhenotypicType.ENTRY_DETAIL.toString(), "N", 0));
 		final Variate variate = new Variate("VARIATE1", "VARIATE1", "YIELD (GRAIN)", "Kg/ha", "Paddy Rice",
 				PhenotypicType.VARIATE.toString(), "N", TermId.NUMERIC_VARIABLE.getId(),
 				new ArrayList<ValueReference>(), 0.0, 0.0);

@@ -220,6 +220,7 @@ public class CreateTrialControllerTest {
 		Mockito.doReturn(new TabInfo()).when(spy).prepareEnvironmentsTabInfo(false);
 		Mockito.doReturn(new TabInfo()).when(spy).prepareTrialSettingsTabInfo();
 		Mockito.doReturn(new TabInfo()).when(spy).prepareExperimentalDesignSpecialData();
+		Mockito.doReturn(new TabInfo()).when(spy).prepareEntryDetailsData();
 		final Model model = Mockito.mock(Model.class);
 		final CreateTrialForm form = Mockito.mock(CreateTrialForm.class);
 		final HttpSession session = Mockito.mock(HttpSession.class);
@@ -228,6 +229,7 @@ public class CreateTrialControllerTest {
 		// Verify model attributes
 		Mockito.verify(model).addAttribute(ArgumentMatchers.eq("basicDetailsData"), ArgumentMatchers.any(TabInfo.class));
 		Mockito.verify(model).addAttribute(ArgumentMatchers.eq("germplasmData"), ArgumentMatchers.any(TabInfo.class));
+		Mockito.verify(model).addAttribute(ArgumentMatchers.eq("entryDetailsData"), ArgumentMatchers.any(TabInfo.class));
 		Mockito.verify(model).addAttribute(ArgumentMatchers.eq(CreateTrialController.ENVIRONMENT_DATA_TAB), ArgumentMatchers.any(TabInfo.class));
 		Mockito.verify(model).addAttribute(ArgumentMatchers.eq(CreateTrialController.TRIAL_SETTINGS_DATA_TAB), ArgumentMatchers.any(TabInfo.class));
 		Mockito.verify(model).addAttribute(ArgumentMatchers.eq("experimentalDesignSpecialData"), ArgumentMatchers.any(TabInfo.class));
