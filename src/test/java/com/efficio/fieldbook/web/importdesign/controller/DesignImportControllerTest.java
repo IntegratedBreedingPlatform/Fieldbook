@@ -14,14 +14,15 @@ import com.efficio.fieldbook.web.data.initializer.DesignImportTestDataInitialize
 import com.efficio.fieldbook.web.data.initializer.SettingDetailTestDataInitializer;
 import com.efficio.fieldbook.web.importdesign.service.impl.DesignImportServiceImpl;
 import com.efficio.fieldbook.web.importdesign.validator.DesignImportValidator;
+import com.efficio.fieldbook.web.trial.bean.ExpDesignParameterUi;
 import com.efficio.fieldbook.web.trial.bean.Instance;
 import com.efficio.fieldbook.web.trial.bean.InstanceInfo;
-import com.efficio.fieldbook.web.trial.bean.ExpDesignParameterUi;
 import com.efficio.fieldbook.web.trial.bean.TrialSettingsBean;
 import com.efficio.fieldbook.web.util.WorkbookUtil;
 import com.efficio.fieldbook.web.util.parsing.DesignImportParser;
 import org.generationcp.commons.parsing.FileParsingException;
 import org.generationcp.commons.spring.util.ContextUtil;
+import org.generationcp.middleware.data.initializer.WorkbookTestDataInitializer;
 import org.generationcp.middleware.domain.dms.ExperimentDesignType;
 import org.generationcp.middleware.domain.dms.PhenotypicType;
 import org.generationcp.middleware.domain.dms.StandardVariable;
@@ -29,6 +30,7 @@ import org.generationcp.middleware.domain.dms.ValueReference;
 import org.generationcp.middleware.domain.etl.MeasurementData;
 import org.generationcp.middleware.domain.etl.MeasurementRow;
 import org.generationcp.middleware.domain.etl.MeasurementVariable;
+import org.generationcp.middleware.domain.etl.StudyDetails;
 import org.generationcp.middleware.domain.etl.Workbook;
 import org.generationcp.middleware.domain.oms.Term;
 import org.generationcp.middleware.domain.oms.TermId;
@@ -271,6 +273,13 @@ public class DesignImportControllerTest {
 		final ImportDesignForm form = new ImportDesignForm();
 		form.setFile(this.multiPartFile);
 		form.setFileType(DesignImportParser.FILE_TYPE_CSV);
+		final Workbook workbook = Mockito.mock(Workbook.class);
+		final StudyDetails studyDetails = Mockito.mock(StudyDetails.class);
+		Mockito.when(this.userSelection.getWorkbook()).thenReturn(workbook);
+		Mockito.when(workbook.getStudyDetails()).thenReturn(studyDetails);
+		final Workbook workbookReloaded = WorkbookTestDataInitializer.getTestWorkbook(1, StudyTypeDto.getTrialDto());
+		Mockito.when(fieldbookMiddlewareService.getStudyDataSet(this.userSelection.getWorkbook().getStudyDetails().getId()))
+			.thenReturn(workbookReloaded);
 		final String resultsMap = this.designImportController.importFile(form);
 
 		Mockito.verify(this.userSelection).setDesignImportData(Matchers.any(DesignImportData.class));
@@ -290,6 +299,13 @@ public class DesignImportControllerTest {
 		form.setFileType(DesignImportParser.FILE_TYPE_CSV);
 		Mockito.when(this.designImportParser.parseFile(DesignImportParser.FILE_TYPE_CSV, this.multiPartFile))
 				.thenThrow(new FileParsingException("force file parse exception"));
+		final Workbook workbook = Mockito.mock(Workbook.class);
+		final StudyDetails studyDetails = Mockito.mock(StudyDetails.class);
+		Mockito.when(this.userSelection.getWorkbook()).thenReturn(workbook);
+		Mockito.when(workbook.getStudyDetails()).thenReturn(studyDetails);
+		final Workbook workbookReloaded = WorkbookTestDataInitializer.getTestWorkbook(1, StudyTypeDto.getTrialDto());
+		Mockito.when(fieldbookMiddlewareService.getStudyDataSet(this.userSelection.getWorkbook().getStudyDetails().getId()))
+			.thenReturn(workbookReloaded);
 
 		final String resultsMap = this.designImportController.importFile(form);
 
