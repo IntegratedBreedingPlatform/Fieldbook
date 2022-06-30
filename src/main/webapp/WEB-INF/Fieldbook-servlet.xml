@@ -337,10 +337,11 @@
 		<aop:scoped-proxy />
 	</bean>
 
-	<bean id="inventoryMiddlewareService" factory-bean="managerFactory"
-		factory-method="getInventoryMiddlewareService" scope="request">
+	<bean id="lotService" factory-bean="managerFactory"
+			  factory-method="getLotService" scope="request">
 		<aop:scoped-proxy />
 	</bean>
+
 
 	<bean id="ontologyService" factory-bean="managerFactory"
 		factory-method="getOntologyService" scope="request">
