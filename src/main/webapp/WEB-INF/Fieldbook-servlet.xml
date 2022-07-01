@@ -710,6 +710,11 @@
 		  class="com.efficio.fieldbook.web.trial.controller.AdvancingController">
 		<property name="advanceLinesThreshold" value="${advancing.lines.warning.threshold}"/>
 	</bean>
+
+	<bean id="cropService"
+		class="org.generationcp.middleware.api.crop.CropServiceImpl">
+		<constructor-arg ref="workbenchHibernateSessionProvider" />
+	</bean>
     <!-- Nested <beans> elements can only be at the end. -->
 
 
