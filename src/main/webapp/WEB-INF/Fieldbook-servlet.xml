@@ -698,6 +698,11 @@
 		<property name="advanceLinesThreshold" value="${advancing.lines.warning.threshold}"/>
 	</bean>
 
+	<bean id="cropService"
+		class="org.generationcp.middleware.api.crop.CropServiceImpl">
+		<constructor-arg ref="workbenchHibernateSessionProvider" />
+	</bean>
+
 	<bean id="germplasmListDataService" factory-bean="managerFactory"
 			  factory-method="getGermplasmListDataService" scope="request">
 		<aop:scoped-proxy />
