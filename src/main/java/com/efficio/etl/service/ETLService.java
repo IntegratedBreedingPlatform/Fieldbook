@@ -164,4 +164,5 @@ public interface ETLService {
    */
   String getExperimentalDesignValueFromObservationSheet(Workbook workbook, UserSelection userSelection, final int columnIndex);
 
+  Map<String, Integer> retrieveAvailableCategoricalScales(final Integer termId, final String programUUID);
 }

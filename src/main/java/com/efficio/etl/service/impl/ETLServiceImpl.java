@@ -569,12 +569,10 @@ public class ETLServiceImpl implements ETLService {
 		final Sheet sheet = workbook.getSheetAt(userSelection.getSelectedSheet());
 
 		final List<MeasurementRow> rows = new ArrayList<>(userSelection.getObservationRows());
-		final Map<String, Integer> availableEntryTypes = this
-			.retrieveAvailableEntryTypes(this.contextUtil.getCurrentProgramUUID());
 		for (int i = userSelection.getContentRowIndex(); i <= userSelection.getContentRowIndex()
 			+ userSelection.getObservationRows() - 1; i++) {
 			final MeasurementRow row = new MeasurementRow();
-			row.setDataList(this.convertRow(sheet, i, variableIndexMap, discardInvalidValues, availableEntryTypes));
+			row.setDataList(this.convertRow(sheet, i, variableIndexMap, discardInvalidValues));
 			rows.add(row);
 		}
 
@@ -583,8 +581,7 @@ public class ETLServiceImpl implements ETLService {
 
 	protected List<MeasurementData> convertRow(
 		final Sheet sheet, final int dataRowIndex,
-		final Map<Integer, MeasurementVariable> variableIndexMap, final boolean discardInvalidValues,
-		final Map<String, Integer> availableEntryTypes) {
+		final Map<Integer, MeasurementVariable> variableIndexMap, final boolean discardInvalidValues) {
 		final List<MeasurementData> dataList = new ArrayList<>(variableIndexMap.size());
 		for (final Map.Entry<Integer, MeasurementVariable> entry : variableIndexMap.entrySet()) {
 			final Integer columnIndex = entry.getKey();
@@ -598,27 +595,26 @@ public class ETLServiceImpl implements ETLService {
 				measurementData.setValue("");
 			}
 
-			// The entry type id should be saved in the db instead of the entry
-			// type name
-			this.convertEntryTypeNameToID(variable, measurementData, availableEntryTypes);
+			if (variable.getDataTypeId() == TermId.CATEGORICAL_VARIABLE.getId() && measurementData.getValue() != null) {
+				final Map<String, Integer> availableScales = this.retrieveAvailableCategoricalScales(variable.getTermId(),
+					this.contextUtil.getCurrentProgramUUID());
+				this.convertCategoricalNameToCategoricalID(measurementData, availableScales);
+			}
+
 			dataList.add(measurementData);
 		}
 
 		return dataList;
 	}
 
-	public void convertEntryTypeNameToID(
-		final MeasurementVariable variable, final MeasurementData measurementData,
-		final Map<String, Integer> availableEntryTypes) {
-		if (TermId.ENTRY_TYPE.getId() == variable.getTermId() && measurementData.getValue() != null) {
-			final String value = measurementData.getValue();
-			final Integer entryType = availableEntryTypes.get(value);
-			if (entryType == null) {
-				throw new FieldbookRequestValidationException("error.invalid.entry.type",
-					new String[] {String.join(", ", availableEntryTypes.keySet())});
-			}
-			measurementData.setValue(entryType.toString());
+	public void convertCategoricalNameToCategoricalID(final MeasurementData measurementData, final Map<String, Integer> availableScales) {
+		final String value = measurementData.getValue();
+		final Integer scaleId = availableScales.get(value);
+		if (scaleId == null) {
+			throw new FieldbookRequestValidationException("error.invalid.categorical.value",
+				new String[] {String.join(", ", availableScales.keySet())});
 		}
+		measurementData.setValue(scaleId.toString());
 	}
 
 	public FileService getFileService() {
@@ -1143,5 +1139,17 @@ public class ETLServiceImpl implements ETLService {
 		}
 
 		return entryTypeMap;
+	}
+	@Override
+	public Map<String, Integer> retrieveAvailableCategoricalScales(final Integer termId, final String programUUID) {
+		final Map<String, Integer> scaleMap = new HashMap<>();
+		final List<Enumeration> categoricalScales = this.ontologyService
+			.getStandardVariable(termId, programUUID).getEnumerations();
+
+		for (final Enumeration scale : categoricalScales) {
+			scaleMap.put(scale.getName(), scale.getId());
+		}
+
+		return scaleMap;
 	}
 }
