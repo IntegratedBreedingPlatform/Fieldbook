@@ -1010,12 +1010,11 @@ public class ETLServiceTest {
 		final List<MeasurementVariable> factors = new LinkedList<>();
 		final List<MeasurementVariable> variates = new LinkedList<>();
 
-		factors.add(new MeasurementVariable(ETLServiceTest.TRIAL_INSTANCE, "", "", "", "", "", "", ""));
-		factors.add(new MeasurementVariable(ETLServiceTest.ENTRY_NO, "", "", "", "", "", "", ""));
-		factors.add(new MeasurementVariable(ETLServiceTest.PLOT_NO, "", "", "", "", "", "", ""));
+		factors.add(new MeasurementVariable(ETLServiceTest.TRIAL_INSTANCE, TermId.TRIAL_INSTANCE_FACTOR.getId(), DataType.NUMERIC_VARIABLE.getId()));
+		factors.add(new MeasurementVariable(ETLServiceTest.ENTRY_NO, TermId.ENTRY_NO.getId(), DataType.NUMERIC_VARIABLE.getId()));
+		factors.add(new MeasurementVariable(ETLServiceTest.PLOT_NO, TermId.PLOT_NO.getId(), DataType.NUMERIC_VARIABLE.getId()));
 
-		final MeasurementVariable categorical = new MeasurementVariable(ETLServiceTest.ALEU_COL_1_5, "", "", "", "", "",
-			"", "");
+		final MeasurementVariable categorical =	new MeasurementVariable(ETLServiceTest.ALEU_COL_1_5, 51547, DataType.CATEGORICAL_VARIABLE.getId());
 		categorical.setPossibleValues(ValueReferenceTestDataInitializer.createPossibleValues());
 		categorical.setDataTypeId(DataType.CATEGORICAL_VARIABLE.getId());
 		categorical.setRole(PhenotypicType.VARIATE);
