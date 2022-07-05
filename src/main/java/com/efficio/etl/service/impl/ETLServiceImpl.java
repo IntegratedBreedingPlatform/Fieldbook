@@ -595,7 +595,7 @@ public class ETLServiceImpl implements ETLService {
 				measurementData.setValue("");
 			}
 
-			if (variable.getDataTypeId() == TermId.CATEGORICAL_VARIABLE.getId() && measurementData.getValue() != null) {
+			if (variable.getDataTypeId() == TermId.CATEGORICAL_VARIABLE.getId() && variable.getRole() == PhenotypicType.ENTRY_DETAIL && measurementData.getValue() != null) {
 				final Map<String, Integer> availableScales = this.retrieveAvailableCategoricalScales(variable.getTermId(),
 					this.contextUtil.getCurrentProgramUUID());
 				this.convertCategoricalNameToCategoricalID(measurementData, availableScales);
