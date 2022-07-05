@@ -715,6 +715,10 @@
 		class="org.generationcp.middleware.api.crop.CropServiceImpl">
 		<constructor-arg ref="workbenchHibernateSessionProvider" />
 	</bean>
+
+	<bean id="toolService" class="org.generationcp.middleware.api.tool.ToolServiceImpl">
+		<constructor-arg ref="workbenchHibernateSessionProvider" />
+	</bean>
     <!-- Nested <beans> elements can only be at the end. -->
 
 

@@ -1,5 +1,6 @@
 package com.efficio.etl.service;
 
+import org.generationcp.middleware.api.tool.ToolService;
 import org.generationcp.middleware.manager.api.GermplasmDataManager;
 import org.generationcp.middleware.manager.api.OntologyDataManager;
 import org.generationcp.middleware.manager.api.StudyDataManager;
@@ -22,22 +23,25 @@ import org.springframework.context.annotation.Profile;
 public class ETLServiceTestConfiguration {
 
 	@Mock
-	DataImportService dummyDataService;
+	private DataImportService dummyDataService;
 
 	@Mock
-	OntologyService dummyOntologyService;
+	private OntologyService dummyOntologyService;
 
 	@Mock
-	OntologyDataManager dummyManager;
+	private OntologyDataManager dummyManager;
 
 	@Mock
-	StudyDataManager studyDataManager;
+	private StudyDataManager studyDataManager;
 
 	@Mock
-	WorkbenchDataManager workbenchDataManager;
+	private WorkbenchDataManager workbenchDataManager;
 
 	@Mock
-	GermplasmDataManager germplasmDataManager;
+	private GermplasmDataManager germplasmDataManager;
+
+	@Mock
+	private ToolService toolService;
 
 	public ETLServiceTestConfiguration() {
 		MockitoAnnotations.initMocks(this);
@@ -71,6 +75,11 @@ public class ETLServiceTestConfiguration {
 	@Bean
 	public GermplasmDataManager getGermplasmDataManagerBean() {
 		return germplasmDataManager;
+	}
+
+	@Bean
+	public ToolService getToolService() {
+		return this.toolService;
 	}
 
 }
