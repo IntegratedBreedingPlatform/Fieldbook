@@ -703,6 +703,10 @@
 		<constructor-arg ref="workbenchHibernateSessionProvider" />
 	</bean>
 
+	<bean id="toolService" class="org.generationcp.middleware.api.tool.ToolServiceImpl">
+		<constructor-arg ref="workbenchHibernateSessionProvider" />
+	</bean>
+
 	<bean id="germplasmListDataService" factory-bean="managerFactory"
 			  factory-method="getGermplasmListDataService" scope="request">
 		<aop:scoped-proxy />

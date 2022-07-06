@@ -19,6 +19,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.generationcp.commons.spring.util.ContextUtil;
 import org.generationcp.commons.util.DateUtil;
+import org.generationcp.middleware.api.tool.ToolService;
 import org.generationcp.middleware.domain.dms.DMSVariableType;
 import org.generationcp.middleware.domain.dms.DataSet;
 import org.generationcp.middleware.domain.dms.DatasetReference;
@@ -39,7 +40,6 @@ import org.generationcp.middleware.exceptions.MiddlewareQueryException;
 import org.generationcp.middleware.exceptions.WorkbookParserException;
 import org.generationcp.middleware.manager.api.OntologyDataManager;
 import org.generationcp.middleware.manager.api.StudyDataManager;
-import org.generationcp.middleware.manager.api.WorkbenchDataManager;
 import org.generationcp.middleware.operation.parser.WorkbookParser;
 import org.generationcp.middleware.pojos.dms.DmsProject;
 import org.generationcp.middleware.pojos.workbench.Tool;
@@ -108,7 +108,7 @@ public class ETLServiceImpl implements ETLService {
 	private StudyDataManager studyDataManager;
 
 	@Resource
-	private WorkbenchDataManager workbenchDataManager;
+	private ToolService toolService;
 
 	@Resource
 	private ResourceBundleMessageSource messageSource;
@@ -923,7 +923,7 @@ public class ETLServiceImpl implements ETLService {
 	@Override
 	public Tool getFieldbookWebTool() {
 		try {
-			return this.workbenchDataManager.getToolWithName(ToolName.FIELDBOOK_WEB.toString());
+			return this.toolService.getToolWithName(ToolName.FIELDBOOK_WEB.toString());
 		} catch (final MiddlewareQueryException e) {
 			ETLServiceImpl.LOG.error(e.getMessage(), e);
 		}

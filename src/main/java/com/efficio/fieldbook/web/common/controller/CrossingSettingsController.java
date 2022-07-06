@@ -30,6 +30,7 @@ import org.generationcp.middleware.api.breedingmethod.BreedingMethodDTO;
 import org.generationcp.middleware.api.breedingmethod.BreedingMethodSearchRequest;
 import org.generationcp.middleware.api.breedingmethod.BreedingMethodService;
 import org.generationcp.middleware.api.program.ProgramService;
+import org.generationcp.middleware.api.tool.ToolService;
 import org.generationcp.middleware.constant.ColumnLabels;
 import org.generationcp.middleware.domain.gms.GermplasmListType;
 import org.generationcp.middleware.domain.oms.TermId;
@@ -37,7 +38,6 @@ import org.generationcp.middleware.exceptions.MiddlewareQueryException;
 import org.generationcp.middleware.manager.api.GermplasmDataManager;
 import org.generationcp.middleware.manager.api.GermplasmListManager;
 import org.generationcp.middleware.manager.api.PresetService;
-import org.generationcp.middleware.manager.api.WorkbenchDataManager;
 import org.generationcp.middleware.pojos.Germplasm;
 import org.generationcp.middleware.pojos.GermplasmList;
 import org.generationcp.middleware.pojos.GermplasmListData;
@@ -136,7 +136,7 @@ public class CrossingSettingsController extends SettingsController {
 	private GermplasmDataManager germplasmDataManager;
 
 	@Resource
-	private WorkbenchDataManager workbenchDataManager;
+	private ToolService toolService;
 
 	@Resource
 	private UserService userService;
@@ -168,7 +168,7 @@ public class CrossingSettingsController extends SettingsController {
 
 		try {
 
-			final int fieldbookToolId = this.workbenchDataManager.getToolWithName(ToolName.FIELDBOOK_WEB.getName()).getToolId().intValue();
+			final int fieldbookToolId = this.toolService.getToolWithName(ToolName.FIELDBOOK_WEB.getName()).getToolId().intValue();
 
 			final List<ProgramPreset> presets = this.presetService
 					.getProgramPresetFromProgramAndTool(this.getCurrentProgramID(), fieldbookToolId,
@@ -665,7 +665,7 @@ public class CrossingSettingsController extends SettingsController {
 
 	private void saveCrossSetting(final CrossSetting setting, final String programUUID) throws JAXBException {
 
-		final int fieldbookToolId = this.workbenchDataManager.getToolWithName(ToolName.FIELDBOOK_WEB.getName()).getToolId().intValue();
+		final int fieldbookToolId = this.toolService.getToolWithName(ToolName.FIELDBOOK_WEB.getName()).getToolId().intValue();
 		final List<ProgramPreset> presets = this.presetService
 				.getProgramPresetFromProgramAndTool(programUUID, fieldbookToolId, ToolSection.FBK_CROSS_IMPORT.name());
 
@@ -683,7 +683,7 @@ public class CrossingSettingsController extends SettingsController {
 		if (!found) {
 			forSaving = new ProgramPreset();
 			forSaving.setName(setting.getName());
-			forSaving.setToolId(this.workbenchDataManager.getToolWithName(ToolName.FIELDBOOK_WEB.getName()).getToolId().intValue());
+			forSaving.setToolId(this.toolService.getToolWithName(ToolName.FIELDBOOK_WEB.getName()).getToolId().intValue());
 			forSaving.setProgramUuid(programUUID);
 			forSaving.setToolSection(ToolSection.FBK_CROSS_IMPORT.name());
 			forSaving.setConfiguration(this.settingsPresetService.convertPresetSettingToXml(setting, CrossSetting.class));

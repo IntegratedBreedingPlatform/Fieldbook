@@ -1,21 +1,13 @@
 package com.efficio.fieldbook.web.common.controller;
 
-import static org.mockito.Mockito.times;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.bind.JAXBException;
-
+import com.efficio.fieldbook.web.common.bean.CrossImportSettings;
+import com.efficio.fieldbook.web.common.bean.UserSelection;
+import com.efficio.fieldbook.web.common.exception.CrossingTemplateExportException;
+import com.efficio.fieldbook.web.common.exception.InvalidInputException;
+import com.efficio.fieldbook.web.common.service.CrossingService;
+import com.efficio.fieldbook.web.common.service.impl.CrossingTemplateExcelExporter;
+import com.efficio.fieldbook.web.util.CrossesListUtil;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang.RandomStringUtils;
 import org.generationcp.commons.data.initializer.ImportedCrossesTestDataInitializer;
 import org.generationcp.commons.parsing.pojo.ImportedCross;
@@ -33,6 +25,7 @@ import org.generationcp.commons.util.DateUtil;
 import org.generationcp.middleware.api.breedingmethod.BreedingMethodDTO;
 import org.generationcp.middleware.api.breedingmethod.BreedingMethodSearchRequest;
 import org.generationcp.middleware.api.breedingmethod.BreedingMethodService;
+import org.generationcp.middleware.api.tool.ToolService;
 import org.generationcp.middleware.constant.ColumnLabels;
 import org.generationcp.middleware.data.initializer.GermplasmTestDataInitializer;
 import org.generationcp.middleware.domain.etl.StudyDetails;
@@ -44,7 +37,6 @@ import org.generationcp.middleware.manager.api.GermplasmDataManager;
 import org.generationcp.middleware.manager.api.GermplasmListManager;
 import org.generationcp.middleware.manager.api.OntologyDataManager;
 import org.generationcp.middleware.manager.api.PresetService;
-import org.generationcp.middleware.manager.api.WorkbenchDataManager;
 import org.generationcp.middleware.pojos.Germplasm;
 import org.generationcp.middleware.pojos.GermplasmList;
 import org.generationcp.middleware.pojos.GermplasmListData;
@@ -71,14 +63,20 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 
-import com.efficio.fieldbook.web.common.bean.CrossImportSettings;
-import com.efficio.fieldbook.web.common.bean.UserSelection;
-import com.efficio.fieldbook.web.common.exception.CrossingTemplateExportException;
-import com.efficio.fieldbook.web.common.exception.InvalidInputException;
-import com.efficio.fieldbook.web.common.service.CrossingService;
-import com.efficio.fieldbook.web.common.service.impl.CrossingTemplateExcelExporter;
-import com.efficio.fieldbook.web.util.CrossesListUtil;
-import com.google.common.collect.Lists;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.JAXBException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
+import static org.mockito.Mockito.times;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CrossingSettingsControllerTest {
@@ -154,7 +152,7 @@ public class CrossingSettingsControllerTest {
 	private CrossingService crossingService;
 
 	@Mock
-	private WorkbenchDataManager workbenchDataManager;
+	private ToolService toolService;
 
 	@Mock
 	private StudyEntryService studyEntryService;
@@ -270,7 +268,7 @@ public class CrossingSettingsControllerTest {
 			final CrossingSettingsController mole = Mockito.spy(this.crossingSettingsController);
 			final CrossSetting sampleSetting = this.constructCrossSetting();
 			Mockito.doReturn(CrossingSettingsControllerTest.TEST_PROGRAM_ID).when(mole).getCurrentProgramID();
-			Mockito.doReturn(fieldbookTool).when(this.workbenchDataManager).getToolWithName(ToolName.FIELDBOOK_WEB.getName());
+			Mockito.doReturn(fieldbookTool).when(this.toolService).getToolWithName(ToolName.FIELDBOOK_WEB.getName());
 
 			Mockito.doReturn(new ArrayList<ProgramPreset>()).when(this.presetService)
 					.getProgramPresetFromProgramAndTool(ArgumentMatchers.anyString(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyString());
@@ -301,7 +299,7 @@ public class CrossingSettingsControllerTest {
 			final CrossingSettingsController mole = Mockito.spy(this.crossingSettingsController);
 			final CrossSetting sampleSetting = this.constructCrossSetting();
 			Mockito.doReturn(CrossingSettingsControllerTest.TEST_PROGRAM_ID).when(mole).getCurrentProgramID();
-			Mockito.doReturn(fieldbookTool).when(this.workbenchDataManager).getToolWithName(ToolName.FIELDBOOK_WEB.getName());
+			Mockito.doReturn(fieldbookTool).when(this.toolService).getToolWithName(ToolName.FIELDBOOK_WEB.getName());
 
 			Mockito.doReturn(this.constructDummyPresetList()).when(this.presetService)
 					.getProgramPresetFromProgramAndTool(ArgumentMatchers.anyString(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyString());
@@ -363,7 +361,7 @@ public class CrossingSettingsControllerTest {
 			fieldbookTool.setToolId(CrossingSettingsControllerTest.DUMMY_TOOL_ID);
 			final CrossingSettingsController mole = Mockito.spy(this.crossingSettingsController);
 			Mockito.doReturn(CrossingSettingsControllerTest.TEST_PROGRAM_ID).when(mole).getCurrentProgramID();
-			Mockito.doReturn(fieldbookTool).when(this.workbenchDataManager).getToolWithName(ToolName.FIELDBOOK_WEB.getName());
+			Mockito.doReturn(fieldbookTool).when(this.toolService).getToolWithName(ToolName.FIELDBOOK_WEB.getName());
 
 			Mockito.doReturn(this.constructDummyPresetList()).when(this.presetService)
 					.getProgramPresetFromProgramAndTool(ArgumentMatchers.anyString(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyString());
