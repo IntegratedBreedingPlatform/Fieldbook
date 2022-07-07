@@ -58,8 +58,7 @@ public class StudyEntryTransformer {
 					importedGermplasm.setMgid(mgid);
 					importedGermplasm.setGroupId(mgid);
 				}
-				//FIXME: The GroupName is the Preferred Name of the groupGID
-				//importedGermplasm.setGroupName(studyEntryDto.getStudyEntryPropertyValue(TermId.CROSS.getId()).orElse("")); //
+
 				importedGermplasm.setIndex(studyEntryDto.getEntryNumber());
 				importedGermplasmList.add(importedGermplasm);
 			}
