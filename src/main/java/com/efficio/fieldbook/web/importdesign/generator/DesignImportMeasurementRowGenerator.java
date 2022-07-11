@@ -95,8 +95,8 @@ public class DesignImportMeasurementRowGenerator {
 		this.addTrialEnvironmentVariablesToDataList(rowValues, dataList);
 		LOG.debug("Added Environment Variables to MeasurementDataList : size=" + dataList.size());
 
-		this.addGermplasmVariablesToDataList(rowValues, dataList);
-		LOG.debug("Added Germplasm Variables to MeasurementDataList : size=" + dataList.size());
+		this.addEntryDetailsVariablesToDataList(rowValues, dataList);
+		LOG.debug("Added Entry Details Variables to MeasurementDataList : size=" + dataList.size());
 
 		this.addTrialDesignAndVariatesToDataList(rowValues, dataList);
 		LOG.debug("Added TrialDesign and Variates to MeasurementDataList : size=" + dataList.size());
@@ -140,13 +140,13 @@ public class DesignImportMeasurementRowGenerator {
 		}
 	}
 
-	private void addGermplasmVariablesToDataList(final List<String> rowValues, final List<MeasurementData> dataList) {
 
-		final Map<Integer, DesignHeaderItem> germplasmHeaders = this.mappedHeaders.get(PhenotypicType.GERMPLASM);
+	private void addEntryDetailsVariablesToDataList(final List<String> rowValues, final List<MeasurementData> dataList) {
 
+		final Map<Integer, DesignHeaderItem> entryDetailHeaders = this.mappedHeaders.get(PhenotypicType.ENTRY_DETAIL);
 		// ENTRY_TYPE or CHECK
 		boolean hasEntryTypeColumnFromTheImport = false;
-		final DesignHeaderItem entryTypeHeaderItem = germplasmHeaders.get(TermId.ENTRY_TYPE.getId());
+		final DesignHeaderItem entryTypeHeaderItem = entryDetailHeaders.get(TermId.ENTRY_TYPE.getId());
 		if (entryTypeHeaderItem != null && this.germplasmStandardVariables.get(TermId.ENTRY_TYPE.getId()) != null) {
 			final String checkType = String.valueOf(rowValues.get(entryTypeHeaderItem.getColumnIndex()));
 			final String checkTypeId = String.valueOf(this.availableCheckTypes.get(checkType));
@@ -155,13 +155,12 @@ public class DesignImportMeasurementRowGenerator {
 		}
 
 		// ENTRY_NO
-		final DesignHeaderItem entryNoHeaderItem = germplasmHeaders.get(TermId.ENTRY_NO.getId());
+		final DesignHeaderItem entryNoHeaderItem = entryDetailHeaders.get(TermId.ENTRY_NO.getId());
 		if (entryNoHeaderItem != null) {
 			final Integer entryNo = Integer.parseInt(rowValues.get(entryNoHeaderItem.getColumnIndex()));
 			this.addGermplasmDetailsToDataList(this.importedGermplasm, this.germplasmStandardVariables, dataList, entryNo,
-					hasEntryTypeColumnFromTheImport);
+				hasEntryTypeColumnFromTheImport);
 		}
-
 	}
 
 	protected void addGermplasmDetailsToDataList(final Map<Integer, ImportedGermplasm> importedGermplasm,
@@ -194,10 +193,6 @@ public class DesignImportMeasurementRowGenerator {
 		if (germplasmStandardVariables.get(TermId.GERMPLASM_SOURCE.getId()) != null) {
 			dataList.add(
 				this.createMeasurementData(germplasmStandardVariables.get(TermId.GERMPLASM_SOURCE.getId()), germplasmEntry.getSource()));
-		}
-		if (germplasmStandardVariables.get(TermId.SEED_SOURCE.getId()) != null) {
-			dataList
-				.add(this.createMeasurementData(germplasmStandardVariables.get(TermId.SEED_SOURCE.getId()), germplasmEntry.getSource()));
 		}
 		if (germplasmStandardVariables.get(TermId.OBS_UNIT_ID.getId()) != null) {
 			// This will initially create blank values for OBS_UNIT_ID but the generation of observation unit IDs will be handled during the saving of Workbook.

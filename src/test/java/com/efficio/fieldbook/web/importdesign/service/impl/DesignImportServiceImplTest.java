@@ -144,7 +144,8 @@ public class DesignImportServiceImplTest {
 		final Map<PhenotypicType, List<DesignHeaderItem>> result = this.service.categorizeHeadersByPhenotype(this.createUnmappedHeaders());
 
 		Assert.assertEquals("Total No of TRIAL in file is 2", 2, result.get(PhenotypicType.TRIAL_ENVIRONMENT).size());
-		Assert.assertEquals("Total No of GERMPLASM FACTOR in file is 1", 1, result.get(PhenotypicType.GERMPLASM).size());
+		Assert.assertEquals("Total No of ENTRY DETAILS in file is 1", 1, result.get(PhenotypicType.ENTRY_DETAIL).size());
+		Assert.assertEquals("Total No of GERMPLASM FACTOR in file is 0", 0, result.get(PhenotypicType.GERMPLASM).size());
 		Assert.assertEquals("Total No of DESIGN FACTOR in file is 3", 3, result.get(PhenotypicType.TRIAL_DESIGN).size());
 		Assert.assertEquals("Total No of VARIATE in file is 0", 0, result.get(PhenotypicType.VARIATE).size());
 
@@ -157,7 +158,7 @@ public class DesignImportServiceImplTest {
 				this.service.categorizeHeadersByPhenotype(this.createUnmappedHeadersWithWrongCase());
 
 		Assert.assertEquals("Total No of TRIAL in file is 2", 2, result.get(PhenotypicType.TRIAL_ENVIRONMENT).size());
-		Assert.assertEquals("Total No of GERMPLASM FACTOR in file is 1", 1, result.get(PhenotypicType.GERMPLASM).size());
+		Assert.assertEquals("Total No of ENTRY DETAILS in file is 1", 1, result.get(PhenotypicType.ENTRY_DETAIL).size());
 		Assert.assertEquals("Total No of DESIGN FACTOR in file is 3", 3, result.get(PhenotypicType.TRIAL_DESIGN).size());
 		Assert.assertEquals("Total No of VARIATE in file is 0", 0, result.get(PhenotypicType.VARIATE).size());
 
@@ -363,7 +364,7 @@ public class DesignImportServiceImplTest {
 
 		// If NOT in PREVIEW mode, the method will remove the trial environment factors in the list except for trial instance. This is
 		// because the actual measurements/observations that will be generated from import should not contain study environment factors.
-		Assert.assertEquals("The total number of Factors and Variates (less the trial environments) in workbook is 17", 17, result.size());
+		Assert.assertEquals("The total number of Factors and Variates (less the trial environments) in workbook is 16", 16, result.size());
 	}
 
 	/**
@@ -570,31 +571,13 @@ public class DesignImportServiceImplTest {
 	private void initializeOntologyService() {
 
 		Mockito.doReturn(DesignImportTestDataInitializer
-				.createStandardVariable(PhenotypicType.GERMPLASM, TermId.ENTRY_NO.getId(), "ENTRY_NO", "", "", "",
+				.createStandardVariable(PhenotypicType.ENTRY_DETAIL, TermId.ENTRY_NO.getId(), "ENTRY_NO", "", "", "",
 						DesignImportTestDataInitializer.NUMERIC_VARIABLE, "N", "", "")).when(this.ontologyService)
 				.getStandardVariable(TermId.ENTRY_NO.getId(), DesignImportServiceImplTest.PROGRAM_UUID);
 		Mockito.doReturn(DesignImportTestDataInitializer
-				.createStandardVariable(PhenotypicType.GERMPLASM, TermId.GID.getId(), "GID", "", "", "",
-						DesignImportTestDataInitializer.NUMERIC_VARIABLE, "N", "", "")).when(this.ontologyService)
-				.getStandardVariable(TermId.GID.getId(), DesignImportServiceImplTest.PROGRAM_UUID);
-		Mockito.doReturn(DesignImportTestDataInitializer
-				.createStandardVariable(PhenotypicType.GERMPLASM, TermId.DESIG.getId(), "DESIG", "", "", "",
-						DesignImportTestDataInitializer.CHARACTER_VARIABLE, "C", "", "")).when(this.ontologyService)
-				.getStandardVariable(TermId.DESIG.getId(), DesignImportServiceImplTest.PROGRAM_UUID);
-
-		Mockito.doReturn(DesignImportTestDataInitializer
-				.createStandardVariable(PhenotypicType.GERMPLASM, TermId.OBS_UNIT_ID.getId(), "OBS_UNIT_ID", "", "", "",
-						DesignImportTestDataInitializer.CHARACTER_VARIABLE, "C", "", "")).when(this.ontologyService)
-				.getStandardVariable(TermId.OBS_UNIT_ID.getId(), DesignImportServiceImplTest.PROGRAM_UUID);
-
-		Mockito.doReturn(DesignImportTestDataInitializer
-				.createStandardVariable(PhenotypicType.GERMPLASM, TermId.CROSS.getId(), "CROSS", "", "", "",
-						DesignImportTestDataInitializer.CHARACTER_VARIABLE, "C", "", "")).when(this.ontologyService)
-				.getStandardVariable(TermId.CROSS.getId(), DesignImportServiceImplTest.PROGRAM_UUID);
-		Mockito.doReturn(DesignImportTestDataInitializer
-				.createStandardVariable(PhenotypicType.GERMPLASM, TermId.SEED_SOURCE.getId(), "SEED_SOURCE", "", "", "",
-						DesignImportTestDataInitializer.CHARACTER_VARIABLE, "C", "", "")).when(this.ontologyService)
-				.getStandardVariable(TermId.SEED_SOURCE.getId(), DesignImportServiceImplTest.PROGRAM_UUID);
+				.createStandardVariable(PhenotypicType.ENTRY_DETAIL, TermId.ENTRY_TYPE.getId(), "ENTRY_TYPE", "", "", "",
+					DesignImportTestDataInitializer.CATEGORICAL_VARIABLE, "C", "", "")).when(this.ontologyService)
+			.getStandardVariable(TermId.ENTRY_TYPE.getId(), DesignImportServiceImplTest.PROGRAM_UUID);
 
 		final Property prop = new Property();
 		final Term term = new Term();
@@ -609,7 +592,9 @@ public class DesignImportServiceImplTest {
 		map.put("SITE_NAME", this.createList(DesignImportTestDataInitializer
 				.createStandardVariable(VariableType.ENVIRONMENT_DETAIL, StudyTypeDto.getTrialDto().getId(), "SITE_NAME", "", "", "", "", "", "")));
 		map.put("ENTRY_NO", this.createList(DesignImportTestDataInitializer
-				.createStandardVariable(VariableType.GERMPLASM_DESCRIPTOR, TermId.ENTRY_NO.getId(), "ENTRY_NO", "", "", "", "", "", "")));
+				.createStandardVariable(VariableType.ENTRY_DETAIL, TermId.ENTRY_NO.getId(), "ENTRY_NO", "", "", "", "", "", "")));
+		map.put("ENTRY_TYPE", this.createList(DesignImportTestDataInitializer
+			.createStandardVariable(VariableType.ENTRY_DETAIL, TermId.ENTRY_TYPE.getId(), "ENTRY_TYPE", "", "", "", "", "", "")));
 		map.put("PLOT_NO", this.createList(DesignImportTestDataInitializer
 				.createStandardVariable(VariableType.EXPERIMENTAL_DESIGN, TermId.PLOT_NO.getId(), "PLOT_NO", "", "", "", "", "", "")));
 		map.put("REP_NO", this.createList(DesignImportTestDataInitializer

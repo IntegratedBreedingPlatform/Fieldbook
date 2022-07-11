@@ -192,7 +192,6 @@ public class CrossingSettingsControllerTest {
 		Mockito.when(this.ontologyDataManager.getTermById(TermId.FGID.getId())).thenReturn(this.getTerm(ColumnLabels.FGID));
 		Mockito.when(this.ontologyDataManager.getTermById(TermId.MALE_PARENT.getId())).thenReturn(this.getTerm(ColumnLabels.MALE_PARENT));
 		Mockito.when(this.ontologyDataManager.getTermById(TermId.MGID.getId())).thenReturn(this.getTerm(ColumnLabels.MGID));
-		Mockito.when(this.ontologyDataManager.getTermById(TermId.SEED_SOURCE.getId())).thenReturn(this.getTerm(ColumnLabels.SEED_SOURCE));
 		Mockito.when(this.ontologyDataManager.getTermById(TermId.CROSS_FEMALE_GID.getId()))
 				.thenReturn(this.getTerm(ColumnLabels.CROSS_FEMALE_GID));
 		Mockito.when(this.ontologyDataManager.getTermById(TermId.CROSS_MALE_GID.getId()))
@@ -490,7 +489,7 @@ public class CrossingSettingsControllerTest {
 		final List<GermplasmListData> germplasmListDatas = new ArrayList<>();
 		final GermplasmList germplasmList = new GermplasmList();
 		final GermplasmListData germplasmListData = new GermplasmListData(771, germplasmList, 45, CrossingSettingsControllerTest.ENTRY_ID,
-				CrossingSettingsControllerTest.TEST_ENTRY_CODE, CrossingSettingsControllerTest.TEST_SEED_SOURCE,"testGroupName", 0, 5);
+			CrossingSettingsControllerTest.TEST_SEED_SOURCE, "testGroupName", 0, 5);
 		germplasmListData.addMaleParent(new GermplasmParent(CrossingSettingsControllerTest.MGID1, CrossingSettingsControllerTest.TEST_MALE_PARENT1, CrossingSettingsControllerTest.MALE_PEDIGREE1));
 		germplasmListData.setFemaleParent(new GermplasmParent(CrossingSettingsControllerTest.FGID, CrossingSettingsControllerTest.TEST_FEMALE_PARENT, CrossingSettingsControllerTest.FEMALE_PEDIGREE));
 

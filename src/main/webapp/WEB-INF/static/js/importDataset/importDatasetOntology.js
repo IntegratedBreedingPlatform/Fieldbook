@@ -16,6 +16,7 @@
 			$scope.mappingdata.germplasm = germplasmList;
 			$scope.mappingdata.trialDesign = trialDesignList;
 			$scope.mappingdata.variate = variateList;
+			$scope.mappingdata.entryDetail = entryDetailList;
 			$scope.serverMessages = [];
 			$scope.errorMessages = {};
 			$scope.errorMessages.CONTAINS_UNMAPPED = errorUnmappedVariables;
@@ -170,7 +171,10 @@
 
 				$scope.serverMessages = [];
 
-				var postData = $scope.mappingdata.germplasm.concat($scope.mappingdata.trialDesign).concat($scope.mappingdata.trialEnvironment).concat($scope.mappingdata.variate);
+				var postData = $scope.mappingdata.germplasm.concat($scope.mappingdata.trialDesign)
+					.concat($scope.mappingdata.trialEnvironment)
+					.concat($scope.mappingdata.variate)
+					.concat($scope.mappingdata.entryDetail);
 
 				myHttp.post(APPLICATION_BASE + '/etl/workbook/mapOntology', postData).then(function (response) {
 					$scope.previewMode = true;
@@ -236,7 +240,10 @@
 			$scope.performSaveOntologyHeaderMapping = function () {
 				$scope.serverMessages = [];
 
-				var postData = $scope.mappingdata.germplasm.concat($scope.mappingdata.trialDesign).concat($scope.mappingdata.trialEnvironment).concat($scope.mappingdata.variate);
+				var postData = $scope.mappingdata.germplasm.concat($scope.mappingdata.trialDesign)
+					.concat($scope.mappingdata.trialEnvironment)
+					.concat($scope.mappingdata.variate)
+					.concat($scope.mappingdata.entryDetail);
 
 				myHttp.post(APPLICATION_BASE + "/etl/workbook/mapOntology/confirm/" + $scope.advancedOptions.maintainHeaderNaming, postData).then(function (response) {
 					if (response.data.success) {
@@ -264,6 +271,8 @@
 					return $scope.mappingdata.variate;
 				} else if (phenotypicType === 'germplasmEntry') {
 					return $scope.mappingdata.germplasm;
+				} else if (phenotypicType === 'entryDetail') {
+					return $scope.mappingdata.entryDetail;
 				}
 			};
 
@@ -521,8 +530,6 @@
 
 				// ONTOLOGY INTEGRATION CALLBACKS
 				$scope.performOntologyVariableUpdate = function (standardVariable) {
-					console.log("IM HERE>> $scope.performOntologyVariableUpdate");
-
 					if (standardVariable === undefined || standardVariable.status === undefined) return;
 					switch (standardVariable.status) {
 						case "ADD":
@@ -595,6 +602,9 @@
 								case "TRIAL_ENVIRONMENT":
 									phenotype = "trialEnvironment";
 									break;
+								case "ENTRY_DETAIL":
+									phenotype = "entryDetail";
+									break;
 							}
 							return false;
 						}
@@ -606,14 +616,9 @@
 				}
 
 				var applyOntologyManageVariableUpdate = function (standardVariable, options) {
-					console.log("I am called!");
-
 					// access angularJS MapHeadersJSController scope
 					if ($("#mappingForm").length > 0)
 						window.angular.element("#mappingForm").scope().$parent.$apply(function (_scope) {
-							console.log("apply is called");
-							console.log(standardVariable);
-
 							_scope.performOntologyVariableUpdate(standardVariable);
 
 						});
@@ -637,7 +642,8 @@
 						{name: 'Trial Environment', value: 'trialEnvironment'},
 						{name: 'Germplasm Entry', value: 'germplasmEntry'},
 						{name: 'Trial Design', value: 'trialDesign'},
-						{name: 'Variate', value: 'variate'}
+						{name: 'Variate', value: 'variate'},
+						{name: 'Entry Detail', value: 'entryDetail'}
 					]
 				},
 

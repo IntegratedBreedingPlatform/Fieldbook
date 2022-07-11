@@ -1,14 +1,11 @@
 package com.efficio.fieldbook.web.study.germplasm;
 
-import org.apache.commons.lang.StringUtils;
 import org.generationcp.commons.parsing.pojo.ImportedGermplasm;
 import org.generationcp.commons.spring.util.ContextUtil;
 import org.generationcp.middleware.domain.dms.Enumeration;
 import org.generationcp.middleware.domain.oms.TermId;
-import org.generationcp.middleware.interfaces.GermplasmExportSource;
 import org.generationcp.middleware.service.api.OntologyService;
 import org.generationcp.middleware.service.api.study.StudyEntryDto;
-import org.generationcp.middleware.service.api.study.StudyEntryPropertyData;
 import org.springframework.beans.factory.annotation.Configurable;
 
 import javax.annotation.Resource;
@@ -50,151 +47,23 @@ public class StudyEntryTransformer {
 					importedGermplasm.setEntryTypeValue(entryType.get());
 					importedGermplasm.setEntryTypeCategoricalID(entryTypeCategoricalId);
 				}
-				importedGermplasm.setCross(studyEntryDto.getStudyEntryPropertyValue(TermId.CROSS.getId()).orElse(""));
+				importedGermplasm.setCross(studyEntryDto.getCross());
 				importedGermplasm.setDesig(studyEntryDto.getDesignation());
-				importedGermplasm.setEntryCode(studyEntryDto.getEntryCode());
+				importedGermplasm.setEntryCode(studyEntryDto.getStudyEntryPropertyValue(TermId.ENTRY_CODE.getId()).orElse(""));
 				importedGermplasm.setEntryNumber(studyEntryDto.getEntryNumber());
 				importedGermplasm.setGid(studyEntryDto.getGid().toString());
-				final Optional<String> groupGid = studyEntryDto.getStudyEntryPropertyValue(TermId.GROUPGID.getId());
+				final Optional<Integer> groupGid =  Optional.ofNullable(studyEntryDto.getGroupGid());
 				if (groupGid.isPresent()) {
 					final Integer mgid = Integer.valueOf(groupGid.get());
 					importedGermplasm.setMgid(mgid);
 					importedGermplasm.setGroupId(mgid);
 				}
-				importedGermplasm.setSource(studyEntryDto.getStudyEntryPropertyValue(TermId.SEED_SOURCE.getId()).orElse(""));
-				importedGermplasm.setGroupName(studyEntryDto.getStudyEntryPropertyValue(TermId.CROSS.getId()).orElse(""));
+
 				importedGermplasm.setIndex(studyEntryDto.getEntryNumber());
 				importedGermplasmList.add(importedGermplasm);
 			}
 		}
 		return importedGermplasmList;
-	}
-
-	public List<GermplasmExportSource> tranformToGermplasmExportSource(final List<StudyEntryDto> studyEntries) {
-
-		final Map<Integer, String> checkTypesDescriptionMap =
-			this.ontologyService.getStandardVariable(TermId.ENTRY_TYPE.getId(), this.contextUtil.getCurrentProgramUUID())
-				.getEnumerations().stream().collect(Collectors.toMap(Enumeration::getId, Enumeration::getDescription));
-
-		final List<GermplasmExportSource> germplasmExportSourceList = new ArrayList<>();
-		if (studyEntries != null && !studyEntries.isEmpty()) {
-			for (final StudyEntryDto studyEntryDto : studyEntries) {
-				final GermplasmExportSource germplasmExportSource = new GermplasmExportSource() {
-
-					@Override
-					public Integer getGermplasmId() {
-						return studyEntryDto.getGid();
-					}
-
-					@Override
-					public Integer getCheckType() {
-						final Optional<String> entryType = studyEntryDto.getStudyEntryPropertyValue(TermId.ENTRY_TYPE.getId());
-						return  entryType.isPresent()? Integer.valueOf(entryType.get()) : 0;
-					}
-
-					@Override
-					public String getCheckTypeDescription() {
-						return checkTypesDescriptionMap.getOrDefault(this.getCheckType(), "");
-					}
-
-					@Override
-					public Integer getEntryId() {
-						return studyEntryDto.getEntryNumber();
-					}
-
-					@Override
-					public String getEntryCode() {
-						return studyEntryDto.getEntryCode();
-					}
-
-					@Override
-					public String getSeedSource() {
-						return studyEntryDto.getStudyEntryPropertyValue(TermId.SEED_SOURCE.getId()).orElse("");
-					}
-
-					public String getDesignation() {
-						return studyEntryDto.getDesignation();
-					}
-
-					@Override
-					public String getGroupName() {
-						return studyEntryDto.getStudyEntryPropertyValue(TermId.CROSS.getId()).orElse("");
-					}
-
-					@Override
-					public String getFemaleParentDesignation() {
-						return null;
-					}
-
-					@Override
-					public Integer getFemaleGid() {
-						return null;
-					}
-
-					@Override
-					public String getMaleParentDesignation() {
-						return null;
-					}
-
-					@Override
-					public Integer getMaleGid() {
-						return null;
-					}
-
-					@Override
-					public String getStockIDs() {
-						return StringUtils.EMPTY;
-					}
-
-					@Override
-					public String getSeedAmount() {
-						return null;
-					}
-
-					@Override
-					public Integer getGroupId() {
-						final Optional<String> groupGid = studyEntryDto.getStudyEntryPropertyValue(TermId.GROUPGID.getId());
-						return  groupGid.isPresent()? Integer.valueOf(groupGid.get()) : 0;
-					}
-
-					@Override
-					public String getNotes() {
-						return null;
-					}
-
-					@Override
-					public Integer getListDataId() {
-						return null;
-					}
-				};
-
-				germplasmExportSourceList.add(germplasmExportSource);
-			}
-		}
-
-		return germplasmExportSourceList;
-	}
-
-	public List<StudyEntryDto> transformToStudyEntryDto(final List<ImportedGermplasm> importedGermplasmList) {
-
-		final List<StudyEntryDto> list = new ArrayList<>();
-		for (final ImportedGermplasm importedGermplasm : importedGermplasmList) {
-			final StudyEntryDto dto = new StudyEntryDto();
-			dto.setDesignation(importedGermplasm.getDesig());
-			dto.setGid(Integer.valueOf(importedGermplasm.getGid()));
-			dto.setEntryCode(importedGermplasm.getEntryCode());
-			dto.setEntryNumber(importedGermplasm.getEntryNumber());
-			dto.getProperties().put(TermId.ENTRY_TYPE.getId(),
-				new StudyEntryPropertyData(null, TermId.ENTRY_TYPE.getId(), String.valueOf(importedGermplasm.getEntryTypeCategoricalID())));
-			dto.getProperties().put(TermId.SEED_SOURCE.getId(),
-				new StudyEntryPropertyData(null, TermId.SEED_SOURCE.getId(), importedGermplasm.getSource()));
-			dto.getProperties().put(TermId.CROSS.getId(),
-					new StudyEntryPropertyData(null, TermId.CROSS.getId(), String.valueOf(importedGermplasm.getCross())));
-			dto.getProperties().put(TermId.GROUPGID.getId(),
-				new StudyEntryPropertyData(null, TermId.GROUPGID.getId(), String.valueOf(importedGermplasm.getGroupId())));
-			list.add(dto);
-		}
-		return list;
 	}
 
 }

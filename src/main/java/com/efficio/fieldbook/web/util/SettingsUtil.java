@@ -63,6 +63,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 /**
  * The Class SettingsUtil.
@@ -380,8 +381,8 @@ public class SettingsUtil {
 		final List<SettingDetail> studyLevelConditions, final List<SettingDetail> plotsLevelList,
 		final List<SettingDetail> baselineTraitsList, final List<SettingDetail> trialLevelVariablesList,
 		final List<SettingDetail> treatmentFactorDetails, final Map<String, TreatmentFactorData> treatmentFactorItems,
-		final List<SettingDetail> studyConditions, final List<SettingDetail> trialLevelConditions, final String programUUID,
-		final String description, final String startDate, final String endDate, final String studyUpdate) {
+		final List<SettingDetail> studyConditions, final List<SettingDetail> trialLevelConditions, final List<SettingDetail> entryDetails,
+		final String programUUID, final String description, final String startDate, final String endDate, final String studyUpdate) {
 
 		// name and operation setting are no longer performed on the other
 		// setting lists provided as params in this method
@@ -392,6 +393,9 @@ public class SettingsUtil {
 		final List<Condition> conditions =
 			SettingsUtil.convertDetailsToConditions(studyLevelConditions, fieldbookMiddlewareService, programUUID);
 		final List<Factor> factors = SettingsUtil.convertDetailsToFactors(plotsLevelList, fieldbookMiddlewareService, programUUID);
+
+		factors.addAll(SettingsUtil.convertDetailsToFactors(entryDetails, fieldbookMiddlewareService, programUUID));
+
 		final List<Variate> variates =
 			SettingsUtil.convertBaselineTraitsToVariates(baselineTraitsList, fieldbookMiddlewareService, programUUID);
 		final List<Constant> constants =
@@ -547,6 +551,9 @@ public class SettingsUtil {
 		workbook.getTreatmentFactors().addAll(SettingsUtil.convertTreatmentFactorsToTreatmentVariables(studyDataSet.getTreatmentFactors()));
 		SettingsUtil.setExperimentalDesignToWorkbook(param, variables, workbook, allExpDesignVariables, fieldbookMiddlewareService,
 			programUUID);
+
+		workbook.setEntryDetails(SettingsUtil.convertFactorsToMeasurementVariables(studyDataSet.getFactors().stream().filter(factor -> factor.getRole().equals(PhenotypicType.ENTRY_DETAIL.name())).collect(
+			Collectors.toList())));
 
 		return workbook;
 	}
@@ -869,6 +876,9 @@ public class SettingsUtil {
 		final List<SettingDetail> germplasmDescriptors = new ArrayList<>();
 		SettingsUtil.rearrangeSettings(factors, germplasmDescriptors, PhenotypicType.GERMPLASM);
 		studyDetails.setGermplasmDescriptors(germplasmDescriptors);
+		final List<SettingDetail> entryDetails =
+			SettingsUtil.convertWorkbookFactorsToSettingDetails(workbook.getEntryDetails(), fieldbookMiddlewareService);
+		studyDetails.setEntryDetails(entryDetails);
 		final List<TreatmentFactorDetail> treatmentFactorDetails =
 			SettingsUtil.convertWorkbookFactorsToTreatmentDetailFactors(workbook.getTreatmentFactors());
 		studyDetails.setTreatmentFactorDetails(treatmentFactorDetails);
@@ -1574,9 +1584,11 @@ public class SettingsUtil {
 	private static void removeTrialConditions(final List<Integer> ids, final Workbook workbook) {
 
 		if (workbook.getTrialConditions() != null && !workbook.getTrialConditions().isEmpty()) {
-			for (final MeasurementVariable var : workbook.getConditions()) {
-				if (ids.contains(var.getTermId())) {
-					var.setOperation(Operation.DELETE);
+			Iterator<MeasurementVariable> iter = workbook.getConditions().iterator();
+			while (iter.hasNext()) {
+				final MeasurementVariable measurementVariable = iter.next();
+				if (ids.contains(measurementVariable.getTermId())) {
+					iter.remove();
 				}
 			}
 		}
@@ -1842,7 +1854,9 @@ public class SettingsUtil {
 				userSelection.getStudyLevelConditions().addAll(newDetails);
 			}
 
-		} else if (mode == VariableType.EXPERIMENTAL_DESIGN.getId() || mode == VariableType.GERMPLASM_DESCRIPTOR.getId()) {
+		} else if (mode == VariableType.EXPERIMENTAL_DESIGN.getId()
+			|| mode == VariableType.GERMPLASM_DESCRIPTOR.getId()
+			|| mode == VariableType.ENTRY_DETAIL.getId()) {
 			if (userSelection.getPlotsLevelList() == null) {
 				userSelection.setPlotsLevelList(newDetails);
 			} else {

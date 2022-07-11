@@ -376,7 +376,7 @@ public class ETLServiceTest {
 			variable);
 		final Map<String, Integer> availableEntryTypes = new HashMap<>();
 		availableEntryTypes.put(value, TermId.ENTRY_TYPE.getId());
-		this.etlService.convertEntryTypeNameToID(variable, measurementData, availableEntryTypes);
+		this.etlService.convertCategoricalNameToCategoricalID(measurementData, availableEntryTypes);
 		Assert.assertEquals("The measurement data's value should be " + TermId.ENTRY_TYPE.getId(),
 			String.valueOf(TermId.ENTRY_TYPE.getId()), measurementData.getValue());
 	}
@@ -388,7 +388,7 @@ public class ETLServiceTest {
 			.createMeasurementVariable(TermId.ENTRY_TYPE.getId(), value);
 		final MeasurementData measurementData = this.measurementDataTestDataInitializer.createMeasurementData(value, variable);
 		final Map<String, Integer> availableEntryTypes = new HashMap<>();
-		this.etlService.convertEntryTypeNameToID(variable, measurementData, availableEntryTypes);
+		this.etlService.convertCategoricalNameToCategoricalID(measurementData, availableEntryTypes);
 	}
 
 	@Test
@@ -932,8 +932,8 @@ public class ETLServiceTest {
 
 		// Germplasm
 		final LinkedHashMap<String, MeasurementVariable> germplasmMap = new LinkedHashMap<>();
-		germplasmMap.put("SOURCE", MeasurementVariableTestDataInitializer.createMeasurementVariable(
-			TermId.SOURCE.getId(), "SOURCE", PhenotypicType.GERMPLASM, DataType.NUMERIC_VARIABLE.getId()));
+		germplasmMap.put(TermId.IMMEDIATE_SOURCE_NAME.name(), MeasurementVariableTestDataInitializer.createMeasurementVariable(
+			TermId.IMMEDIATE_SOURCE_NAME.getId(), TermId.IMMEDIATE_SOURCE_NAME.name(), PhenotypicType.GERMPLASM, DataType.NUMERIC_VARIABLE.getId()));
 		germplasmMap.put("ENTRY", MeasurementVariableTestDataInitializer.createMeasurementVariable(
 			TermId.ENTRY_NO.getId(), "ENTRY", PhenotypicType.GERMPLASM, DataType.NUMERIC_VARIABLE.getId()));
 		germplasmMap.put("CROSS", MeasurementVariableTestDataInitializer.createMeasurementVariable(TermId.CROSS.getId(),
@@ -1010,12 +1010,11 @@ public class ETLServiceTest {
 		final List<MeasurementVariable> factors = new LinkedList<>();
 		final List<MeasurementVariable> variates = new LinkedList<>();
 
-		factors.add(new MeasurementVariable(ETLServiceTest.TRIAL_INSTANCE, "", "", "", "", "", "", ""));
-		factors.add(new MeasurementVariable(ETLServiceTest.ENTRY_NO, "", "", "", "", "", "", ""));
-		factors.add(new MeasurementVariable(ETLServiceTest.PLOT_NO, "", "", "", "", "", "", ""));
+		factors.add(new MeasurementVariable(ETLServiceTest.TRIAL_INSTANCE, TermId.TRIAL_INSTANCE_FACTOR.getId(), DataType.NUMERIC_VARIABLE.getId()));
+		factors.add(new MeasurementVariable(ETLServiceTest.ENTRY_NO, TermId.ENTRY_NO.getId(), DataType.NUMERIC_VARIABLE.getId()));
+		factors.add(new MeasurementVariable(ETLServiceTest.PLOT_NO, TermId.PLOT_NO.getId(), DataType.NUMERIC_VARIABLE.getId()));
 
-		final MeasurementVariable categorical = new MeasurementVariable(ETLServiceTest.ALEU_COL_1_5, "", "", "", "", "",
-			"", "");
+		final MeasurementVariable categorical =	new MeasurementVariable(ETLServiceTest.ALEU_COL_1_5, 51547, DataType.CATEGORICAL_VARIABLE.getId());
 		categorical.setPossibleValues(ValueReferenceTestDataInitializer.createPossibleValues());
 		categorical.setDataTypeId(DataType.CATEGORICAL_VARIABLE.getId());
 		categorical.setRole(PhenotypicType.VARIATE);

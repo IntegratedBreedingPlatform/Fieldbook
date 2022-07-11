@@ -47,6 +47,10 @@ public class WorkbookUtilTest {
 
 	private static final String PROGRAM_UUID = "abcd-efg-10101";
 
+	private final String ENTRY_SOURCE = "ENTRY_SOURCE";
+
+	private final Integer ENTRY_SOURCE_ID = 123;
+
 	@Mock
 	private OntologyService ontologyService;
 
@@ -122,10 +126,11 @@ public class WorkbookUtilTest {
 		Assert.assertEquals(measurementVariable1, result.get());
 	}
 
+	// TODO: Commented broken tests.
 	@Test
 	public void testAddMeasurementDataToRowsExpForVariableAddOperation() {
 		final MeasurementVariable variable = MeasurementVariableTestDataInitializer.createMeasurementVariableWithOperation(
-			TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name(), TermId.SEED_SOURCE.name(), Operation.ADD);
+			ENTRY_SOURCE_ID, ENTRY_SOURCE, ENTRY_SOURCE, Operation.ADD);
 		final List<MeasurementVariable> variableList = Arrays.asList(variable);
 		final List<MeasurementRow> observations = Arrays.asList(MeasurementRowTestDataInitializer.createMeasurementRow());
 		final int previousMeasurementDataSize = observations.get(0).getDataList().size();
@@ -155,7 +160,7 @@ public class WorkbookUtilTest {
 	@Test
 	public void testAddMeasurementDataToRowsExpForVariableUpdateOperation() {
 		final MeasurementVariable variable = MeasurementVariableTestDataInitializer.createMeasurementVariableWithOperation(
-			TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name(), TermId.SEED_SOURCE.name(), Operation.UPDATE);
+			ENTRY_SOURCE_ID, ENTRY_SOURCE, ENTRY_SOURCE, Operation.UPDATE);
 		final List<MeasurementVariable> variableList = Arrays.asList(variable);
 		final List<MeasurementRow> observations = Arrays.asList(MeasurementRowTestDataInitializer.createMeasurementRow());
 		final int previousMeasurementDataSize = observations.get(0).getDataList().size();
@@ -180,7 +185,7 @@ public class WorkbookUtilTest {
 	@Test
 	public void testAddMeasurementDataToRowsIfNecessary() {
 		final MeasurementVariable variable = MeasurementVariableTestDataInitializer.createMeasurementVariableWithOperation(
-			TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name(), TermId.SEED_SOURCE.name(), Operation.ADD);
+			ENTRY_SOURCE_ID, ENTRY_SOURCE, ENTRY_SOURCE, Operation.ADD);
 		final List<MeasurementVariable> variableList = Arrays.asList(variable);
 		final List<MeasurementRow> observations = Arrays.asList(MeasurementRowTestDataInitializer.createMeasurementRow());
 		final int previousMeasurementDataSize = observations.get(0).getDataList().size();
@@ -210,7 +215,7 @@ public class WorkbookUtilTest {
 	@Test
 	public void testAddMeasurementDataToRowsForVariate() {
 		final MeasurementVariable variable = MeasurementVariableTestDataInitializer.createMeasurementVariableWithOperation(
-			TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name(), TermId.SEED_SOURCE.name(), Operation.ADD);
+			ENTRY_SOURCE_ID, ENTRY_SOURCE, ENTRY_SOURCE, Operation.ADD);
 		final List<MeasurementVariable> variableList = Arrays.asList(variable);
 		final List<MeasurementRow> observations = Arrays.asList(MeasurementRowTestDataInitializer.createMeasurementRow());
 		final int previousMeasurementDataSize = observations.get(0).getDataList().size();
@@ -240,7 +245,7 @@ public class WorkbookUtilTest {
 	@Test
 	public void testAddMeasurementDataToRowsForVariableUpdateOperation() {
 		final MeasurementVariable variable = MeasurementVariableTestDataInitializer.createMeasurementVariableWithOperation(
-			TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name(), TermId.SEED_SOURCE.name(), Operation.UPDATE);
+			ENTRY_SOURCE_ID, ENTRY_SOURCE, ENTRY_SOURCE, Operation.UPDATE);
 		final List<MeasurementVariable> variableList = Arrays.asList(variable);
 		final List<MeasurementRow> observations = Arrays.asList(MeasurementRowTestDataInitializer.createMeasurementRow());
 		final int previousMeasurementDataSize = observations.get(0).getDataList().size();
@@ -261,12 +266,12 @@ public class WorkbookUtilTest {
 	@Test
 	public void testSetVariablePossibleValuesForVariateWithBreedingMethodProperty() {
 		final MeasurementVariable variable = MeasurementVariableTestDataInitializer.createMeasurementVariableWithOperation(
-			TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name(), TermId.SEED_SOURCE.name(), Operation.UPDATE);
+			ENTRY_SOURCE_ID, ENTRY_SOURCE, ENTRY_SOURCE, Operation.UPDATE);
 		final String originalProperty = "Pórtúgêsê Própêrty";
 		// Perform HTML escaping on actual property value
 		variable.setProperty(HtmlUtils.htmlEscape(originalProperty));
 		final StandardVariable stdVariable =
-			StandardVariableTestDataInitializer.createStandardVariable(TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name());
+			StandardVariableTestDataInitializer.createStandardVariable(ENTRY_SOURCE_ID, ENTRY_SOURCE);
 
 		WorkbookUtil.setVariablePossibleValues(true, this.ontologyService, this.fieldbookService, variable,	stdVariable);
 		Assert.assertEquals(this.breedingMethods, variable.getPossibleValues());
@@ -277,11 +282,11 @@ public class WorkbookUtilTest {
 	@Test
 	public void testSetVariablePossibleValuesForVariateNonBreedingMethodProperty() {
 		final MeasurementVariable variable = MeasurementVariableTestDataInitializer.createMeasurementVariableWithOperation(
-			TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name(), TermId.SEED_SOURCE.name(), Operation.UPDATE);
+			ENTRY_SOURCE_ID, ENTRY_SOURCE, ENTRY_SOURCE, Operation.UPDATE);
 		final StandardVariable stdVariable =
-			StandardVariableTestDataInitializer.createStandardVariable(TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name());
+			StandardVariableTestDataInitializer.createStandardVariable(ENTRY_SOURCE_ID, ENTRY_SOURCE);
 		Mockito.when(this.ontologyService.getProperty(Matchers.anyString()))
-			.thenReturn(new Property(new Term(TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name(), "definition")));
+			.thenReturn(new Property(new Term(ENTRY_SOURCE_ID, ENTRY_SOURCE, "definition")));
 
 		WorkbookUtil.setVariablePossibleValues(true, this.ontologyService, this.fieldbookService,variable, stdVariable);
 		Assert.assertEquals(WorkbookUtil.transformPossibleValues(stdVariable.getEnumerations()), variable.getPossibleValues());
@@ -290,9 +295,9 @@ public class WorkbookUtilTest {
 	@Test
 	public void testSetVariablePossibleValuesForFactor() {
 		final MeasurementVariable variable = MeasurementVariableTestDataInitializer.createMeasurementVariableWithOperation(
-			TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name(), TermId.SEED_SOURCE.name(), Operation.UPDATE);
+			ENTRY_SOURCE_ID, ENTRY_SOURCE, ENTRY_SOURCE, Operation.UPDATE);
 		final StandardVariable stdVariable =
-			StandardVariableTestDataInitializer.createStandardVariable(TermId.SEED_SOURCE.getId(), TermId.SEED_SOURCE.name());
+			StandardVariableTestDataInitializer.createStandardVariable(ENTRY_SOURCE_ID, ENTRY_SOURCE);
 
 		WorkbookUtil.setVariablePossibleValues(false, this.ontologyService, this.fieldbookService, variable, stdVariable);
 		Assert.assertEquals(WorkbookUtil.transformPossibleValues(stdVariable.getEnumerations()), variable.getPossibleValues());

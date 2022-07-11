@@ -4,10 +4,10 @@
 (function() {
 	'use strict';
 	angular.module('manageTrialApp').service('TrialManagerDataService', ['GERMPLASM_LIST_SIZE','GERMPLASM_CHECKS_SIZE', 'TRIAL_SETTINGS_INITIAL_DATA',
-		'SAMPLE_LIST_DATA','ENVIRONMENTS_INITIAL_DATA', 'GERMPLASM_INITIAL_DATA', 'EXPERIMENTAL_DESIGN_INITIAL_DATA',
+		'SAMPLE_LIST_DATA','ENVIRONMENTS_INITIAL_DATA', 'GERMPLASM_INITIAL_DATA', 'ENTRY_DETAILS_INITIAL_DATA', 'EXPERIMENTAL_DESIGN_INITIAL_DATA',
 		'EXPERIMENTAL_DESIGN_SPECIAL_DATA', 'TREATMENT_FACTORS_INITIAL_DATA', 'BASIC_DETAILS_DATA', '$http', '$resource', 'TRIAL_MANAGEMENT_MODE', 'PROGRAM_DEFAULT_LOCATION_ID', 'BREEDING_METHOD_CODE', '$q',
 		'TrialSettingsManager','studyStateService', '_', '$localStorage','$rootScope', 'studyContext', 'derivedVariableService', 'experimentDesignService',
-		function(GERMPLASM_LIST_SIZE, GERMPLASM_CHECKS_SIZE, TRIAL_SETTINGS_INITIAL_DATA, SAMPLE_LIST_DATA, ENVIRONMENTS_INITIAL_DATA, GERMPLASM_INITIAL_DATA,
+		function(GERMPLASM_LIST_SIZE, GERMPLASM_CHECKS_SIZE, TRIAL_SETTINGS_INITIAL_DATA, SAMPLE_LIST_DATA, ENVIRONMENTS_INITIAL_DATA, GERMPLASM_INITIAL_DATA, ENTRY_DETAILS_INITIAL_DATA,
 					EXPERIMENTAL_DESIGN_INITIAL_DATA, EXPERIMENTAL_DESIGN_SPECIAL_DATA, TREATMENT_FACTORS_INITIAL_DATA, BASIC_DETAILS_DATA, $http, $resource,
 					TRIAL_MANAGEMENT_MODE, PROGRAM_DEFAULT_LOCATION_ID, BREEDING_METHOD_CODE, $q, TrialSettingsManager, studyStateService, _, $localStorage, $rootScope, studyContext, derivedVariableService, experimentDesignService) {
 
@@ -205,6 +205,7 @@
 					trialSettings: extractSettings(TRIAL_SETTINGS_INITIAL_DATA),
 					environments: extractSettings(ENVIRONMENTS_INITIAL_DATA),
 					germplasm: extractSettings(GERMPLASM_INITIAL_DATA),
+					entryDetails: extractSettings(ENTRY_DETAILS_INITIAL_DATA),
 					treatmentFactors: extractTreatmentFactorSettings(TREATMENT_FACTORS_INITIAL_DATA),
 					basicDetails: extractSettings(BASIC_DETAILS_DATA),
 					sampleList: SAMPLE_LIST_DATA
@@ -320,6 +321,14 @@
 
 				isLockedStudy: function() {
 					return service.currentData.basicDetails.isLocked;
+				},
+
+				generationLevel: function() {
+					return service.currentData.basicDetails.generationLevel;
+				},
+
+				updateGenerationLevel: function(level) {
+					service.currentData.basicDetails.generationLevel = level;
 				},
 
 				changeLockedStatus : function(doLock) {

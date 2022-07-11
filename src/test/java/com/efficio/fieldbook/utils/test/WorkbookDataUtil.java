@@ -14,6 +14,8 @@ package com.efficio.fieldbook.utils.test;
 import com.efficio.fieldbook.web.common.bean.SettingDetail;
 import com.efficio.fieldbook.web.common.bean.SettingVariable;
 import org.generationcp.commons.constant.AppConstants;
+import org.generationcp.middleware.data.initializer.WorkbookTestDataInitializer;
+import org.generationcp.middleware.domain.dms.PhenotypicType;
 import org.generationcp.middleware.domain.dms.StandardVariable;
 import org.generationcp.middleware.domain.dms.ValueReference;
 import org.generationcp.middleware.domain.etl.MeasurementData;
@@ -168,6 +170,7 @@ public class WorkbookDataUtil {
 		workbook.setStudyDetails(WorkbookDataUtil.createStudyDetails(studyType));
 		workbook.setConditions(WorkbookDataUtil.createConditions());
 		workbook.setFactors(WorkbookDataUtil.createFactors());
+		workbook.setEntryDetails(WorkbookDataUtil.createEntryDetails());
 		workbook.setConstants(WorkbookDataUtil.createConstants());
 		workbook.setVariates(WorkbookDataUtil.createVariates());
 		workbook.setObservations(WorkbookDataUtil.createObservations(noOfObservations, noOfInstance,
@@ -192,6 +195,22 @@ public class WorkbookDataUtil {
 		details.setId(-1);
 
 		return details;
+	}
+
+	private static List<MeasurementVariable> createEntryDetails() {
+		final List<MeasurementVariable> entryDetails = new ArrayList<>();
+		entryDetails.add(WorkbookTestDataInitializer.createMeasurementVariable(TermId.ENTRY_NO.getId(), WorkbookTestDataInitializer.ENTRY,
+			"The germplasm entry number", WorkbookTestDataInitializer.NUMBER, WorkbookTestDataInitializer.ENUMERATED,
+			WorkbookTestDataInitializer.GERMPLASM_ENTRY, WorkbookTestDataInitializer.NUMERIC, WorkbookTestDataInitializer.STUDY,
+			WorkbookTestDataInitializer.ENTRY, TermId.NUMERIC_VARIABLE.getId(), PhenotypicType.ENTRY_DETAIL, false));
+
+		entryDetails.add(
+			WorkbookTestDataInitializer.createMeasurementVariable(TermId.ENTRY_TYPE.getId(), WorkbookTestDataInitializer.ENTRY_TYPE,
+				"The germplasm entry type", WorkbookTestDataInitializer.NUMBER, WorkbookTestDataInitializer.ENUMERATED,
+				WorkbookTestDataInitializer.GERMPLASM_ENTRY, WorkbookTestDataInitializer.CATEGORICA, WorkbookTestDataInitializer.STUDY,
+				WorkbookTestDataInitializer.ENTRY_TYPE, TermId.CATEGORICAL_VARIATE.getId(), PhenotypicType.ENTRY_DETAIL, false));
+
+		return entryDetails;
 	}
 
 	private static List<MeasurementVariable> createConditions() {
@@ -326,13 +345,6 @@ public class WorkbookDataUtil {
 		factors.add(variable);
 
 		variable =
-				new MeasurementVariable(TermId.SEED_SOURCE.getId(), WorkbookDataUtil.SEED_SOURCE, "The seed source of the germplasm",
-						WorkbookDataUtil.NAME, WorkbookDataUtil.SELECTED, WorkbookDataUtil.SEED_SOURCE, WorkbookDataUtil.CHAR,
-						WorkbookDataUtil.STUDY, WorkbookDataUtil.ENTRY);
-		variable.setDataTypeId(TermId.CHARACTER_VARIABLE.getId());
-		factors.add(variable);
-
-		variable =
 				new MeasurementVariable(TermId.PLOT_NO.getId(), WorkbookDataUtil.PLOT, "Plot number ", WorkbookDataUtil.NESTED_NUMBER,
 						WorkbookDataUtil.ENUMERATED, WorkbookDataUtil.FIELD_PLOT, WorkbookDataUtil.NUMERIC, WorkbookDataUtil.NUMERIC_VALUE,
 						WorkbookDataUtil.PLOT);
@@ -434,10 +446,6 @@ public class WorkbookDataUtil {
 
 				data = new MeasurementData(WorkbookDataUtil.CROSS, "-");
 				data.setMeasurementVariable(WorkbookDataUtil.getMeasurementVariable(TermId.CROSS.getId(), workbook.getFactors()));
-				dataList.add(data);
-
-				data = new MeasurementData(WorkbookDataUtil.SOURCE, "-");
-				data.setMeasurementVariable(WorkbookDataUtil.getMeasurementVariable(TermId.SEED_SOURCE.getId(), workbook.getFactors()));
 				dataList.add(data);
 
 				data = new MeasurementData(WorkbookDataUtil.PLOT, String.valueOf(i));
@@ -728,8 +736,6 @@ public class WorkbookDataUtil {
 		visibleColumnMap.put(TermId.ENTRY_NO, true);
 		visibleColumnMap.put(TermId.DESIG, true);
 		visibleColumnMap.put(TermId.ENTRY_CODE, true);
-		visibleColumnMap.put(TermId.SEED_SOURCE, true);
-
 		return visibleColumnMap;
 
 	}

@@ -187,10 +187,6 @@ public class DesignImportMeasurementRowGeneratorTest {
 				Assert.assertEquals(
 						"The value of MeasurementData should match the germplasm value for " + TermId.GERMPLASM_SOURCE.toString()
 								+ " variable.", measurementData.getValue().toString(), germplasmEntry.getSource().toString());
-			} else if (TermId.SEED_SOURCE.getId() == measurementData.getMeasurementVariable().getTermId()) {
-				Assert.assertEquals(
-						"The value of MeasurementData should match the germplasm value for " + TermId.SEED_SOURCE.toString() + " variable.",
-						measurementData.getValue().toString(), germplasmEntry.getSource().toString());
 			} else if (TermId.OBS_UNIT_ID.getId() == measurementData.getMeasurementVariable().getTermId()) {
 				Assert.assertEquals("The value of MeasurementData should be empty for " + TermId.OBS_UNIT_ID.toString() + " variable",
 						measurementData.getValue().toString(), "");

@@ -240,12 +240,16 @@ table.dataTable.table-sorted thead th.sorting_desc {
     background: #c8c6c6 url('../img/datatable/sort_desc.png') no-repeat center right;
 }
 
+#entriesTableContainer table.dataTable.table-sorted thead th,
 #subObservationTableContainer table.dataTable.table-sorted thead th.factors.sorting,
 #subObservationTableContainer table.dataTable.table-sorted thead th.factors.sorting_asc,
 #subObservationTableContainer table.dataTable.table-sorted thead th.factors.sorting_desc {
     background-color: #a4a4a4;
 }
 
+#entriesTableContainer table.dataTable.table-sorted thead th.editable {
+    background-color: #c2c3c4;
+}
 
 .pagination {
     font-size: 10px;
@@ -1081,6 +1085,15 @@ div.sectionContainer {
 .dropdown-submenu>a:after{display:block;content:" ";float:right;width:0;height:0;border-color:transparent;border-style:solid;border-width:5px 0 5px 5px;border-left-color:#cccccc;margin-top:5px;margin-right:-10px;}
 .dropdown-submenu:hover>a:after{border-left-color:#ffffff;}
 .dropdown-submenu.pull-left{float:none;}.dropdown-submenu.pull-left>.dropdown-menu{left:-100%;margin-left:10px;-webkit-border-radius:6px 0 6px 6px;-moz-border-radius:6px 0 6px 6px;border-radius:6px 0 6px 6px;}
+.dropdown-menu > li > div {
+    display: block;
+    padding: 0px 20px;
+    clear: both;
+    font-weight: 400;
+    line-height: 1.42857143;
+    color: #333;
+    white-space: nowrap;
+}
 
 #inventory-germplasm-list {
     min-height: 500px;
@@ -2549,4 +2562,12 @@ div.dt-button-collection {
 }
 .show-on-hover:hover {
     opacity: 0.5;
+}
+
+.text-ellipsis {
+    display: block;
+    white-space: nowrap;
+    max-width: 125px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

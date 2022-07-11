@@ -296,7 +296,6 @@ public class GermplasmTreeControllerTest {
 
 		Assert.assertEquals("Only one cross should be created", 1, listCaptor.getValue().size());
 		Assert.assertEquals(1, listCaptor.getValue().get(0).getRight().getEntryId().intValue());
-		Assert.assertEquals("1", listCaptor.getValue().get(0).getRight().getEntryCode());
 	}
 
 	@Test

@@ -158,11 +158,6 @@
 
 	<bean id="exportFieldmapService" class="com.efficio.fieldbook.service.ExportFieldmapServiceImpl" />
 
-	<bean id="exportStudyEntriesService"
-		  class="com.efficio.fieldbook.web.common.service.impl.ExportStudyEntriesServiceImpl" scope="request">
-		<aop:scoped-proxy />
-	</bean>
-
     <bean id="studyServiceFactory" class="com.efficio.fieldbook.web.study.ImportStudyServiceFactory"/>
 
 	<bean id="designImportService"
@@ -482,14 +477,6 @@
 		<aop:scoped-proxy />
 	</bean>
 
-    <bean id="germplasmExportService" class="org.generationcp.commons.service.impl.GermplasmExportServiceImpl" scope="request">
-		<aop:scoped-proxy />
-	</bean>
-
-	<bean id="germplasmExportedWorkbook" class="org.generationcp.commons.parsing.GermplasmExportedWorkbook" scope="request">
-		<aop:scoped-proxy />
-	</bean>
-
 	<!-- Including all beans used for generating Code Sheet when exporting Germplasm List excel file -->
 	<context:component-scan base-package="org.generationcp.commons.workbook.generator" />
 
@@ -719,7 +706,12 @@
 	<bean id="toolService" class="org.generationcp.middleware.api.tool.ToolServiceImpl">
 		<constructor-arg ref="workbenchHibernateSessionProvider" />
 	</bean>
-    <!-- Nested <beans> elements can only be at the end. -->
 
+	<bean id="germplasmListDataService" factory-bean="managerFactory"
+			  factory-method="getGermplasmListDataService" scope="request">
+		<aop:scoped-proxy />
+    </bean>
+
+    <!-- Nested <beans> elements can only be at the end. -->
 
 </beans>

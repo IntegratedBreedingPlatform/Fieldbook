@@ -51,7 +51,6 @@ public class CrossesListUtil {
 		importedCross.setId(crossesData.getId());
 		importedCross.setEntryNumber(crossesData.getEntryId());
 		importedCross.setGid(crossesData.getGid() != null ? Integer.toString(crossesData.getGid()) : null);
-		importedCross.setEntryCode(crossesData.getEntryCode());
 		importedCross.setSource(crossesData.getSeedSource());
 
 		final GermplasmParent femaleParentFromDB = crossesData.getFemaleParent();
@@ -153,7 +152,7 @@ public class CrossesListUtil {
 		tableHeaderList.add(this.getTermNameFromOntology(ColumnLabels.CROSS_MALE_GID));
 		tableHeaderList.add(this.getTermNameFromOntology(ColumnLabels.MALE_PARENT));
 		tableHeaderList.add(this.getTermNameFromOntology(ColumnLabels.BREEDING_METHOD_NAME));
-		tableHeaderList.add(this.getTermNameFromOntology(ColumnLabels.SEED_SOURCE));
+		tableHeaderList.add(ColumnLabels.GERMPLASM_ORIGIN.name());
 		tableHeaderList.add(this.getTermNameFromOntology(ColumnLabels.FGID));
 		tableHeaderList.add(this.getTermNameFromOntology(ColumnLabels.MGID));
 		tableHeaderList.add(this.getTermNameFromOntology(ColumnLabels.BREEDING_METHOD_NUMBER));

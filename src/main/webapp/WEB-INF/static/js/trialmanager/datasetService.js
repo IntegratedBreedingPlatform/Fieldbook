@@ -241,6 +241,11 @@
 					.then(successHandler, failureHandler);
 			};
 
+			datasetService.updateDatasetProperties = function (variableIds) {
+				var request = $http.put(BASE_URL + studyContext.studyId + '/plot-datasets/properties', variableIds);
+				return request.then(successHandler, failureHandler);
+			};
+
 			return datasetService;
 
 		}]);

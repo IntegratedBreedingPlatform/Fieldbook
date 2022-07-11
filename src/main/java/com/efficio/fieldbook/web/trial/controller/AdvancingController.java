@@ -594,27 +594,13 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 		tableHeaderList.add(new TableHeader(ColumnLabels.DESIGNATION.getTermNameFromOntology(this.ontologyDataManager), "desig"));
 		tableHeaderList.add(new TableHeader(ColumnLabels.PARENTAGE.getTermNameFromOntology(this.ontologyDataManager), "parentage"));
 		tableHeaderList.add(new TableHeader(ColumnLabels.GID.getTermNameFromOntology(this.ontologyDataManager), "gid"));
-		tableHeaderList.add(new TableHeader(ColumnLabels.SEED_SOURCE.getTermNameFromOntology(this.ontologyDataManager), "source"));
+		tableHeaderList.add(new TableHeader(ColumnLabels.GERMPLASM_ORIGIN.name(), "source"));
 
 		tableHeaderList.add(new TableHeader(ColumnLabels.TRIAL_INSTANCE.getTermNameFromOntology(this.ontologyDataManager),
 			"trialInstanceNumber"));
 		tableHeaderList.add(new TableHeader(ColumnLabels.REP_NO.getTermNameFromOntology(this.ontologyDataManager), "replicationNumber"));
 
 		return tableHeaderList;
-	}
-
-	private List<StandardVariableReference> filterVariablesByProperty(final List<SettingDetail> variables, final String propertyName) {
-		final List<StandardVariableReference> list = new ArrayList<>();
-		if (variables != null && !variables.isEmpty()) {
-			for (final SettingDetail detail : variables) {
-				if (detail.getVariable() != null && detail.getVariable().getProperty() != null
-					&& propertyName.equalsIgnoreCase(detail.getVariable().getProperty())) {
-					list.add(new StandardVariableReference(detail.getVariable().getCvTermId(), detail.getVariable().getName(), detail
-						.getVariable().getDescription()));
-				}
-			}
-		}
-		return list;
 	}
 
 	@ResponseBody

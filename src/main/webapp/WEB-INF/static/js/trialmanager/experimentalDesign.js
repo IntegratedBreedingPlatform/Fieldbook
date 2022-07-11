@@ -103,6 +103,7 @@
 						}
 
 						$scope.germplasmDescriptorSettings = TrialManagerDataService.settings.germplasm;
+						$scope.entryDetailSettings = TrialManagerDataService.settings.entryDetails;
 						$scope.data.treatmentFactors = TrialManagerDataService.settings.treatmentFactors.details;
 						$scope.data.treatmentFactorsData = TrialManagerDataService.currentData.treatmentFactors.currentData;
 						$scope.measurementDetails = {hasMeasurement: studyStateService.hasGeneratedDesign()};

@@ -196,9 +196,6 @@ public class SettingsControllerTest {
 	public void testRemoveSelectionVariatesFromTraitsWithoutSelectionVariate() {
 		final List<SettingDetail> variables = this.createSettingDetailVariables();
 		final String originalProperty = "Pórtúgêsê Própêrty";
-		final SettingDetail specialVariable = this.createSettingDetail(TermId.SEED_SOURCE.getId(), "");
-		specialVariable.getVariable().setProperty(HtmlUtils.htmlEscape(originalProperty));
-		variables.add(specialVariable);
 		final int originalSize = variables.size();
 		final List<String> properties = new ArrayList<>();
 		for (final SettingDetail detail : variables) {

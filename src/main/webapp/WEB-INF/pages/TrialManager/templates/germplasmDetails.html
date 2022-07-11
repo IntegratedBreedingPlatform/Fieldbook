@@ -1,13 +1,13 @@
 <div ng-cloak="">
 <div class="row" >
 	<div class="col-lg-6 col-md-8 col-sm-10 col-xs-12">
-		<section-container th:attr="heading=#{study.managesettings.germplasm.factors.label}" collapsible="true">
+		<section-container th:attr="heading=#{study.managesettings.entry.details.label}" collapsible="true">
 			<section-container icon="bms-factors" name="content"
-							   th:attr="heading=#{study.studydetails.germplasm.descriptors}" help-tool-type="MANAGE_STUDIES_GERMPLASM"
-							   add-variable="true" hide-variable="addVariable" on-hide-callback="onHideCallback" model-data="settings"
-							   variable-type="1804" callback="onAddVariable(result, 1804)">
-				<display-settings hide-delete="isHideDelete" name="content" predelete-function="onRemoveVariable" settings="settings" variable-type="1804"></display-settings>
-            </section-container>
+							   th:attr="heading=#{study.studydetails.entry.details}" help-tool-type="MANAGE_STUDIES_GERMPLASM"
+							   add-variable="true" hide-variable="addVariable" on-hide-callback="onHideCallback" model-data="entryDetails"
+							   variable-type="1815" callback="onAddVariable(result, 1815)">
+				<display-settings hide-delete="isHideDelete" name="content" predelete-function="onRemoveVariable" settings="entryDetails" variable-type="1815"></display-settings>
+			</section-container>
 		</section-container>
 	</div>
 </div>
@@ -20,6 +20,7 @@
 		<button class="btn btn-primary show-germplasm-details"  ng-click="updateModifyList()" th:text="#{study.germplasm.replace}">Overwrite</button>
 	</div>
 </div>
+
 <div class="collapse in germplasmListDetails germplasmAndCheckSection" id="chooseGermplasmAndChecks" data-replace="0">
 	<!-- Germplasm List Table View -->
 	<div id="primary-section">
@@ -27,15 +28,33 @@
 			<img th:src="@{/static/img/review-list-details.png}" />
 			<label class="control-label"><strong id="germplasmLabel" class="sub-content-heading">Study List</strong></label>
 
+			<div class="pull-right" ng-show="showAddColumns">
+				<div class="btn-group" style="padding-right: 12px">
+					<button type="button" class="btn btn-info dropdown-toggle fbk-columns-btn" data-toggle="dropdown">
+						<span th:text="#{study.studydetails.columns}">Columns</span>
+					</button>
+					<ul class="dropdown-menu fbk-right-button-drop-down" role="menu">
+						<li ng-repeat="column in entryTableColumns">
+							<div>
+								<input type="checkbox" id="check-{{column.id}}" ng-checked="column.selected" ng-model="column.selected"  />
+								<label for="check-{{column.id}}">{{column.name}}</label>
+							</div>
+						</li>
+						<li class="fbk-center">
+							<button class="btn btn-primary ng-binding" ng-click="selectEntryTableColumns()">Apply</button>
+						</li>
+					</ul>
+				</div>
+			</div>
 
-			<div  class="pull-right">
-				 <div class="btn-group">
+			<div class="pull-right">
+				 <div class="btn-group" style="padding-right: 12px">
 					<button type="button" class="btn btn-info dropdown-toggle fbk-action-btn" data-toggle="dropdown">
 						<span th:text="#{study.studydetails.actions}">Actions</span>
 					</button>
 					<ul class="dropdown-menu fbk-right-button-drop-down" role="menu">
 						<li>
-							<a href="javascript: void(0)" ng-show="hasGermplasmListSelected()" ng-click="validateGermplasmForReplacement()" th:text="#{replace.germplasm}" >Replace Germplasm</a>
+							<a href="javascript: void(0)" ng-show="hasGermplasmListSelected()" ng-click="validateGermplasmForReplacement()" th:text="#{replace.germplasm}">Replace Germplasm</a>
 						</li>
 						<li>
 							<a href="javascript: void(0)" ng-click="showAddEntriesModal()" th:text="#{add.new.entries}" >Add New Entries</a>
@@ -56,6 +75,10 @@
 	<div ng-show="showStudyTable()">
 		Total Entries: <label class="control-label control-label-bold" ng-model="numberOfEntries">{{numberOfEntries}}</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<div class="col-show-hide pull-right">
+			<div id="obsCategoricalDescriptionBtn" class="btn btn-link" ng-click="toggleShowCategoricalDescription()">
+				<span ng-if="!isCategoricalDescriptionView" th:text="#{observations.show.categorical.description}"></span>
+				<span ng-if="isCategoricalDescriptionView" th:text="#{observations.hide.categorical.description}"></span>
+			</div>
 		</div>
 	</div>
 
@@ -65,7 +88,7 @@
 
 <div class="collapse in germplasmListDetails">
 	<div class="row">
-		<div class="col-xs-12" ng-show="showStudyTable()">
+		<div id="entriesTableContainer" class="col-xs-12" ng-show="showStudyTable()">
 			<table id="germplasm-table"
 				   datatable=""
 				   dt-instance="nested.dtInstance"
@@ -109,4 +132,20 @@ $(document).ready(function() {
 });
 
 //]]>
+</script>
+<script type="text/ng-template" id="crossOptionsPopover.html">
+	<form>
+		<div class="form-group">
+			<label for="generationLevel"><strong>Specify expansion level</strong></label>
+			<select class="form-control" id="generationLevel" name="generationLevel"
+					ng-model="generationLevel"
+					ng-options="level for level in generationLevels"
+					ng-change="changeGenerationLevel(generationLevel)">
+			</select>
+
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-primary" ng-click="fillWithCrossExpansion()">Apply</button>
+		</div>
+	</form>
 </script>

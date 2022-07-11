@@ -241,51 +241,7 @@ public abstract class BaseTrialController extends SettingsController {
 	}
 
 	TabInfo prepareGermplasmTabInfo(final List<MeasurementVariable> measurementVariables, final boolean isUsePrevious) {
-		final List<SettingDetail> detailList = new ArrayList<>();
-		final List<Integer> requiredIDList = this.buildVariableIDList(AppConstants.CREATE_STUDY_PLOT_REQUIRED_FIELDS.getString());
-
-		for (final MeasurementVariable measurementVariable : measurementVariables) {
-			// this condition is required so that treatment factors are not
-			// included in the list of factors for the germplasm tab
-			if (measurementVariable.getTreatmentLabel() != null && !measurementVariable.getTreatmentLabel().isEmpty()
-				|| this.inRequiredExpDesignVar(measurementVariable.getTermId()) && isUsePrevious) {
-				continue;
-			}
-
-			final SettingDetail detail =
-				this.createSettingDetail(measurementVariable.getTermId(), measurementVariable.getName(), VariableType.GERMPLASM_DESCRIPTOR.getRole().name());
-
-			if (measurementVariable.getRole() != null) {
-				detail.setRole(measurementVariable.getRole());
-				detail.getVariable().setRole(measurementVariable.getRole().name());
-			}
-
-			if (requiredIDList.contains(measurementVariable.getTermId())) {
-				detail.setDeletable(false);
-			} else {
-				detail.setDeletable(true);
-			}
-
-			// set all variables with trial design role to hidden
-			if (measurementVariable.getRole() == PhenotypicType.TRIAL_DESIGN) {
-				detail.setHidden(true);
-				// BMS-1048
-				if (measurementVariable.getTermId() == TermId.COLUMN_NO.getId() || measurementVariable.getTermId() == TermId.RANGE_NO.getId()) {
-					detail.setDeletable(false);
-					detail.setHidden(false);
-				}
-			} else {
-				detail.setHidden(false);
-			}
-
-			if (!isUsePrevious) {
-				detail.getVariable().setOperation(Operation.UPDATE);
-			} else {
-				detail.getVariable().setOperation(Operation.ADD);
-			}
-
-			detailList.add(detail);
-		}
+		final List<SettingDetail> detailList = this.getPlotsLevelsDetails(measurementVariables, isUsePrevious);
 
 		final TabInfo info = new TabInfo();
 		info.setSettings(detailList);
@@ -295,15 +251,13 @@ public abstract class BaseTrialController extends SettingsController {
 		return info;
 	}
 
-	boolean inRequiredExpDesignVar(final int termId) {
-		final StringTokenizer token = new StringTokenizer(AppConstants.EXP_DESIGN_REQUIRED_VARIABLES.getString(), ",");
+	TabInfo prepareEntryDetailsData(final List<MeasurementVariable> entryDetails) {
+		final List<SettingDetail> settings = this.getEntryDetails(entryDetails);
 
-		while (token.hasMoreTokens()) {
-			if (Integer.parseInt(token.nextToken()) == termId) {
-				return true;
-			}
-		}
-		return false;
+		final TabInfo tabInfo = new TabInfo();
+		tabInfo.setSettings(settings);
+		this.userSelection.setEntryDetails(settings);
+		return tabInfo;
 	}
 
 	protected TabInfo prepareTreatmentFactorsInfo(final List<TreatmentVariable> treatmentVariables, final boolean isUsePrevious) {
@@ -634,6 +588,7 @@ public abstract class BaseTrialController extends SettingsController {
 		basic.setUserID(studyOwnerUserId);
 		basic.setUserName(studyOwnerPersonName);
 		basic.setStudyType(studyDetails.getStudyType());
+
 		final TabInfo tab = new TabInfo();
 		tab.setData(basic);
 

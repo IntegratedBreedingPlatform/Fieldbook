@@ -11,15 +11,20 @@
 
 package com.efficio.fieldbook.web.trial.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
-
+import com.efficio.fieldbook.service.api.ErrorHandlerService;
+import com.efficio.fieldbook.web.common.bean.SettingDetail;
+import com.efficio.fieldbook.web.trial.bean.BasicDetails;
 import com.efficio.fieldbook.web.trial.bean.Instance;
+import com.efficio.fieldbook.web.trial.bean.InstanceInfo;
+import com.efficio.fieldbook.web.trial.bean.TabInfo;
+import com.efficio.fieldbook.web.trial.bean.TrialData;
+import com.efficio.fieldbook.web.trial.bean.TrialSettingsBean;
+import com.efficio.fieldbook.web.trial.form.CreateTrialForm;
+import com.efficio.fieldbook.web.trial.form.ImportGermplasmListForm;
+import com.efficio.fieldbook.web.util.SessionUtility;
+import com.efficio.fieldbook.web.util.SettingsUtil;
+import com.efficio.fieldbook.web.util.WorkbookUtil;
+import org.generationcp.commons.constant.AppConstants;
 import org.generationcp.commons.context.ContextInfo;
 import org.generationcp.middleware.domain.etl.MeasurementRow;
 import org.generationcp.middleware.domain.etl.MeasurementVariable;
@@ -29,6 +34,7 @@ import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.domain.ontology.VariableType;
 import org.generationcp.middleware.exceptions.MiddlewareException;
 import org.generationcp.middleware.exceptions.MiddlewareQueryException;
+import org.generationcp.middleware.manager.Operation;
 import org.generationcp.middleware.pojos.workbench.settings.Dataset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,19 +51,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.efficio.fieldbook.service.api.ErrorHandlerService;
-import com.efficio.fieldbook.web.common.bean.SettingDetail;
-import com.efficio.fieldbook.web.trial.bean.BasicDetails;
-import com.efficio.fieldbook.web.trial.bean.InstanceInfo;
-import com.efficio.fieldbook.web.trial.bean.TabInfo;
-import com.efficio.fieldbook.web.trial.bean.TrialData;
-import com.efficio.fieldbook.web.trial.bean.TrialSettingsBean;
-import com.efficio.fieldbook.web.trial.form.CreateTrialForm;
-import com.efficio.fieldbook.web.trial.form.ImportGermplasmListForm;
-import org.generationcp.commons.constant.AppConstants;
-import com.efficio.fieldbook.web.util.SessionUtility;
-import com.efficio.fieldbook.web.util.SettingsUtil;
-import com.efficio.fieldbook.web.util.WorkbookUtil;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 /**
  * The Class CreateTrialController.
@@ -122,6 +124,7 @@ public class CreateTrialController extends BaseTrialController {
 
 		model.addAttribute("basicDetailsData", this.prepareBasicDetailsTabInfo());
 		model.addAttribute("germplasmData", this.prepareGermplasmTabInfo(false));
+		model.addAttribute("entryDetailsData", this.prepareEntryDetailsData());
 		model.addAttribute(CreateTrialController.ENVIRONMENT_DATA_TAB, this.prepareEnvironmentsTabInfo(false));
 		model.addAttribute(CreateTrialController.TRIAL_SETTINGS_DATA_TAB, this.prepareTrialSettingsTabInfo());
 		model.addAttribute("experimentalDesignSpecialData", this.prepareExperimentalDesignSpecialData());
@@ -151,7 +154,7 @@ public class CreateTrialController extends BaseTrialController {
 						this.prepareTrialSettingsTabInfo(trialWorkbook.getStudyConditions(), true));
 				tabDetails.put("measurementsData",
 						this.prepareMeasurementVariableTabInfo(trialWorkbook.getVariates(), VariableType.TRAIT, true));
-
+				tabDetails.put("entryDetailsData", this.prepareEntryDetailsData(trialWorkbook.getEntryDetails(), true));
 				// TODO:Uncomment lines below related to treatment factors after resolving IBP-2207
 				/*this.fieldbookMiddlewareService
 						.setTreatmentFactorValues(trialWorkbook.getTreatmentFactors(), trialWorkbook.getMeasurementDatesetId());
@@ -351,6 +354,71 @@ public class CreateTrialController extends BaseTrialController {
 
 		return info;
 	}
+
+	protected TabInfo prepareEntryDetailsData() {
+		final List<SettingDetail> initialDetailList = new ArrayList<>();
+		final List<Integer> initialSettingIDs = this.buildVariableIDList(AppConstants.CREATE_STUDY_ENTRY_DETAILS_REQUIRED_FIELDS.getString());
+
+		for (final Integer initialSettingID : initialSettingIDs) {
+			try {
+				final SettingDetail detail =
+					this.createSettingDetail(initialSettingID, null, VariableType.ENTRY_DETAIL.getRole().name());
+				detail.setDeletable(false);
+				detail.getVariable().setOperation(Operation.UPDATE);
+				initialDetailList.add(detail);
+			} catch (final MiddlewareException e) {
+				CreateTrialController.LOG.error(e.getMessage(), e);
+			}
+		}
+
+		final TabInfo info = new TabInfo();
+		info.setSettings(initialDetailList);
+
+		if (!isEmpty(this.userSelection.getPlotsLevelList())) {
+			this.userSelection.getPlotsLevelList().addAll(initialDetailList);
+		}
+
+		return info;
+	}
+
+	protected TabInfo prepareEntryDetailsData(final List<MeasurementVariable> measurementVariables, final boolean isUsePrevious) {
+		final List<Integer> requiredIDList = this.buildVariableIDList(AppConstants.CREATE_STUDY_ENTRY_DETAILS_REQUIRED_FIELDS.getString());
+		final List<SettingDetail> detailList = measurementVariables.stream()
+			.map(measurementVariable -> {
+				final SettingDetail settingDetail =
+					this.createSettingDetail(measurementVariable.getTermId(), measurementVariable.getName(),
+						VariableType.ENTRY_DETAIL.getRole().name());
+
+				if (measurementVariable.getRole() != null) {
+					settingDetail.setRole(measurementVariable.getRole());
+					settingDetail.getVariable().setRole(measurementVariable.getRole().name());
+				}
+
+				if (requiredIDList.contains(measurementVariable.getTermId())) {
+					settingDetail.setDeletable(false);
+				} else {
+					settingDetail.setDeletable(true);
+				}
+
+				if (!isUsePrevious) {
+					settingDetail.getVariable().setOperation(Operation.UPDATE);
+				} else {
+					settingDetail.getVariable().setOperation(Operation.ADD);
+				}
+				return settingDetail;
+			})
+			.collect(Collectors.toList());
+
+		final TabInfo info = new TabInfo();
+		info.setSettings(detailList);
+
+		if (!isEmpty(this.userSelection.getPlotsLevelList())) {
+			this.userSelection.getPlotsLevelList().addAll(detailList);
+		}
+
+		return info;
+	}
+
 
 	protected TabInfo prepareEnvironmentsTabInfo(final boolean isClearSettings) {
 		final TabInfo info = new TabInfo();

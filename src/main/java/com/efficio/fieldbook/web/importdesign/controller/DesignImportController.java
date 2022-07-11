@@ -89,6 +89,8 @@ public class DesignImportController extends SettingsController {
 
 	private static final String MAPPED_TRAITS = "mappedTraits";
 
+	private static final String MAPPED_ENTRY_DETAILS = "mappeEntryDetails";
+
 	public static final String IS_SUCCESS = "isSuccess";
 
 	public static final String ERROR = "error";
@@ -153,6 +155,7 @@ public class DesignImportController extends SettingsController {
 		final Map<String, Object> resultsMap = new HashMap<>();
 
 		try {
+			this.reloadWorkbook();
 			this.initializeTemporaryWorkbook();
 
 			final DesignImportData designImportData = this.designImportParser.parseFile(form.getFileType(),
@@ -184,6 +187,25 @@ public class DesignImportController extends SettingsController {
 
 		// we return string instead of json to fix IE issue rel. DataTable
 		return this.convertObjectToJson(resultsMap);
+	}
+
+ //TODO:  This method is used as a fix to reload the workbook and set the userSelection from the DB,
+ // avoiding loaded the same variable with different operations like ADD and UPDATE.
+ 	private void reloadWorkbook() {
+		final Workbook workbook = this.fieldbookMiddlewareService.getStudyDataSet(this.userSelection.getWorkbook().getStudyDetails().getId());
+		this.userSelection.setConstantsWithLabels(workbook.getConstants());
+		this.userSelection.setWorkbook(workbook);
+		this.userSelection.setExperimentalDesignVariables(WorkbookUtil.getExperimentalDesignVariables(workbook.getConditions()));
+		this.userSelection
+			.setExpDesignParams(SettingsUtil.convertToExpDesignParamsUi(this.userSelection.getExperimentalDesignVariables()));
+		this.userSelection.setTemporaryWorkbook(null);
+		this.userSelection.setMeasurementRowList(workbook.getObservations());
+
+		this.fieldbookMiddlewareService
+			.setTreatmentFactorValues(workbook.getTreatmentFactors(), workbook.getMeasurementDatesetId());
+		this.userSelection.setPlotsLevelList(this.getPlotsLevelsDetails(workbook.getFactors(), true));
+		this.userSelection.setEntryDetails(this.getEntryDetails(workbook.getEntryDetails()));
+
 	}
 
 	/**
@@ -277,7 +299,8 @@ public class DesignImportController extends SettingsController {
 				this.userSelection.getDesignImportData().getMappedHeaders().get(PhenotypicType.GERMPLASM));
 		mappingData.put(DesignImportController.MAPPED_TRAITS,
 				this.userSelection.getDesignImportData().getMappedHeaders().get(PhenotypicType.VARIATE));
-
+		mappingData.put(DesignImportController.MAPPED_ENTRY_DETAILS,
+			this.userSelection.getDesignImportData().getMappedHeaders().get(PhenotypicType.ENTRY_DETAIL));
 		return mappingData;
 	}
 
@@ -431,6 +454,9 @@ public class DesignImportController extends SettingsController {
 				case DesignImportController.MAPPED_TRAITS:
 					newMappingResults.put(PhenotypicType.VARIATE, item.getValue());
 					break;
+				case DesignImportController.MAPPED_ENTRY_DETAILS:
+					newMappingResults.put(PhenotypicType.ENTRY_DETAIL, item.getValue());
+					break;
 				default:
 
 			}
@@ -452,6 +478,8 @@ public class DesignImportController extends SettingsController {
 					case DesignImportController.MAPPED_TRAITS:
 						stdVar.setPhenotypicType(PhenotypicType.VARIATE);
 						break;
+					case DesignImportController.MAPPED_ENTRY_DETAILS:
+						stdVar.setPhenotypicType(PhenotypicType.ENTRY_DETAIL);
 					default:
 
 				}
@@ -755,8 +783,8 @@ public class DesignImportController extends SettingsController {
 		final Dataset dataset = (Dataset) SettingsUtil
 			.convertPojoToXmlDataset(this.fieldbookMiddlewareService, name, combinedList, this.userSelection.getPlotsLevelList(),
 				variatesList, this.userSelection.getTrialLevelVariableList(), this.userSelection.getTreatmentFactors(),
-				null, null, this.userSelection.getStudyConditions(), this.contextUtil.getCurrentProgramUUID(), description, startDate,
-				endDate, studyUpdate);
+				null, this.userSelection.getStudyConditions(), null, this.userSelection.getEntryDetails(),
+				this.contextUtil.getCurrentProgramUUID(), description, startDate, endDate, studyUpdate);
 
 		workbook = SettingsUtil.convertXmlDatasetToWorkbook(dataset, this.contextUtil.getCurrentProgramUUID());
 

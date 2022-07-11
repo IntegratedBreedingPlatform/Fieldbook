@@ -1642,6 +1642,15 @@
 								}
 							}
 						});
+					} else if (columnData.termId === 8330) {
+						// GROUPGID
+						columnsDef.push({
+							targets: columns.length - 1,
+							orderable: false,
+							render: function (data, type, full, meta) {
+								return (data.value === "0")  ? '-' : data.value;
+							}
+						});
 					} else if (!columnData.factor) { // variates
 						columnsDef.push({
 							targets: columns.length - 1,
@@ -1706,7 +1715,8 @@
 									return renderCategoricalValue(data.value, columnData);
 								}
 
-								return EscapeHTML.escape(data.value);
+								var escapedValue = EscapeHTML.escape(data.value);
+								return '<span class="text-ellipsis" title="' + escapedValue + '">' + escapedValue + '</span>';
 							}
 						});
 					}
@@ -1759,7 +1769,7 @@
 				if (numericValue === "missing" || numericValue === "") {
 					return numericValue;
 				} else {
-					return EscapeHTML.escape(numericValue ? Number(Math.round(numericValue + 'e4') + 'e-4') : '');
+					return EscapeHTML.escape(numericValue ? Number(numericValue) : '');
 				}
 			}
 
@@ -1888,6 +1898,7 @@
 			}
 
 		}])
+		// TODO: move to commons because it's also used by 'Germplasm & checks' tab
 		.directive('observationInlineEditor', function () {
 			return {
 				restrict: 'E',

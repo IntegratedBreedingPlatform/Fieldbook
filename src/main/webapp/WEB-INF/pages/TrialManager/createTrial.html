@@ -159,8 +159,8 @@
 										   th:text="#{study.studydetails.action.import.study}">Import Observations</a>
 									</li>
 									<li ng-show="hasGermplasmListSelected()">
-										<a href="javascript: showExportGermplasmListPopup();" id="export-germplasm-link"
-										   th:text="#{study.studydetails.action.export.germplasm.list}">Export Germplasm List</a>
+										<a ng-click="exportStudyEntriesPrintingLabels()" id="export-germplasm-link"
+										   th:text="#{study.studydetails.action.export.study.entries}">Export study entries</a>
 									</li>
 								</ul>
 							</li>
@@ -470,10 +470,6 @@
 	</div>
 
 	<div class="row">
-		<div th:include="/Common/exportGermplasmList"></div>
-	</div>
-
-	<div class="row">
 		<div th:include="/Common/browseGermplasmListTable"></div>
 	</div>
 
@@ -678,6 +674,11 @@
 				label: /*[[#{study.managesettings.add.study.conditions}]]*/ '',
 				placeholder: /*[[#{study.reminder.add.study.conditions}]]*/ ''
 			},
+			/*ENTRY DETAILS*/
+			1815: {
+				label: /*[[#{study.managesettings.add.entrydetails.variates}]]*/ '',
+				placeholder: /*[[#{study.reminder.add.entrydetails.settings}]]*/ ''
+			},
 			generalAjaxError: /*[[#{study.managesettings.variable.selection.error}]]*/ '',
 			variableSelectedMessage: /*[[#{common.warning.variable.in.use}]]*/ '',
             uniqueVariableError: /*[[#{variable.selection.unique.variable.error}]]*/ '',
@@ -696,6 +697,7 @@
 			).constant('SAMPLE_LIST_DATA', /*[[${sampleList}]]*/ ''
 			).constant('ENVIRONMENTS_INITIAL_DATA', /*[[${environmentData}]]*/ ''
 			).constant('GERMPLASM_INITIAL_DATA', /*[[${germplasmData}]]*/ ''
+			).constant('ENTRY_DETAILS_INITIAL_DATA', /*[[${entryDetailsData}]]*/ ''
 			).constant('GERMPLASM_LIST_SIZE', /*[[${germplasmListSize}]]*/ ''
 			).constant('GERMPLASM_CHECKS_SIZE', /*[[${germplasmChecksSize}]]*/ ''
 			).constant('TREATMENT_FACTORS_INITIAL_DATA', /*[[${treatmentFactorsData}]]*/ ''
@@ -760,7 +762,8 @@
 				trialDatasetId: /*[[${trialDatasetId}]]*/ ''
 			}).constant('LABEL_PRINTING_TYPE', {
 				OBSERVATION_DATASET: /*[[${T(org.generationcp.middleware.domain.labelprinting.LabelPrintingType).OBSERVATION_DATASET.getCode()}]]*/ null,
-				SUBOBSERVATION_DATASET: /*[[${T(org.generationcp.middleware.domain.labelprinting.LabelPrintingType).SUBOBSERVATION_DATASET.getCode()}]]*/ null
+				SUBOBSERVATION_DATASET: /*[[${T(org.generationcp.middleware.domain.labelprinting.LabelPrintingType).SUBOBSERVATION_DATASET.getCode()}]]*/ null,
+				STUDY_ENTRIES: /*[[${T(org.generationcp.middleware.domain.labelprinting.LabelPrintingType).STUDY_ENTRIES.getCode()}]]*/ null,
 			}).constant('SEARCH_ORIGIN', {
 				MANAGE_STUDY_SOURCE: /*[[${T(org.generationcp.middleware.domain.inventory.common.SearchOriginCompositeDto.SearchOrigin).MANAGE_STUDY_SOURCE}]]*/ null,
 				MANAGE_STUDY_PLOT: /*[[${T(org.generationcp.middleware.domain.inventory.common.SearchOriginCompositeDto.SearchOrigin).MANAGE_STUDY_PLOT}]]*/ null
@@ -802,6 +805,7 @@
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/germplasm/germplasm-details-modal/germplasm-details-module.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/germplasm-selector/germplasm-selector-modal.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/studyEntryService.js}"></script>
+	<script type="text/javascript" th:src="@{/static/js/trialmanager/studyEntryObservationService.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/treatment.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/studyInstanceService.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/environments.js}"></script>

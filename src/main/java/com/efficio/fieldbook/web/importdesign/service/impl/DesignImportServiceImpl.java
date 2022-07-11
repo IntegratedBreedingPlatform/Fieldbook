@@ -33,12 +33,23 @@ import org.generationcp.middleware.service.api.study.StudyEntryService;
 import org.springframework.context.MessageSource;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 public class DesignImportServiceImpl implements DesignImportService {
 
 	private static final String ADDTL_PARAMS_NO_OF_ADDED_ENVIRONMENTS = "noOfAddedEnvironments";
+
+	private static final List<Integer> GERMPLASM_DESCRIPTOR_VARIABLE_IDS_ALLOWED = Arrays.asList(8377, 8250, 8240, 8330, 8340, 8235, 8378, 8201);
 
 	public static final String ZERO = "0";
 
@@ -98,6 +109,7 @@ public class DesignImportServiceImpl implements DesignImportService {
 		final Map<Integer, StandardVariable> germplasmStandardVariables =
 				this.convertToStandardVariables(workbook.getGermplasmFactors(), PhenotypicType.GERMPLASM);
 
+		germplasmStandardVariables.putAll(this.convertToStandardVariables(workbook.getEntryDetails(), PhenotypicType.ENTRY_DETAIL));
 		final Map<PhenotypicType, Map<Integer, DesignHeaderItem>> mappedHeadersWithStdVarId =
 				designImportData.getMappedHeadersWithDesignHeaderItemsMappedToStdVarId();
 
@@ -221,22 +233,22 @@ public class DesignImportServiceImpl implements DesignImportService {
 			}
 		}
 
-		// Add the germplasm factors that exist from csv file header
-		measurementVariables.addAll(this.extractMeasurementVariable(PhenotypicType.GERMPLASM, mappedHeaders));
-
-		// Add the germplasm factors from the selected germplasm in workbook
-		measurementVariables.addAll(workbook.getGermplasmFactors());
-
-		// Add the design factors that exists from csv file header
-		measurementVariables.addAll(this.extractMeasurementVariable(PhenotypicType.TRIAL_DESIGN, mappedHeaders));
-
-		// Add the variates that exist from csv file header
-		measurementVariables.addAll(this.extractMeasurementVariable(PhenotypicType.VARIATE, mappedHeaders));
-
 		// Add the variates from the added traits in workbook
 		measurementVariables.addAll(workbook.getVariates());
 
 		measurementVariables.addAll(workbook.getFactors());
+
+		// Add the germplasm factors that exist from csv file header
+		this.extractMeasurementVariable(measurementVariables, PhenotypicType.GERMPLASM, mappedHeaders);
+
+		// Add the entry details that exist from csv file header
+		this.extractMeasurementVariable(measurementVariables, PhenotypicType.ENTRY_DETAIL, mappedHeaders);
+
+		// Add the design factors that exists from csv file header
+		this.extractMeasurementVariable(measurementVariables, PhenotypicType.TRIAL_DESIGN, mappedHeaders);
+
+		// Add the variates that exist from csv file header
+		this.extractMeasurementVariable(measurementVariables, PhenotypicType.VARIATE, mappedHeaders);
 
 		return measurementVariables;
 	}
@@ -284,6 +296,9 @@ public class DesignImportServiceImpl implements DesignImportService {
 		// Add the germplasm factors that exist from csv file header
 		measurementVariables.addAll(this.extractMeasurementVariable(PhenotypicType.GERMPLASM, mappedHeaders));
 
+		// Add the entry Details that exist from csv file header
+		measurementVariables.addAll(this.extractMeasurementVariable(PhenotypicType.ENTRY_DETAIL, mappedHeaders));
+
 		// Add the design factors that exists from csv file header
 		measurementVariables.addAll(this.extractMeasurementVariable(PhenotypicType.TRIAL_DESIGN, mappedHeaders));
 
@@ -329,6 +344,7 @@ public class DesignImportServiceImpl implements DesignImportService {
 		mappedDesignHeaders.put(PhenotypicType.TRIAL_DESIGN, new ArrayList<DesignHeaderItem>());
 		mappedDesignHeaders.put(PhenotypicType.GERMPLASM, new ArrayList<DesignHeaderItem>());
 		mappedDesignHeaders.put(PhenotypicType.VARIATE, new ArrayList<DesignHeaderItem>());
+		mappedDesignHeaders.put(PhenotypicType.ENTRY_DETAIL, new ArrayList<DesignHeaderItem>());
 
 		final Map<String, List<StandardVariable>> variables =
 				this.ontologyDataManager.getStandardVariablesInProjects(headers, this.contextUtil.getCurrentProgramUUID());
@@ -336,9 +352,14 @@ public class DesignImportServiceImpl implements DesignImportService {
 		// ok, so these variables dont have Phenotypic information, we need to
 		// assign it via proj-prop or cvtermid
 		final Set<PhenotypicType> designImportRoles = new HashSet<>(
-			Arrays.asList(PhenotypicType.TRIAL_ENVIRONMENT, PhenotypicType.TRIAL_DESIGN, PhenotypicType.GERMPLASM, PhenotypicType.VARIATE));
+			Arrays.asList(PhenotypicType.TRIAL_ENVIRONMENT, PhenotypicType.TRIAL_DESIGN, PhenotypicType.GERMPLASM, PhenotypicType.VARIATE, PhenotypicType.ENTRY_DETAIL));
 		for (final Entry<String, List<StandardVariable>> entryVar : variables.entrySet()) {
 			for (final StandardVariable sv : entryVar.getValue()) {
+				if (sv.getVariableTypes().contains(VariableType.GERMPLASM_DESCRIPTOR) &&
+					!DesignImportServiceImpl.GERMPLASM_DESCRIPTOR_VARIABLE_IDS_ALLOWED.contains(sv.getId())) {
+					entryVar.setValue(new ArrayList<>());
+					continue;
+				}
 				for (final VariableType variableType : sv.getVariableTypes()) {
 					if (designImportRoles.contains(variableType.getRole())) {
 						sv.setPhenotypicType(variableType.getRole());
@@ -418,6 +439,17 @@ public class DesignImportServiceImpl implements DesignImportService {
 		}
 
 		return measurementVariables;
+	}
+
+	public void extractMeasurementVariable(final Set<MeasurementVariable> measurementVariables, final PhenotypicType phenotypicType,
+		final Map<PhenotypicType, List<DesignHeaderItem>> mappedHeaders) {
+		for (final DesignHeaderItem designHeaderItem : mappedHeaders.get(phenotypicType)) {
+			final MeasurementVariable measurementVariable = ExpDesignUtil.convertStandardVariableToMeasurementVariable(designHeaderItem.getVariable(), Operation.ADD, this.fieldbookService);
+			measurementVariable.setName(designHeaderItem.getName());
+			if (!measurementVariables.contains(measurementVariable)) {
+				measurementVariables.add(measurementVariable);
+			}
+		}
 	}
 
 	protected Map<Integer, StandardVariable> convertToStandardVariables(final List<MeasurementVariable> list,

@@ -68,9 +68,9 @@ public class DesignImportValidatorTest {
 		Mockito.when(this.studyEntryTransformer.tranformToImportedGermplasm(studyEntries))
 			.thenReturn(ImportedGermplasmInitializer.createImportedGermplasmList());
 		final DesignHeaderItem headerItem = DesignImportTestDataInitializer
-			.filterDesignHeaderItemsByTermId(TermId.ENTRY_NO, this.designImportData.getMappedHeaders().get(PhenotypicType.GERMPLASM));
+			.filterDesignHeaderItemsByTermId(TermId.ENTRY_NO, this.designImportData.getMappedHeaders().get(PhenotypicType.ENTRY_DETAIL));
 		Mockito.doReturn(headerItem).when(this.designImportService).validateIfStandardVariableExists(
-			this.designImportData.getMappedHeadersWithDesignHeaderItemsMappedToStdVarId().get(PhenotypicType.GERMPLASM),
+			this.designImportData.getMappedHeadersWithDesignHeaderItemsMappedToStdVarId().get(PhenotypicType.ENTRY_DETAIL),
 			"design.import.error.entry.no.is.required", TermId.ENTRY_NO);
 
 	}
@@ -93,7 +93,7 @@ public class DesignImportValidatorTest {
 
 		final DesignImportData testData = DesignImportTestDataInitializer.createDesignImportData(1, 1, 5);
 		final DesignHeaderItem entryNoHeader = DesignImportTestDataInitializer
-			.filterDesignHeaderItemsByTermId(TermId.ENTRY_NO, testData.getMappedHeaders().get(PhenotypicType.GERMPLASM));
+			.filterDesignHeaderItemsByTermId(TermId.ENTRY_NO, testData.getMappedHeaders().get(PhenotypicType.ENTRY_DETAIL));
 
 		try {
 
@@ -111,7 +111,7 @@ public class DesignImportValidatorTest {
 
 		final DesignImportData testData = DesignImportTestDataInitializer.createDesignImportData(1, 1, 2);
 		final DesignHeaderItem entryNoHeader = DesignImportTestDataInitializer
-			.filterDesignHeaderItemsByTermId(TermId.ENTRY_NO, testData.getMappedHeaders().get(PhenotypicType.GERMPLASM));
+			.filterDesignHeaderItemsByTermId(TermId.ENTRY_NO, testData.getMappedHeaders().get(PhenotypicType.ENTRY_DETAIL));
 
 		try {
 
@@ -129,7 +129,7 @@ public class DesignImportValidatorTest {
 
 		final DesignImportData testData = DesignImportTestDataInitializer.createDesignImportData(1, 1, 10);
 		final DesignHeaderItem entryNoHeader = DesignImportTestDataInitializer
-			.filterDesignHeaderItemsByTermId(TermId.ENTRY_NO, testData.getMappedHeaders().get(PhenotypicType.GERMPLASM));
+			.filterDesignHeaderItemsByTermId(TermId.ENTRY_NO, testData.getMappedHeaders().get(PhenotypicType.ENTRY_DETAIL));
 
 		try {
 

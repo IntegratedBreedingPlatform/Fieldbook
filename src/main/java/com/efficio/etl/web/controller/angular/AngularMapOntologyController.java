@@ -104,6 +104,7 @@ public class AngularMapOntologyController extends AbstractBaseETLController {
 			model.addAttribute("trialDesignList", headerMap.get(PhenotypicType.TRIAL_DESIGN));
 			model.addAttribute("variateList", headerMap.get(PhenotypicType.VARIATE));
 			model.addAttribute("germplasmList", headerMap.get(PhenotypicType.GERMPLASM));
+			model.addAttribute("entryDetailList", headerMap.get(PhenotypicType.ENTRY_DETAIL));
 			model.addAttribute("datasetType", this.userSelection.getDatasetType());
 
 			model.addAttribute("fieldbookWebLink",
@@ -134,6 +135,7 @@ public class AngularMapOntologyController extends AbstractBaseETLController {
 		allocatedCount += this.getAllocatedCount(headerMap, PhenotypicType.TRIAL_DESIGN);
 		allocatedCount += this.getAllocatedCount(headerMap, PhenotypicType.VARIATE);
 		allocatedCount += this.getAllocatedCount(headerMap, PhenotypicType.GERMPLASM);
+		allocatedCount += this.getAllocatedCount(headerMap, PhenotypicType.ENTRY_DETAIL);
 
 		return allocatedCount;
 	}

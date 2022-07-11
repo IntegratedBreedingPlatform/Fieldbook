@@ -125,6 +125,8 @@ public class UserSelection implements Serializable {
 	/** The new selection variates. */
 	private List<SettingDetail> newSelectionVariates;
 
+	private List<SettingDetail> entryDetails;
+
 	/** The workbook. */
 	private Workbook workbook;
 
@@ -983,6 +985,14 @@ public class UserSelection implements Serializable {
 
 	public void setCreatedBy(final String createdBy) {
 		this.createdBy = createdBy;
+	}
+
+	public List<SettingDetail> getEntryDetails() {
+		return this.entryDetails;
+	}
+
+	public void setEntryDetails(final List<SettingDetail> entryDetails) {
+		this.entryDetails = entryDetails;
 	}
 
 	@Override
