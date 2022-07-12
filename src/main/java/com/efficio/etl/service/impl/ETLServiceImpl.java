@@ -609,10 +609,18 @@ public class ETLServiceImpl implements ETLService {
 				measurementData.setValue("");
 			}
 
-			if (variable.getDataTypeId() == TermId.CATEGORICAL_VARIABLE.getId() && variable.getRole() == PhenotypicType.ENTRY_DETAIL && measurementData.getValue() != null) {
+			if (variable.getDataTypeId() == TermId.CATEGORICAL_VARIABLE.getId() && variable.getRole() == PhenotypicType.ENTRY_DETAIL) {
 				final Map<String, Integer> availableScales = this.retrieveAvailableCategoricalScales(variable.getTermId(),
 					this.contextUtil.getCurrentProgramUUID());
-				this.convertCategoricalNameToCategoricalID(measurementData, availableScales);
+				final boolean isBlanckValue = StringUtils.isBlank(measurementData.getValue());
+				if (TermId.ENTRY_TYPE.getId() == variable.getTermId() && isBlanckValue) {
+					throw new FieldbookRequestValidationException("error.entry.type.cannot.be.null",
+						new String[] {String.join(", ", availableScales.keySet())});
+				}
+				if (!isBlanckValue) {
+					this.convertCategoricalNameToCategoricalID(measurementData, availableScales);
+				}
+
 			}
 
 			dataList.add(measurementData);
