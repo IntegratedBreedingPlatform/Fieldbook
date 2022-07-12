@@ -331,7 +331,7 @@ public class ETLServiceImpl implements ETLService {
 			headers.add(TermId.OBS_UNIT_ID.name());
 		}
 
-		if (userSelection.getDatasetType() == DatasetTypeEnum.PLOT_DATA.getId() && !headers.contains(TermId.ENTRY_TYPE.name())) {
+		if (userSelection.getDatasetType() != null && userSelection.getDatasetType() == DatasetTypeEnum.PLOT_DATA.getId() && !headers.contains(TermId.ENTRY_TYPE.name())) {
 			// Force add ENTRY TYPE with T value by default when importing a PLOT_DATA,
 			// and the ENTRY TYPE did not include in the file.
 			headers.add(TermId.ENTRY_TYPE.name());
