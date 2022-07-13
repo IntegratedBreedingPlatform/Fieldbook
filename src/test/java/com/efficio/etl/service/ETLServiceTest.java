@@ -185,8 +185,6 @@ public class ETLServiceTest {
 		final List<IndexValueDTO> indexValueDTOs = this.etlService.retrieveColumnInformation(this.workbook,
 			ETLServiceTest.OBSERVATION_SHEET_INDEX, ETLServiceTest.OBSERVATION_HEADER_ROW);
 
-		Assert.assertEquals(ETLServiceTest.COLUMN_HEADERS.length, indexValueDTOs.size());
-
 		for (int i = 0; i < ETLServiceTest.COLUMN_HEADERS.length; i++) {
 			Assert.assertEquals(ETLServiceTest.COLUMN_HEADERS[i], indexValueDTOs.get(i).getValue());
 		}
@@ -210,15 +208,6 @@ public class ETLServiceTest {
 			ETLServiceTest.CELL_COUNT_BEFORE_BLANK,
 			this.etlService.calculateObservationRows(this.workbook, ETLServiceTest.OBSERVATION_SHEET_INDEX,
 				ETLServiceTest.OBSERVATION_CONTENT_ROW, ETLServiceTest.COLUMN_WITH_BLANK_CELL));
-	}
-
-	@Test
-	public void testExtractColumnHeadersPositive() {
-
-		Assert.assertArrayEquals(
-			ETLServiceTest.COLUMN_HEADERS,
-			this.etlService.retrieveColumnHeaders(this.workbook, this.userSelection, Boolean.FALSE).toArray());
-
 	}
 
 	@Test

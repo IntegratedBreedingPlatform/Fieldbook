@@ -31,6 +31,7 @@ import org.generationcp.middleware.domain.etl.MeasurementData;
 import org.generationcp.middleware.domain.etl.MeasurementRow;
 import org.generationcp.middleware.domain.etl.MeasurementVariable;
 import org.generationcp.middleware.domain.etl.StudyDetails;
+import org.generationcp.middleware.domain.gms.SystemDefinedEntryType;
 import org.generationcp.middleware.domain.oms.Term;
 import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.domain.study.StudyTypeDto;
@@ -329,6 +330,19 @@ public class ETLServiceImpl implements ETLService {
 		if (addObsUnitId && !headers.contains(TermId.OBS_UNIT_ID.name())) {
 			headers.add(TermId.OBS_UNIT_ID.name());
 		}
+
+		if (userSelection.getDatasetType() != null && userSelection.getDatasetType() == DatasetTypeEnum.PLOT_DATA.getId() && !headers.contains(TermId.ENTRY_TYPE.name())) {
+			// Force add ENTRY TYPE with T value by default when importing a PLOT_DATA,
+			// and the ENTRY TYPE did not include in the file.
+			headers.add(TermId.ENTRY_TYPE.name());
+			final int entryTypeIdx = PoiUtil.rowAsStringArray(sheet, 0).length;
+			PoiUtil.getCell(sheet, entryTypeIdx, 0).setCellValue(TermId.ENTRY_TYPE.name());
+			final Integer lastRow = PoiUtil.getLastRowNum(sheet);
+			for (int i = 0; i <= lastRow; i++) {
+				PoiUtil.getCell(sheet, entryTypeIdx, i).setCellValue(SystemDefinedEntryType.TEST_ENTRY.getEntryTypeValue());
+			}
+
+		}
 		// Trim all header names before returning
 		return Lists.transform(headers, new Function<String, String>() {
 
@@ -595,10 +609,18 @@ public class ETLServiceImpl implements ETLService {
 				measurementData.setValue("");
 			}
 
-			if (variable.getDataTypeId() == TermId.CATEGORICAL_VARIABLE.getId() && variable.getRole() == PhenotypicType.ENTRY_DETAIL && measurementData.getValue() != null) {
+			if (variable.getDataTypeId() == TermId.CATEGORICAL_VARIABLE.getId() && variable.getRole() == PhenotypicType.ENTRY_DETAIL) {
 				final Map<String, Integer> availableScales = this.retrieveAvailableCategoricalScales(variable.getTermId(),
 					this.contextUtil.getCurrentProgramUUID());
-				this.convertCategoricalNameToCategoricalID(measurementData, availableScales);
+				final boolean isBlanckValue = StringUtils.isBlank(measurementData.getValue());
+				if (TermId.ENTRY_TYPE.getId() == variable.getTermId() && isBlanckValue) {
+					throw new FieldbookRequestValidationException("error.entry.type.cannot.be.null",
+						new String[] {String.join(", ", availableScales.keySet())});
+				}
+				if (!isBlanckValue) {
+					this.convertCategoricalNameToCategoricalID(measurementData, availableScales);
+				}
+
 			}
 
 			dataList.add(measurementData);
