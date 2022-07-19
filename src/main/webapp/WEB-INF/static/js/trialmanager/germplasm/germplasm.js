@@ -11,6 +11,9 @@
 			function ($scope, $rootScope, $q, $compile, TrialManagerDataService, DTOptionsBuilder, studyStateService, studyEntryService, germplasmStudySourceService,
 					  datasetService, $timeout, $uibModal, germplasmDetailsModalService, studyEntryObservationService, DATASET_TYPES, VARIABLE_TYPES, $http, studyContext) {
 
+				var GID = 8240,
+					GROUPGID = 8330;
+
 				$scope.entryDetails = TrialManagerDataService.settings.entryDetails;
 				$scope.isLockedStudy = TrialManagerDataService.isLockedStudy;
 				$scope.trialMeasurement = {hasMeasurement: studyStateService.hasGeneratedDesign()};
@@ -42,10 +45,78 @@
 				$scope.generationLevel = getGenerationLevel();
 				$scope.generationLevels = Array.from(Array(10).keys()).map((k) => k + 1);
 
+				$scope.columnFilter = {
+					selectAll: function () {
+						this.columnData.possibleValues.forEach(function (value) {
+							value.isSelectedInFilters = this.columnData.isSelectAll;
+						}.bind(this));
+					},
+					selectOption: function (selected) {
+						if (!selected) {
+							this.columnData.isSelectAll = false;
+						}
+					},
+					search: function (item) {
+						var query = $scope.columnFilter.columnData.query;
+						if (!query) {
+							return true;
+						}
+						if (item.name.indexOf(query) !== -1 || item.displayDescription.indexOf(query) !== -1) {
+							return true;
+						}
+						return false;
+					}
+				};
+
+				$scope.openColumnFilter = function (index) {
+					$scope.columnFilter.index = index;
+					$scope.columnFilter.columnData = $scope.columnsObj.columns[index].columnData;
+					if ($scope.columnFilter.columnData.sortingAsc != null && !table().order().some(function (order) {
+						return order[0] === index;
+					})) {
+						$scope.columnFilter.columnData.sortingAsc = null;
+					}
+				};
+
+				$scope.sortColumn = function (asc) {
+					$scope.columnFilter.columnData.sortingAsc = asc;
+					table().order([$scope.columnFilter.index, asc ? 'asc' : 'desc']).draw();
+				};
+
+				$scope.getFilteringByClass = function (index) {
+					if (!$scope.columnsObj.columns[index]) {
+						return;
+					}
+					var columnData = $scope.columnsObj.columns[index].columnData;
+					if (columnData.isFiltered) {
+						return 'filtering-by';
+					}
+				};
+
+				$scope.isCheckBoxColumn = function (index) {
+					return index === 0;
+				};
+
+				$scope.filterByColumn = function () {
+					table().ajax.reload();
+				};
+
+				$scope.resetFilterByColumn = function () {
+					$scope.columnFilter.columnData.query = '';
+					$scope.columnFilter.columnData.sortingAsc = null;
+					if ($scope.columnFilter.columnData.possibleValues) {
+						$scope.columnFilter.columnData.possibleValues.forEach(function (value) {
+							value.isSelectedInFilters = false;
+						});
+						$scope.columnFilter.columnData.isSelectAll = false;
+					}
+					table().ajax.reload();
+				};
+
 				loadTable();
 				loadStudyEntryColumns();
 
-				$rootScope.$on("reloadStudyEntryTableData", function(setShowValues){
+				$rootScope.$on("reloadStudyEntryTableData", function (setShowValues) {
 					$scope.reloadStudyEntryTableData(setShowValues);
 				});
 
@@ -61,6 +132,77 @@
 					});
 				}
 
+				function getFilter() {
+					return {
+						entryNumbers: [],
+						entryIds: [],
+						filteredValues: $scope.columnsObj.columns.reduce(function (map, column) {
+							var columnData = column.columnData;
+							columnData.isFiltered = false;
+
+							if (isTextFilter(columnData)) {
+								return map;
+							}
+
+							if (columnData.possibleValues) {
+								columnData.possibleValues.forEach(function (value) {
+									if (value.isSelectedInFilters) {
+										if (!map[columnData.termId]) {
+											map[columnData.termId] = [];
+										}
+										map[columnData.termId].push(value.name);
+									}
+								});
+								if (!map[columnData.termId] && columnData.query) {
+									map[columnData.termId] = [columnData.query];
+								}
+							} else if (columnData.query) {
+								if (columnData.dataType === 'Date') {
+									map[columnData.termId] = [($.datepicker.formatDate("yymmdd", columnData.query))];
+								} else {
+									map[columnData.termId] = [(columnData.query)];
+								}
+							}
+
+							if (map[columnData.termId]) {
+								columnData.isFiltered = true;
+							}
+							return map;
+						}, {}),
+						filteredTextValues: $scope.columnsObj.columns.reduce(function (map, column) {
+							var columnData = column.columnData;
+							if (!isTextFilter(columnData)) {
+								return map;
+							}
+							if (columnData.query) {
+								map[columnData.termId] = columnData.query;
+								columnData.isFiltered = true;
+							}
+							return map;
+						}, {}),
+						variableTypeMap: $scope.columnsObj.columns.reduce(function (map, column) {
+							map[column.columnData.termId] = column.columnData.variableType;
+							return map;
+						}, {})
+					};
+				}
+
+				function isTextFilter(columnData) {
+
+					// Factors like GID, GROUPGID have 'Germplasm List' datatype but they should be treated as numeric
+					if (columnData.termId === GID || columnData.termId === GROUPGID) {
+						return false;
+					}
+
+					if (columnData.dataType === 'Categorical' || columnData.dataType === 'Numeric'
+						|| columnData.dataType === 'Date') {
+						return false;
+					}
+
+					return true;
+
+				}
+
 				function table() {
 					return $scope.nested.dtInstance.DataTable;
 				}
@@ -72,7 +214,9 @@
 								$.ajax({
 									type: 'POST',
 									url: studyEntryService.getStudyEntriesUrl() + getPageQueryParameters(d),
-									dataSrc: '',
+									data: JSON.stringify({
+										filter: getFilter()
+									}),
 									success: function (res, status, xhr) {
 										let json = {recordsTotal: 0, recordsFiltered: 0};
 										json.recordsTotal = json.recordsFiltered = xhr.getResponseHeader('X-Total-Count');
@@ -95,6 +239,13 @@
 
 				function initCompleteCallback() {
 					table().columns().every(function () {
+
+						// Skip if column is checkbox column.
+						if ($scope.isCheckBoxColumn(this.index())) {
+							return;
+						}
+
+						// Add Crossing Options popover
 						$(this.header())
 							.append($compile('<span class="glyphicon glyphicon-edit" ' +
 								' style="cursor:pointer; padding-left: 5px;"' +
@@ -104,7 +255,18 @@
 								// does not work with outsideClick
 								' ng-if="checkColumnByTermId(' + this.index() + ', 8377)"' +
 								' ng-show="!isLockedStudy()"' +
-								' uib-popover-template="\'crossOptionsPopover.html\'"></span>')($scope))
+								' uib-popover-template="\'crossOptionsPopover.html\'"></span>')($scope));
+						// Add Sorting and Filter popover
+						$(this.header())
+							.append($compile('<span class="glyphicon glyphicon-filter" ' +
+								' style="cursor:pointer; padding-left: 5px;"' +
+								' popover-placement="bottom"' +
+								' ng-class="getFilteringByClass(' + this.index() + ')"' +
+								' popover-append-to-body="true"' +
+								' popover-trigger="\'outsideClick\'"' +
+								// does not work with outsideClick
+								' ng-click="openColumnFilter(' + this.index() + ')"' +
+								' uib-popover-template="\'columnFilterPopoverTemplate.html\'"></span>')($scope))
 					});
 					adjustColumns();
 					tableRenderedResolve();
@@ -418,8 +580,7 @@
 
 				function setNumberOfEntries(numberOfEntries) {
 					$scope.numberOfEntries = numberOfEntries;
-					TrialManagerDataService.specialSettings.experimentalDesign.
-						germplasmTotalListCount = $scope.numberOfEntries;
+					TrialManagerDataService.specialSettings.experimentalDesign.germplasmTotalListCount = $scope.numberOfEntries;
 					$rootScope.$apply();
 				}
 
@@ -598,7 +759,8 @@
 									return full.guid;
 								}
 							});
-						} if (columnData.termId === -3) {
+						}
+						if (columnData.termId === -3) {
 							//ACTIVE LOT
 							columnsDef.push({
 								targets: columns.length - 1,
@@ -675,7 +837,7 @@
 										if (value === undefined) {
 											value = '';
 										}
-										value +=  '<i onclick="showFiles(\'' + full.variables['OBS_UNIT_ID'].value + '\''
+										value += '<i onclick="showFiles(\'' + full.variables['OBS_UNIT_ID'].value + '\''
 											+ ', \'' + columnData.name + '\')" '
 											+ ' class="glyphicon glyphicon-duplicate text-info" '
 											+ ' title="click to see associated files"'
@@ -907,7 +1069,7 @@
 					return $scope.showUpdateImportListButton;
 				};
 
-				$scope.showClearListButton = function() {
+				$scope.showClearListButton = function () {
 					return $scope.showClearList;
 				}
 
@@ -915,7 +1077,7 @@
 					return $scope.showImportListBrowser;
 				};
 
-				$scope.showStudyTable = function() {
+				$scope.showStudyTable = function () {
 					return $scope.showStudyEntriesTable;
 				}
 
@@ -956,24 +1118,24 @@
 					}
 				};
 
-				$scope.openReplaceGermplasmModal = function(entryId) {
+				$scope.openReplaceGermplasmModal = function (entryId) {
 					$rootScope.openGermplasmSelectorModal(false).then((gids) => {
 						if (gids != null) {
 							// if there are multiple entries selected, get only the first entry for replacement
 							studyEntryService.replaceStudyGermplasm(entryId, gids[0]).then(function (response) {
 								showSuccessfulMessage('', $.germplasmMessages.replaceGermplasmSuccessful);
 								$rootScope.$emit("reloadStudyEntryTableData", {});
-							}, function(errResponse) {
-								showErrorMessage($.fieldbookMessages.errorServerError,  errResponse.errors[0].message);
+							}, function (errResponse) {
+								showErrorMessage($.fieldbookMessages.errorServerError, errResponse.errors[0].message);
 							});
 						}
 					});
 				};
 
 
-				$scope.replaceGermplasm = function(entryId) {
+				$scope.replaceGermplasm = function (entryId) {
 					if (studyStateService.hasGeneratedDesign()) {
-						var modalConfirmReplacement = $scope.openConfirmModal($.germplasmMessages.replaceGermplasmWarning, 'Yes','No');
+						var modalConfirmReplacement = $scope.openConfirmModal($.germplasmMessages.replaceGermplasmWarning, 'Yes', 'No');
 						modalConfirmReplacement.result.then(function (shouldContinue) {
 							if (shouldContinue) {
 								$scope.openReplaceGermplasmModal(entryId);
@@ -988,7 +1150,7 @@
 				$scope.saveStudyEntries = function (listId) {
 
 					studyEntryService.deleteEntries().then(function () {
-						studyEntryService.saveStudyEntriesList(listId).then(function(res){
+						studyEntryService.saveStudyEntriesList(listId).then(function (res) {
 							TrialManagerDataService.applicationData.germplasmListSelected = true;
 							$scope.reloadStudyEntryTableData();
 							$scope.showImportListBrowser = false;
@@ -999,7 +1161,7 @@
 					});
 				};
 
-				$scope.resetStudyEntries = function() {
+				$scope.resetStudyEntries = function () {
 					var modalConfirmCancellation = $scope.openConfirmModal($.fieldbookMessages.confirmResetStudyEntries, 'Confirm', 'Cancel');
 					modalConfirmCancellation.result.then(function (shouldContinue) {
 						if (shouldContinue) {
@@ -1017,7 +1179,7 @@
 				}
 
 				$scope.onRemoveVariable = async function (variableType, variableIds) {
-					if(variableIds && variableIds.length !== 0) {
+					if (variableIds && variableIds.length !== 0) {
 
 						if (variableType === VARIABLE_TYPES.ENTRY_DETAIL.toString()) {
 							let doContinue = await $scope.checkVariableHasMeasurementData(variableIds);
@@ -1066,7 +1228,7 @@
 					return deferred.promise;
 				};
 
-				$scope.onAddVariable = function(result, variableType) {
+				$scope.onAddVariable = function (result, variableType) {
 					var variable = undefined;
 					angular.forEach(result, function (val) {
 						variable = val.variable;
@@ -1089,9 +1251,9 @@
 					$rootScope.navigateToTab('germplasm', {reload: true});
 				};
 
-				$scope.showPopOverCheck = function(entryIds, currentValue) {
-					if(!studyStateService.hasGeneratedDesign()) {
-						if(!Array.isArray(entryIds)) {
+				$scope.showPopOverCheck = function (entryIds, currentValue) {
+					if (!studyStateService.hasGeneratedDesign()) {
+						if (!Array.isArray(entryIds)) {
 							entryIds = [parseInt(entryIds)];
 						}
 						$uibModal.open({
@@ -1111,7 +1273,7 @@
 					}
 				};
 
-				$scope.setEntryTypeByBatch = function() {
+				$scope.setEntryTypeByBatch = function () {
 					if ($scope.selectedItems.length === 0) {
 						showAlertMessage('', $.germplasmMessages.setEntryTypeSelectEntry);
 					} else {
@@ -1119,7 +1281,7 @@
 					}
 				};
 
-				$scope.showAddEntriesModal = function() {
+				$scope.showAddEntriesModal = function () {
 					$uibModal.open({
 						templateUrl: '/Fieldbook/static/angular-templates/germplasm/addNewEntriesModal.html',
 						controller: "AddNewEntriesController",
@@ -1128,11 +1290,11 @@
 
 				};
 
-				$scope.reloadStudyEntryTableData = function(setShowValues) {
+				$scope.reloadStudyEntryTableData = function (setShowValues) {
 					$scope.selectedItems = [];
 					$scope.reloadEntryDetails();
 					$rootScope.navigateToTab('germplasm', {reload: true});
-					if(setShowValues) {
+					if (setShowValues) {
 						$scope.showImportListBrowser = false;
 						$scope.showStudyEntriesTable = true;
 						$scope.showClearList = !studyStateService.hasGeneratedDesign();
@@ -1160,13 +1322,13 @@
 					studyEntryService.fillWithCrossExpansion($scope.generationLevel).then(function (response) {
 						TrialManagerDataService.updateGenerationLevel($scope.generationLevel);
 						$scope.reloadStudyEntryTableData();
-					}, function(errResponse) {
+					}, function (errResponse) {
 						$uibModalInstance.close();
-						showErrorMessage($.fieldbookMessages.errorServerError,  errResponse.errors[0].message);
+						showErrorMessage($.fieldbookMessages.errorServerError, errResponse.errors[0].message);
 					});
 				};
 
-				$scope.changeGenerationLevel = function(level) {
+				$scope.changeGenerationLevel = function (level) {
 					$scope.generationLevel = level;
 				};
 
@@ -1187,7 +1349,7 @@
 						});
 				};
 
-				$scope.selectEntryTableColumns = function() {
+				$scope.selectEntryTableColumns = function () {
 					var selectedPropertyIds = this.entryTableColumns.filter((column) => column.selected).map((column) => column.id);
 					datasetService.updateDatasetProperties(selectedPropertyIds).then(function () {
 						$rootScope.navigateToTab('germplasm', {reload: true});
@@ -1201,17 +1363,17 @@
 // README IMPORTANT: Code unmanaged by angular should go here
 
 /* This will be called when germplasm details page is loaded */
-(function() {
+(function () {
 	'use strict';
 
-	document.onLoadGermplasmDetails = function() {
+	document.onLoadGermplasmDetails = function () {
 
 		displayGermplasmListTreeTable('germplasmTree');
 
 		changeBrowseGermplasmButtonBehavior(false);
 
 		$('#listTreeModal').off('hide.bs.modal');
-		$('#listTreeModal').on('hide.bs.modal', function() {
+		$('#listTreeModal').on('hide.bs.modal', function () {
 			TreePersist.saveGermplasmTreeState(true, '#germplasmTree');
 			displayGermplasmListTreeTable('germplasmTree');
 			changeBrowseGermplasmButtonBehavior(false);
