@@ -808,8 +808,21 @@ public class ETLServiceImpl implements ETLService {
 		// set variables
 		wb.setFactors(this.getFactorsFromDatasets(trialDataset, datasetForImport));
 		wb.setVariates(this.getVariatesFromDatasets(trialDataset, datasetForImport, isMeansDataImport));
+		wb.setEntryDetails(this.getEntryDetailsFromDatasets(datasetForImport));
 		wb.setConditions(new ArrayList<MeasurementVariable>());
 		wb.setConstants(new ArrayList<MeasurementVariable>());
+	}
+
+	private List<MeasurementVariable> getEntryDetailsFromDatasets(final DataSet datasetForImport) {
+		final List<MeasurementVariable> entryDetails = new ArrayList<>();
+
+		for (final DMSVariableType variableType : datasetForImport.getVariableTypes().getVariableTypes()) {
+			final PhenotypicType pheno = variableType.getStandardVariable().getPhenotypicType();
+			if (PhenotypicType.ENTRY_DETAIL.compareTo(pheno) == 0) {
+				entryDetails.add(this.convertToMeasurementVariable(variableType));
+			}
+		}
+		return entryDetails;
 	}
 
 	private List<MeasurementVariable> getFactorsFromDatasets(final DataSet trialDataset, final DataSet nonTrialDataset) {
