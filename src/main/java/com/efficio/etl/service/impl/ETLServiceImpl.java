@@ -327,9 +327,6 @@ public class ETLServiceImpl implements ETLService {
 
 		final List<String> headers = new ArrayList<>();
 		headers.addAll(Arrays.asList(headerArray));
-		if (addObsUnitId && !headers.contains(TermId.OBS_UNIT_ID.name())) {
-			headers.add(TermId.OBS_UNIT_ID.name());
-		}
 
 		if (userSelection.getDatasetType() != null && userSelection.getDatasetType() == DatasetTypeEnum.PLOT_DATA.getId() && !headers.contains(TermId.ENTRY_TYPE.name())) {
 			// Force add ENTRY TYPE with T value by default when importing a PLOT_DATA,
@@ -342,6 +339,10 @@ public class ETLServiceImpl implements ETLService {
 				PoiUtil.getCell(sheet, entryTypeIdx, i).setCellValue(SystemDefinedEntryType.TEST_ENTRY.getEntryTypeValue());
 			}
 
+		}
+
+		if (addObsUnitId && !headers.contains(TermId.OBS_UNIT_ID.name())) {
+			headers.add(TermId.OBS_UNIT_ID.name());
 		}
 		// Trim all header names before returning
 		return Lists.transform(headers, new Function<String, String>() {
