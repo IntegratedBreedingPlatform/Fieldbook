@@ -8,6 +8,7 @@ import com.efficio.etl.web.bean.VariableDTO;
 import com.efficio.etl.web.validators.FileUploadFormValidator;
 import com.efficio.fieldbook.service.api.FieldbookService;
 import com.google.common.base.Optional;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.fest.util.Collections;
 import org.generationcp.commons.spring.util.ContextUtil;
@@ -15,11 +16,13 @@ import org.generationcp.commons.util.WorkbenchAppPathResolver;
 import org.generationcp.middleware.domain.dms.PhenotypicType;
 import org.generationcp.middleware.domain.etl.Constants;
 import org.generationcp.middleware.domain.etl.MeasurementVariable;
+import org.generationcp.middleware.domain.gms.SystemDefinedEntryType;
 import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.enumeration.DatasetTypeEnum;
 import org.generationcp.middleware.exceptions.WorkbookParserException;
 import org.generationcp.middleware.service.api.DataImportService;
 import org.generationcp.middleware.util.Message;
+import org.generationcp.middleware.util.PoiUtil;
 import org.generationcp.middleware.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -274,6 +277,7 @@ public class AngularMapOntologyController extends AbstractBaseETLController {
 			this.userSelection.clearMeasurementVariables();
 
 			final Workbook workbook = this.etlService.retrieveCurrentWorkbook(this.userSelection);
+			this.addEntryTypeByDefaultIfNotExists(workbook);
 			this.etlService.mergeVariableData(variables, this.userSelection, maintainHeaderMapping);
 			final org.generationcp.middleware.domain.etl.Workbook importData = this.etlService.convertToWorkbook(this.userSelection);
 
@@ -309,6 +313,25 @@ public class AngularMapOntologyController extends AbstractBaseETLController {
 			return this.wrapFormResult(errorMessages);
 		}
 
+	}
+
+	private void addEntryTypeByDefaultIfNotExists(final Workbook workbook) {
+		final Sheet sheet = workbook.getSheetAt(userSelection.getSelectedSheet());
+		final String[] headerArray = PoiUtil.rowAsStringArray(sheet, userSelection.getHeaderRowIndex());
+
+		final List<String> headers = Arrays.asList(headerArray);
+		if (userSelection.getDatasetType() != null && userSelection.getDatasetType() == DatasetTypeEnum.PLOT_DATA.getId()
+			&& !headers.contains(TermId.ENTRY_TYPE.name())) {
+			// Force add ENTRY TYPE with T value by default when importing a PLOT_DATA,
+			// and the ENTRY TYPE did not include in the file.
+			final int entryTypeIdx = PoiUtil.rowAsStringArray(sheet, 0).length;
+			PoiUtil.getCell(sheet, entryTypeIdx, 0).setCellValue(TermId.ENTRY_TYPE.name());
+			final Integer lastRow = PoiUtil.getLastRowNum(sheet);
+			for (int i = 0; i <= lastRow; i++) {
+				PoiUtil.getCell(sheet, entryTypeIdx, i).setCellValue(SystemDefinedEntryType.TEST_ENTRY.getEntryTypeValue());
+			}
+
+		}
 	}
 
 	void processExperimentalDesign(final org.generationcp.middleware.domain.etl.Workbook importData, final Workbook workbook)  throws WorkbookParserException{

@@ -328,18 +328,6 @@ public class ETLServiceImpl implements ETLService {
 		final List<String> headers = new ArrayList<>();
 		headers.addAll(Arrays.asList(headerArray));
 
-		if (userSelection.getDatasetType() != null && userSelection.getDatasetType() == DatasetTypeEnum.PLOT_DATA.getId() && !headers.contains(TermId.ENTRY_TYPE.name())) {
-			// Force add ENTRY TYPE with T value by default when importing a PLOT_DATA,
-			// and the ENTRY TYPE did not include in the file.
-			headers.add(TermId.ENTRY_TYPE.name());
-			final int entryTypeIdx = PoiUtil.rowAsStringArray(sheet, 0).length;
-			PoiUtil.getCell(sheet, entryTypeIdx, 0).setCellValue(TermId.ENTRY_TYPE.name());
-			final Integer lastRow = PoiUtil.getLastRowNum(sheet);
-			for (int i = 0; i <= lastRow; i++) {
-				PoiUtil.getCell(sheet, entryTypeIdx, i).setCellValue(SystemDefinedEntryType.TEST_ENTRY.getEntryTypeValue());
-			}
-
-		}
 
 		if (addObsUnitId && !headers.contains(TermId.OBS_UNIT_ID.name())) {
 			headers.add(TermId.OBS_UNIT_ID.name());
