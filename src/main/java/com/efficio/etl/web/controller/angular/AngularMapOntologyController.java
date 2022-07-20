@@ -8,7 +8,6 @@ import com.efficio.etl.web.bean.VariableDTO;
 import com.efficio.etl.web.validators.FileUploadFormValidator;
 import com.efficio.fieldbook.service.api.FieldbookService;
 import com.google.common.base.Optional;
-import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.fest.util.Collections;
 import org.generationcp.commons.spring.util.ContextUtil;
@@ -16,13 +15,11 @@ import org.generationcp.commons.util.WorkbenchAppPathResolver;
 import org.generationcp.middleware.domain.dms.PhenotypicType;
 import org.generationcp.middleware.domain.etl.Constants;
 import org.generationcp.middleware.domain.etl.MeasurementVariable;
-import org.generationcp.middleware.domain.gms.SystemDefinedEntryType;
 import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.enumeration.DatasetTypeEnum;
 import org.generationcp.middleware.exceptions.WorkbookParserException;
 import org.generationcp.middleware.service.api.DataImportService;
 import org.generationcp.middleware.util.Message;
-import org.generationcp.middleware.util.PoiUtil;
 import org.generationcp.middleware.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -277,7 +274,7 @@ public class AngularMapOntologyController extends AbstractBaseETLController {
 			this.userSelection.clearMeasurementVariables();
 
 			final Workbook workbook = this.etlService.retrieveCurrentWorkbook(this.userSelection);
-			this.dataImportService.addEntryTypeByDefaultIfNotExists(workbook.getSheetAt(userSelection.getSelectedSheet()),
+			this.dataImportService.addEntryTypeWhenNotFoundInSheet(workbook.getSheetAt(userSelection.getSelectedSheet()),
 				userSelection.getHeaderRowIndex(), userSelection.getDatasetType());
 			this.etlService.mergeVariableData(variables, this.userSelection, maintainHeaderMapping);
 			final org.generationcp.middleware.domain.etl.Workbook importData = this.etlService.convertToWorkbook(this.userSelection);
