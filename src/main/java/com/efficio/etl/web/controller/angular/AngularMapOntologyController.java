@@ -277,7 +277,8 @@ public class AngularMapOntologyController extends AbstractBaseETLController {
 			this.userSelection.clearMeasurementVariables();
 
 			final Workbook workbook = this.etlService.retrieveCurrentWorkbook(this.userSelection);
-			this.addEntryTypeByDefaultIfNotExists(workbook);
+			this.dataImportService.addEntryTypeByDefaultIfNotExists(workbook.getSheetAt(userSelection.getSelectedSheet()),
+				userSelection.getHeaderRowIndex(), userSelection.getDatasetType());
 			this.etlService.mergeVariableData(variables, this.userSelection, maintainHeaderMapping);
 			final org.generationcp.middleware.domain.etl.Workbook importData = this.etlService.convertToWorkbook(this.userSelection);
 
@@ -313,25 +314,6 @@ public class AngularMapOntologyController extends AbstractBaseETLController {
 			return this.wrapFormResult(errorMessages);
 		}
 
-	}
-
-	private void addEntryTypeByDefaultIfNotExists(final Workbook workbook) {
-		final Sheet sheet = workbook.getSheetAt(userSelection.getSelectedSheet());
-		final String[] headerArray = PoiUtil.rowAsStringArray(sheet, userSelection.getHeaderRowIndex());
-
-		final List<String> headers = Arrays.asList(headerArray);
-		if (userSelection.getDatasetType() != null && userSelection.getDatasetType() == DatasetTypeEnum.PLOT_DATA.getId()
-			&& !headers.contains(TermId.ENTRY_TYPE.name())) {
-			// Force add ENTRY TYPE with T value by default when importing a PLOT_DATA,
-			// and the ENTRY TYPE did not include in the file.
-			final int entryTypeIdx = PoiUtil.rowAsStringArray(sheet, 0).length;
-			PoiUtil.getCell(sheet, entryTypeIdx, 0).setCellValue(TermId.ENTRY_TYPE.name());
-			final Integer lastRow = PoiUtil.getLastRowNum(sheet);
-			for (int i = 0; i <= lastRow; i++) {
-				PoiUtil.getCell(sheet, entryTypeIdx, i).setCellValue(SystemDefinedEntryType.TEST_ENTRY.getEntryTypeValue());
-			}
-
-		}
 	}
 
 	void processExperimentalDesign(final org.generationcp.middleware.domain.etl.Workbook importData, final Workbook workbook)  throws WorkbookParserException{
