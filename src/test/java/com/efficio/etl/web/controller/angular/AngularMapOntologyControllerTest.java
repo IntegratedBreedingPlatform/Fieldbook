@@ -27,7 +27,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.olap4j.metadata.Measure;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
