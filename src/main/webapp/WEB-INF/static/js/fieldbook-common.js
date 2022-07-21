@@ -1807,3 +1807,32 @@ function showAdvanceStudyModal(trialInstances, noOfReplications, locationsSelect
 	'use strict';
 	return angular.element('#mainApp').injector().get('advanceStudyModalService').openAdvanceStudyModal(trialInstances, noOfReplications, locationsSelected, advanceType, values);
 }
+
+function openFeedbackSurvey(feedbackEnabled, feature, feedbackService) {
+	if (feedbackEnabled && feature) {
+		feedbackService.shouldShowFeedback(feature).then((shouldShow) => {
+			if (shouldShow) {
+				const crop = $('#cropName').val() ? $('#cropName').val() : cropName;
+				const programUUID = $('#currentProgramId').val() ? $('#currentProgramId').val() : currentProgramId;
+				const url = '/ibpworkbench/controller/jhipster#/feedback-dialog?restartApplication' +
+					'&cropName=' + crop +
+					'&programUUID=' + programUUID +
+					'&feature=' + feature + '&modal';
+
+				$('.feedback-section').html('');
+				$('<iframe>', {
+					src: url,
+					id: 'myFrame',
+					frameborder: 0,
+					width: '100%',
+					height: 750
+				}).appendTo('.feedback-section');
+				$('#feedbackModal').modal('toggle');
+
+				window.closeModal = function () {
+					$('#feedbackModal').modal('hide');
+				}
+			}
+		})
+	}
+}
