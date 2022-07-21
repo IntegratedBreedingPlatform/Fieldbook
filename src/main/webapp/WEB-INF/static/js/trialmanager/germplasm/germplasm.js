@@ -569,12 +569,11 @@
 					var order = data.order && data.order[0];
 					var pageQuery = '?size=' + data.length
 						+ '&page=' + ((data.length === 0) ? 0 : data.start / data.length);
-					// FIXME: Until now the sort works with entryNumber when will implements by specific column we need replace the code by the commented.
-					/*if ($scope.columnsData[order.column]) {
+					console.log('order');
+					console.log(order);
+					if ($scope.columnsData[order.column]) {
 						pageQuery += '&sort=' + $scope.columnsData[order.column].termId + ',' + order.dir;
-					}*/
-					pageQuery += '&sort=8230' + ',' + order.dir;
-
+					}
 					return pageQuery;
 				}
 
@@ -620,6 +619,8 @@
 					return loadTableHeader().then(function (columnsObj) {
 						$scope.selectedItems = [];
 						$scope.dtOptions = getDtOptions();
+						// Set table default order: ENTRY_NO ascending
+						$scope.dtOptions.withOption('order', [1, 'asc']);
 						dtColumnsPromise.resolve(columnsObj.columns);
 						dtColumnDefsPromise.resolve(columnsObj.columnsDef);
 						initResolve();
