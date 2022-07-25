@@ -315,7 +315,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				hidden: true
 			};
 			$scope.analysisResultsTab = {
-				name: 'SSA Analysis Results',
+				name: 'SSA Results',
 				state: 'analysisResults',
 				hidden: true
 			};
