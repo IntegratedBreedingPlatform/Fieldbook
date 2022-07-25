@@ -91,16 +91,6 @@
 				</li>
 			</ul>
 		</div>
-		<div ng-if="columnFilter.columnData.dataTypeCode === 'D'" class="add_top_padding">
-			<input class="form-control" ng-model='columnFilter.columnData.query'
-				   uib-datepicker-popup="yyyyMMdd"
-				   placeholder="Filter value"/>
-			<div class="add_top_padding"></div>
-			<div uib-datepicker="" ng-model="columnFilter.columnData.query" class="well well-sm uib-datepicker-style-trasformer"
-				 ng-click="$event.stopPropagation()"
-				 ng-if="columnFilter.columnData.dataTypeCode === 'D'"
-				 datepicker-options="datepickerOptions"></div>
-		</div>
 		<div class="add_top_padding">
 			<button class="btn btn-info" ng-click="filterByColumn()" title="Apply all selected filters">Apply</button>
 			<button class="btn btn-default" ng-click="resetFilterByColumn()" title="Reset this filter">Reset</button>

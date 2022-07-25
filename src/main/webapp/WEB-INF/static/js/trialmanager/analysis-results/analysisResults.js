@@ -63,9 +63,6 @@
 						return false;
 					}
 				};
-				$scope.datepickerOptions = {
-					showWeeks: false
-				};
 
 				$scope.changeEnvironment = function () {
 					table().columns('.termId-'+TRIAL_INSTANCE).visible($scope.nested.selectedEnvironment === $scope.environments[0]);
@@ -162,11 +159,7 @@
 									map[columnData.termId] = [columnData.query];
 								}
 							} else if (columnData.query) {
-								if (columnData.dataType === 'Date') {
-									map[columnData.termId] = [($.datepicker.formatDate("yymmdd", columnData.query))];
-								} else {
-									map[columnData.termId] = [(columnData.query)];
-								}
+								map[columnData.termId] = [(columnData.query)];
 							}
 
 							if (map[columnData.termId]) {
@@ -199,8 +192,7 @@
 						return false;
 					}
 
-					if (columnData.dataType === 'Categorical' || columnData.dataType === 'Numeric'
-						|| columnData.dataType === 'Date') {
+					if (columnData.dataType === 'Categorical' || columnData.dataType === 'Numeric') {
 						return false;
 					}
 					return true;
