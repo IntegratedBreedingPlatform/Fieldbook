@@ -570,8 +570,6 @@
 					var order = data.order && data.order[0];
 					var pageQuery = '?size=' + data.length
 						+ '&page=' + ((data.length === 0) ? 0 : data.start / data.length);
-					console.log('order');
-					console.log(order);
 					if ($scope.columnsData[order.column]) {
 						pageQuery += '&sort=' + $scope.columnsData[order.column].termId + ',' + order.dir;
 					}
