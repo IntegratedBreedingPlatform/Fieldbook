@@ -9,7 +9,8 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 	var manageTrialApp = angular.module('manageTrialApp', ['designImportApp', 'leafnode-utils', 'fieldbook-utils', 'subObservation',
 		'ui.router', 'ui.bootstrap', 'ngLodash', 'ngResource', 'ngStorage', 'datatables', 'datatables.buttons', 'datatables.colreorder',
 		'ngSanitize', 'ui.select', 'ngMessages', 'blockUI', 'datasets-api', 'auth', 'bmsAuth', 'studyState',
-		'export-study', 'import-study', 'create-sample', 'derived-variable', 'importObservationsApp', 'germplasm-study-source', 'germplasmDetailsModule', 'pascalprecht.translate']);
+		'export-study', 'import-study', 'create-sample', 'derived-variable', 'importObservationsApp', 'germplasm-study-source', 'analysis-results',
+		'germplasmDetailsModule', 'pascalprecht.translate']);
 
 	manageTrialApp.config(['$httpProvider', function ($httpProvider) {
 		$httpProvider.interceptors.push('authInterceptor');
@@ -128,6 +129,16 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 					inventory: {
 						controller: 'InventoryTabCtrl',
 						templateUrl: '/Fieldbook/static/js/trialmanager/inventory/inventory-tab.html'
+					}
+				}
+			})
+
+			.state('analysisResults', {
+				url: '/analysisResults',
+				views: {
+					analysisResults: {
+						controller: 'AnalysisResultsCtrl',
+						templateUrl: '/Fieldbook/static/js/trialmanager/analysis-results/analysis-results-tab.html'
 					}
 				}
 			})
@@ -303,6 +314,11 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				state: 'inventory',
 				hidden: true
 			};
+			$scope.analysisResultsTab = {
+				name: 'SSA Analysis Results',
+				state: 'analysisResults',
+				hidden: true
+			};
 			$scope.isOpenStudy = TrialManagerDataService.isOpenStudy;
 			$scope.isLockedStudy = TrialManagerDataService.isLockedStudy;
 			$scope.studyTypes = [];
@@ -341,6 +357,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				studyStateService.updateHasListsOrSubObs(HAS_LISTS_OR_SUB_OBS);
 				studyStateService.updateGeneratedDesign(HAS_GENERATED_DESIGN);
 				studyStateService.updateHasMeansDataset(HAS_MEANS_DATASET);
+				loadAnalysisResultsTab();
 
 				if (HAS_GENERATED_DESIGN) {
 					studyEntryService.getStudyEntriesMetadata().then(function (metadata) {
@@ -382,6 +399,13 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 						}
 					});
 				});
+			}
+
+			function loadAnalysisResultsTab() {
+				if(HAS_MEANS_DATASET) {
+					$scope.analysisResultsTab.hidden = false;
+					$scope.trialTabs.push($scope.analysisResultsTab);
+				}
 			}
 
 			$http.get('/bmsapi/crops/' + cropName + '/study-types/visible?programUUID=' + studyContext.programId).success(function (data) {

@@ -306,6 +306,18 @@ public class OpenTrialController extends BaseTrialController {
 		model.addAttribute("measurementDatasetId", trialWorkbook.getMeasurementDatesetId());
 		model.addAttribute("trialDatasetId", trialWorkbook.getTrialDatasetId());
 		model.addAttribute(OpenTrialController.HAS_MEANS_DATASET, hasMeansDataset);
+		if(hasMeansDataset) {
+			final List<DatasetDTO> analysisResultsDTOs = this.datasetService.getDatasets(trialId,
+				new HashSet<>(DatasetTypeEnum.ANALYSIS_RESULTS_DATASET_IDS));
+			for(DatasetDTO datasetDTO: analysisResultsDTOs) {
+				if(datasetDTO.getDatasetTypeId().equals(DatasetTypeEnum.MEANS_DATA.getId())) {
+					model.addAttribute("meansDatasetId", datasetDTO.getDatasetId());
+				} else if(datasetDTO.getDatasetTypeId().equals(DatasetTypeEnum.SUMMARY_STATISTICS_DATA.getId())) {
+					model.addAttribute("summaryStatisticsDatasetId", datasetDTO.getDatasetId());
+				}
+			}
+		}
+
 
 		this.setIsSuperAdminAttribute(model);
 	}

@@ -404,6 +404,7 @@
 			<div class="col-xs-12" ui-view="germplasmStudySource" ng-show="tabSelected==='germplasmStudySource'"></div>
 			<div class="col-xs-12" ui-view="inventory" ng-show="tabSelected==='inventory'"></div>
 			<div class="col-xs-12" ui-view="subObservationTab" ng-show="tabSelected.indexOf('/subObservationTabs/') === 0"></div>
+			<div class="col-xs-12" ui-view="analysisResults" ng-show="tabSelected==='analysisResults'"></div>
 			<div class="col-xs-12" ng-repeat="advancetab in advanceTabsData track by $index" id="{{advancetab.id}}"
 				 ng-show="tabSelected===advancetab.name">
 				<div ng-bind-html="advancetab.data"></div>
@@ -759,7 +760,8 @@
 				loggedInUserId: /*[[${currentCropUserId}]]*/ '',
 				studyId: /*[[${studyId}]]*/ '',
 				measurementDatasetId: /*[[${measurementDatasetId}]]*/ '',
-				trialDatasetId: /*[[${trialDatasetId}]]*/ ''
+				meansDatasetId: /*[[${meansDatasetId}]]*/ '',
+				summaryStatisticsDatasetId: /*[[${summaryStatisticsDatasetId}]]*/ ''
 			}).constant('LABEL_PRINTING_TYPE', {
 				OBSERVATION_DATASET: /*[[${T(org.generationcp.middleware.domain.labelprinting.LabelPrintingType).OBSERVATION_DATASET.getCode()}]]*/ null,
 				SUBOBSERVATION_DATASET: /*[[${T(org.generationcp.middleware.domain.labelprinting.LabelPrintingType).SUBOBSERVATION_DATASET.getCode()}]]*/ null,
@@ -814,6 +816,7 @@
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/saveList.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/r-package/r-package.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/visualization/visualization.js}"></script>
+	<script type="text/javascript" th:src="@{/static/js/trialmanager/analysis-results/analysisResults.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/germplasm-study-source/germplasmStudySource.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/germplasm-study-source/germplasmStudySourceService.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/subobservations/subObservationTab.js}"></script>
