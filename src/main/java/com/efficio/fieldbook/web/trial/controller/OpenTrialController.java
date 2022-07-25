@@ -36,6 +36,7 @@ import org.generationcp.middleware.service.api.study.StudyEntryService;
 import org.generationcp.middleware.service.api.study.StudyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -75,6 +76,9 @@ public class OpenTrialController extends BaseTrialController {
 	private static final String IS_DELETED_ENVIRONMENT = "0";
 	private static final String IS_PREVIEW_EDITABLE = "0";
 	private static final String REDIRECT = "redirect:";
+
+	@Value("${feedback.enabled}")
+	private boolean feedbackEnabled;
 
 	@Resource
 	private ErrorHandlerService errorHandlerService;
@@ -160,6 +164,11 @@ public class OpenTrialController extends BaseTrialController {
 	@ModelAttribute("maxNumOfSubObsSetsPerParentUnit")
 	public Integer getMaxNumOfSubObsSetsPerParentunit() {
 		return this.fieldbookProperties.getMaxNumOfSubObsPerParentUnit();
+	}
+
+	@ModelAttribute("feedbackEnabled")
+	public boolean isFeedbackEnabled() {
+		return this.feedbackEnabled;
 	}
 
 	@RequestMapping(value = "/trialSettings", method = RequestMethod.GET)

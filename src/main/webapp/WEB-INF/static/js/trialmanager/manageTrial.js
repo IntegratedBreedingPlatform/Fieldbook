@@ -254,11 +254,11 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 		'$timeout', '_', '$localStorage', '$state', '$window', '$location', 'HasAnyAuthorityService', 'derivedVariableService', 'exportStudyModalService',
 		'importStudyModalService', 'createSampleModalService', 'derivedVariableModalService', '$uibModal', '$q', 'datasetService', 'InventoryService',
 		'studyContext', 'PERMISSIONS', 'LABEL_PRINTING_TYPE', 'HAS_LISTS_OR_SUB_OBS', 'HAS_GENERATED_DESIGN', 'germplasmStudySourceService', 'studyEntryService', 'HAS_MEANS_DATASET',
-		'advanceStudyModalService', 'STABRAPP_URL',
+		'advanceStudyModalService', 'STABRAPP_URL', 'FEEDBACK_ENABLED',
 		function ($scope, $rootScope, studyStateService, TrialManagerDataService, $http, $timeout, _, $localStorage, $state, $window, $location, HasAnyAuthorityService,
 				  derivedVariableService, exportStudyModalService, importStudyModalService, createSampleModalService, derivedVariableModalService, $uibModal, $q, datasetService, InventoryService,
 				  studyContext, PERMISSIONS, LABEL_PRINTING_TYPE, HAS_LISTS_OR_SUB_OBS, HAS_GENERATED_DESIGN, germplasmStudySourceService, studyEntryService, HAS_MEANS_DATASET, advanceStudyModalService,
-				  STABRAPP_URL) {
+				  STABRAPP_URL, FEEDBACK_ENABLED) {
 
 			$scope.germplasmDetailsHasChanges = false;
 			$window.addEventListener("message", (event) => {
@@ -326,6 +326,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			$scope.isChoosePreviousStudy = false;
 			$scope.hasUnsavedData = studyStateService.hasUnsavedData;
 			$scope.STABRAPP_URL = STABRAPP_URL;
+			$scope.FEEDBACK_ENABLED = FEEDBACK_ENABLED;
 
 			$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
 			$scope.PERMISSIONS = PERMISSIONS;
