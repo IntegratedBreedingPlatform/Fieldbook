@@ -59,6 +59,9 @@
 						<li>
 							<a href="javascript: void(0)" ng-click="showAddEntriesModal()" th:text="#{add.new.entries}" >Add New Entries</a>
 						</li>
+						<li>
+							<a href="javascript: void(0)" ng-click="openImportEntryDetailsModal()" th:text="#{import.entry.details}" >Import Entry Details</a>
+						</li>
 						<li ng-show="!hasGeneratedDesign()">
 							<a href="javascript: void(0)" ng-click="setEntryTypeByBatch()" th:text="#{set.entry.type}" >Set Entry Type</a>
 						</li>
