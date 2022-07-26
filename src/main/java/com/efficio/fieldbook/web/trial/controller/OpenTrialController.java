@@ -318,7 +318,7 @@ public class OpenTrialController extends BaseTrialController {
 		if(hasMeansDataset) {
 			final List<DatasetDTO> analysisResultsDTOs = this.datasetService.getDatasets(trialId,
 				new HashSet<>(DatasetTypeEnum.ANALYSIS_RESULTS_DATASET_IDS));
-			for(DatasetDTO datasetDTO: analysisResultsDTOs) {
+			for(final DatasetDTO datasetDTO: analysisResultsDTOs) {
 				if(datasetDTO.getDatasetTypeId().equals(DatasetTypeEnum.MEANS_DATA.getId())) {
 					model.addAttribute("meansDatasetId", datasetDTO.getDatasetId());
 				} else if(datasetDTO.getDatasetTypeId().equals(DatasetTypeEnum.SUMMARY_STATISTICS_DATA.getId())) {
