@@ -3,8 +3,6 @@
 
 	var TRIAL_INSTANCE = 8170,
 		GID = 8240;
-	var hiddenColumns = [TRIAL_INSTANCE];
-
 	var analysisResultsModule = angular.module('analysis-results', []);
 
 	analysisResultsModule.controller('AnalysisResultsCtrl',
@@ -372,20 +370,12 @@
 								return className;
 							}
 
-							function isColumnVisible() {
-								if (columnData.termId === TRIAL_INSTANCE) {
-									return $scope.nested.selectedEnvironment === $scope.environments[0];
-								}
-								return hiddenColumns.indexOf(columnData.termId) < 0;
-							}
-
 							columns.push({
 								title: columnData.alias,
 								name: columnData.alias,
 								data: function (row) {
 									return row.variables[columnData.name];
 								},
-								visible: isColumnVisible(),
 								defaultContent: '',
 								className: getClassName(),
 								columnData: columnData
