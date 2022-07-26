@@ -3,9 +3,9 @@
 
 	var TRIAL_INSTANCE = 8170,
 		GID = 8240;
-	var analysisResultsModule = angular.module('analysis-results', []);
+	var module = angular.module('manageTrialApp');
 
-	analysisResultsModule.controller('AnalysisResultsCtrl',
+	module.controller('AnalysisResultsCtrl',
 		['$scope',
 			'DTOptionsBuilder', '$q', '$compile', 'datasetService', '$timeout', 'studyContext', 'germplasmDetailsModalService',
 			function ($scope, DTOptionsBuilder, $q, $compile, datasetService, $timeout, studyContext, germplasmDetailsModalService) {

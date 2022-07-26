@@ -9,7 +9,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 	var manageTrialApp = angular.module('manageTrialApp', ['designImportApp', 'leafnode-utils', 'fieldbook-utils', 'subObservation',
 		'ui.router', 'ui.bootstrap', 'ngLodash', 'ngResource', 'ngStorage', 'datatables', 'datatables.buttons', 'datatables.colreorder',
 		'ngSanitize', 'ui.select', 'ngMessages', 'blockUI', 'datasets-api', 'auth', 'bmsAuth', 'studyState',
-		'export-study', 'import-study', 'create-sample', 'derived-variable', 'importObservationsApp', 'germplasm-study-source', 'analysis-results',
+		'export-study', 'import-study', 'create-sample', 'derived-variable', 'importObservationsApp', 'germplasm-study-source',
 		'germplasmDetailsModule', 'pascalprecht.translate']);
 
 	manageTrialApp.config(['$httpProvider', function ($httpProvider) {
