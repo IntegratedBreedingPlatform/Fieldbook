@@ -19,7 +19,7 @@
 		<div class="fb-tabs" style="padding-top: 15px;">
 			<div class="info">
 				<div class="col-xs-12">
-					<div id="subObservationTableContainer" class="col-xs-12 add-top-padding-small">
+					<div id="subObservationTableContainer" class="col-xs-12 add-top-padding-small" ng-if="datasetId">
 						<div class="row add_top_padding">
 							<div class="col-xs-12 form-inline">
 								<div class="form-group" style="padding-right: 10px;">
@@ -47,6 +47,13 @@
 									   width="100%"
 									   class="table table-curved table-condensed table-sorted">
 								</table>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 add-top-padding-small" ng-if="!datasetId">
+						<div class="form-group">
+							<div class="form-group" style="padding-right: 10px;">
+								<label style="padding-right: 10px;">There is no data to review in the dataset</label>
 							</div>
 						</div>
 					</div>

@@ -114,18 +114,19 @@
 					$scope.activeTab = tab;
 
 					$scope.datasetId = $scope.activeTab === 1 ? studyContext.summaryStatisticsDatasetId: studyContext.meansDatasetId;
+					if($scope.datasetId) {
+						datasetService.getDataset($scope.datasetId).then(function (dataset) {
+							$scope.dataset = dataset;
+							$scope.environments = [{
+								instanceNumber: null,
+								locationName: 'All environments'
+							}].concat(dataset.instances);
 
-					datasetService.getDataset($scope.datasetId).then(function (dataset) {
-						$scope.dataset = dataset;
-						$scope.environments = [{
-							instanceNumber: null,
-							locationName: 'All environments'
-						}].concat(dataset.instances);
+							$scope.nested.selectedEnvironment = $scope.activeTab === 1 ? $scope.environments[0] : $scope.environments[1];
 
-						$scope.nested.selectedEnvironment = $scope.activeTab === 1 ? $scope.environments[0] : $scope.environments[1];
-
-						loadTable();
-					});
+							loadTable();
+						});
+					}
 				};
 
 				$scope.showSSATab(1);
