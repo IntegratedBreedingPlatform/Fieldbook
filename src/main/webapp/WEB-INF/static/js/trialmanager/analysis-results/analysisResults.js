@@ -1,8 +1,7 @@
 (function () {
 	'use strict';
 
-	var TRIAL_INSTANCE = 8170,
-		GID = 8240;
+	var GID = 8240;
 	var module = angular.module('manageTrialApp');
 
 	module.controller('AnalysisResultsCtrl',
@@ -63,7 +62,6 @@
 				};
 
 				$scope.changeEnvironment = function () {
-					table().columns('.termId-'+TRIAL_INSTANCE).visible($scope.nested.selectedEnvironment === $scope.environments[0]);
 					table().ajax.reload();
 				};
 
