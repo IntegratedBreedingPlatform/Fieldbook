@@ -1617,6 +1617,36 @@
 									full.gid + '\')">' + EscapeHTML.escape(data.value) + '</a>';
 							}
 						});
+					} else if (columnData.termId === 8236 || columnData.termId === 8237) {
+						// FEMALE_PARENT_NAME  or FEMALE_PARENT_GID
+						columnsDef.push({
+							targets: columns.length - 1,
+							orderable: false,
+							createdCell: function (td, cellData, rowData, rowIndex, colIndex) {
+								$(td).val("");
+								var value = columnData.termId === 8236 ? rowData.variables['FEMALE_PARENT_NAME'].value : rowData.variables['FEMALE_PARENT_GID'].value;
+								$(td).append($compile('<a class="gid-link" href="javascript: void(0)" ' +
+									'ng-click="openGermplasmDetailsModal(\'' + rowData.variables['FEMALE_PARENT_GID'].value + '\')">' + value + '</a>')($scope));
+							},
+							render: function (data, type, full, meta) {
+								return '';
+							}
+						});
+					} else if (columnData.termId === 8238 || columnData.termId === 8239) {
+						// MALE_PARENT_GID or MALE_PARENT_NAME
+						columnsDef.push({
+							targets: columns.length - 1,
+							orderable: false,
+							createdCell: function (td, cellData, rowData, rowIndex, colIndex) {
+								$(td).val("");
+								var value = columnData.termId === 8238 ? rowData.variables['MALE_PARENT_NAME'].value : rowData.variables['MALE_PARENT_GID'].value;
+								$(td).append($compile('<a class="gid-link" href="javascript: void(0)" ' +
+									'ng-click="openGermplasmDetailsModal(\'' + rowData.variables['MALE_PARENT_GID'].value + '\')">' + value + '</a>')($scope));
+							},
+							render: function (data, type, full, meta) {
+								return '';
+							}
+						});
 					} else if (columnData.termId === STOCK_ID) {
 						// STOCK_ID column
 						columnsDef.push({

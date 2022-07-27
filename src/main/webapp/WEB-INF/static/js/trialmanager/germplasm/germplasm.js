@@ -574,6 +574,40 @@
 									return '';
 								}
 							});
+						} else if (columnData.termId === 8236 || columnData.termId === 8237) {
+							// FEMALE_PARENT_GID or FEMALE_PARENT_NAME
+							columnsDef.push({
+								targets: columns.length - 1,
+								orderable: false,
+								createdCell: function (td, cellData, rowData, rowIndex, colIndex) {
+									$(td).val("");
+									var value = columnData.termId === 8236 ? rowData.properties['8236'].value : rowData.properties['8237'].value;
+									$(td).append($compile('<a class="gid-link" href="javascript: void(0)" ' +
+										'ng-click="openGermplasmDetailsModal(\'' + rowData.properties['8237'].value + '\')">' + value + '</a>')($scope));
+
+
+								},
+								render: function (data, type, full, meta) {
+									return '';
+								}
+							});
+						} else if (columnData.termId === 8238 || columnData.termId === 8239) {
+							// MALE_PARENT_GID or MALE_PARENT_NAME
+							columnsDef.push({
+								targets: columns.length - 1,
+								orderable: false,
+								createdCell: function (td, cellData, rowData, rowIndex, colIndex) {
+									$(td).val("");
+									var value = columnData.termId === 8238 ? rowData.properties['8238'].value : rowData.properties['8239'].value;
+									$(td).append($compile('<a class="gid-link" href="javascript: void(0)" ' +
+										'ng-click="openGermplasmDetailsModal(\'' + rowData.properties['8239'].value + '\')">' + value + '</a>')($scope));
+
+
+								},
+								render: function (data, type, full, meta) {
+									return '';
+								}
+							});
 						} else if (columnData.termId === 8377) {
 							// CROSS
 							columnsDef.push({
