@@ -383,11 +383,9 @@
 				}
 
 				function adjustColumns() {
-					if ($scope.hasInstances) {
-						$timeout(function () {
-							table().columns.adjust();
-						});
-					}
+					$timeout(function () {
+						table().columns.adjust();
+					});
 				}
 
 				$scope.reloadEntryDetails = function () {
