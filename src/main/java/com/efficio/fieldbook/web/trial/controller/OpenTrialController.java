@@ -119,10 +119,6 @@ public class OpenTrialController extends BaseTrialController {
 	@ModelAttribute("dsBrappUrl")
 	public String getDsBrappUrl() {
 		final Optional<CropParameter> dsBrappUrl = this.cropParameterService.getCropParameter(CropParameterEnum.DS_BRAPP_URL);
-		LOG.error("PRES: " + dsBrappUrl.isPresent());
-		if(dsBrappUrl.isPresent()) {
-			LOG.error(dsBrappUrl.get().getValue());
-		}
 		return dsBrappUrl.isPresent()? dsBrappUrl.get().getValue(): null;
 	}
 
