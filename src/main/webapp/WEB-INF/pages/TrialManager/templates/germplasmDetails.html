@@ -59,7 +59,7 @@
 						<li>
 							<a href="javascript: void(0)" ng-click="showAddEntriesModal()" th:text="#{add.new.entries}" >Add New Entries</a>
 						</li>
-						<li>
+						<li ng-show="!hasGeneratedDesign()">
 							<a href="javascript: void(0)" ng-click="openImportEntryDetailsModal()" th:text="#{import.entry.details}" >Import Entry Details</a>
 						</li>
 						<li ng-show="!hasGeneratedDesign()">
