@@ -42,6 +42,10 @@
 					tableRenderedResolve = resolve;
 				});
 
+				$scope.datepickerOptions = {
+					showWeeks: false
+				};
+
 				$scope.generationLevel = getGenerationLevel();
 				$scope.generationLevels = Array.from(Array(10).keys()).map((k) => k + 1);
 
