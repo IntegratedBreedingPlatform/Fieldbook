@@ -35,6 +35,7 @@ import org.generationcp.middleware.domain.ontology.Variable;
 import org.generationcp.middleware.domain.ontology.VariableType;
 import org.generationcp.middleware.domain.samplelist.SampleListDTO;
 import org.generationcp.middleware.domain.study.StudyTypeDto;
+import org.generationcp.middleware.enumeration.DatasetTypeEnum;
 import org.generationcp.middleware.exceptions.MiddlewareException;
 import org.generationcp.middleware.exceptions.MiddlewareQueryException;
 import org.generationcp.middleware.manager.Operation;
@@ -1115,8 +1116,18 @@ public class OpenTrialControllerTest {
 
 	@Test
 	public void testSetModelAttributes() throws ParseException {
+		final Integer trialId = 1010;
 		final Workbook testWorkbook = WorkbookTestDataInitializer.getTestWorkbook();
-		this.openTrialController.setModelAttributes(this.createTrialForm, 1010, this.model, testWorkbook);
+		Mockito.when(this.studyService.studyHasGivenDatasetType(trialId, DatasetTypeEnum.MEANS_DATA.getId())).thenReturn(true);
+		final DatasetDTO meansDataset = new DatasetDTO();
+		meansDataset.setDatasetId(1);
+		meansDataset.setDatasetTypeId(DatasetTypeEnum.MEANS_DATA.getId());
+		final DatasetDTO summaryStatisticsDataset = new DatasetDTO();
+		summaryStatisticsDataset.setDatasetId(1);
+		summaryStatisticsDataset.setDatasetTypeId(DatasetTypeEnum.SUMMARY_STATISTICS_DATA.getId());
+		Mockito.when(this.datasetService.getDatasets(trialId, new HashSet<>(DatasetTypeEnum.ANALYSIS_RESULTS_DATASET_IDS)))
+			.thenReturn(Arrays.asList(meansDataset, summaryStatisticsDataset));
+		this.openTrialController.setModelAttributes(this.createTrialForm, trialId, this.model, testWorkbook);
 		Mockito.verify(this.model).addAttribute(ArgumentMatchers.eq("basicDetailsData"), ArgumentMatchers.any(TabInfo.class));
 		Mockito.verify(this.model).addAttribute(ArgumentMatchers.eq("germplasmData"), ArgumentMatchers.any(TabInfo.class));
 		Mockito.verify(this.model).addAttribute(ArgumentMatchers.eq(OpenTrialController.ENVIRONMENT_DATA_TAB), ArgumentMatchers.any(TabInfo.class));
@@ -1131,6 +1142,8 @@ public class OpenTrialControllerTest {
 		Mockito.verify(this.model).addAttribute("description", testWorkbook.getStudyDetails().getDescription());
 		Mockito.verify(this.model).addAttribute(ArgumentMatchers.eq("sampleList"), ArgumentMatchers.anyListOf(SampleListDTO.class));
 		Mockito.verify(this.model).addAttribute("germplasmListSize", 0);
+		Mockito.verify(this.model).addAttribute("meansDatasetId", meansDataset.getDatasetId());
+		Mockito.verify(this.model).addAttribute("summaryStatisticsDatasetId", summaryStatisticsDataset.getDatasetId());
 		Mockito.verify(this.model).addAttribute(ArgumentMatchers.eq("isSuperAdmin"), ArgumentMatchers.anyBoolean());
 	}
 
