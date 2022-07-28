@@ -17,8 +17,10 @@
 				$uibModalInstance.close(null);
 			};
 
-			window.onGidsSelected = function(gids) {
-				$uibModalInstance.close(gids);
+			window.handleImportSuccess = function() {
+				$uibModalInstance.close();
+				showSuccessfulMessage('', $.germplasmMessages.importEntrySuccess);
+				$rootScope.$emit("reloadStudyEntryTableData", {});
 			};
 
 			$scope.cancel = function() {
