@@ -2,7 +2,7 @@ package com.efficio.fieldbook.web.trial.controller;
 
 import com.efficio.fieldbook.service.api.ErrorHandlerService;
 import com.efficio.fieldbook.web.common.bean.SettingDetail;
-import com.efficio.fieldbook.web.trial.bean.TabInfo;
+import com.efficio.fieldbook.web.common.controller.ReviewStudyDetailsController;
 import com.efficio.fieldbook.web.trial.bean.TrialData;
 import com.efficio.fieldbook.web.trial.form.CreateTrialForm;
 import com.efficio.fieldbook.web.trial.form.ImportGermplasmListForm;
@@ -12,6 +12,8 @@ import com.efficio.fieldbook.web.util.WorkbookUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.generationcp.commons.constant.AppConstants;
 import org.generationcp.commons.context.ContextInfo;
+import org.generationcp.middleware.api.cropparameter.CropParameterEnum;
+import org.generationcp.middleware.api.cropparameter.CropParameterService;
 import org.generationcp.middleware.domain.dms.DatasetDTO;
 import org.generationcp.middleware.domain.dms.PhenotypicType;
 import org.generationcp.middleware.domain.etl.MeasurementData;
@@ -25,6 +27,7 @@ import org.generationcp.middleware.domain.samplelist.SampleListDTO;
 import org.generationcp.middleware.enumeration.DatasetTypeEnum;
 import org.generationcp.middleware.exceptions.MiddlewareQueryException;
 import org.generationcp.middleware.manager.ontology.api.TermDataManager;
+import org.generationcp.middleware.pojos.CropParameter;
 import org.generationcp.middleware.pojos.UserDefinedField;
 import org.generationcp.middleware.pojos.dms.DmsProject;
 import org.generationcp.middleware.pojos.workbench.settings.Dataset;
@@ -57,13 +60,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Controller
 @RequestMapping(OpenTrialController.URL)
 @Transactional
 public class OpenTrialController extends BaseTrialController {
-
 	static final String TRIAL_SETTINGS_DATA = "trialSettingsData";
 	private static final String TRIAL_INSTANCE = "TRIAL_INSTANCE";
 	private static final String TRIAL = "TRIAL";
@@ -101,6 +103,9 @@ public class OpenTrialController extends BaseTrialController {
 	@Resource
 	private SampleListService sampleListService;
 
+	@Resource
+	private CropParameterService cropParameterService;
+
 	@Override
 	public String getContentName() {
 		return "TrialManager/createTrial";
@@ -109,6 +114,16 @@ public class OpenTrialController extends BaseTrialController {
 	@ModelAttribute("staBrappUrl")
 	public String getStaBrappUrl() {
 		return this.fieldbookProperties.getStaBrappUrl();
+	}
+
+	@ModelAttribute("dsBrappUrl")
+	public String getDsBrappUrl() {
+		final Optional<CropParameter> dsBrappUrl = this.cropParameterService.getCropParameter(CropParameterEnum.DS_BRAPP_URL);
+		LOG.error("PRES: " + dsBrappUrl.isPresent());
+		if(dsBrappUrl.isPresent()) {
+			LOG.error(dsBrappUrl.get().getValue());
+		}
+		return dsBrappUrl.isPresent()? dsBrappUrl.get().getValue(): null;
 	}
 
 	@ModelAttribute("projectID")
