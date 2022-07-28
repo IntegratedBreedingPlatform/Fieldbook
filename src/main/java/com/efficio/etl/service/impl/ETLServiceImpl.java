@@ -31,7 +31,6 @@ import org.generationcp.middleware.domain.etl.MeasurementData;
 import org.generationcp.middleware.domain.etl.MeasurementRow;
 import org.generationcp.middleware.domain.etl.MeasurementVariable;
 import org.generationcp.middleware.domain.etl.StudyDetails;
-import org.generationcp.middleware.domain.gms.SystemDefinedEntryType;
 import org.generationcp.middleware.domain.oms.Term;
 import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.domain.study.StudyTypeDto;
@@ -327,21 +326,10 @@ public class ETLServiceImpl implements ETLService {
 
 		final List<String> headers = new ArrayList<>();
 		headers.addAll(Arrays.asList(headerArray));
+
+
 		if (addObsUnitId && !headers.contains(TermId.OBS_UNIT_ID.name())) {
 			headers.add(TermId.OBS_UNIT_ID.name());
-		}
-
-		if (userSelection.getDatasetType() != null && userSelection.getDatasetType() == DatasetTypeEnum.PLOT_DATA.getId() && !headers.contains(TermId.ENTRY_TYPE.name())) {
-			// Force add ENTRY TYPE with T value by default when importing a PLOT_DATA,
-			// and the ENTRY TYPE did not include in the file.
-			headers.add(TermId.ENTRY_TYPE.name());
-			final int entryTypeIdx = PoiUtil.rowAsStringArray(sheet, 0).length;
-			PoiUtil.getCell(sheet, entryTypeIdx, 0).setCellValue(TermId.ENTRY_TYPE.name());
-			final Integer lastRow = PoiUtil.getLastRowNum(sheet);
-			for (int i = 0; i <= lastRow; i++) {
-				PoiUtil.getCell(sheet, entryTypeIdx, i).setCellValue(SystemDefinedEntryType.TEST_ENTRY.getEntryTypeValue());
-			}
-
 		}
 		// Trim all header names before returning
 		return Lists.transform(headers, new Function<String, String>() {
@@ -807,8 +795,21 @@ public class ETLServiceImpl implements ETLService {
 		// set variables
 		wb.setFactors(this.getFactorsFromDatasets(trialDataset, datasetForImport));
 		wb.setVariates(this.getVariatesFromDatasets(trialDataset, datasetForImport, isMeansDataImport));
+		wb.setEntryDetails(this.getEntryDetailsFromDatasets(datasetForImport));
 		wb.setConditions(new ArrayList<MeasurementVariable>());
 		wb.setConstants(new ArrayList<MeasurementVariable>());
+	}
+
+	private List<MeasurementVariable> getEntryDetailsFromDatasets(final DataSet datasetForImport) {
+		final List<MeasurementVariable> entryDetails = new ArrayList<>();
+
+		for (final DMSVariableType variableType : datasetForImport.getVariableTypes().getVariableTypes()) {
+			final PhenotypicType pheno = variableType.getStandardVariable().getPhenotypicType();
+			if (PhenotypicType.ENTRY_DETAIL.compareTo(pheno) == 0) {
+				entryDetails.add(this.convertToMeasurementVariable(variableType));
+			}
+		}
+		return entryDetails;
 	}
 
 	private List<MeasurementVariable> getFactorsFromDatasets(final DataSet trialDataset, final DataSet nonTrialDataset) {

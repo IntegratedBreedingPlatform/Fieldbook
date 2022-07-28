@@ -368,6 +368,7 @@
 	<div class="row">
 		<div class="col-xs-12 col-md-12">
 			<div id="showBaselineTraitDetails" th:include="/StudyManager/includes/baselineTraitDetails"></div>
+			<div id="showFeedbackModal" th:include="/StudyManager/includes/feedbackModal"></div>
 		</div>
 	</div>
 
@@ -712,6 +713,7 @@
 			).constant('BREEDING_METHOD_SCALE', /*[[${breedingMethodCodeScale}]]*/ ''
 			).constant('HAS_MEANS_DATASET', /*[[${hasMeansDataset}]]*/ ''
 			).constant('STABRAPP_URL', /*[[${staBrappUrl}]]*/ ''
+			).constant('FEEDBACK_ENABLED', /*[[${feedbackEnabled}]]*/ ''
 			).constant('DESIGN_TYPE',
 				{
 					RANDOMIZED_COMPLETE_BLOCK: /*[[${T(org.generationcp.middleware.domain.dms.ExperimentDesignType).RANDOMIZED_COMPLETE_BLOCK.getId()}]]*/ 0
@@ -807,6 +809,7 @@
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/germplasm-selector/germplasm-selector-modal.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/studyEntryService.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/studyEntryObservationService.js}"></script>
+	<script type="text/javascript" th:src="@{/static/js/trialmanager/feedbackService.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/treatment.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/studyInstanceService.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/environments.js}"></script>

@@ -7,9 +7,11 @@
 
 	manageTrialAppModule.controller('GermplasmCtrl',
 		['$scope', '$rootScope', '$q', '$compile', 'TrialManagerDataService', 'DTOptionsBuilder', 'studyStateService', 'studyEntryService', 'germplasmStudySourceService',
-			'datasetService', '$timeout', '$uibModal', 'germplasmDetailsModalService', 'studyEntryObservationService', 'DATASET_TYPES', 'VARIABLE_TYPES', '$http', 'studyContext',
+			'datasetService', '$timeout', '$uibModal', 'germplasmDetailsModalService', 'studyEntryObservationService', 'feedbackService', 'DATASET_TYPES', 'VARIABLE_TYPES',
+			'$http', 'studyContext',
 			function ($scope, $rootScope, $q, $compile, TrialManagerDataService, DTOptionsBuilder, studyStateService, studyEntryService, germplasmStudySourceService,
-					  datasetService, $timeout, $uibModal, germplasmDetailsModalService, studyEntryObservationService, DATASET_TYPES, VARIABLE_TYPES, $http, studyContext) {
+					  datasetService, $timeout, $uibModal, germplasmDetailsModalService, studyEntryObservationService, feedbackService, DATASET_TYPES, VARIABLE_TYPES,
+					  $http, studyContext) {
 
 				$scope.entryDetails = TrialManagerDataService.settings.entryDetails;
 				$scope.isLockedStudy = TrialManagerDataService.isLockedStudy;
@@ -44,6 +46,7 @@
 
 				loadTable();
 				loadStudyEntryColumns();
+				openFeedbackSurvey($scope.FEEDBACK_ENABLED, 'GERMPLASM_AND_CHECKS', feedbackService);
 
 				$rootScope.$on("reloadStudyEntryTableData", function(setShowValues){
 					$scope.reloadStudyEntryTableData(setShowValues);
