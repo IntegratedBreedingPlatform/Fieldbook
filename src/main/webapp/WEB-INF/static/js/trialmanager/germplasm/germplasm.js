@@ -1205,6 +1205,12 @@
 					var selectedPropertyIds = concatAllColumns().filter((column) => column.selected).map((column) => column.id);
 					datasetService.updateDatasetProperties(selectedPropertyIds).then(function () {
 						$rootScope.navigateToTab('germplasm', {reload: true});
+					}, function (response) {
+						if (response.errors && response.errors.length) {
+							showErrorMessage('', response.errors[0].message);
+						} else {
+							showErrorMessage('', ajaxGenericErrorMsg);
+						}
 					});
 				}
 
