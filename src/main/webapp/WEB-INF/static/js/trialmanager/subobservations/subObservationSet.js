@@ -989,8 +989,14 @@
 				var order = data.order && data.order[0];
 				var pageQuery = '?size=' + data.length
 					+ '&page=' + ((data.length === 0) ? 0 : data.start / data.length);
-				if (subObservationSet.columnsData[order.column]) {
-					pageQuery += '&sort=' + subObservationSet.columnsData[order.column].termId + ',' + order.dir;
+				var columnData = subObservationSet.columnsData[order.column];
+				if (columnData) {
+					var sort = columnData.termId;
+					if (columnData.variableType === 'GERMPLASM_PASSPORT' ||
+						columnData.variableType === 'GERMPLASM_ATTRIBUTES') {
+						sort = 'VARIABLE_' + sort;
+					}
+					pageQuery += '&sort=' + sort + ',' + order.dir;
 				}
 				return pageQuery;
 			}
