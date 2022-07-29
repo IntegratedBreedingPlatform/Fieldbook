@@ -552,7 +552,7 @@
 				function adjustColumns() {
 					$timeout(function () {
 						table().columns.adjust();
-					});
+					}, 50);
 				}
 
 				$scope.reloadEntryDetails = function () {
