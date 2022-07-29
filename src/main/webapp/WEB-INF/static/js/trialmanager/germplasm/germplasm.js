@@ -552,7 +552,7 @@
 				function adjustColumns() {
 					$timeout(function () {
 						table().columns.adjust();
-					}, 50);
+					}, 100);
 				}
 
 				$scope.reloadEntryDetails = function () {
@@ -567,8 +567,14 @@
 					var order = data.order && data.order[0];
 					var pageQuery = '?size=' + data.length
 						+ '&page=' + ((data.length === 0) ? 0 : data.start / data.length);
-					if ($scope.columnsData[order.column]) {
-						pageQuery += '&sort=' + $scope.columnsData[order.column].termId + ',' + order.dir;
+					var columnData = $scope.columnsData[order.column];
+					if (columnData) {
+						var sort = columnData.termId;
+						if (columnData.variableType === 'GERMPLASM_PASSPORT' ||
+							columnData.variableType === 'GERMPLASM_ATTRIBUTES') {
+							sort = 'VARIABLE_' + sort;
+						}
+						pageQuery += '&sort=' + sort + ',' + order.dir;
 					}
 					return pageQuery;
 				}
