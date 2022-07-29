@@ -1,12 +1,15 @@
-<div class="modal-body">
+<div class="modal-header">
 	<div class="row form-group">
 		<div class="col-xs-10 col-md-11">
-			<label class="modal-title fbk-modal-title" id="heading-modal">Select environments</label>
+			<label class="modal-title fbk-modal-title" id="heading-modal">{{modalTitle}}</label>
 		</div>
 		<div class="col-xs-1 col-md-1">
 			<button type="button" class="close pull-right glyphicon glyphicon-remove" data-dismiss="modal" ng-click="cancel()"/>
 		</div>
 	</div>
+</div>
+<div class="modal-body">
+	<label class="control-label control-label-bold">Select environments:</label>
 	<div id="instance-selection">
 		<instances-table instances="instances"
 						 selected-instances="selectedInstances"

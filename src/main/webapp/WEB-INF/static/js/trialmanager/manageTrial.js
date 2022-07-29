@@ -1067,11 +1067,17 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 							' selected-instances="selectedInstances" ' +
 							' on-select-instance="onSelectInstance" ' +
 							' on-continue="onContinue" ' +
+							' modal-title="modalTitle" ' +
 							' ></multiple-instance-selector-modal>',
 						controller: function ($scope) {
 							$scope.selectedInstances = {};
 							$scope.instances = datasetInstances;
 							$scope.isEmptySelection = false;
+							if (brappURL === DS_BRAPP_URL) {
+								$scope.modalTitle = 'Decision Support Tool(Beta)';
+							} else if (brappURL === STABRAPP_URL) {
+								$scope.modalTitle = 'STA BrAPP(Beta)';
+							}
 
 							$scope.onContinue = function () {
 								const instanceIds = Object.entries($scope.selectedInstances)
