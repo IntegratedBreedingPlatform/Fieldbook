@@ -2,13 +2,13 @@ package com.efficio.fieldbook.web.naming.expression.dataprocessor;
 
 import com.efficio.fieldbook.util.FieldbookException;
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
-import org.generationcp.commons.pojo.AdvancingSource;
 import com.google.common.collect.Lists;
+import org.generationcp.commons.pojo.AdvancingSource;
+import org.generationcp.middleware.api.location.LocationService;
 import org.generationcp.middleware.domain.etl.MeasurementData;
 import org.generationcp.middleware.domain.etl.MeasurementRow;
 import org.generationcp.middleware.domain.etl.MeasurementVariable;
 import org.generationcp.middleware.domain.oms.TermId;
-import org.generationcp.middleware.manager.api.LocationDataManager;
 import org.generationcp.middleware.pojos.Location;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +23,7 @@ import java.util.List;
 public class LocationAbbreviationExpressionDataProcessorTest {
 
     @Mock
-    private LocationDataManager locationDataManager;
+    private LocationService locationService;
 
     @InjectMocks
     private LocationAbbreviationExpressionDataProcessor locationAbbreviationExpressionDataProcessor;
@@ -69,7 +69,7 @@ public class LocationAbbreviationExpressionDataProcessorTest {
 
         Mockito.when(measurementRow.getDataList()).thenReturn(listMeasurementData);
         Mockito.when(source.getTrailInstanceObservation()).thenReturn(measurementRow);
-        Mockito.when(locationDataManager.getLocationByID(11)).thenReturn(location);
+        Mockito.when(locationService.getLocationByID(11)).thenReturn(location);
 
         locationAbbreviationExpressionDataProcessor.processPlotLevelData(source, null);
 
