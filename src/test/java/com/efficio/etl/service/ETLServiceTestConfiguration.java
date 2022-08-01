@@ -4,7 +4,7 @@ import org.generationcp.middleware.api.tool.ToolService;
 import org.generationcp.middleware.manager.api.GermplasmDataManager;
 import org.generationcp.middleware.manager.api.OntologyDataManager;
 import org.generationcp.middleware.manager.api.StudyDataManager;
-import org.generationcp.middleware.manager.api.WorkbenchDataManager;
+import org.generationcp.middleware.api.role.RoleService;
 import org.generationcp.middleware.service.api.DataImportService;
 import org.generationcp.middleware.service.api.OntologyService;
 import org.mockito.Mock;
@@ -35,7 +35,7 @@ public class ETLServiceTestConfiguration {
 	private StudyDataManager studyDataManager;
 
 	@Mock
-	private WorkbenchDataManager workbenchDataManager;
+	private RoleService roleService;
 
 	@Mock
 	private GermplasmDataManager germplasmDataManager;
@@ -68,8 +68,8 @@ public class ETLServiceTestConfiguration {
 	}
 
 	@Bean
-	public WorkbenchDataManager getWorkbenchDataManagerBean() {
-		return workbenchDataManager;
+	public RoleService getRoleServiceBean() {
+		return roleService;
 	}
 
 	@Bean
