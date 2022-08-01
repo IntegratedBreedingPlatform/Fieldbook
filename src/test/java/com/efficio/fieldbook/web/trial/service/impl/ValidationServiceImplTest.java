@@ -11,7 +11,7 @@ import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.domain.ontology.DataType;
 import org.generationcp.middleware.domain.ontology.Scale;
 import org.generationcp.middleware.domain.ontology.Variable;
-import org.generationcp.middleware.manager.api.WorkbenchDataManager;
+import org.generationcp.middleware.api.role.RoleService;
 import org.generationcp.middleware.pojos.workbench.Project;
 import org.generationcp.middleware.service.api.FieldbookService;
 import org.generationcp.middleware.service.api.user.UserDto;
@@ -42,7 +42,7 @@ public class ValidationServiceImplTest {
 	private UserService userService;
 	
 	@Mock
-	private WorkbenchDataManager workbenchDataManager;
+	private RoleService roleService;
 	
 	@InjectMocks
 	private ValidationServiceImpl validationService;
