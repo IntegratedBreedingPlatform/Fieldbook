@@ -571,7 +571,7 @@
 					if (columnData) {
 						var sort = columnData.termId;
 						if (columnData.variableType === 'GERMPLASM_PASSPORT' ||
-							columnData.variableType === 'GERMPLASM_ATTRIBUTES') {
+							columnData.variableType === 'GERMPLASM_ATTRIBUTE') {
 							sort = 'VARIABLE_' + sort;
 						}
 						pageQuery += '&sort=' + sort + ',' + order.dir;
