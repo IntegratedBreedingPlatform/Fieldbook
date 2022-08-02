@@ -23,7 +23,6 @@ import org.generationcp.middleware.domain.dms.ValueReference;
 import org.generationcp.middleware.domain.gms.SystemDefinedEntryType;
 import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.exceptions.MiddlewareQueryException;
-import org.generationcp.middleware.manager.api.LocationDataManager;
 import org.generationcp.middleware.manager.ontology.api.OntologyVariableDataManager;
 import org.generationcp.middleware.pojos.workbench.Project;
 import org.slf4j.Logger;
@@ -46,9 +45,6 @@ public abstract class AbstractBaseFieldbookController {
 	public static final String ANGULAR_BASE_TEMPLATE_NAME = "/template/ng-base-template";
 	public static final String ERROR_TEMPLATE_NAME = "/template/error-template";
 	public static final String TEMPLATE_NAME_ATTRIBUTE = "templateName";
-
-	@Resource
-	protected LocationDataManager locationDataManager;
 
 	@Resource
 	protected ContextUtil contextUtil;

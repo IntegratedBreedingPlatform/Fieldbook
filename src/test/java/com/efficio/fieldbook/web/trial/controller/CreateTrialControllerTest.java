@@ -1,17 +1,17 @@
 
 package com.efficio.fieldbook.web.trial.controller;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
-import javax.servlet.http.HttpSession;
-
 import com.efficio.fieldbook.service.FieldbookServiceImpl;
+import com.efficio.fieldbook.service.api.ErrorHandlerService;
 import com.efficio.fieldbook.utils.test.WorkbookDataUtil;
+import com.efficio.fieldbook.web.common.bean.SettingDetail;
+import com.efficio.fieldbook.web.common.bean.UserSelection;
+import com.efficio.fieldbook.web.trial.bean.Instance;
+import com.efficio.fieldbook.web.trial.bean.InstanceInfo;
+import com.efficio.fieldbook.web.trial.bean.TabInfo;
+import com.efficio.fieldbook.web.trial.form.CreateTrialForm;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.generationcp.commons.constant.AppConstants;
 import org.generationcp.commons.spring.util.ContextUtil;
 import org.generationcp.middleware.api.file.FileMetadataService;
 import org.generationcp.middleware.api.location.LocationDTO;
@@ -27,7 +27,6 @@ import org.generationcp.middleware.domain.ontology.VariableType;
 import org.generationcp.middleware.domain.study.StudyTypeDto;
 import org.generationcp.middleware.exceptions.MiddlewareQueryException;
 import org.generationcp.middleware.manager.Operation;
-import org.generationcp.middleware.manager.api.LocationDataManager;
 import org.generationcp.middleware.manager.api.StudyDataManager;
 import org.generationcp.middleware.pojos.ErrorCode;
 import org.generationcp.middleware.pojos.Location;
@@ -43,14 +42,12 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.ui.Model;
 
-import com.efficio.fieldbook.service.api.ErrorHandlerService;
-import com.efficio.fieldbook.web.common.bean.SettingDetail;
-import com.efficio.fieldbook.web.common.bean.UserSelection;
-import com.efficio.fieldbook.web.trial.bean.Instance;
-import com.efficio.fieldbook.web.trial.bean.InstanceInfo;
-import com.efficio.fieldbook.web.trial.bean.TabInfo;
-import com.efficio.fieldbook.web.trial.form.CreateTrialForm;
-import org.generationcp.commons.constant.AppConstants;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 public class CreateTrialControllerTest {
 
@@ -64,9 +61,6 @@ public class CreateTrialControllerTest {
 
 	@Mock
 	private ContextUtil contextUtil;
-
-	@Mock
-	private LocationDataManager locationDataManager;
 
 	@Mock
 	private ErrorHandlerService errorHandlerService;
@@ -90,7 +84,7 @@ public class CreateTrialControllerTest {
 		MockitoAnnotations.initMocks(this);
 		Mockito.doReturn(CreateTrialControllerTest.PROGRAM_UUID).when(this.contextUtil).getCurrentProgramUUID();
 		this.defaultLocationId = Math.abs(new Random().nextInt());
-		Mockito.doReturn(Arrays.asList(new Location(this.defaultLocationId))).when(this.locationDataManager)
+		Mockito.doReturn(Arrays.asList(new Location(this.defaultLocationId))).when(this.locationService)
 				.getLocationsByName(Location.UNSPECIFIED_LOCATION, Operation.EQUAL);
 		final LocationDTO locationDTO = new LocationDTO();
 		locationDTO.setId(this.defaultLocationId);
@@ -265,7 +259,7 @@ public class CreateTrialControllerTest {
 	public void testPrepareEnvironmentsTabInfoNoDefaultLocation() {
 		Mockito.doReturn(this.createStandardVariable(new Random().nextInt())).when(this.fieldbookMiddlewareService)
 			.getStandardVariable(ArgumentMatchers.anyInt(), ArgumentMatchers.eq(CreateTrialControllerTest.PROGRAM_UUID));
-		Mockito.doReturn(new ArrayList<>()).when(this.locationDataManager)
+		Mockito.doReturn(new ArrayList<>()).when(this.locationService)
 			.getLocationsByName(Location.UNSPECIFIED_LOCATION, Operation.EQUAL);
 		Mockito.doReturn(null).when(this.locationService).getDefaultBreedingLocation(CreateTrialControllerTest.PROGRAM_UUID);
 
