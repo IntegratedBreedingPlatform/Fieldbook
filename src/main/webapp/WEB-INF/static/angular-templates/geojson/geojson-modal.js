@@ -7,6 +7,8 @@
 		function ($scope, studyContext, $uibModalInstance, helpLinkService) {
 			$scope.geoJSONEditorUrl = '/ibpworkbench/controller/brapi-fieldmap?'
 				+ 'instanceId=' + $scope.$resolve.instanceId
+				+ '&studyId=' + studyContext.studyId
+				+ '&programUUID=' + studyContext.programId
 				+ '&cropName=' + studyContext.cropName;
 
 			helpLinkService.helpLink($scope.$resolve.helpModule).then(function (url){

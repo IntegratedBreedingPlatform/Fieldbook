@@ -11,7 +11,8 @@
 					instances: '=',
 					selectedInstances: '=',
 					instanceIdProperty: '@',
-					onContinue: '='
+					onContinue: '=',
+					modalTitle: '=',
 				},
 				templateUrl: '/Fieldbook/static/angular-templates/instance-selector/multiple-instance-selector-modal.html',
 				controller: function ($scope) {

@@ -508,6 +508,11 @@
 		<aop:scoped-proxy proxy-target-class="false" />
 	</bean>
 
+	<bean id="cropParameterService" factory-bean="managerFactory"
+		  factory-method="getCropParameterService" scope="request">
+		<aop:scoped-proxy proxy-target-class="false" />
+	</bean>
+
 	<bean id="sampleService" factory-bean="managerFactory"
 		  factory-method="getSampleService" scope="request">
 		<aop:scoped-proxy proxy-target-class="false" />
