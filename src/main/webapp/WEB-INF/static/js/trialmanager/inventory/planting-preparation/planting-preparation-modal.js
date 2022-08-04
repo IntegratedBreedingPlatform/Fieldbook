@@ -95,7 +95,7 @@
 								$scope.entryMap[stock.unitId][entry.entryNo] = entry;
 							}
 
-							for (const entryDetail of Object.values(entry.enrtyDetailByVariableId)) {
+							for (const entryDetail of Object.values(entry.entryDetailByVariableId)) {
 								if (!$scope.variableMap[entryDetail.variableId]) {
 									$scope.variableMap[entryDetail.variableId] = {};
 								}
