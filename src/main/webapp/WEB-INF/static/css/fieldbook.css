@@ -2571,3 +2571,55 @@ div.dt-button-collection {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.entryColumnsPopover {
+    font-size: 12px;
+}
+
+.entryColumnsPopover label {
+    margin-bottom: 0;
+}
+
+.entryColumnsPopover .categoryContainer {
+    margin-top: 1.3rem;
+}
+
+.entryColumnsPopover hr {
+    margin: 0.3rem;
+}
+
+.entryColumnsPopover label.category {
+    font-weight: bold;
+}
+
+.entryColumnsPopover .arrow {
+    display: none;
+}
+
+.entryColumnsPopover .columns-container {
+    max-height: 300px;
+    overflow: auto;
+}
+
+.popover.bottom.entryColumnsPopover {
+    margin-top: 2px;
+}
+
+/* ==========================================================================
+Input with icon
+========================================================================== */
+.inner-addon {
+    position: relative;
+}
+
+.inner-addon .glyphicon {
+    position: absolute;
+    padding: 10px;
+    pointer-events: none;
+}
+
+.left-addon .glyphicon  { left:  0px;}
+.right-addon .glyphicon { right: 0px;}
+
+.left-addon input  { padding-left:  30px; }
+.right-addon input { padding-right: 30px; }

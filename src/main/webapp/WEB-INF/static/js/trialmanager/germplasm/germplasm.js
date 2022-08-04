@@ -24,7 +24,6 @@
 				$scope.showAddColumns = TrialManagerDataService.applicationData.germplasmListSelected;
 				$scope.selectedItems = [];
 				$scope.numberOfEntries = 0;
-				$scope.entryTableColumns = [];
 
 				var initResolve;
 				$scope.initPromise = new Promise(function (resolve) {
@@ -120,7 +119,6 @@
 				};
 
 				loadTable();
-				loadStudyEntryColumns();
 				openFeedbackSurvey($scope.FEEDBACK_ENABLED, 'GERMPLASM_AND_CHECKS', feedbackService);
 
 				$rootScope.$on("reloadStudyEntryTableData", function (setShowValues) {
@@ -130,12 +128,6 @@
 				function getGenerationLevel() {
 					studyEntryService.getCrossLevelGeneration().then(function (level) {
 						$scope.generationLevel = level ? level : 1;
-					});
-				}
-
-				function loadStudyEntryColumns() {
-					studyEntryService.getStudyEntriesColumns().then(function (columnsData) {
-						$scope.entryTableColumns = columnsData;
 					});
 				}
 
@@ -558,11 +550,9 @@
 				}
 
 				function adjustColumns() {
-					if ($scope.hasInstances) {
-						$timeout(function () {
-							table().columns.adjust();
-						});
-					}
+					$timeout(function () {
+						table().columns.adjust();
+					}, 100);
 				}
 
 				$scope.reloadEntryDetails = function () {
@@ -577,8 +567,14 @@
 					var order = data.order && data.order[0];
 					var pageQuery = '?size=' + data.length
 						+ '&page=' + ((data.length === 0) ? 0 : data.start / data.length);
-					if ($scope.columnsData[order.column]) {
-						pageQuery += '&sort=' + $scope.columnsData[order.column].termId + ',' + order.dir;
+					var columnData = $scope.columnsData[order.column];
+					if (columnData) {
+						var sort = columnData.termId;
+						if (columnData.variableType === 'GERMPLASM_PASSPORT' ||
+							columnData.variableType === 'GERMPLASM_ATTRIBUTE') {
+							sort = 'VARIABLE_' + sort;
+						}
+						pageQuery += '&sort=' + sort + ',' + order.dir;
 					}
 					return pageQuery;
 				}
@@ -868,7 +864,8 @@
 										return renderCategoricalValue(data.value, columnData);
 									}
 
-									return EscapeHTML.escape(data.value);
+									var escapedValue = EscapeHTML.escape(data.value);
+									return '<span class="text-ellipsis" title="' + escapedValue + '">' + escapedValue + '</span>';
 								}
 							});
 						}
@@ -1356,11 +1353,92 @@
 						});
 				};
 
+				// Entry table columns dropdown
+				$scope.germplasmDescriptorColumns = [];
+				$scope.passportColumns = [];
+				$scope.attributesColumns = [];
+
+				// This is being used as a workaround to manually close the 'Columns' dropdown when the 'Actions' dropdown is clicked.
+				$scope.entryColumnsPopover = {
+					isOpen: false,
+
+					close: function close() {
+						$scope.entryColumnsPopover.isOpen = false;
+					}
+				}
+
+				$scope.entryColumnsButtonClicked = function() {
+					if (!$scope.entryColumnsPopover.isOpen) {
+						resetColumns();
+						loadStudyEntryColumns();
+					}
+				}
+
 				$scope.selectEntryTableColumns = function () {
-					var selectedPropertyIds = this.entryTableColumns.filter((column) => column.selected).map((column) => column.id);
+					var selectedPropertyIds = concatAllColumns().filter((column) => column.selected).map((column) => column.id);
 					datasetService.updateDatasetProperties(selectedPropertyIds).then(function () {
 						$rootScope.navigateToTab('germplasm', {reload: true});
+					}, function (response) {
+						if (response.errors && response.errors.length) {
+							showErrorMessage('', response.errors[0].message);
+						} else {
+							showErrorMessage('', ajaxGenericErrorMsg);
+						}
 					});
+				}
+
+				$scope.onSearchColumn = function(evt) {
+					const searchString = evt.target.value.toLowerCase();
+
+					if (searchString) {
+						filterColumns(concatAllColumns(), searchString);
+					} else {
+						showAllColumns();
+					}
+				}
+
+				$scope.checkAreColumnsVisible = function(columns) {
+					return columns.filter((column) => column.visible).length > 0;
+				}
+
+				function resetColumns() {
+					$scope.germplasmDescriptorColumns = [];
+					$scope.passportColumns = [];
+					$scope.attributesColumns = [];
+				}
+
+				function loadStudyEntryColumns() {
+					studyEntryService.getStudyEntriesColumns().then(function (columns) {
+						columns.forEach((column) => {
+							column.displayName = column.alias ? `${column.alias} (${column.name}) ` : column.name;
+
+							if (column.typeId === VARIABLE_TYPES.GERMPLASM_DESCRIPTOR) {
+								$scope.germplasmDescriptorColumns.push(column);
+							} else if (column.typeId === VARIABLE_TYPES.GERMPLASM_PASSPORT) {
+								$scope.passportColumns.push(column);
+							} else if (column.typeId === VARIABLE_TYPES.GERMPLASM_ATTRIBUTE) {
+								$scope.attributesColumns.push(column);
+							}
+						});
+
+						showAllColumns();
+					});
+				}
+
+				function filterColumns(columns, searchString) {
+					columns.forEach((column) => {
+						if (!column.displayName.toLowerCase().includes(searchString)) {
+							column.visible = false;
+						}
+					});
+				}
+
+				function showAllColumns() {
+					concatAllColumns().forEach((column) => column.visible = true);
+				}
+
+				function concatAllColumns() {
+					return [].concat($scope.germplasmDescriptorColumns, $scope.passportColumns, $scope.attributesColumns);
 				}
 
 			}]);
