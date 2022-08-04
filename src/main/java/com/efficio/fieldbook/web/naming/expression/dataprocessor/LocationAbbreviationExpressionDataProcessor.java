@@ -2,14 +2,14 @@ package com.efficio.fieldbook.web.naming.expression.dataprocessor;
 
 import com.efficio.fieldbook.util.FieldbookException;
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
-import org.generationcp.commons.pojo.AdvancingSource;
 import org.apache.commons.lang3.StringUtils;
+import org.generationcp.commons.pojo.AdvancingSource;
+import org.generationcp.middleware.api.location.LocationService;
 import org.generationcp.middleware.domain.dms.Study;
 import org.generationcp.middleware.domain.etl.MeasurementData;
 import org.generationcp.middleware.domain.etl.MeasurementRow;
 import org.generationcp.middleware.domain.etl.Workbook;
 import org.generationcp.middleware.domain.oms.TermId;
-import org.generationcp.middleware.manager.api.LocationDataManager;
 import org.generationcp.middleware.pojos.Location;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,7 @@ import javax.annotation.Resource;
 public class LocationAbbreviationExpressionDataProcessor implements ExpressionDataProcessor {
 
     @Resource
-    LocationDataManager locationDataManager;
+    private LocationService locationService;
 
     @Override
     public void processEnvironmentLevelData(AdvancingSource source, Workbook workbook, AdvancingStudy nurseryInfo, Study study) throws FieldbookException {
@@ -37,7 +37,7 @@ public class LocationAbbreviationExpressionDataProcessor implements ExpressionDa
                     String locationIdString = measurementData.getValue();
                     Integer locationId = StringUtils.isEmpty(locationIdString) ? null : Integer.valueOf(locationIdString);
                     if(locationId != null){
-                        Location location = locationDataManager.getLocationByID(locationId);
+                        Location location = locationService.getLocationByID(locationId);
                         locationAbbreviation = location.getLabbr();
                     }
                     source.setLocationAbbreviation(locationAbbreviation);

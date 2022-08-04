@@ -233,8 +233,8 @@
 		<property name="hybridBreedingMethods" value="#{'${hybrid.breeding.methods}'.split(',')}" />
 	</bean>
 
-	<bean id="workbenchDataManager"
-		class="org.generationcp.middleware.manager.WorkbenchDataManagerImpl"
+	<bean id="roleService"
+		class="org.generationcp.middleware.api.role.RoleServiceImpl"
 		destroy-method="close">
 		<constructor-arg ref="workbenchHibernateSessionProvider" />
 	</bean>
@@ -313,11 +313,6 @@
 
 	<bean id="variableDataValidatorFactory" factory-bean="managerFactory"
 		  factory-method="getVariableDataValidatorFactory" scope="request">
-		<aop:scoped-proxy />
-	</bean>
-
-	<bean id="locationDataManager" factory-bean="managerFactory"
-		  factory-method="getLocationDataManager" scope="request">
 		<aop:scoped-proxy />
 	</bean>
 
