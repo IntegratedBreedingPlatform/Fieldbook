@@ -4,18 +4,34 @@
 	const module = angular.module('manageTrialApp');
 
 	module.controller('PlantingPreparationModalCtrl', ['$scope', '$rootScope', 'studyContext', '$uibModalInstance', 'DTOptionsBuilder', 'DTColumnBuilder',
-		'PlantingPreparationService', 'InventoryService', '$timeout', '$q', 'HasAnyAuthorityService', 'PERMISSIONS',
+		'PlantingPreparationService', 'InventoryService', '$timeout', '$q', 'HasAnyAuthorityService', 'PERMISSIONS', 'variableService', 'VARIABLE_TYPES',
 		function ($scope, $rootScope, studyContext, $uibModalInstance, DTOptionsBuilder, DTColumnBuilder, service, InventoryService, $timeout, $q,
-				  HasAnyAuthorityService, PERMISSIONS) {
+				  HasAnyAuthorityService, PERMISSIONS, variableService, VARIABLE_TYPES) {
 
 			$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
 			$scope.PERMISSIONS = PERMISSIONS;
+			$scope.entryDetailVariables = [];
+			$scope.variableSelected;
 
 			// used also in tests - to call $rootScope.$apply()
 			var initResolve;
 			$scope.initPromise = new Promise(function (resolve) {
 				initResolve = resolve;
 			});
+
+			variableService.getVariablesByFilter({
+				scaleIds: 6040,
+				variableTypeIds: VARIABLE_TYPES.ENTRY_DETAIL,
+				datasetIds: $scope.$resolve.datasetId
+			}).then(function (variablesFiltered) {
+				const entryDetails = variablesFiltered.filter(function (variable) {
+					return variable.id !== '8230';
+				});
+				angular.forEach(entryDetails, function (variable) {
+					$scope.entryDetailVariables.push({name: variable.name, variableId: variable.id});
+				});
+			});
+
 
 			$scope.unitsDTOptions = DTOptionsBuilder.newOptions().withDOM('<"row"<"col-sm-12"tr>>');
 			$scope.entriesDTOptions = DTOptionsBuilder.newOptions().withDOM('<"row"<"col-sm-6"l><"col-sm-6"f>>' +
