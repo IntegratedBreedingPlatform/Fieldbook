@@ -2,7 +2,6 @@ package com.efficio.fieldbook.web.trial.controller;
 
 import com.efficio.fieldbook.service.api.ErrorHandlerService;
 import com.efficio.fieldbook.web.common.bean.SettingDetail;
-import com.efficio.fieldbook.web.common.controller.ReviewStudyDetailsController;
 import com.efficio.fieldbook.web.trial.bean.TrialData;
 import com.efficio.fieldbook.web.trial.form.CreateTrialForm;
 import com.efficio.fieldbook.web.trial.form.ImportGermplasmListForm;
