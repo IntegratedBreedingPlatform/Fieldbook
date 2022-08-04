@@ -4,7 +4,7 @@ package com.efficio.etl.web.interceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.generationcp.middleware.manager.WorkbenchDataManagerImpl;
+import org.generationcp.middleware.api.role.RoleServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -12,7 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class ETLHandlerInterceptor implements HandlerInterceptor {
 
 	@Autowired
-	private WorkbenchDataManagerImpl workbenchDataManager;
+	private RoleServiceImpl roleService;
 
 	public ETLHandlerInterceptor() {
 
@@ -32,7 +32,7 @@ public class ETLHandlerInterceptor implements HandlerInterceptor {
 
 	@Override
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-		this.workbenchDataManager.close();
+		this.roleService.close();
 	}
 
 }

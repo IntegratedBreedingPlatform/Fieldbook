@@ -34,9 +34,8 @@ import org.generationcp.middleware.domain.ontology.Variable;
 import org.generationcp.middleware.exceptions.MiddlewareQueryException;
 import org.generationcp.middleware.exceptions.WorkbookParserException;
 import org.generationcp.middleware.manager.Operation;
-import org.generationcp.middleware.manager.api.WorkbenchDataManager;
+import org.generationcp.middleware.api.role.RoleService;
 import org.generationcp.middleware.pojos.Method;
-import org.generationcp.middleware.pojos.workbench.WorkbenchUser;
 import org.generationcp.middleware.service.api.FieldbookService;
 import org.generationcp.middleware.service.api.user.UserDto;
 import org.generationcp.middleware.service.api.user.UserService;
@@ -63,7 +62,7 @@ public class ValidationServiceImpl implements ValidationService {
 	private FieldbookService fieldbookMiddlewareService;
 
 	@Resource
-	private WorkbenchDataManager workbenchDataManager;
+	private RoleService roleService;
 
 	@Resource
 	private UserService userService;

@@ -204,8 +204,11 @@
 							<li>
 								<a href="" th:text="#{study.studydetails.action.unlock.study}" ng-show="isLockedStudy() &amp;&amp;  userHasLockPermission()" ng-click="changeLockedStatus(0)">Unlock Study</a>
 							</li>
-							<li ng-show="STABRAPP_URL">
-								<a href="" th:utext="#{study.studydetails.action.stabrapp}" ng-click="analyzeWithStaBrapp()"></a>
+							<li ng-show="staBrappURL">
+								<a href="" th:utext="#{study.studydetails.action.stabrapp}" ng-click="analyzeWithBrapp(staBrappURL)"></a>
+							</li>
+							<li ng-show="dsBrappURL">
+								<a href="" th:utext="#{study.studydetails.action.dsbrapp}" ng-click="analyzeWithBrapp(dsBrappURL)"></a>
 							</li>
 						</ul>
 					</div>
@@ -714,6 +717,7 @@
 			).constant('BREEDING_METHOD_SCALE', /*[[${breedingMethodCodeScale}]]*/ ''
 			).constant('HAS_MEANS_DATASET', /*[[${hasMeansDataset}]]*/ ''
 			).constant('STABRAPP_URL', /*[[${staBrappUrl}]]*/ ''
+			).constant('DS_BRAPP_URL', /*[[${dsBrappUrl}]]*/ ''
 			).constant('FEEDBACK_ENABLED', /*[[${feedbackEnabled}]]*/ ''
 			).constant('DESIGN_TYPE',
 				{
@@ -835,7 +839,6 @@
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/column-filters/column-filters.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/observations/change-plot-entry-modal.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/observations/change-plot-entry-service.js}"></script>
-	<script type="text/javascript" th:src="@{/static/js/trialmanager/stabrapp/stabrapp-modal.js}"></script>
 
 	<script type="text/javascript" th:src="@{/static/js/auth/auth.module.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/auth/account.service.js}"></script>

@@ -30,26 +30,21 @@
 
 			<div class="pull-right" ng-show="showAddColumns">
 				<div class="btn-group" style="padding-right: 12px">
-					<button type="button" class="btn btn-info dropdown-toggle fbk-columns-btn" data-toggle="dropdown">
+					<button type="button" class="btn btn-info" ng-click="entryColumnsButtonClicked()"
+							popover-trigger="'outsideClick'"
+							popover-placement="bottom-right"
+							popover-append-to-body="true"
+							popover-class="entryColumnsPopover"
+							popover-is-open="entryColumnsPopover.isOpen"
+							uib-popover-template="'entryColumnsPopover.html'">
 						<span th:text="#{study.studydetails.columns}">Columns</span>
 					</button>
-					<ul class="dropdown-menu fbk-right-button-drop-down" role="menu">
-						<li ng-repeat="column in entryTableColumns">
-							<div>
-								<input type="checkbox" id="check-{{column.id}}" ng-checked="column.selected" ng-model="column.selected"  />
-								<label for="check-{{column.id}}">{{column.name}}</label>
-							</div>
-						</li>
-						<li class="fbk-center">
-							<button class="btn btn-primary ng-binding" ng-click="selectEntryTableColumns()">Apply</button>
-						</li>
-					</ul>
 				</div>
 			</div>
 
 			<div class="pull-right">
 				 <div class="btn-group" style="padding-right: 12px">
-					<button type="button" class="btn btn-info dropdown-toggle fbk-action-btn" data-toggle="dropdown">
+					<button type="button" class="btn btn-info dropdown-toggle fbk-action-btn" data-toggle="dropdown" ng-click="entryColumnsPopover.close()">
 						<span th:text="#{study.studydetails.actions}">Actions</span>
 					</button>
 					<ul class="dropdown-menu fbk-right-button-drop-down" role="menu">
@@ -203,4 +198,61 @@ $(document).ready(function() {
 			<button class="btn btn-default" ng-click="resetFilterByColumn()" title="Reset this filter">Reset</button>
 		</div>
 	</div>
+</script>
+
+<script type="text/ng-template" id="entryColumnsPopover.html">
+	<form>
+		<div class="form-group">
+			<div class="inner-addon right-addon">
+				<span class="glyphicon glyphicon-search"></span>
+				<input type="text" class="form-control" placeholder="Search" ng-keyup="onSearchColumn($event)" />
+			</div>
+		</div>
+
+		<div class="columns-container">
+			<div ng-if="checkAreColumnsVisible(germplasmDescriptorColumns)">
+				<div ng-repeat="column in germplasmDescriptorColumns">
+					<div ng-if="column.visible">
+						<input type="checkbox" ng-model="column.selected"
+							   id="check-germplasm-descriptor-{{column.id}}" name="'check-germplasm-descriptor-{{column.id}}'" />
+						<label for="check-germplasm-descriptor-{{column.id}}">
+							{{column.displayName}}
+						</label>
+					</div>
+				</div>
+			</div>
+
+			<div ng-if="checkAreColumnsVisible(passportColumns)" class="categoryContainer">
+				<label th:text="#{study.studydetails.columns.label.passport}" class="category">PASSPORT</label>
+				<hr />
+				<div ng-repeat="column in passportColumns">
+					<div ng-if="column.visible">
+						<input type="checkbox" ng-model="column.selected"
+							   id="check-passport-{{column.id}}" name="'check-passport-{{column.id}}'" />
+						<label for="check-passport-{{column.id}}">
+							{{column.displayName}}
+						</label>
+					</div>
+				</div>
+			</div>
+
+			<div ng-if="checkAreColumnsVisible(attributesColumns)" class="categoryContainer">
+				<label th:text="#{study.studydetails.columns.label.attributes}" class="category">ATTRIBUTES</label>
+				<hr />
+				<div ng-repeat="column in attributesColumns">
+					<div ng-if="column.visible">
+						<input  type="checkbox" ng-model="column.selected"
+								id="check-attributes-{{column.id}}" name="'check-attributes-{{column.id}}'" />
+						<label for="check-attributes-{{column.id}}">
+							{{column.displayName}}
+						</label>
+					</div>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="text-center"><br/>
+			<button type="submit" class="btn btn-info btn-sm" ng-click="selectEntryTableColumns()">Apply</button>
+		</div>
+	</form>
 </script>
