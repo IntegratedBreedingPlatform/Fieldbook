@@ -21,6 +21,7 @@
 					<th># Lots with "Valid" status</th>
 					<th>Group transactions</th>
 					<th>Withdraw all available inventory?</th>
+					<th>Use entry detail variable</th>
 					<th>Amount per packet</th>
 				</tr>
 				</thead>
@@ -29,9 +30,17 @@
 					<td>{{::unit.unitName}}</td>
 					<td>{{validLotsCount(unitId)}}</td>
 					<td><input type="checkbox" ng-change="onGroupTransactionsChecked(unitId, unit)" ng-model="unit.groupTransactions"/></td>
-					<td><input type="checkbox" ng-change="onWithdrawAllChecked(unitId, unit)" ng-model="unit.withdrawAll" ng-disabled="!unit.groupTransactions" /></td>
-					<td><input type="text" ng-change="onAmountPerPacketChanged(unitId, unit)" ng-model="unit.amountPerPacket" ng-disabled="unit.withdrawAll"
+					<td><input type="checkbox" ng-change="onWithdrawAllChecked(unitId, unit)" ng-model="unit.withdrawAll" ng-disabled="!unit.groupTransactions || unit.useEntryDetail" /></td>
+					<td><input type="checkbox" ng-change="onUseEntryDetailChecked(unitId, unit)" ng-model="unit.useEntryDetail" ng-disabled="unit.withdrawAll" /></td>
+					<td ng-if="!unit.useEntryDetail"><input type="text" ng-change="onAmountPerPacketChanged(unitId, unit)" ng-model="unit.amountPerPacket" ng-disabled="unit.withdrawAll || unit.useEntryDetail"
 							   ng-model-options="{ debounce: 1000 }"/></td>
+					<td ng-if="unit.useEntryDetail">
+						<select id="useEntryDetail" name="useEntryDetail" class="form-control" ng-model="unit.variableSelected" ng-change="onAmountPerPacketByEntryDetailChanged(unitId, unit)"
+								ng-options="variable.name for variable in entryDetailVariables"  required="unit.entryDetails">
+							<option value="">Please Choose</option>
+						</select>
+					</td>
+					</td>
 				</tr>
 				</tbody>
 			</table>
@@ -78,7 +87,7 @@
 					<td>{{::entry.numberOfPackets}}</td>
 					<td>{{units[entry.stockSelected.unitId].unitName}}</td>
 					<td>{{(units[entry.stockSelected.unitId].withdrawAll && entry.stockSelected.availableBalance)
-						|| withdrawalCalculator(units[entry.stockSelected.unitId].amountPerPacket, entry.numberOfPackets)}}
+						|| withdrawalCalculator(entry.stockSelected.unitId, entry.entryNo, entry.numberOfPackets)}}
 					</td>
 					<td style="font-size: 2rem">
 						<span class="glyphicon glyphicon-ok-circle text-success" ng-if="entry.valid"></span>
