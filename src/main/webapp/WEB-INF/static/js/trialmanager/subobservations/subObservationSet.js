@@ -1631,8 +1631,10 @@
 							createdCell: function (td, cellData, rowData, rowIndex, colIndex) {
 								$(td).val("");
 								var value = columnData.termId === 8236 ? rowData.variables['FEMALE_PARENT_NAME'].value : rowData.variables['FEMALE_PARENT_GID'].value;
-								$(td).append($compile('<a class="gid-link" href="javascript: void(0)" ' +
-									'ng-click="openGermplasmDetailsModal(\'' + rowData.variables['FEMALE_PARENT_GID'].value + '\')">' + value + '</a>')($scope));
+								if (value) {
+									$(td).append($compile('<a class="gid-link" href="javascript: void(0)" ' +
+										'ng-click="openGermplasmDetailsModal(\'' + rowData.variables['FEMALE_PARENT_GID'].value + '\')">' + value + '</a>')($scope));
+								}
 							},
 							render: function (data, type, full, meta) {
 								return '';
@@ -1646,8 +1648,10 @@
 							createdCell: function (td, cellData, rowData, rowIndex, colIndex) {
 								$(td).val("");
 								var value = columnData.termId === 8238 ? rowData.variables['MALE_PARENT_NAME'].value : rowData.variables['MALE_PARENT_GID'].value;
-								$(td).append($compile('<a class="gid-link" href="javascript: void(0)" ' +
-									'ng-click="openGermplasmDetailsModal(\'' + rowData.variables['MALE_PARENT_GID'].value + '\')">' + value + '</a>')($scope));
+								if(value){
+									$(td).append($compile('<a class="gid-link" href="javascript: void(0)" ' +
+										'ng-click="openGermplasmDetailsModal(\'' + rowData.variables['MALE_PARENT_GID'].value + '\')">' + value + '</a>')($scope));
+								}
 							},
 							render: function (data, type, full, meta) {
 								return '';

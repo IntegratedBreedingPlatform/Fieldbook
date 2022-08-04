@@ -742,11 +742,16 @@
 								orderable: false,
 								createdCell: function (td, cellData, rowData, rowIndex, colIndex) {
 									$(td).val("");
-									var value = columnData.termId === 8236 ? rowData.properties['8236'].value : rowData.properties['8237'].value;
-									$(td).append($compile('<a class="gid-link" href="javascript: void(0)" ' +
-										'ng-click="openGermplasmDetailsModal(\'' + rowData.properties['8237'].value + '\')">' + value + '</a>')($scope));
-
-
+									var value;
+									if (columnData.termId === 8236 && rowData.properties['8236']) {
+										value = rowData.properties['8236'].value;
+									} else if (columnData.termId === 8237 && rowData.properties['8237']) {
+										value = rowData.properties['8237'].value;
+									}
+									if (value) {
+										$(td).append($compile('<a class="gid-link" href="javascript: void(0)" ' +
+											'ng-click="openGermplasmDetailsModal(\'' + rowData.properties['8237'].value + '\')">' + value + '</a>')($scope));
+									}
 								},
 								render: function (data, type, full, meta) {
 									return '';
@@ -759,11 +764,16 @@
 								orderable: false,
 								createdCell: function (td, cellData, rowData, rowIndex, colIndex) {
 									$(td).val("");
-									var value = columnData.termId === 8238 ? rowData.properties['8238'].value : rowData.properties['8239'].value;
-									$(td).append($compile('<a class="gid-link" href="javascript: void(0)" ' +
-										'ng-click="openGermplasmDetailsModal(\'' + rowData.properties['8239'].value + '\')">' + value + '</a>')($scope));
-
-
+									var value;
+									if (columnData.termId === 8238 && rowData.properties['8238']) {
+										value = rowData.properties['8238'].value;
+									} else if (columnData.termId === 8239 && rowData.properties['8239']) {
+										value = rowData.properties['8239'].value;
+									}
+									if (value) {
+										$(td).append($compile('<a class="gid-link" href="javascript: void(0)" ' +
+											'ng-click="openGermplasmDetailsModal(\'' + rowData.properties['8239'].value + '\')">' + value + '</a>')($scope));
+									}
 								},
 								render: function (data, type, full, meta) {
 									return '';
