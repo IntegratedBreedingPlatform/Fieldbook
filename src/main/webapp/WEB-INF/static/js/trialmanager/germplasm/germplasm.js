@@ -749,8 +749,12 @@
 										value = rowData.properties['8237'].value;
 									}
 									if (value) {
-										$(td).append($compile('<a class="gid-link" href="javascript: void(0)" ' +
-											'ng-click="openGermplasmDetailsModal(\'' + rowData.properties['8237'].value + '\')">' + value + '</a>')($scope));
+										if (value !== 'UNKNOWN') {
+											$(td).append($compile('<a class="gid-link" href="javascript: void(0)" ' +
+												'ng-click="openGermplasmDetailsModal(\'' + rowData.properties['8237'].value + '\')">' + value + '</a>')($scope));
+										} else {
+											$(td).append(value);
+										}
 									}
 								},
 								render: function (data, type, full, meta) {
@@ -771,8 +775,12 @@
 										value = rowData.properties['8239'].value;
 									}
 									if (value) {
-										$(td).append($compile('<a class="gid-link" href="javascript: void(0)" ' +
-											'ng-click="openGermplasmDetailsModal(\'' + rowData.properties['8239'].value + '\')">' + value + '</a>')($scope));
+										if (value !== 'UNKNOWN') {
+											$(td).append($compile('<a class="gid-link" href="javascript: void(0)" ' +
+												'ng-click="openGermplasmDetailsModal(\'' + rowData.properties['8239'].value + '\')">' + value + '</a>')($scope));
+										} else {
+											$(td).append(value);
+										}
 									}
 								},
 								render: function (data, type, full, meta) {
