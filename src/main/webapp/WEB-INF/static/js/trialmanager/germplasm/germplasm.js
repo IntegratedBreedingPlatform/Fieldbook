@@ -735,6 +735,58 @@
 									return '';
 								}
 							});
+						} else if (columnData.termId === 8342 || columnData.termId === 8343) {
+							// FEMALE_PARENT_GID or FEMALE_PARENT_NAME
+							columnsDef.push({
+								targets: columns.length - 1,
+								orderable: false,
+								createdCell: function (td, cellData, rowData, rowIndex, colIndex) {
+									$(td).val("");
+									var value;
+									if (columnData.termId === 8342 && rowData.properties['8342']) {
+										value = rowData.properties['8342'].value;
+									} else if (columnData.termId === 8343 && rowData.properties['8343']) {
+										value = rowData.properties['8343'].value;
+									}
+									if (value) {
+										if (value !== 'UNKNOWN') {
+											$(td).append($compile('<a class="gid-link" href="javascript: void(0)" ' +
+												'ng-click="openGermplasmDetailsModal(\'' + rowData.properties['8342'].value + '\')">' + value + '</a>')($scope));
+										} else {
+											$(td).append(value);
+										}
+									}
+								},
+								render: function (data, type, full, meta) {
+									return '';
+								}
+							});
+						} else if (columnData.termId === 8345 || columnData.termId === 8346) {
+							// MALE_PARENT_GID or MALE_PARENT_NAME
+							columnsDef.push({
+								targets: columns.length - 1,
+								orderable: false,
+								createdCell: function (td, cellData, rowData, rowIndex, colIndex) {
+									$(td).val("");
+									var value;
+									if (columnData.termId === 8345 && rowData.properties['8345']) {
+										value = rowData.properties['8345'].value;
+									} else if (columnData.termId === 8346 && rowData.properties['8346']) {
+										value = rowData.properties['8346'].value;
+									}
+									if (value) {
+										if (value !== 'UNKNOWN') {
+											$(td).append($compile('<a class="gid-link" href="javascript: void(0)" ' +
+												'ng-click="openGermplasmDetailsModal(\'' + rowData.properties['8345'].value + '\')">' + value + '</a>')($scope));
+										} else {
+											$(td).append(value);
+										}
+									}
+								},
+								render: function (data, type, full, meta) {
+									return '';
+								}
+							});
 						} else if (columnData.termId === 8377) {
 							// CROSS
 							columnsDef.push({

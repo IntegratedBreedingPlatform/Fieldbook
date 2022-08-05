@@ -21,6 +21,22 @@
 					<tr th:class="${row.even}? 'even' : 'odd'" th:each="measurementRow, row: *{paginatedMeasurementRowList}">
 						<td th:class="${measurementData.displayAcceptedValidValues} ? 'accepted-value' : ''" th:switch="${measurementData.measurementVariable.termId}" style="vertical-center; padding: 0px; white-space: nowrap; padding-left: 5px; padding-right: 5px;" align="left" th:each="measurementData, rowIndex : ${measurementRow.dataList}">
 							<a th:case="8240" class="gid-link" href="javascript: void(0)" th:text="${measurementData.value}"></a>
+							<label th:case="8237">
+								<p th:if="${measurementData.value} eq 'UNKNOWN'">
+									<label th:text="${measurementData.displayValue}"></label>
+								</p>
+								<a th:if="${measurementData.value} neq 'UNKNOWN'">
+									<p class="gid-link" href="javascript: void(0)" th:text="${measurementData.value}"></p>
+								</a>
+							</label>
+							<label th:case="8239">
+								<p th:if="${measurementData.value} eq 'UNKNOWN'">
+									<label th:text="${measurementData.displayValue}"></label>
+								</p>
+								<a th:if="${measurementData.value} neq 'UNKNOWN'">
+									<p class="gid-link" href="javascript: void(0)" th:text="${measurementData.value}"></p>
+								</a>
+							</label>
 							<a th:case="8250" class="desig-link" href="javascript: void(0)" th:text="${measurementData.value}"></a>
 							<label th:case="8330" th:text="${measurementData.displayValue} == '0' ? '-' : ${measurementData.displayValue}" ></label>
 							<label th:case="*" th:text="${measurementData.displayValue}"></label>
