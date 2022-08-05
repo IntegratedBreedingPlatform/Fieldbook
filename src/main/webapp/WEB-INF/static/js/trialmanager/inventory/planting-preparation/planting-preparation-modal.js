@@ -25,7 +25,7 @@
 				datasetIds: $scope.$resolve.datasetId
 			}).then(function (variablesFiltered) {
 				const entryDetails = variablesFiltered.filter(function (variable) {
-					return variable.id !== '8230';
+					return variable.metadata &&  variable.metadata.usage && variable.metadata.usage.isSystemVariable === false;
 				});
 				angular.forEach(entryDetails, function (variable) {
 					$scope.entryDetailVariables.push({name: variable.name, variableId: variable.id});
