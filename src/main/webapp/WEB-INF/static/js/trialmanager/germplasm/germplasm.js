@@ -1346,6 +1346,15 @@
 
 				};
 
+				$scope.openImportEntryDetailsModal = function() {
+					$uibModal.open({
+						templateUrl: '/Fieldbook/static/angular-templates/germplasm/importEntryDetailsModal.html',
+						controller: "ImportEntryDetailsController",
+						size: 'lg'
+					});
+
+				};
+
 				$scope.reloadStudyEntryTableData = function (setShowValues) {
 					$scope.selectedItems = [];
 					$scope.reloadEntryDetails();
