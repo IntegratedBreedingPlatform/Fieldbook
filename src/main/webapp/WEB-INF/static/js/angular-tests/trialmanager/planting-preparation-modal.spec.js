@@ -29,13 +29,18 @@ describe('PlantingPreparationModalCtrl:', function () {
 			'getMetadata',
 			'confirmPlanting'
 		]),
+		variableServiceMock = jasmine.createSpyObj('variableService', [
+			'getVariablesByFilter'
+		]),
 		HasAnyAuthorityServiceMock = {},
-		PERMISSIONSMock	= [];
+		PERMISSIONSMock	= [],
+		VARIABLE_TYPESMock = [];
 
 	beforeEach(function (done) {
 		module('manageTrialApp');
 
 		module(function ($provide) {
+			$provide.value("variableService", variableServiceMock);
 			$provide.value("PlantingPreparationService", PlantingPreparationServiceMock);
 			$provide.value("InventoryService", InventoryServiceMock);
 		});
@@ -56,6 +61,7 @@ describe('PlantingPreparationModalCtrl:', function () {
 
 			$httpBackend.whenGET('/Fieldbook/TrialManager/createTrial/trialSettings').respond(200, {data: "ok"});
 
+			variableServiceMock.getVariablesByFilter.and.returnValue($q.resolve(getMockVariablesByFilter()))
 			PlantingPreparationServiceMock.getPlantingPreparationData.and.returnValue($q.resolve(getMockPlantingPreparationData()))
 			InventoryServiceMock.queryUnits.and.returnValue($q.resolve(getMockUnits()))
 
@@ -66,7 +72,9 @@ describe('PlantingPreparationModalCtrl:', function () {
 				InventoryService: InventoryServiceMock,
 				studyContext: studyContextMock,
 				HasAnyAuthorityService: HasAnyAuthorityServiceMock,
-				PERMISSIONS: PERMISSIONSMock
+				PERMISSIONS: PERMISSIONSMock,
+				variableService: variableServiceMock,
+				VARIABLE_TYPES: VARIABLE_TYPESMock
 			});
 
 			scope.initPromise.then(function () {
@@ -88,6 +96,35 @@ describe('PlantingPreparationModalCtrl:', function () {
 			expect(scope.isValid(entry)).toBe(true);
 		});
 	})
+
+	function getMockVariablesByFilter() {
+		return [{
+			"id": "100257", "name": "PACKET_WEIGHT", "alias": "", "description": "PACKET_WEIGHT", "property": {
+				"id": "100050", "name": "Plant Number", "description": "Plant Number", "cropOntologyId": null, "classes": ["Passport"],
+				"metadata": {
+					"dateCreated": null, "lastModified": null, "editableFields": [], "deletable": false,
+					"usage": {"observations": 0, "studies": 0}
+				}
+			}, "method": {
+				"id": "4040", "name": "Enumerated", "description": "Levels enumerated - 1,2,3", "metadata": {
+					"dateCreated": "2016-01-28T19:36:53.000Z", "lastModified": null, "editableFields": [], "deletable": false,
+					"usage": {"observations": 0, "studies": 0}
+				}
+			}, "scale": {
+				"id": "6040", "name": "Number", "description": "Number",
+				"dataType": {"id": "1110", "name": "Numeric", "systemDataType": false}, "validValues": {}, "metadata": {
+					"dateCreated": "2016-01-28T19:36:53.000Z", "lastModified": null, "editableFields": [], "deletable": false,
+					"usage": {"observations": 0, "studies": 0}
+				}
+			}, "variableTypes": [{"id": "1815", "name": "Entry Detail", "description": "Variables that describes list entries"}],
+			"favourite": false, "metadata": {
+				"editableFields": [], "deletable": false, "dateCreated": "2022-08-05T14:10:55.853Z", "lastModified": null, "usage": {
+					"observations": 0, "studies": 0, "datasets": 0, "germplasm": 0, "breedingMethods": 0, "lists": 0,
+					"isSystemVariable": false
+				}
+			}, "expectedRange": {}, "formula": null, "allowsFormula": false
+		}]
+	}
 
 	function getMockPlantingPreparationData() {
 		return {
@@ -126,7 +163,14 @@ describe('PlantingPreparationModalCtrl:', function () {
 							"observationUnitId": "b3afda17-0106-4a5f-8af7-f3eeb9e4ecea",
 							"instanceId": 1
 						}
-					]
+					],
+					"entryDetailByVariableId": {
+						"100257": {
+							"variableId": 100257,
+							"name": "PACKET_WEIGHT",
+							"value": 8
+						}
+					}
 				},
 				{
 					"entryNo": 1,
@@ -148,7 +192,14 @@ describe('PlantingPreparationModalCtrl:', function () {
 							"observationUnitId": "e46a9d13-f380-4035-98d8-1a633dcb92df",
 							"instanceId": 1
 						}
-					]
+					],
+					"entryDetailByVariableId": {
+						"100257": {
+							"variableId": 100257,
+							"name": "PACKET_WEIGHT",
+							"value": 8
+						}
+					}
 				}
 			]
 		}
