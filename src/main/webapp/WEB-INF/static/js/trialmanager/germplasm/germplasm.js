@@ -735,7 +735,7 @@
 									return '';
 								}
 							});
-						} else if (columnData.termId === 8236 || columnData.termId === 8237) {
+						} else if (columnData.termId === 8342 || columnData.termId === 8343) {
 							// FEMALE_PARENT_GID or FEMALE_PARENT_NAME
 							columnsDef.push({
 								targets: columns.length - 1,
@@ -743,15 +743,15 @@
 								createdCell: function (td, cellData, rowData, rowIndex, colIndex) {
 									$(td).val("");
 									var value;
-									if (columnData.termId === 8236 && rowData.properties['8236']) {
-										value = rowData.properties['8236'].value;
-									} else if (columnData.termId === 8237 && rowData.properties['8237']) {
-										value = rowData.properties['8237'].value;
+									if (columnData.termId === 8342 && rowData.properties['8342']) {
+										value = rowData.properties['8342'].value;
+									} else if (columnData.termId === 8343 && rowData.properties['8343']) {
+										value = rowData.properties['8343'].value;
 									}
 									if (value) {
 										if (value !== 'UNKNOWN') {
 											$(td).append($compile('<a class="gid-link" href="javascript: void(0)" ' +
-												'ng-click="openGermplasmDetailsModal(\'' + rowData.properties['8237'].value + '\')">' + value + '</a>')($scope));
+												'ng-click="openGermplasmDetailsModal(\'' + rowData.properties['8342'].value + '\')">' + value + '</a>')($scope));
 										} else {
 											$(td).append(value);
 										}
@@ -761,7 +761,7 @@
 									return '';
 								}
 							});
-						} else if (columnData.termId === 8238 || columnData.termId === 8239) {
+						} else if (columnData.termId === 8345 || columnData.termId === 8346) {
 							// MALE_PARENT_GID or MALE_PARENT_NAME
 							columnsDef.push({
 								targets: columns.length - 1,
@@ -769,15 +769,15 @@
 								createdCell: function (td, cellData, rowData, rowIndex, colIndex) {
 									$(td).val("");
 									var value;
-									if (columnData.termId === 8238 && rowData.properties['8238']) {
-										value = rowData.properties['8238'].value;
-									} else if (columnData.termId === 8239 && rowData.properties['8239']) {
-										value = rowData.properties['8239'].value;
+									if (columnData.termId === 8345 && rowData.properties['8345']) {
+										value = rowData.properties['8345'].value;
+									} else if (columnData.termId === 8346 && rowData.properties['8346']) {
+										value = rowData.properties['8346'].value;
 									}
 									if (value) {
 										if (value !== 'UNKNOWN') {
 											$(td).append($compile('<a class="gid-link" href="javascript: void(0)" ' +
-												'ng-click="openGermplasmDetailsModal(\'' + rowData.properties['8239'].value + '\')">' + value + '</a>')($scope));
+												'ng-click="openGermplasmDetailsModal(\'' + rowData.properties['8345'].value + '\')">' + value + '</a>')($scope));
 										} else {
 											$(td).append(value);
 										}
