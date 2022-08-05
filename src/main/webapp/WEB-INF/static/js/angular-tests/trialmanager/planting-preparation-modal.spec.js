@@ -164,13 +164,7 @@ describe('PlantingPreparationModalCtrl:', function () {
 							"instanceId": 1
 						}
 					],
-					"entryDetailByVariableId": {
-						"100257": {
-							"variableId": 100257,
-							"name": "PACKET_WEIGHT",
-							"value": 8
-						}
-					}
+					"entryDetailVariableId": {"100257": 8}
 				},
 				{
 					"entryNo": 1,
@@ -193,13 +187,7 @@ describe('PlantingPreparationModalCtrl:', function () {
 							"instanceId": 1
 						}
 					],
-					"entryDetailByVariableId": {
-						"100257": {
-							"variableId": 100257,
-							"name": "PACKET_WEIGHT",
-							"value": 8
-						}
-					}
+					"entryDetailVariableId": {"100257": 8}
 				}
 			]
 		}

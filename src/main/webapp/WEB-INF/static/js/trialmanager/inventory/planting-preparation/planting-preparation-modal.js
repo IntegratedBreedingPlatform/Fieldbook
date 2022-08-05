@@ -95,11 +95,11 @@
 								$scope.entryMap[stock.unitId][entry.entryNo] = entry;
 							}
 
-							for (const entryDetail of Object.values(entry.entryDetailByVariableId)) {
-								if (!$scope.variableMap[entryDetail.variableId]) {
-									$scope.variableMap[entryDetail.variableId] = {};
+							for (const entryDetailId of Object.keys(entry.entryDetailVariableId)) {
+								if (!$scope.variableMap[entryDetailId]) {
+									$scope.variableMap[entryDetailId] = {};
 								}
-								$scope.variableMap[entryDetail.variableId][entry.entryNo] = entryDetail;
+								$scope.variableMap[entryDetailId][entry.entryNo] = entry.entryDetailVariableId[entryDetailId];
 							}
 						}
 					});
@@ -200,7 +200,7 @@
 				}
 
 				if (unit.useEntryDetail) {
-					const value = unit.variableSelected ? $scope.variableMap[unit.variableSelected.variableId][entry.entryNo].value : 0;
+					const value = unit.variableSelected ? $scope.variableMap[unit.variableSelected.variableId][entry.entryNo] : 0;
 					return value > 0 && //
 						value * entry.numberOfPackets <= stock.availableBalance;
 				}
@@ -285,7 +285,7 @@
 							groupTransactions: unit.groupTransactions,
 							withdrawAllAvailableBalance: unit.withdrawAll,
 							withdrawUsingEntryDetail: unit.useEntryDetail,
-							entryDetailsVariableId: unit.useEntryDetail ? unit.variableSelected.variableId : null,
+							entryDetailVariableId: unit.useEntryDetail ? unit.variableSelected.variableId : null,
 							withdrawalAmount: unit.amountPerPacket
 						};
 						return withdrawalsPerUnit;
@@ -307,7 +307,7 @@
 				const unit = $scope.units[unitId];
 				let amount = 0
 				if (unit.useEntryDetail) {
-					amount = unit.variableSelected ? $scope.variableMap[unit.variableSelected.variableId][entryNo].value : 0;
+					amount = unit.variableSelected ? $scope.variableMap[unit.variableSelected.variableId][entryNo] : 0;
 				} else {
 					amount = unit.amountPerPacket;
 				}
