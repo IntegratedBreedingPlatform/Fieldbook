@@ -20,7 +20,7 @@
 			});
 
 			variableService.getVariablesByFilter({
-				scaleIds: 6040,
+				dataTypeIds: 1110,
 				variableTypeIds: VARIABLE_TYPES.ENTRY_DETAIL,
 				datasetIds: $scope.$resolve.datasetId
 			}).then(function (variablesFiltered) {
