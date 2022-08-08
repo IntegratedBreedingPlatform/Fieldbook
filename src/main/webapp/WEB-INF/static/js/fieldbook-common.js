@@ -638,7 +638,8 @@ function deleteFieldmap() {
 	var params = {
 		allExistingFieldmapSelected: allExistingFieldmapSelected,
 		instanceIds: instanceIds,
-		datasetId: datasetId
+		datasetId: datasetId,
+		deleteFieldAndBlock: true
 	}
 	$.ajax({
 		url: '/Fieldbook/Fieldmap/enterFieldDetails/deletion',

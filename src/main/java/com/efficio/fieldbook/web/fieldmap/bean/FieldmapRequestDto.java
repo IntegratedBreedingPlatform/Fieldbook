@@ -15,6 +15,7 @@ public class FieldmapRequestDto implements Serializable {
 	private Integer datasetId;
 	private boolean allExistingFieldmapSelected;
 	private List<Integer> instanceIds;
+	private boolean deleteFieldAndBlock;
 
 	public Integer getDatasetId() {
 		return this.datasetId;
@@ -38,6 +39,14 @@ public class FieldmapRequestDto implements Serializable {
 
 	public void setInstanceIds(final List<Integer> instanceIds) {
 		this.instanceIds = instanceIds;
+	}
+
+	public boolean isDeleteFieldAndBlock() {
+		return this.deleteFieldAndBlock;
+	}
+
+	public void setDeleteFieldAndBlock(final boolean deleteFieldAndBlock) {
+		this.deleteFieldAndBlock = deleteFieldAndBlock;
 	}
 
 	@Override
