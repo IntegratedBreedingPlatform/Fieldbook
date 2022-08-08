@@ -29,8 +29,8 @@ describe('PlantingPreparationModalCtrl:', function () {
 			'getMetadata',
 			'confirmPlanting'
 		]),
-		variableServiceMock = jasmine.createSpyObj('variableService', [
-			'getVariablesByFilter'
+		datasetServiceMock = jasmine.createSpyObj('datasetService', [
+			'getDataset'
 		]),
 		HasAnyAuthorityServiceMock = {},
 		PERMISSIONSMock	= [],
@@ -40,7 +40,7 @@ describe('PlantingPreparationModalCtrl:', function () {
 		module('manageTrialApp');
 
 		module(function ($provide) {
-			$provide.value("variableService", variableServiceMock);
+			$provide.value("datasetService", datasetServiceMock);
 			$provide.value("PlantingPreparationService", PlantingPreparationServiceMock);
 			$provide.value("InventoryService", InventoryServiceMock);
 		});
@@ -61,7 +61,7 @@ describe('PlantingPreparationModalCtrl:', function () {
 
 			$httpBackend.whenGET('/Fieldbook/TrialManager/createTrial/trialSettings').respond(200, {data: "ok"});
 
-			variableServiceMock.getVariablesByFilter.and.returnValue($q.resolve(getMockVariablesByFilter()))
+			datasetServiceMock.getDataset.and.returnValue($q.resolve(getMockVariablesByFilter()))
 			PlantingPreparationServiceMock.getPlantingPreparationData.and.returnValue($q.resolve(getMockPlantingPreparationData()))
 			InventoryServiceMock.queryUnits.and.returnValue($q.resolve(getMockUnits()))
 
@@ -73,7 +73,7 @@ describe('PlantingPreparationModalCtrl:', function () {
 				studyContext: studyContextMock,
 				HasAnyAuthorityService: HasAnyAuthorityServiceMock,
 				PERMISSIONS: PERMISSIONSMock,
-				variableService: variableServiceMock,
+				datasetService: datasetServiceMock,
 				VARIABLE_TYPES: VARIABLE_TYPESMock
 			});
 
@@ -98,32 +98,278 @@ describe('PlantingPreparationModalCtrl:', function () {
 	})
 
 	function getMockVariablesByFilter() {
-		return [{
-			"id": "100257", "name": "PACKET_WEIGHT", "alias": "", "description": "PACKET_WEIGHT", "property": {
-				"id": "100050", "name": "Plant Number", "description": "Plant Number", "cropOntologyId": null, "classes": ["Passport"],
-				"metadata": {
-					"dateCreated": null, "lastModified": null, "editableFields": [], "deletable": false,
-					"usage": {"observations": 0, "studies": 0}
+		return {
+			"datasetId": 25039,
+			"name": "Observations",
+			"datasetTypeId": 4,
+			"studyId": 25037,
+			"cropName": "maize",
+			"variables": [
+				{
+					"termId": 8240,
+					"name": "GID",
+					"alias": "GID",
+					"description": "Germplasm identifier - assigned (DBID)",
+					"scale": "Germplasm id",
+					"scaleId": 1907,
+					"method": "Assigned",
+					"property": "Germplasm id",
+					"dataType": "Germplasm List",
+					"value": null,
+					"label": "",
+					"dataTypeId": 1135,
+					"possibleValues": null,
+					"possibleValuesString": null,
+					"minRange": null,
+					"maxRange": null,
+					"scaleMinRange": null,
+					"scaleMaxRange": null,
+					"variableMinRange": null,
+					"variableMaxRange": null,
+					"required": false,
+					"treatmentLabel": null,
+					"operation": null,
+					"role": null,
+					"variableType": "GERMPLASM_DESCRIPTOR",
+					"formula": null,
+					"cropOntology": null,
+					"factor": true,
+					"dataTypeCode": "C",
+					"systemVariable": true
+				},
+				{
+					"termId": 8250,
+					"name": "DESIGNATION",
+					"alias": "DESIGNATION",
+					"description": "Germplasm identifier - assigned (DBCV)",
+					"scale": "Germplasm name",
+					"scaleId": 1908,
+					"method": "Assigned",
+					"property": "Germplasm id",
+					"dataType": "Germplasm List",
+					"value": null,
+					"label": "",
+					"dataTypeId": 1135,
+					"possibleValues": null,
+					"possibleValuesString": null,
+					"minRange": null,
+					"maxRange": null,
+					"scaleMinRange": null,
+					"scaleMaxRange": null,
+					"variableMinRange": null,
+					"variableMaxRange": null,
+					"required": false,
+					"treatmentLabel": null,
+					"operation": null,
+					"role": null,
+					"variableType": "GERMPLASM_DESCRIPTOR",
+					"formula": null,
+					"cropOntology": null,
+					"factor": true,
+					"dataTypeCode": "C",
+					"systemVariable": true
+				},
+				{
+					"termId": 8201,
+					"name": "OBS_UNIT_ID",
+					"alias": "OBS_UNIT_ID",
+					"description": "Field observation unit id - assigned (text)",
+					"scale": "Text",
+					"scaleId": 6020,
+					"method": "Assigned",
+					"property": "Field plot",
+					"dataType": "Character",
+					"value": null,
+					"label": "",
+					"dataTypeId": 1120,
+					"possibleValues": null,
+					"possibleValuesString": null,
+					"minRange": null,
+					"maxRange": null,
+					"scaleMinRange": null,
+					"scaleMaxRange": null,
+					"variableMinRange": null,
+					"variableMaxRange": null,
+					"required": false,
+					"treatmentLabel": null,
+					"operation": null,
+					"role": null,
+					"variableType": "GERMPLASM_DESCRIPTOR",
+					"formula": null,
+					"cropOntology": null,
+					"factor": true,
+					"dataTypeCode": "T",
+					"systemVariable": true
+				},
+				{
+					"termId": 8230,
+					"name": "ENTRY_NO",
+					"alias": "ENTRY_NO",
+					"description": "Germplasm entry - enumerated (number)",
+					"scale": "Number",
+					"scaleId": 6040,
+					"method": "Enumerated",
+					"property": "Germplasm entry",
+					"dataType": "Numeric",
+					"value": null,
+					"label": "",
+					"dataTypeId": 1110,
+					"possibleValues": null,
+					"possibleValuesString": null,
+					"minRange": null,
+					"maxRange": null,
+					"scaleMinRange": null,
+					"scaleMaxRange": null,
+					"variableMinRange": null,
+					"variableMaxRange": null,
+					"required": false,
+					"treatmentLabel": null,
+					"operation": null,
+					"role": null,
+					"variableType": "ENTRY_DETAIL",
+					"formula": null,
+					"cropOntology": null,
+					"factor": true,
+					"dataTypeCode": "N",
+					"systemVariable": true
+				},
+				{
+					"termId": 8255,
+					"name": "ENTRY_TYPE",
+					"alias": "ENTRY_TYPE",
+					"description": "Entry type (test/check)- assigned (type)",
+					"scale": "Type of ENTRY_TYPE",
+					"scaleId": 17269,
+					"method": "Assigned",
+					"property": "Entry type",
+					"dataType": "Categorical",
+					"value": null,
+					"label": "",
+					"dataTypeId": 1130,
+					"possibleValues": [
+						{
+							"id": 10170,
+							"name": "T",
+							"description": "Test entry",
+							"programUUID": null,
+							"key": "10170",
+							"displayDescription": "T= Test entry",
+							"folder": false,
+							"study": false
+						},
+						{
+							"id": 10190,
+							"name": "D",
+							"description": "Disease check",
+							"programUUID": null,
+							"key": "10190",
+							"displayDescription": "D= Disease check",
+							"folder": false,
+							"study": false
+						},
+						{
+							"id": 10185,
+							"name": "X",
+							"description": "Non Replicated",
+							"programUUID": null,
+							"key": "10185",
+							"displayDescription": "X= Non Replicated",
+							"folder": false,
+							"study": false
+						},
+						{
+							"id": 10180,
+							"name": "C",
+							"description": "Check entry",
+							"programUUID": null,
+							"key": "10180",
+							"displayDescription": "C= Check entry",
+							"folder": false,
+							"study": false
+						},
+						{
+							"id": 10200,
+							"name": "S",
+							"description": "Stress check",
+							"programUUID": null,
+							"key": "10200",
+							"displayDescription": "S= Stress check",
+							"folder": false,
+							"study": false
+						}
+					],
+					"possibleValuesString": "",
+					"minRange": null,
+					"maxRange": null,
+					"scaleMinRange": null,
+					"scaleMaxRange": null,
+					"variableMinRange": null,
+					"variableMaxRange": null,
+					"required": false,
+					"treatmentLabel": null,
+					"operation": null,
+					"role": null,
+					"variableType": "ENTRY_DETAIL",
+					"formula": null,
+					"cropOntology": null,
+					"factor": true,
+					"dataTypeCode": "C",
+					"systemVariable": true
+				},
+				{
+					"termId": 100257,
+					"name": "PACKET_WEIGHT",
+					"alias": "DIego",
+					"description": "PACKET_WEIGHT",
+					"scale": "Number",
+					"scaleId": 6040,
+					"method": "Enumerated",
+					"property": "Plant Number",
+					"dataType": "Numeric",
+					"value": null,
+					"label": "",
+					"dataTypeId": 1110,
+					"possibleValues": null,
+					"possibleValuesString": null,
+					"minRange": null,
+					"maxRange": null,
+					"scaleMinRange": null,
+					"scaleMaxRange": null,
+					"variableMinRange": null,
+					"variableMaxRange": null,
+					"required": false,
+					"treatmentLabel": null,
+					"operation": null,
+					"role": null,
+					"variableType": "ENTRY_DETAIL",
+					"formula": null,
+					"cropOntology": null,
+					"factor": true,
+					"dataTypeCode": "N",
+					"systemVariable": false
+				},
+			],
+			"instances": [
+				{
+					"instanceId": 11,
+					"locationName": "Argentina",
+					"locationAbbreviation": "ARG",
+					"customLocationAbbreviation": null,
+					"locationDescriptorDataId": null,
+					"instanceNumber": 1,
+					"hasFieldmap": false,
+					"hasGeoJSON": false,
+					"hasFieldLayout": false,
+					"hasInventory": true,
+					"hasExperimentalDesign": true,
+					"hasMeasurements": false,
+					"canBeDeleted": false,
+					"experimentId": 0
 				}
-			}, "method": {
-				"id": "4040", "name": "Enumerated", "description": "Levels enumerated - 1,2,3", "metadata": {
-					"dateCreated": "2016-01-28T19:36:53.000Z", "lastModified": null, "editableFields": [], "deletable": false,
-					"usage": {"observations": 0, "studies": 0}
-				}
-			}, "scale": {
-				"id": "6040", "name": "Number", "description": "Number",
-				"dataType": {"id": "1110", "name": "Numeric", "systemDataType": false}, "validValues": {}, "metadata": {
-					"dateCreated": "2016-01-28T19:36:53.000Z", "lastModified": null, "editableFields": [], "deletable": false,
-					"usage": {"observations": 0, "studies": 0}
-				}
-			}, "variableTypes": [{"id": "1815", "name": "Entry Detail", "description": "Variables that describes list entries"}],
-			"favourite": false, "metadata": {
-				"editableFields": [], "deletable": false, "dateCreated": "2022-08-05T14:10:55.853Z", "lastModified": null, "usage": {
-					"observations": 0, "studies": 0, "datasets": 0, "germplasm": 0, "breedingMethods": 0, "lists": 0,
-					"isSystemVariable": false
-				}
-			}, "expectedRange": {}, "formula": null, "allowsFormula": false
-		}]
+			],
+			"hasPendingData": false,
+			"hasOutOfSyncData": false
+		}
 	}
 
 	function getMockPlantingPreparationData() {

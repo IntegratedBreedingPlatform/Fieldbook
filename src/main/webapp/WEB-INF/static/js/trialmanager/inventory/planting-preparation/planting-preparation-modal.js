@@ -4,9 +4,9 @@
 	const module = angular.module('manageTrialApp');
 
 	module.controller('PlantingPreparationModalCtrl', ['$scope', '$rootScope', 'studyContext', '$uibModalInstance', 'DTOptionsBuilder', 'DTColumnBuilder',
-		'PlantingPreparationService', 'InventoryService', '$timeout', '$q', 'HasAnyAuthorityService', 'PERMISSIONS', 'variableService', 'VARIABLE_TYPES',
+		'PlantingPreparationService', 'InventoryService', '$timeout', '$q', 'HasAnyAuthorityService', 'PERMISSIONS', 'datasetService', 'VARIABLE_TYPES',
 		function ($scope, $rootScope, studyContext, $uibModalInstance, DTOptionsBuilder, DTColumnBuilder, service, InventoryService, $timeout, $q,
-				  HasAnyAuthorityService, PERMISSIONS, variableService, VARIABLE_TYPES) {
+				  HasAnyAuthorityService, PERMISSIONS, datasetService, VARIABLE_TYPES) {
 
 			$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
 			$scope.PERMISSIONS = PERMISSIONS;
@@ -19,19 +19,20 @@
 				initResolve = resolve;
 			});
 
-			variableService.getVariablesByFilter({
-				dataTypeIds: 1110,
-				variableTypeIds: VARIABLE_TYPES.ENTRY_DETAIL,
-				datasetIds: $scope.$resolve.datasetId
-			}).then(function (variablesFiltered) {
-				const entryDetails = variablesFiltered.filter(function (variable) {
-					return variable.metadata &&  variable.metadata.usage && variable.metadata.usage.isSystemVariable === false;
+			datasetService.getDataset($scope.$resolve.datasetId)
+				.then(function (dataset) {
+					const entryDetails =
+						dataset.variables.filter(function (variable) {
+							return variable && variable.dataTypeId === 1110 &&
+								variable.variableType === 'ENTRY_DETAIL' &&
+								variable.systemVariable === false;
+						});
+					angular.forEach(entryDetails, function (variable) {
+						$scope.entryDetailVariables.push({
+							name: variable.alias ? variable.alias : variable.name, variableId: variable.termId
+						});
+					});
 				});
-				angular.forEach(entryDetails, function (variable) {
-					$scope.entryDetailVariables.push({name: variable.name, variableId: variable.id});
-				});
-			});
-
 
 			$scope.unitsDTOptions = DTOptionsBuilder.newOptions().withDOM('<"row"<"col-sm-12"tr>>');
 			$scope.entriesDTOptions = DTOptionsBuilder.newOptions().withDOM('<"row"<"col-sm-6"l><"col-sm-6"f>>' +
