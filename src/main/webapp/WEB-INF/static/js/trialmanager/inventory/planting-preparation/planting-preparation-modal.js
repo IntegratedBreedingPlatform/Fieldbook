@@ -306,10 +306,12 @@
 			$scope.withdrawalCalculator = function (unitId, entryNo, packets) {
 				const unit = $scope.units[unitId];
 				let amount = 0
-				if (unit.useEntryDetail) {
-					amount = unit.variableSelected ? $scope.variableMap[unit.variableSelected.variableId][entryNo] : 0;
-				} else {
-					amount = unit.amountPerPacket;
+				if (unit) {
+					if (unit.useEntryDetail) {
+						amount = unit.variableSelected ? $scope.variableMap[unit.variableSelected.variableId][entryNo] : 0;
+					} else if (unit.amountPerPacket) {
+						amount = unit.amountPerPacket;
+					}
 				}
 				return (Math.round(isNaN(amount) ? 0 : amount * 1000) * packets) / 1000;
 			}
