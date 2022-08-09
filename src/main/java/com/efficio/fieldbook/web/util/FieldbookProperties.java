@@ -6,7 +6,6 @@ public class FieldbookProperties {
 	private String uploadDirectory;
 	private Integer maxNumOfSubObsSetsPerStudy;
 	private Integer maxNumOfSubObsPerParentUnit;
-	private String staBrappUrl;
 
 	public String getUploadDirectory() {
 		return this.uploadDirectory;
@@ -30,13 +29,5 @@ public class FieldbookProperties {
 
 	public void setMaxNumOfSubObsPerParentUnit(final Integer maxNumOfSubObsPerParentUnit) {
 		this.maxNumOfSubObsPerParentUnit = maxNumOfSubObsPerParentUnit;
-	}
-
-	public String getStaBrappUrl() {
-		return staBrappUrl;
-	}
-
-	public void setStaBrappUrl(final String staBrappUrl) {
-		this.staBrappUrl = staBrappUrl;
 	}
 }
