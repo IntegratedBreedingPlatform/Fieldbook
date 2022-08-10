@@ -15,9 +15,9 @@
 </ui-select>
 <div class="possibleValuesDiv">
 	<input type="radio" name="location-lookup" ng-model="localData.locationLookup" value="1" ng-click="fetch()">
-	<span th:text="#{show.breeding.location}">Breeding locations</span> &nbsp;
-	<input type="radio" name="location-lookup" ng-model="localData.locationLookup" value="2" ng-click="fetch()">
 	<span th:text="#{show.all.location}">All locations types</span> &nbsp;
+	<input type="radio" name="location-lookup" ng-model="localData.locationLookup" value="2" ng-click="fetch()">
+	<span th:text="#{show.breeding.location}">Breeding locations</span> &nbsp;
 </div>
 <div class="possibleValuesDiv">
 	<input type="checkbox" name="location-favorite" ng-model="localData.useFavorites" ng-click="fetch()">
