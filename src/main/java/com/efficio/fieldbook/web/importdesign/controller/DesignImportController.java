@@ -44,6 +44,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -549,6 +550,14 @@ public class DesignImportController extends SettingsController {
 			this.addVariablesFromTemporaryWorkbookToWorkbook(this.userSelection);
 			this.updateObservationsFromTemporaryWorkbookToWorkbook(this.userSelection);
 
+			// Workaround to prevent adding duplicated variables
+			this.assignUpdateOperationToVariable(this.userSelection.getWorkbook().getConditions(), TermId.LOCATION_ID.getId());
+			this.assignUpdateOperationToVariable(this.userSelection.getWorkbook().getConditions(), TermId.TRIAL_INSTANCE_FACTOR.getId());
+			this.assignUpdateOperationToVariable(this.userSelection.getWorkbook().getConditions(), TermId.TRIAL_INSTANCE_FACTOR.getId());
+			this.assignUpdateOperationToVariable(this.userSelection.getWorkbook().getFactors(), TermId.TRIAL_INSTANCE_FACTOR.getId());
+			this.assignUpdateOperationToVariable(this.userSelection.getWorkbook().getTrialConditions(), TermId.TRIAL_INSTANCE_FACTOR.getId());
+			this.assignUpdateOperationToVariable(this.userSelection.getWorkbook().getTrialVariables(), TermId.TRIAL_INSTANCE_FACTOR.getId());
+
 			this.fieldbookMiddlewareService.saveExperimentalDesign(this.userSelection.getWorkbook(), this.getCurrentProject().getUniqueID(), this.getCurrentProject().getCropType());
 			resultsMap.put(DesignImportController.IS_SUCCESS, 1);
 			resultsMap.put("environmentData", instanceInfo);
@@ -564,6 +573,15 @@ public class DesignImportController extends SettingsController {
 		}
 
 		return resultsMap;
+	}
+
+	private void assignUpdateOperationToVariable(final List<MeasurementVariable> variables, final Integer variableId) {
+		if (!CollectionUtils.isEmpty(variables)) {
+			variables.stream()
+				.filter(variable -> variable.getTermId() == variableId)
+				.findFirst()
+				.ifPresent(variable -> variable.setOperation(Operation.UPDATE));
+		}
 	}
 
 	/***
