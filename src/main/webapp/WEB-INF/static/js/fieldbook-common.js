@@ -405,10 +405,10 @@ function createRow(id, parentClass, value, realId, withFieldMap, hasOneInstance)
 	if (id.indexOf('study') > -1 || id.indexOf('dataset') > -1) {
 		// Study and dataset level
 		newRow = '<tr id="' + realId + '" class="tr-expander ' + genClassName + id + ' ' + genParentClassName + '">';
-		newCell = newCell + '<td>' + value + '</td><td></td><td></td><td></td><td></td><td></td><td></td>';
+		newCell = newCell + '<td>' + value + '</td><td></td><td></td><td></td><td></td>';
 
 		if (!withFieldMap) {
-			newCell = newCell + '<td></td>';
+			newCell = newCell + '<td></td><td></td><td></td>';
 		}
 	} else {
 		// Trial instance level
