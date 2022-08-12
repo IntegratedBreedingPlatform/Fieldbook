@@ -92,7 +92,7 @@
 					}
 
 					locationService.getLocations($scope.localData.locationLookup == 2 ? BREEDING_AND_COUNTRY_LOCATION : [], $scope.localData.useFavorites, $select ? $select.search : '', $scope.locationPage, 500).then(function (response) {
-						$scope.locationItems = $scope.locationItems.concat(response.data);
+						$scope.locationItems = response.data;
 						$scope.loadMore = ($scope.locationPage + 1) * 500 < response.headers()['x-total-count'];
 					});
 				};
