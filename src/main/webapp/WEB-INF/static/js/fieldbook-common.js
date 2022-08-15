@@ -205,6 +205,15 @@ function createFieldMap(isDeleting = false) {
 		var mode = '#createTrialMainForm';
 		var active = '';
 	}
+
+	if (isDeleting) {
+		$('.delete-label').show();
+		$('.default-label').hide();
+	} else {
+		$('.delete-label').hide();
+		$('.default-label').show();
+	}
+
 	var id = $(mode + ' #studyId').val(),
 		name = $(active + ' #studyName').val();
 	showFieldMapPopUpCreate(id, isDeleting);
