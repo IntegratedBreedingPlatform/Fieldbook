@@ -590,7 +590,7 @@ function showCreateFieldMap() {
 		studyId,
 		hasFieldMap;
 
-	if (!validateLocationMatch()) {
+	if (!isDeleteMode && !validateLocationMatch()) {
 		showMessage(msgLocationNotMatched);
 		return;
 	}
