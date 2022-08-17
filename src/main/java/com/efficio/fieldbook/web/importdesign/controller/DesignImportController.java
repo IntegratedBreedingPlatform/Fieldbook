@@ -638,7 +638,7 @@ public class DesignImportController extends SettingsController {
 
 		workbook.setObservations(measurementRows);
 
-		measurementVariables = this.designImportService.getDesignMeasurementVariables(workbook, designImportData, false);
+		measurementVariables = this.designImportService.getDesignMeasurementVariables(designImportData, false);
 
 		workbook.setMeasurementDatasetVariables(new ArrayList<>(measurementVariables));
 
