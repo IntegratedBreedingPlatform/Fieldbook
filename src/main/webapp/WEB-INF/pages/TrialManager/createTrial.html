@@ -128,12 +128,16 @@
 									<li>
 										<a href="" style="display: none" id="fieldmap-url"
 										   th:href="@{/Fieldmap/enterFieldDetails/nursery}"></a>
-										<a href="javascript: createFieldMap();" id="fieldmap-url-link"
+										<a href="javascript: createFieldMap(false);" id="fieldmap-url-link"
 										   th:text="#{study.studydetails.action.createFieldmap}">Make Field Map</a>
 									</li>
 									<li>
 										<a href="javascript: showFieldMap('trial-table');" id="view-fieldmap-url-link"
 										   th:text="#{study.edit.study.view.field.map}">View Field Map</a>
+									</li>
+									<li>
+										<a href="javascript: createFieldMap(true);" id="delete-fieldmap-url-link"
+										   th:text="#{study.edit.study.delete.field.map}">Delete Field Map</a>
 									</li>
 									<li>
 										<a ng-click="showGeoJSONModal()"
@@ -766,6 +770,7 @@
 				loggedInUserId: /*[[${currentCropUserId}]]*/ '',
 				studyId: /*[[${studyId}]]*/ '',
 				measurementDatasetId: /*[[${measurementDatasetId}]]*/ '',
+				trialDatasetId: /*[[${trialDatasetId}]]*/ '',
 				meansDatasetId: /*[[${meansDatasetId}]]*/ '',
 				summaryStatisticsDatasetId: /*[[${summaryStatisticsDatasetId}]]*/ ''
 			}).constant('LABEL_PRINTING_TYPE', {
