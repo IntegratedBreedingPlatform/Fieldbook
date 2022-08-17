@@ -346,10 +346,8 @@ public class DesignImportServiceImplTest {
 
 		// retrieve no of variables imported from the csv file without TermId.TRIAL_INSTANCE_FACTOR.getId()
 		final int noOfVariablesFromCSVFile = this.designImportData.getRowDataMap().get(0).size();
-		final int expectedNoOfVariablesUsed =
-				noOfVariablesFromCSVFile + workbook.getFactors().size() + workbook.getVariates().size();
 		Assert.assertEquals("The total number of variables to use for generating design from workbook and csv file must be equal to "
-				+ expectedNoOfVariablesUsed + " but returned " + result.size() + " instead.", expectedNoOfVariablesUsed, result.size());
+				+ noOfVariablesFromCSVFile + " but returned " + result.size() + " instead.", noOfVariablesFromCSVFile, result.size());
 	}
 
 	/**
@@ -364,7 +362,7 @@ public class DesignImportServiceImplTest {
 
 		// If NOT in PREVIEW mode, the method will remove the trial environment factors in the list except for trial instance. This is
 		// because the actual measurements/observations that will be generated from import should not contain study environment factors.
-		Assert.assertEquals("The total number of Factors and Variates (less the trial environments) in workbook is 16", 16, result.size());
+		Assert.assertEquals("The total number of Factors and Variates (less the trial environments) in workbook is 6", 6, result.size());
 	}
 
 	/**
