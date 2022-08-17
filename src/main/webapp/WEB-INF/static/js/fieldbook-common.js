@@ -191,7 +191,7 @@ function triggerFieldMapTableSelection(tableName) {
 	});
 }
 
-function createFieldMap() {
+function createFieldMap(isDeleting = false) {
 
 	if ($('.import-study-data').data('data-import') === '1') {
 		showErrorMessage('', needSaveImportDataError);
@@ -205,11 +205,19 @@ function createFieldMap() {
 		var mode = '#createTrialMainForm';
 		var active = '';
 	}
+
+	if (isDeleting) {
+		$('.delete-label').show();
+		$('.default-label').hide();
+	} else {
+		$('.delete-label').hide();
+		$('.default-label').show();
+	}
+
 	var id = $(mode + ' #studyId').val(),
 		name = $(active + ' #studyName').val();
-	showFieldMapPopUpCreate(id);
+	showFieldMapPopUpCreate(id, isDeleting);
 }
-
 
 function $safeId(fieldId) {
 	return $(getJquerySafeId(fieldId));
@@ -289,7 +297,7 @@ function selectTrialInstance() {
 	});
 }
 
-function selectTrialInstanceCreate() {
+function selectTrialInstanceCreate(isDeleting = false) {
 	$.ajax({
 		url: '/Fieldbook/Fieldmap/enterFieldDetails/selectTrialInstance',
 		type: 'GET',
@@ -301,6 +309,7 @@ function selectTrialInstanceCreate() {
 				// Show popup to select instances to create field map
 				clearStudyTree();
 				isViewFieldmap = false;
+				isDeleteMode = isDeleting;
 				createStudyTree($.parseJSON(data.fieldMapInfo), isViewFieldmap);
 				$('#selectTrialInstanceModal').modal('toggle');
 			}
@@ -371,7 +380,9 @@ function createHeader(hasFieldMap) {
 			'<th style="width:15%">' + entryLabel + '</th>' +
 			'<th style="width:10%">' + repLabel + '</th>' +
 			'<th style="width:20%">' + plotLabel + '</th>';
-		newRow = newRow + '<th style="width:15%">' + fieldmapLabel + '</th>';
+		newRow = newRow + '<th style="width:15%">' + fieldmapLabel + '</th>'
+		newRow = newRow + '<th style="width:15%">' + hasMeansDatasetLabel + '</th>'
+		newRow = newRow + '<th style="width:15%">' + hasGeoreferenceLabel + '</th>';
 	} else {
 		newRow = newRow + '<th style="width:40%"></th>' +
 			'<th style="width:15%">' + locationLabel + '</th>' +
@@ -390,6 +401,8 @@ function createRow(id, parentClass, value, realId, withFieldMap, hasOneInstance)
 		newRow = '',
 		newCell = '',
 		hasFieldMap,
+		hasMeans,
+		hasGeoreference,
 		disabledString,
 		checkBox;
 	var locationName = value.trialInstanceNo + "-" + value.locationName;
@@ -404,7 +417,7 @@ function createRow(id, parentClass, value, realId, withFieldMap, hasOneInstance)
 		newCell = newCell + '<td>' + value + '</td><td></td><td></td><td></td><td></td>';
 
 		if (!withFieldMap) {
-			newCell = newCell + '<td></td>';
+			newCell = newCell + '<td></td><td></td><td></td>';
 		}
 	} else {
 		// Trial instance level
@@ -419,6 +432,8 @@ function createRow(id, parentClass, value, realId, withFieldMap, hasOneInstance)
 			}
 			// For create new fieldmap
 			hasFieldMap = value.hasFieldMap ? 'Yes' : 'No';
+			hasMeans = value.hasMeansData ? 'Yes' : 'No';
+			hasGeoreference = value.hasGeoJSON ? 'Yes' : 'No';
 			var isDisabled = value.hasFieldMap && (value.hasGeoJSON || value.hasMeansData);
 			disabledString = isDisabled ? 'disabled' : '';
 			var checked = hasOneInstance && !isDisabled ? 'checked' : '';
@@ -428,6 +443,8 @@ function createRow(id, parentClass, value, realId, withFieldMap, hasOneInstance)
 			newCell = '<td>' + checkBox + '&nbsp;' + value.trialInstanceNo + '</td><td>' + locationName + '</td><td>' + value.entryCount + '</td>';
 			newCell = newCell + '<td>' + value.repCount + '</td><td>' + value.plotCount + '</td>';
 			newCell = newCell + '<td class="hasFieldMap">' + hasFieldMap + '</td>';
+			newCell = newCell + '<td class="hasMeansDataset">' + hasMeans + '</td>';
+			newCell = newCell + '<td class="hasGeoreference">' + hasGeoreference + '</td>';
 		}
 	}
 	$('#studyFieldMapTree').append(newRow + newCell + '</tr>');
@@ -509,7 +526,7 @@ function showFieldMap(tableName) {
 }
 
 // Show popup to select instances for field map creation
-function showFieldMapPopUpCreate(ids) {
+function showFieldMapPopUpCreate(ids, isDeleting = false) {
 
 	var link = '/Fieldbook/Fieldmap/enterFieldDetails/createFieldmap/';
 	$.ajax({
@@ -517,7 +534,11 @@ function showFieldMapPopUpCreate(ids) {
 		type: 'GET',
 		data: '',
 		success: function (data) {
-			selectTrialInstanceCreate();
+			if (isDeleting && data.nav == '1') {
+				showMessage(noFieldMapExists);
+			} else {
+				selectTrialInstanceCreate(isDeleting);
+			}
 		},
 		error: function (jqXHR, textStatus, errorThrown) {
 			console.log('The following error occured: ' + textStatus, errorThrown);
@@ -578,15 +599,17 @@ function showCreateFieldMap() {
 		studyId,
 		hasFieldMap;
 
-	if (!validateLocationMatch()) {
+	if (!isDeleteMode && !validateLocationMatch()) {
 		showMessage(msgLocationNotMatched);
 		return;
 	}
 
 	if ($('#studyFieldMapTree .checkInstance:checked').attr('id')) {
 		selectedWithFieldMap = false;
+
 		fieldmapIds = [];
 		instanceIds = [];
+		instanceIdsWithNoFieldmap = [];
 		$('#studyFieldMapTree .checkInstance:checked').each(function () {
 			id = this.id;
 			if (id.indexOf('|') > -1) {
@@ -604,11 +627,15 @@ function showCreateFieldMap() {
 			instanceIds.push(parseInt(id));
 			if (hasFieldMap == 'Yes') {
 				selectedWithFieldMap = true;
+			} else if (isDeleteMode) {
+				instanceIdsWithNoFieldmap.push($(this).parent().text().replace('&nbsp;',''));
 			}
 		});
 
 		// Confirm to delete existing fieldmap
-		if (selectedWithFieldMap) {
+		if (instanceIdsWithNoFieldmap.length > 0) {
+			showErrorMessage('', deleteFieldmapNotExisting.replace("{0}", instanceIdsWithNoFieldmap.join(",")));
+		} else if (selectedWithFieldMap) {
 			openDeleteFieldmapConfirmation(instanceIds, datasetId);
 		} else {
 			redirectToFirstPage();
@@ -629,7 +656,7 @@ function openDeleteFieldmapConfirmation(instanceIds, datasetId) {
 	$('#datasetId').val(datasetId);
 }
 
-function deleteFieldmap() {
+function deleteFieldmap(deleteFieldAndBlock) {
 	'use strict';
 	var instanceIds = JSON.parse($('#selectedInstanceIds').val());
 	var datasetId = $('#datasetId').val();
@@ -638,7 +665,8 @@ function deleteFieldmap() {
 	var params = {
 		allExistingFieldmapSelected: allExistingFieldmapSelected,
 		instanceIds: instanceIds,
-		datasetId: datasetId
+		datasetId: datasetId,
+		deleteFieldAndBlock: deleteFieldAndBlock
 	}
 	$.ajax({
 		url: '/Fieldbook/Fieldmap/enterFieldDetails/deletion',
@@ -649,7 +677,17 @@ function deleteFieldmap() {
 			xhr.setRequestHeader('X-Auth-Token', xAuthToken);
 		},
 		success: function (data) {
-			redirectToFirstPage();
+			if(isDeleteMode) {
+				closeModal('selectTrialInstanceModal');
+				closeModal('deleteFieldmapModal');
+				if ((data && data.length == 0) || !deleteFieldAndBlock) {
+					showSuccessfulMessage('', deleteFieldmapSuccess);
+				} else {
+					showAlertMessage('', deleteFieldmapBlockShared.replace("{0}", data.join(",")), 10000);
+				}
+			} else {
+				redirectToFirstPage();
+			}
 		},
 		error: function (jqxhr, textStatus, error) {
 			if (jqxhr.status == 401) {

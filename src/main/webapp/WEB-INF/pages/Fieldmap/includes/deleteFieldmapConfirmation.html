@@ -24,8 +24,14 @@
 			<input type="hidden" id="selectedInstanceIds" />
 			<input type="hidden" id="datasetId" />
 			<div class="modal-footer addVariable-footer">
-				<button type="button" class="btn btn-default" onclick="javascript: closeModal('deleteFieldmapModal')" th:text="#{common.form.no.text}">Cancel</button>
-				<button type="button" class="btn btn-primary" aria-hidden="true" th:text="#{common.form.yes.text}" onclick="javascript: deleteFieldmap();">Ok</button>
+				<div class="row">
+					<button type="button" class="btn btn-default" onclick="javascript: closeModal('deleteFieldmapModal')" th:text="#{common.form.no.text}"></button>
+					<button type="button" class="btn btn-primary" aria-hidden="true" th:text="#{fieldmap.confirm.delete.button}" onclick="javascript: deleteFieldmap(false);"></button>
+				</div>
+
+				<div class="row" style="padding: 5px;">
+					<button type="button" class="btn btn-primary" aria-hidden="true" th:text="#{fieldmap.confirm.delete.include.block}" onclick="javascript: deleteFieldmap(true);"></button>
+				</div>
 			</div>
 		</div>
 	</div>

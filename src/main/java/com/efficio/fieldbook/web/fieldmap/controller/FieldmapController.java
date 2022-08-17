@@ -661,10 +661,11 @@ public class FieldmapController extends AbstractBaseFieldbookController {
 	@ResponseBody
 	@RequestMapping(value = "/deletion", method = RequestMethod.POST,
 		produces = "application/json; charset=utf-8")
-	public ResponseEntity<Void> deleteFieldMap(
+	public ResponseEntity<List<String>> deleteFieldMap(
 		@RequestBody final FieldmapRequestDto requestDto) {
-		this.fieldbookMiddlewareService.deleteAllFieldMapsByTrialInstanceIds(
-			requestDto.getInstanceIds(), requestDto.getDatasetId(), requestDto.isAllExistingFieldmapSelected());
+		List<String> instancesWithSharedBlock = this.fieldbookMiddlewareService.deleteAllFieldMapsByTrialInstanceIds(
+			requestDto.getInstanceIds(), requestDto.getDatasetId(), requestDto.isAllExistingFieldmapSelected(),
+			requestDto.isDeleteFieldAndBlock());
 
 		final List<FieldMapDatasetInfo> datasets = this.userFieldmap.getFieldMapInfo().stream().flatMap(x -> x.getDatasets().stream())
 			.collect(Collectors.toList());
@@ -678,7 +679,7 @@ public class FieldmapController extends AbstractBaseFieldbookController {
 			trial.clearColumnRangeIfExists();
 		});
 
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>(instancesWithSharedBlock, HttpStatus.OK);
 	}
 
 	/**
