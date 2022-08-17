@@ -342,7 +342,7 @@ public class DesignImportServiceImplTest {
 	@Test
 	public void testGetDesignMeasurementVariables() {
 		final Workbook workbook = WorkbookDataUtil.getTestWorkbookForStudy(10, 3);
-		final Set<MeasurementVariable> result = this.service.getDesignMeasurementVariables(workbook, this.designImportData, true);
+		final Set<MeasurementVariable> result = this.service.getDesignMeasurementVariables(this.designImportData, true);
 
 		// retrieve no of variables imported from the csv file without TermId.TRIAL_INSTANCE_FACTOR.getId()
 		final int noOfVariablesFromCSVFile = this.designImportData.getRowDataMap().get(0).size();
@@ -360,7 +360,7 @@ public class DesignImportServiceImplTest {
 
 		final Workbook workbook = WorkbookDataUtil.getTestWorkbookForStudy(10, 3);
 
-		final Set<MeasurementVariable> result = this.service.getDesignMeasurementVariables(workbook, this.designImportData, false);
+		final Set<MeasurementVariable> result = this.service.getDesignMeasurementVariables(this.designImportData, false);
 
 		// If NOT in PREVIEW mode, the method will remove the trial environment factors in the list except for trial instance. This is
 		// because the actual measurements/observations that will be generated from import should not contain study environment factors.

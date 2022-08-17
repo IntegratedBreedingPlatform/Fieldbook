@@ -330,7 +330,7 @@ public class DesignImportControllerTest {
 		Mockito.when(this.userSelection.getTemporaryWorkbook()).thenReturn(workbook);
 
 		Mockito.doReturn(Mockito.mock(Set.class)).when(this.designImportService)
-				.getDesignMeasurementVariables(Matchers.any(Workbook.class), Matchers.any(DesignImportData.class), Matchers.anyBoolean());
+				.getDesignMeasurementVariables(Matchers.any(DesignImportData.class), Matchers.anyBoolean());
 
 		final Model model = Mockito.mock(Model.class);
 
@@ -1344,7 +1344,7 @@ public class DesignImportControllerTest {
 				.generateDesign(Matchers.any(Workbook.class), Matchers.any(DesignImportData.class), Matchers.any(InstanceInfo.class),
 						Matchers.anyBoolean(), Matchers.anyMapOf(String.class, Integer.class));
 		Mockito.doReturn(new HashSet<MeasurementVariable>()).when(this.designImportService)
-				.getDesignMeasurementVariables(Matchers.any(Workbook.class), Matchers.any(DesignImportData.class), Matchers.anyBoolean());
+				.getDesignMeasurementVariables(Matchers.any(DesignImportData.class), Matchers.anyBoolean());
 		Mockito.doReturn(new HashSet<MeasurementVariable>()).when(this.designImportService)
 				.getDesignRequiredStandardVariables(Matchers.any(Workbook.class), Matchers.any(DesignImportData.class));
 		Mockito.doReturn(new HashSet<MeasurementVariable>()).when(this.designImportService)

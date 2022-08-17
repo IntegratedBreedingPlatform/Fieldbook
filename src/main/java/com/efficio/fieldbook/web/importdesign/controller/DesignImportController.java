@@ -317,7 +317,7 @@ public class DesignImportController extends SettingsController {
 		final DesignImportData designImportData = this.userSelection.getDesignImportData();
 
 		final Set<MeasurementVariable> measurementVariables = this.designImportService
-				.getDesignMeasurementVariables(workbook, designImportData, false);
+				.getDesignMeasurementVariables(designImportData, false);
 
 		model.addAttribute("measurementVariables", measurementVariables);
 
