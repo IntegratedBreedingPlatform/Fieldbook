@@ -53,12 +53,12 @@
 			link: function (scope, element, attrs, paginationCtrl) {
 			},
 			controller: ['$scope', 'locationService', function ($scope, locationService) {
-				var BREEDING_LOCATION = [410, 411];
+				var BREEDING_AND_COUNTRY_LOCATION = [410, 405];
 
 				$scope.locationItems = [];
 				$scope.locationPage = 0;
 				$scope.loadMore = true;
-				$scope.localData = {locationLookup: 1, useFavorites: false};
+				$scope.localData = {locationLookup: 1, useFavorites: true};
 				$scope.defaultLocation = null;
 
 				$scope.init = function () {
@@ -91,8 +91,8 @@
 						$scope.locationPage++;
 					}
 
-					locationService.getLocations($scope.localData.locationLookup == 1 ? BREEDING_LOCATION : [], $scope.localData.useFavorites, $select ? $select.search : '', $scope.locationPage, 500).then(function (response) {
-						$scope.locationItems = $scope.locationItems.concat(response.data);
+					locationService.getLocations($scope.localData.locationLookup == 2 ? BREEDING_AND_COUNTRY_LOCATION : [], $scope.localData.useFavorites, $select ? $select.search : '', $scope.locationPage, 500).then(function (response) {
+						$scope.locationItems = response.data;
 						$scope.loadMore = ($scope.locationPage + 1) * 500 < response.headers()['x-total-count'];
 					});
 				};

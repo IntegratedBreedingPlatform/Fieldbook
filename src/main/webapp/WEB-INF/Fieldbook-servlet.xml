@@ -111,7 +111,6 @@
 		<property name="uploadDirectory" value="${upload.directory}" />
 		<property name="maxNumOfSubObsSetsPerStudy" value="${maximum.number.of.sub.observation.sets}" />
 		<property name="maxNumOfSubObsPerParentUnit" value="${maximum.number.of.sub.observation.parent.unit}" />
-		<property name="staBrappUrl" value="${stabrapp.url}" />
 	</bean>
 
 	<bean id="fieldbookService" class="com.efficio.fieldbook.service.FieldbookServiceImpl">

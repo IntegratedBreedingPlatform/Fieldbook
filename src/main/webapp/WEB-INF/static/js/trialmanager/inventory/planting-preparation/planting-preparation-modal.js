@@ -4,18 +4,35 @@
 	const module = angular.module('manageTrialApp');
 
 	module.controller('PlantingPreparationModalCtrl', ['$scope', '$rootScope', 'studyContext', '$uibModalInstance', 'DTOptionsBuilder', 'DTColumnBuilder',
-		'PlantingPreparationService', 'InventoryService', '$timeout', '$q', 'HasAnyAuthorityService', 'PERMISSIONS',
+		'PlantingPreparationService', 'InventoryService', '$timeout', '$q', 'HasAnyAuthorityService', 'PERMISSIONS', 'datasetService', 'VARIABLE_TYPES',
 		function ($scope, $rootScope, studyContext, $uibModalInstance, DTOptionsBuilder, DTColumnBuilder, service, InventoryService, $timeout, $q,
-				  HasAnyAuthorityService, PERMISSIONS) {
+				  HasAnyAuthorityService, PERMISSIONS, datasetService, VARIABLE_TYPES) {
 
 			$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
 			$scope.PERMISSIONS = PERMISSIONS;
+			$scope.entryDetailVariables = [];
+			$scope.variableSelected;
 
 			// used also in tests - to call $rootScope.$apply()
 			var initResolve;
 			$scope.initPromise = new Promise(function (resolve) {
 				initResolve = resolve;
 			});
+
+			datasetService.getDataset($scope.$resolve.datasetId)
+				.then(function (dataset) {
+					const entryDetails =
+						dataset.variables.filter(function (variable) {
+							return variable && variable.dataTypeId === 1110 &&
+								variable.variableType === 'ENTRY_DETAIL' &&
+								variable.systemVariable === false;
+						});
+					angular.forEach(entryDetails, function (variable) {
+						$scope.entryDetailVariables.push({
+							name: variable.alias ? variable.alias : variable.name, variableId: variable.termId
+						});
+					});
+				});
 
 			$scope.unitsDTOptions = DTOptionsBuilder.newOptions().withDOM('<"row"<"col-sm-12"tr>>');
 			$scope.entriesDTOptions = DTOptionsBuilder.newOptions().withDOM('<"row"<"col-sm-6"l><"col-sm-6"f>>' +
@@ -50,6 +67,9 @@
 			/** { "unitId": { "entryNo1": entryObj } } */
 			$scope.entryMap = {};
 
+			/** { "variableId": { "entryNo1": variableObj } } */
+			$scope.variableMap = {};
+
 			service.getPlantingPreparationData($scope.$resolve.searchComposite, $scope.$resolve.datasetId).then(function (data) {
 				return $scope.transformData(data);
 			}, onError);
@@ -74,6 +94,13 @@
 									$scope.entryMap[stock.unitId] = {};
 								}
 								$scope.entryMap[stock.unitId][entry.entryNo] = entry;
+							}
+
+							for (const entryDetailId of Object.keys(entry.entryDetailVariableId)) {
+								if (!$scope.variableMap[entryDetailId]) {
+									$scope.variableMap[entryDetailId] = {};
+								}
+								$scope.variableMap[entryDetailId][entry.entryNo] = entry.entryDetailVariableId[entryDetailId];
 							}
 						}
 					});
@@ -111,7 +138,29 @@
 			$scope.onWithdrawAllChecked = function (unitId, unit) {
 				if (unit.withdrawAll) {
 					unit.amountPerPacket = null;
+					unit.useEntryDetail = false;
+					unit.variableSelected = null;
 				}
+				$scope.revalidateEntries(unitId);
+			};
+
+			$scope.onUseEntryDetailChecked = function (unitId, unit) {
+				if (unit.useEntryDetail) {
+					unit.amountPerPacket = null;
+					unit.withdrawAll = false;
+				} else {
+					unit.variableSelected = null;
+				}
+
+				if (unit.useEntryDetail && $scope.size($scope.entryDetailVariables) === 0) {
+					showErrorMessage('', 'The study should have at least one numerical entry detail associated to enable this option.');
+				}
+
+				$scope.revalidateEntries(unitId);
+
+			};
+
+			$scope.onAmountPerPacketByEntryDetailChanged = function (unitId, unit) {
 				$scope.revalidateEntries(unitId);
 			};
 
@@ -150,6 +199,13 @@
 				if (unit.withdrawAll) {
 					return stock.availableBalance > 0;
 				}
+
+				if (unit.useEntryDetail) {
+					const value = unit.variableSelected ? $scope.variableMap[unit.variableSelected.variableId][entry.entryNo] : 0;
+					return value > 0 && //
+						value * entry.numberOfPackets <= stock.availableBalance;
+				}
+
 				return unit.amountPerPacket > 0 && //
 					unit.amountPerPacket * entry.numberOfPackets <= stock.availableBalance;
 			};
@@ -229,6 +285,8 @@
 						withdrawalsPerUnit[unit.unitName] = {
 							groupTransactions: unit.groupTransactions,
 							withdrawAllAvailableBalance: unit.withdrawAll,
+							withdrawUsingEntryDetail: unit.useEntryDetail,
+							entryDetailVariableId: unit.useEntryDetail ? unit.variableSelected.variableId : null,
 							withdrawalAmount: unit.amountPerPacket
 						};
 						return withdrawalsPerUnit;
@@ -246,7 +304,16 @@
 				};
 			}
 
-			$scope.withdrawalCalculator = function (amount, packets) {
+			$scope.withdrawalCalculator = function (unitId, entryNo, packets) {
+				const unit = $scope.units[unitId];
+				let amount = 0
+				if (unit) {
+					if (unit.useEntryDetail) {
+						amount = unit.variableSelected ? $scope.variableMap[unit.variableSelected.variableId][entryNo] : 0;
+					} else if (unit.amountPerPacket) {
+						amount = unit.amountPerPacket;
+					}
+				}
 				return (Math.round(isNaN(amount) ? 0 : amount * 1000) * packets) / 1000;
 			}
 

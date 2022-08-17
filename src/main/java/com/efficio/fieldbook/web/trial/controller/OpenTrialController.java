@@ -112,7 +112,8 @@ public class OpenTrialController extends BaseTrialController {
 
 	@ModelAttribute("staBrappUrl")
 	public String getStaBrappUrl() {
-		return this.fieldbookProperties.getStaBrappUrl();
+		final Optional<CropParameter> staBrappUrl = this.cropParameterService.getCropParameter(CropParameterEnum.STA_BRAPP_URL);
+		return staBrappUrl.isPresent()? staBrappUrl.get().getValue(): null;
 	}
 
 	@ModelAttribute("dsBrappUrl")
