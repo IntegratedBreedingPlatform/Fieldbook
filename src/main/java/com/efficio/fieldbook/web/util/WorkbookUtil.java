@@ -368,16 +368,23 @@ public class WorkbookUtil {
 		return list;
 	}
 
-	public static void manageExpDesignVariablesAndObs(final Workbook workbook, final Workbook tempWorkbook) {
-		// edit original factors to add/delete new/deleted variables based on tempWorkbook.getFactors
-		// create map of factors in tempWorkbook and factors in workbook
-		final Map<Integer, MeasurementVariable> tempFactorsMap = new HashMap<>();
+	public static void manageExpDesignVariables(final Workbook workbook, final Workbook tempWorkbook) {
+		// edit original factors, conditions and variates to add/delete new/deleted variables based on tempWorkbook.getFactors(), tempWorkbook.getConditions() and tempWorkbook.getVariates()
+		// create maps of factors, conditions and variates in workbook
+		final Map<Integer, MeasurementVariable> conditionsMap = new HashMap<>();
 		final Map<Integer, MeasurementVariable> factorsMap = new HashMap<>();
+		final Map<Integer, MeasurementVariable> varietiesMap = new HashMap<>();
 		final Map<Integer, StandardVariable> expDesignVariablesMap = new HashMap<>();
 
-		if (tempWorkbook.getFactors() != null) {
-			for (final MeasurementVariable var : tempWorkbook.getFactors()) {
-				tempFactorsMap.put(var.getTermId(), var);
+		if (workbook.getConditions() != null) {
+			for (final MeasurementVariable var : workbook.getConditions()) {
+				conditionsMap.put(var.getTermId(), var);
+			}
+		}
+
+		if (workbook.getVariates() != null) {
+			for (final MeasurementVariable var : workbook.getVariates()) {
+				varietiesMap.put(var.getTermId(), var);
 			}
 		}
 
@@ -400,14 +407,25 @@ public class WorkbookUtil {
 			}
 		}
 
-		for (final MeasurementVariable var : workbook.getFactors()) {
-			if (tempFactorsMap.get(var.getTermId()) == null && var.getOperation().equals(Operation.UPDATE)) {
-				var.setOperation(Operation.DELETE);
+		for (final MeasurementVariable var : workbook.getEntryDetails()) {
+			if (factorsMap.get(var.getTermId()) == null) {
+				workbook.getFactors().add(var);
 			}
 		}
 
-		// copy observations generated from experimental design
-		workbook.setObservations(tempWorkbook.getObservations());
+		for (final MeasurementVariable var : tempWorkbook.getVariates()) {
+			if (varietiesMap.get(var.getTermId()) == null) {
+				var.setOperation(Operation.ADD);
+				workbook.getVariates().add(var);
+			}
+		}
+
+		for (final MeasurementVariable var : tempWorkbook.getConditions()) {
+			if (conditionsMap.get(var.getTermId()) == null) {
+				var.setOperation(Operation.ADD);
+				workbook.getConditions().add(var);
+			}
+		}
 	}
 
 	public static Map<Integer, MeasurementVariable> createVariableList(
