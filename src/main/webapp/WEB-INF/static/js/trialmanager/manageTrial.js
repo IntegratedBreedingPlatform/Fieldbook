@@ -1000,11 +1000,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 							return showErrorMessage('', geoReferenceViewNotAvailableError);
 						}
 					} else {
-						instances = datasetInstances.filter((instance) => instance.hasFieldLayout);
-						if (!instances || !instances.length) {
-							return showErrorMessage('', noLayoutError);
-						}
-						instances = instances.filter((instance) => !instance.hasGeoJSON)
+						instances = datasetInstances.filter((instance) => !instance.hasGeoJSON)
 						if (!instances.length) {
 							return showErrorMessage('', geoReferenceCreateNotAvailableError);
 						}
