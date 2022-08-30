@@ -317,7 +317,7 @@ public class DesignImportController extends SettingsController {
 		final DesignImportData designImportData = this.userSelection.getDesignImportData();
 
 		final Set<MeasurementVariable> measurementVariables = this.designImportService
-				.getDesignMeasurementVariables(workbook, designImportData, false);
+				.getDesignMeasurementVariables(designImportData, false);
 
 		model.addAttribute("measurementVariables", measurementVariables);
 
@@ -508,46 +508,23 @@ public class DesignImportController extends SettingsController {
 
 			this.initializeBasicUserSelectionLists();
 
-			final Dataset dataset = (Dataset) SettingsUtil.convertPojoToXmlDataSet(this.fieldbookMiddlewareService, this.userSelection.getStudyName(), this.userSelection,
-				null, this.contextUtil.getCurrentProgramUUID());
-
-			final Workbook workbook = SettingsUtil.convertXmlDatasetToWorkbook(dataset, this.userSelection.getExpDesignParams(),
-				this.userSelection.getExpDesignVariables(),	this.fieldbookMiddlewareService, this.userSelection.getExperimentalDesignVariables(),
-				this.contextUtil.getCurrentProgramUUID());
-
-			workbook.setStudyDetails(this.userSelection.getWorkbook().getStudyDetails());
 			this.userSelection.setMeasurementRowList(null);
 			this.userSelection.getWorkbook().setOriginalObservations(null);
 			this.userSelection.getWorkbook().setObservations(null);
-
-			this.assignOperationOnExpDesignVariables(workbook.getConditions());
-
-			workbook.setOriginalObservations(this.userSelection.getWorkbook().getOriginalObservations());
-			workbook.setTrialObservations(this.userSelection.getWorkbook().getTrialObservations());
-			final int trialDatasetId = this.userSelection.getWorkbook().getTrialDatasetId();
-			final int measurementDatasetId = this.userSelection.getWorkbook().getMeasurementDatesetId();
-			workbook.setTrialDatasetId(trialDatasetId);
-			workbook.setMeasurementDatesetId(measurementDatasetId);
-
-			final List<MeasurementVariable> variablesForEnvironment = new ArrayList<>();
-			variablesForEnvironment.addAll(workbook.getTrialVariables());
-
-			final List<MeasurementRow> trialEnvironmentValues = WorkbookUtil.createMeasurementRowsFromEnvironments(generateDesignInput.getInstanceInfo().getInstances(), variablesForEnvironment,
-				this.userSelection.getExpDesignParams());
-			workbook.setTrialObservations(trialEnvironmentValues);
-
-			this.userSelection.setWorkbook(workbook);
+			this.userSelection.getWorkbook().setMeasurementDatasetVariables(null);
+			this.userSelection.getWorkbook().getNonTrialFactors().clear();
 
 			this.userSelection.setTrialEnvironmentValues(this.convertToValueReference(generateDesignInput.getInstanceInfo().getInstances()));
 
-			WorkbookUtil.manageExpDesignVariablesAndObs(this.userSelection.getWorkbook(), this.userSelection.getTemporaryWorkbook());
-			WorkbookUtil.addMeasurementDataToRowsExp(this.userSelection.getWorkbook().getFactors(), this.userSelection.getWorkbook().getObservations(), false, this.ontologyService,
-				this.fieldbookService, this.contextUtil.getCurrentProgramUUID());
-			WorkbookUtil.addMeasurementDataToRowsExp(this.userSelection.getWorkbook().getVariates(), this.userSelection.getWorkbook().getObservations(), true, this.ontologyService,
-				this.fieldbookService, this.contextUtil.getCurrentProgramUUID());
+			WorkbookUtil.manageExpDesignVariables(this.userSelection.getWorkbook(), this.userSelection.getTemporaryWorkbook());
 
-			this.addVariablesFromTemporaryWorkbookToWorkbook(this.userSelection);
-			this.updateObservationsFromTemporaryWorkbookToWorkbook(this.userSelection);
+			//Fix Observation. Adding all workbook variables.
+			List<MeasurementRow>  measurementRows = this.designImportService.generateDesign(this.userSelection.getWorkbook(), this.userSelection.getDesignImportData(), instanceInfo, false, this.generateAdditionalParams(startingEntryNo, startingPlotNo));
+			this.userSelection.getWorkbook().setObservations(measurementRows);
+
+			this.userSelection.getWorkbook().setExpDesignVariables(this.userSelection.getTemporaryWorkbook().getExpDesignVariables());
+			this.userSelection.getWorkbook().setTrialObservations(this.userSelection.getTemporaryWorkbook().getTrialObservations());
+
 
 			this.fieldbookMiddlewareService.saveExperimentalDesign(this.userSelection.getWorkbook(), this.getCurrentProject().getUniqueID(), this.getCurrentProject().getCropType());
 			resultsMap.put(DesignImportController.IS_SUCCESS, 1);
@@ -638,7 +615,7 @@ public class DesignImportController extends SettingsController {
 
 		workbook.setObservations(measurementRows);
 
-		measurementVariables = this.designImportService.getDesignMeasurementVariables(workbook, designImportData, false);
+		measurementVariables = this.designImportService.getDesignMeasurementVariables(designImportData, false);
 
 		workbook.setMeasurementDatasetVariables(new ArrayList<>(measurementVariables));
 

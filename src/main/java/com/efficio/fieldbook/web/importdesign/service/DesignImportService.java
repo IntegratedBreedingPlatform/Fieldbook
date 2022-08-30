@@ -22,7 +22,7 @@ public interface DesignImportService {
 	List<MeasurementRow> generateDesign(Workbook workbook, DesignImportData designImportData, InstanceInfo instanceInfo,
 			boolean isPreview, Map<String, Integer> additionalParams) throws DesignValidationException;
 
-	Set<MeasurementVariable> getDesignMeasurementVariables(Workbook workbook, DesignImportData designImportData, boolean isPreview);
+	Set<MeasurementVariable> getDesignMeasurementVariables(DesignImportData designImportData, boolean isPreview);
 
 	Set<StandardVariable> getDesignRequiredStandardVariables(Workbook workbook, DesignImportData designImportData);
 

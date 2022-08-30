@@ -213,7 +213,7 @@ public class DesignImportServiceImpl implements DesignImportService {
 	}
 
 	@Override
-	public Set<MeasurementVariable> getDesignMeasurementVariables(final Workbook workbook, final DesignImportData designImportData,
+	public Set<MeasurementVariable> getDesignMeasurementVariables(final DesignImportData designImportData,
 		final boolean isPreview) {
 
 		final Set<MeasurementVariable> measurementVariables = new LinkedHashSet<>();
@@ -232,11 +232,6 @@ public class DesignImportServiceImpl implements DesignImportService {
 				}
 			}
 		}
-
-		// Add the variates from the added traits in workbook
-		measurementVariables.addAll(workbook.getVariates());
-
-		measurementVariables.addAll(workbook.getFactors());
 
 		// Add the germplasm factors that exist from csv file header
 		this.extractMeasurementVariable(measurementVariables, PhenotypicType.GERMPLASM, mappedHeaders);
