@@ -379,7 +379,7 @@
 			function renderCategoricalValue(value, columnData) {
 				var displayValue = '';
 
-				if (columnData.possibleValues) {
+				if (value && columnData.possibleValues) {
 					var possibleValue = columnData.possibleValuesByName[value] || columnData.possibleValuesById[value];
 					displayValue = possibleValue.description;
 				}
