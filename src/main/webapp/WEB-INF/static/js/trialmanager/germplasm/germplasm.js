@@ -677,7 +677,8 @@
 						columnData.index = index;
 
 						function isObservationEditable() {
-							return columnData.termId !== 8230 && !studyStateService.hasGeneratedDesign();
+							return columnData.termId !== 8230 &&
+								(!columnData.systemVariable || (columnData.systemVariable && !studyStateService.hasGeneratedDesign()));
 						}
 
 						function getClassName() {
