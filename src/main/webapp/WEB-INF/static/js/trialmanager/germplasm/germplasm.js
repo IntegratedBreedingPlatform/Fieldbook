@@ -19,8 +19,7 @@
 				$scope.entryDetails = TrialManagerDataService.settings.entryDetails;
 				$scope.isLockedStudy = TrialManagerDataService.isLockedStudy;
 				$scope.trialMeasurement = {hasMeasurement: studyStateService.hasGeneratedDesign()};
-				$scope.isHideDelete = studyStateService.hasGeneratedDesign();
-				$scope.addVariable = !studyStateService.hasGeneratedDesign() && TrialManagerDataService.applicationData.germplasmListSelected;
+				$scope.addVariable = TrialManagerDataService.applicationData.germplasmListSelected;
 				$scope.showAddColumns = TrialManagerDataService.applicationData.germplasmListSelected;
 				$scope.selectedItems = [];
 				$scope.numberOfEntries = 0;
@@ -1299,7 +1298,13 @@
 								studyAlias: variableName
 							}).then(function () {
 								showSuccessfulMessage('', $.germplasmMessages.addVariableSuccess.replace("{0}", variableName));
-							})
+							}, function (response) {
+								if (response.errors && response.errors.length) {
+									showErrorMessage('', response.errors[0].message);
+								} else {
+									showErrorMessage('', ajaxGenericErrorMsg);
+								}
+							});
 						});
 					});
 				};
