@@ -270,8 +270,10 @@
 				}
 			};
 		})
-		.directive('selectStandardVariable', ['VARIABLE_SELECTION_MODAL_SELECTOR', 'VARIABLE_SELECTED_EVENT_TYPE', 'TrialSettingsManager', 'TrialManagerDataService',
-			function(VARIABLE_SELECTION_MODAL_SELECTOR, VARIABLE_SELECTED_EVENT_TYPE, TrialSettingsManager, TrialManagerDataService) {
+		.directive('selectStandardVariable', ['VARIABLE_SELECTION_MODAL_SELECTOR', 'VARIABLE_SELECTED_EVENT_TYPE', 'VARIABLE_TYPES',
+			'TrialSettingsManager', 'TrialManagerDataService', 'studyStateService',
+			function(VARIABLE_SELECTION_MODAL_SELECTOR, VARIABLE_SELECTED_EVENT_TYPE, VARIABLE_TYPES,
+					 TrialSettingsManager, TrialManagerDataService, studyStateService) {
 				return {
 					restrict: 'A',
 					scope: {
@@ -332,7 +334,8 @@
 									return scope.selectedvariables;
 								},
 								callback: scope.selectVariableCallback,
-								onHideCallback: scope.onHideCallback
+								onHideCallback: scope.onHideCallback,
+								preventAddSystemVariable: attrs.variableType === VARIABLE_TYPES.ENTRY_DETAIL.toString() && studyStateService.hasGeneratedDesign(),
 							};
 
 							$(VARIABLE_SELECTION_MODAL_SELECTOR).off(VARIABLE_SELECTED_EVENT_TYPE);
