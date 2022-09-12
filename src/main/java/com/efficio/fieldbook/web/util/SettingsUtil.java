@@ -1185,7 +1185,7 @@ public class SettingsUtil {
 			final long count = fieldbookMiddlewareService.countStocks(datasetId);
 			return String.valueOf(count);
 		} else if (AppConstants.SPFLD_HAS_FIELDMAP.getString().equals(specialFieldLabel)) {
-			return fieldbookMiddlewareService.hasFieldMap(datasetId) ? "Yes" : "No";
+			return fieldbookMiddlewareService.hasFieldLayout(datasetId) ? "Yes" : "No";
 		} else if (AppConstants.SPFLD_COUNT_VARIATES.getString().equals(specialFieldLabel)) {
 			final List<Integer> variateIds = new ArrayList<>();
 			if (workbook.getVariates() != null) {
