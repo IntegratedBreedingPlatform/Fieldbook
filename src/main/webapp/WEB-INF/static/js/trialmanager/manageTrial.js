@@ -10,7 +10,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 		'ui.router', 'ui.bootstrap', 'ngLodash', 'ngResource', 'ngStorage', 'datatables', 'datatables.buttons', 'datatables.colreorder',
 		'ngSanitize', 'ui.select', 'ngMessages', 'blockUI', 'datasets-api', 'auth', 'bmsAuth', 'studyState',
 		'export-study', 'import-study', 'create-sample', 'derived-variable', 'importObservationsApp', 'germplasm-study-source',
-		'germplasmDetailsModule', 'breedingMethodModule', 'pascalprecht.translate']);
+		'germplasmDetailsModule', 'pascalprecht.translate']);
 
 	manageTrialApp.config(['$httpProvider', function ($httpProvider) {
 		$httpProvider.interceptors.push('authInterceptor');

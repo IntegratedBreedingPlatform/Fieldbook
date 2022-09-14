@@ -1,7 +1,7 @@
 (function () {
 	'use strict';
 
-	const breedingMethodModule = angular.module('breedingMethodModule', ['ui.bootstrap']);
+	const breedingMethodModule = angular.module('manageTrialApp');
 	breedingMethodModule.factory('breedingMethodModalService', ['$uibModal', '$rootScope', function ($uibModal, $rootScope) {
 		const breedingMethodModalService = {};
 		breedingMethodModalService.openBreedingMethodModal = function (breedingMethodId) {
