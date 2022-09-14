@@ -787,14 +787,14 @@
 									return '';
 								}
 							});
-						} else if (columnData.termId === 8843) {
+						} else if (columnData.termId === 8254) {
 							// BREEDING_METHOD_ABBR
 							columnsDef.push({
 								targets: columns.length - 1,
 								orderable: false,
 								createdCell: function (td, cellData, rowData, rowIndex, colIndex) {
 									$(td).val("");
-									var value = rowData.properties['8843'].value;
+									var value = rowData.properties['8254'].value;
 									if (value) {
 										$(td).append($compile('<a class="gid-link" href="javascript: void(0)" ' +
 											'ng-click="openBreedingMethodModal(\'' + rowData.breedingMethodId + '\')">' + value + '</a>')($scope));
