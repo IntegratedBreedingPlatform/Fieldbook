@@ -797,7 +797,7 @@
 									var value = rowData.properties['8254'].value;
 									if (value) {
 										$(td).append($compile('<a class="gid-link" href="javascript: void(0)" ' +
-											'ng-click="openBreedingMethodModal(\'' + rowData.breedingMethodId + '\')">' + value + '</a>')($scope));
+											'ng-click="openBreedingMethodModal(\'' + value + '\')">' + value + '</a>')($scope));
 									}
 								},
 								render: function (data, type, full, meta) {
