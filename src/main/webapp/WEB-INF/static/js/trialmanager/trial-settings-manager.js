@@ -231,7 +231,8 @@ window.TrialSettingsManager = (function() {
 		this._variableSelection = new window.BMS.NurseryManager.VariableSelection({
 			uniqueVariableError: this._translations.uniqueVariableError,
 			variableSelectedMessage: this._translations.variableSelectedMessage,
-			invalidAliasError: this._translations.invalidAliasError
+			invalidAliasError: this._translations.invalidAliasError,
+			cannotAddSystemVariableMessage: this._translations.cannotAddSystemVariableMessage
 		});
 
 		return this._variableSelection;
@@ -308,6 +309,7 @@ window.TrialSettingsManager = (function() {
 					callback: params.callback,
                     onHideCallback: params.onHideCallback,
                     options: params.options,
+					preventAddSystemVariable: params.preventAddSystemVariable
 				});
 			});
 
@@ -324,6 +326,7 @@ window.TrialSettingsManager = (function() {
 				callback: params.callback,
                 onHideCallback: params.onHideCallback,
                 options: params.options,
+				preventAddSystemVariable: params.preventAddSystemVariable
 			});
 		}
 	};

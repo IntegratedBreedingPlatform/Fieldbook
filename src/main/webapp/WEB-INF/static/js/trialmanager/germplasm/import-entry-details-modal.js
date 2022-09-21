@@ -3,15 +3,16 @@
 
 	const module = angular.module('manageTrialApp');
 
-	module.controller('ImportEntryDetailsController', ['$scope', '$rootScope', 'studyContext', '$uibModalInstance',
-		function ($scope, $rootScope, studyContext, $uibModalInstance) {
+	module.controller('ImportEntryDetailsController', ['$scope', '$rootScope', 'studyContext', '$uibModalInstance', 'studyStateService',
+		function ($scope, $rootScope, studyContext, $uibModalInstance, studyStateService) {
 
 			$scope.url = '/ibpworkbench/controller/jhipster#/import-entry-details?restartApplication' +
 				'&cropName=' + studyContext.cropName +
 				'&programUUID=' + studyContext.programId +
 				'&studyId=' + studyContext.studyId +
 				'&selectedProjectId=' + studyContext.selectedProjectId +
-				'&loggedInUserId=' + studyContext.loggedInUserId;
+				'&loggedInUserId=' + studyContext.loggedInUserId +
+				'&hasGeneratedDesign=' + studyStateService.hasGeneratedDesign();
 
 			window.closeModal = function() {
 				$uibModalInstance.close(null);

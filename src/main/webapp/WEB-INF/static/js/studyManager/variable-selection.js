@@ -225,6 +225,7 @@ BMS.NurseryManager.VariableSelection = (function($) {
 		this._callback = groupData.callback;
 		this._onHideCallback = groupData.onHideCallback;
 		this._excludedProperties = groupData.excludedProperties || [];
+		this._preventAddSystemVariable = groupData.preventAddSystemVariable;
 
 		if (groupData.options) {
 			var options = groupData.options;
@@ -417,10 +418,12 @@ BMS.NurseryManager.VariableSelection = (function($) {
 			iconContainer = selectButton.children('.glyphicon'),
 			generalErrorMessage = this._translations.generalAjaxError,
 			variableSelectedMessage = this._translations.variableSelectedMessage,
+			cannotAddSystemVariableMessage = this._translations.cannotAddSystemVariableMessage,
 			variableName,
 			selectedVariable,
 			variableId,
-			callback = this._callback;
+			callback = this._callback,
+			preventAddSystemVariable = this._preventAddSystemVariable;
 
 		// If the user is in the middle of entering an alias, close that before proceeding
 		if (container.find(aliasVariableInputSelector).length) {
@@ -437,6 +440,11 @@ BMS.NurseryManager.VariableSelection = (function($) {
 				console.error('Failed to find variable with name \'' + variableName + '\' in list of variables on property with id \' ' +
 					this._selectedProperty.propertyId + '\'.');
 			}
+		}
+
+		if (selectedVariable.isSystem && preventAddSystemVariable) {
+			showErrorMessage(null, cannotAddSystemVariableMessage);
+			return;
 		}
 
 		// validate alias that come from ontology too
