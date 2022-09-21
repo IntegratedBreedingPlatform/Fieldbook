@@ -690,9 +690,8 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 
 			final Integer trueGdate = !"".equals(harvestDate.trim()) ? Integer.valueOf(harvestDate) : gDate;
 			final Germplasm germplasm;
-			germplasm =
-				new Germplasm(gid, importedGermplasm.getBreedingMethodId(), importedGermplasm.getGnpgs(), importedGermplasm.getGpid1(),
-					importedGermplasm.getGpid2(), lgid, locationId, trueGdate, preferredName);
+			germplasm = new Germplasm(gid, importedGermplasm.getGnpgs(), importedGermplasm.getGpid1(), importedGermplasm.getGpid2(), lgid, locationId,
+			trueGdate, 0, 0, 0, preferredName, null, new Method(importedGermplasm.getBreedingMethodId()));
 			final Integer mgid = importedGermplasm.getMgid() == null ? 0 : importedGermplasm.getMgid();
 			germplasm.setMgid(mgid);
 			germplasms.add(new ImmutablePair<>(germplasm, names));
