@@ -100,7 +100,7 @@ public class AdvancingSourceListFactoryTest {
         germplasm.setGpid1(401);
         germplasm.setGpid2(402);
         germplasm.setGnpgs(403);
-        germplasm.setMethodId(13);
+        germplasm.setMethod(new Method(13));
 
         germplasmList.add(germplasm);
         Mockito.when(this.fieldbookMiddlewareService.getGermplasms(Matchers.isA(List.class))).thenReturn(germplasmList);
@@ -200,7 +200,7 @@ public class AdvancingSourceListFactoryTest {
         germplasm.setGpid1(401);
         germplasm.setGpid2(402);
         germplasm.setGnpgs(403);
-        germplasm.setMethodId(14);
+        germplasm.setMethod(new Method(14));
 
         germplasmList.add(germplasm);
         Mockito.when(this.fieldbookMiddlewareService.getGermplasms(Matchers.isA(List.class))).thenReturn(germplasmList);
