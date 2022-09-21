@@ -523,7 +523,7 @@ public class CrossingServiceImplTest {
 		final Germplasm result = this.crossingService.createGermplasm(cross, harvestLocationId, harvestDate);
 
 		assertSame(existingGermplasm, result);
-		assertEquals(breedingMethodId, result.getMethodId().intValue());
+		assertEquals(breedingMethodId, result.getMethod().getMid().intValue());
 		assertEquals(20190101, result.getGdate().intValue());
 		assertEquals(harvestLocationId, result.getLocationId().intValue());
 		assertNotEquals(TEST_FEMALE_GID_1, result.getGpid1());
@@ -545,7 +545,7 @@ public class CrossingServiceImplTest {
 
 		verify(this.germplasmDataManager, times(0)).getGermplasmByGID(anyInt());
 
-		assertEquals(cross.getBreedingMethodId(), result.getMethodId());
+		assertEquals(cross.getBreedingMethodId(), result.getMethod().getMid());
 		assertEquals(20190101, result.getGdate().intValue());
 		assertEquals(harvestLocationId, result.getLocationId().intValue());
 		assertEquals(USER_ID, result.getCreatedBy());
