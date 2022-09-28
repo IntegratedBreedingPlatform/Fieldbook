@@ -761,7 +761,7 @@
 									newValue: newValue,
 									newCategoricalValueId: getCategoricalValueId($scope.nested.newValueBatchUpdate, $scope.nested.selectedVariableFilter),
 									observationUnitsSearchDTO: {
-										instanceId: $scope.nested.selectedEnvironment.instanceId,
+										instanceIds: getInstanceIds(),
 										draftMode: $scope.isPendingView,
 										filter: getFilter()
 									}
@@ -786,7 +786,7 @@
 							case 2:
 								// acceptDraftDataByVariable
 								var param = JSON.stringify({
-									instanceId: $scope.nested.selectedEnvironment.instanceId,
+									instanceIds: getInstanceIds(),
 									draftMode: $scope.isPendingView,
 									filter: getFilter()
 								});
@@ -961,7 +961,7 @@
 								url: datasetService.getObservationTableUrl(subObservationSet.id) + getPageQueryParameters(d),
 								data: JSON.stringify({
 									draw: d.draw,
-									instanceId: $scope.nested.selectedEnvironment.instanceId,
+									instanceIds: getInstanceIds(),
 									draftMode: $scope.isPendingView,
 									filter: getFilter()
 								}),
@@ -1943,6 +1943,10 @@
 			window.showFiles = function (observationUnitUUID, variableName) {
 				event.stopPropagation();
 				$scope.showFiles(observationUnitUUID, variableName);
+			}
+
+			function getInstanceIds() {
+				return $scope.nested.selectedEnvironment.instanceId ? [$scope.nested.selectedEnvironment.instanceId] : undefined;
 			}
 
 		}])

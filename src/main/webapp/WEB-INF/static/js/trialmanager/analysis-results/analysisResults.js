@@ -204,7 +204,7 @@
 									url: datasetService.getObservationTableUrl($scope.datasetId) + getPageQueryParameters(d),
 									data: JSON.stringify({
 										draw: d.draw,
-										instanceId: $scope.nested.selectedEnvironment.instanceId,
+										instanceIds: $scope.nested.selectedEnvironment.instanceId ? [$scope.nested.selectedEnvironment.instanceId] : undefined,
 										draftMode: $scope.isPendingView,
 										filter: getFilter()
 									}),
