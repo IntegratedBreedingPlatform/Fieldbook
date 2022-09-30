@@ -215,6 +215,12 @@
 
 			};
 
+			datasetService.deleteVariableValues = function (datasetId, observationUnitsSearch) {
+				var request = $http.post(BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/observation-units/filter/delete-value', observationUnitsSearch);
+				return request.then(successHandler, failureHandler);
+
+			};
+
 			datasetService.getAllVariables = function (datasetId) {
 				var request = $http.get(BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/variables');
 				return request.then(successHandler, failureHandler);
