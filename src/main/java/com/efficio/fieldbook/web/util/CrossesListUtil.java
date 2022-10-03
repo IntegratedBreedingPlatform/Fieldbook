@@ -2,8 +2,8 @@
 package com.efficio.fieldbook.web.util;
 
 import org.apache.commons.lang3.StringUtils;
-import org.generationcp.commons.parsing.pojo.ImportedCross;
-import org.generationcp.commons.parsing.pojo.ImportedGermplasmParent;
+import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
+import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasmParent;
 import org.generationcp.middleware.constant.ColumnLabels;
 import org.generationcp.middleware.manager.api.GermplasmDataManager;
 import org.generationcp.middleware.manager.api.OntologyDataManager;

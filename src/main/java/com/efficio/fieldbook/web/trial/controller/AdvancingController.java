@@ -28,19 +28,18 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.generationcp.commons.constant.AppConstants;
-import org.generationcp.commons.parsing.pojo.ImportedGermplasm;
-import org.generationcp.commons.pojo.AdvanceGermplasmChangeDetail;
-import org.generationcp.commons.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
+import org.generationcp.middleware.ruleengine.pojo.AdvanceGermplasmChangeDetail;
+import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
 import org.generationcp.commons.pojo.AdvancingSourceList;
-import org.generationcp.commons.ruleengine.RuleException;
-import org.generationcp.commons.ruleengine.generator.SeedSourceGenerator;
+import org.generationcp.middleware.ruleengine.RuleException;
+import org.generationcp.middleware.ruleengine.generator.SeedSourceGenerator;
 import org.generationcp.commons.util.DateUtil;
 import org.generationcp.middleware.constant.ColumnLabels;
 import org.generationcp.middleware.domain.dms.Study;
 import org.generationcp.middleware.domain.dms.ValueReference;
 import org.generationcp.middleware.domain.etl.MeasurementVariable;
 import org.generationcp.middleware.domain.etl.Workbook;
-import org.generationcp.middleware.domain.oms.StandardVariableReference;
 import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.domain.ontology.Property;
 import org.generationcp.middleware.domain.ontology.Scale;
@@ -114,6 +113,9 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 	private static final String LIST_SIZE = "listSize";
 
 	private static final String MESSAGE = "message";
+
+	// TODO: move to a global app constants
+	private static final String METHOD_TYPE_GEN = "GEN";
 
 	/**
 	 * The fieldbook middleware service.
@@ -385,7 +387,7 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 		final Integer sourceGpid1, final Integer sourceGpid2, final Method sourceMethod, final Method breedingMethod) {
 
 		if ((sourceMethod != null && sourceMethod.getMtype() != null
-			&& AppConstants.METHOD_TYPE_GEN.getString().equals(sourceMethod.getMtype())) || sourceGnpgs < 0 &&
+			&& METHOD_TYPE_GEN.equals(sourceMethod.getMtype())) || sourceGnpgs < 0 &&
 			(sourceGpid1 != null && sourceGpid1.equals(0)) && (sourceGpid2 != null && sourceGpid2.equals(0))) {
 
 			germplasm.setGpid1(sourceGid);

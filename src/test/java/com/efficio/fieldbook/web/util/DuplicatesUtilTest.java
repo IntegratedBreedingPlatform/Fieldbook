@@ -4,9 +4,9 @@ package com.efficio.fieldbook.web.util;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.generationcp.commons.parsing.pojo.ImportedCross;
+import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
 import org.generationcp.commons.parsing.pojo.ImportedCrossesList;
-import org.generationcp.commons.parsing.pojo.ImportedGermplasmParent;
+import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasmParent;
 import org.generationcp.middleware.util.Debug;
 import org.junit.Assert;
 import org.junit.Test;
