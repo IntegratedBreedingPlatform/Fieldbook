@@ -739,10 +739,14 @@
 					}
 				}
 
+				const filter = getFilter();
+				if($scope.nested.selectedBatchAction.id === 3) {
+					filter.variableHasValue = true;
+				}
 				var param = JSON.stringify({
 					instanceId: $scope.nested.selectedEnvironment.instanceId,
 					draftMode: $scope.isPendingView,
-					filter: getFilter()
+					filter: filter
 				});
 				datasetService.countFilteredPhenotypesAndInstances(subObservationSet.id, param).then(function (response) {
 					var messages = "This action will update " + response.totalFilteredPhenotypes + " observations in "
@@ -889,10 +893,12 @@
 			}
 
 			function deleteObservationsValues() {
+				const filter = getFilter();
+				filter.variableHasValue = true;
 				var param = JSON.stringify({
 					instanceId: $scope.nested.selectedEnvironment.instanceId,
 					draftMode: $scope.isPendingView,
-					filter: getFilter()
+					filter: filter
 				});
 				datasetService.deleteVariableValues(subObservationSet.id, param).then(function () {
 					if ($scope.isPendingView) {
@@ -920,6 +926,7 @@
 					byOutOfSync: $scope.selectedStatusFilter === "4" || null,
 					byOverwritten: $scope.selectedStatusFilter === "5" || null,
 					variableId: variableId,
+					variableHasValue: null,
 					filterColumns: [],
 					filteredValues: $scope.columnsObj.columns.reduce(function (map, column) {
 						var columnData = column.columnData;
