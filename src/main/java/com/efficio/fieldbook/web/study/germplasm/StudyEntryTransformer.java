@@ -1,6 +1,6 @@
 package com.efficio.fieldbook.web.study.germplasm;
 
-import org.generationcp.commons.parsing.pojo.ImportedGermplasm;
+import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
 import org.generationcp.commons.spring.util.ContextUtil;
 import org.generationcp.middleware.domain.dms.Enumeration;
 import org.generationcp.middleware.domain.oms.TermId;

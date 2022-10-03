@@ -1,7 +1,7 @@
 
 package com.efficio.fieldbook.web.naming.expression.dataprocessor;
 
-import org.generationcp.commons.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
 import com.google.common.collect.Lists;
 import org.generationcp.middleware.data.initializer.MeasurementDataTestDataInitializer;
 import org.generationcp.middleware.data.initializer.MeasurementVariableTestDataInitializer;

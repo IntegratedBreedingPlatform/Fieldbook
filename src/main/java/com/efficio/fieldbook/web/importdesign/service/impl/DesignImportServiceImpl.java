@@ -14,7 +14,7 @@ import com.efficio.fieldbook.web.util.ExpDesignUtil;
 import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
-import org.generationcp.commons.parsing.pojo.ImportedGermplasm;
+import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
 import org.generationcp.commons.spring.util.ContextUtil;
 import org.generationcp.middleware.domain.dms.Enumeration;
 import org.generationcp.middleware.domain.dms.PhenotypicType;

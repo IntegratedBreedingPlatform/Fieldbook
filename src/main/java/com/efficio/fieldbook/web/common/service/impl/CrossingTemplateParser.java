@@ -18,6 +18,8 @@ import org.generationcp.middleware.exceptions.MiddlewareQueryException;
 import org.generationcp.middleware.manager.api.StudyDataManager;
 import org.generationcp.middleware.pojos.Germplasm;
 import org.generationcp.middleware.pojos.Name;
+import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
+import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasmParent;
 import org.generationcp.middleware.service.api.study.StudyEntryDto;
 import org.generationcp.middleware.service.api.study.StudyEntryService;
 import org.generationcp.middleware.service.api.user.UserService;
@@ -198,7 +200,8 @@ public class CrossingTemplateParser extends AbstractExcelFileParser<ImportedCros
 			final Triple<String, Integer, List<Integer>> crossInfo = entryNumberToCrossInfoMap.get(cross.getEntryNumber());
 			if (femalePlotMap.containsKey(crossInfo.getMiddle())) {
 				final StudyEntryDto femaleCrossParent = femalePlotMap.get(crossInfo.getMiddle());
-				final ImportedGermplasmParent femaleParent = new ImportedGermplasmParent(femaleCrossParent.getGid(), femaleCrossParent.getDesignation(), crossInfo.getMiddle(),
+				final ImportedGermplasmParent
+					femaleParent = new ImportedGermplasmParent(femaleCrossParent.getGid(), femaleCrossParent.getDesignation(), crossInfo.getMiddle(),
 					femaleStudyName);
 				cross.setFemaleParent(femaleParent);
 			} else {

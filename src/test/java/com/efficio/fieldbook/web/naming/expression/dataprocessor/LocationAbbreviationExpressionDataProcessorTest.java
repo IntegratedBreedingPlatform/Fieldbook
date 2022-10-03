@@ -3,7 +3,7 @@ package com.efficio.fieldbook.web.naming.expression.dataprocessor;
 import com.efficio.fieldbook.util.FieldbookException;
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
 import com.google.common.collect.Lists;
-import org.generationcp.commons.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
 import org.generationcp.middleware.api.location.LocationService;
 import org.generationcp.middleware.domain.etl.MeasurementData;
 import org.generationcp.middleware.domain.etl.MeasurementRow;

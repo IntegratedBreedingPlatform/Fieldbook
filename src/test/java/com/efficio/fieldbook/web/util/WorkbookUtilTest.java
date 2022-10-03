@@ -10,7 +10,7 @@ import com.efficio.fieldbook.web.trial.bean.Instance;
 import com.google.common.base.Optional;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.generationcp.commons.data.initializer.ImportedGermplasmTestDataInitializer;
-import org.generationcp.commons.parsing.pojo.ImportedGermplasm;
+import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
 import org.generationcp.middleware.data.initializer.MeasurementRowTestDataInitializer;
 import org.generationcp.middleware.data.initializer.MeasurementVariableTestDataInitializer;
 import org.generationcp.middleware.data.initializer.StandardVariableTestDataInitializer;
@@ -39,7 +39,6 @@ import org.springframework.web.util.HtmlUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 

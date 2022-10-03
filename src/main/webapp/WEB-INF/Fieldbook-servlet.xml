@@ -382,21 +382,21 @@
 	<bean id="springAppContextProvider" class="org.generationcp.commons.util.SpringAppContextProvider" />
 
 	<bean
-		class="org.generationcp.commons.ruleengine.naming.expression.ComponentPostProcessor">
+		class="org.generationcp.middleware.ruleengine.naming.expression.ComponentPostProcessor">
 		<property name="ruleFactory" ref="ruleFactory" />
 		<property name="processCodeFactory" ref="processCodeFactory" />
 	</bean>
 
 	<bean id="ruleFactory"
-		class="org.generationcp.commons.ruleengine.ProcessCodeRuleFactory"
+		class="org.generationcp.middleware.ruleengine.ProcessCodeRuleFactory"
 		init-method="init" />
 
 	<bean id="processCodeFactory"
-		  class="org.generationcp.commons.ruleengine.naming.impl.ProcessCodeFactory"
+		  class="org.generationcp.middleware.ruleengine.naming.impl.ProcessCodeFactory"
 		  init-method="init" />
 
 	<bean id="ruleConfigProvider"
-		class="org.generationcp.commons.ruleengine.provider.PropertyFileRuleConfigurationProvider">
+		class="org.generationcp.middleware.ruleengine.provider.PropertyFileRuleConfigurationProvider">
 		<property name="ruleSequenceConfiguration">
 			<map>
 				<entry key="naming" value="${naming.rules}" />
@@ -419,21 +419,21 @@
         <constructor-arg name="factoryInstance" ref="dataProcessorFactory"/>
     </bean>
 
-	<bean id="germplasmNamingService" class="org.generationcp.commons.service.impl.GermplasmNamingServiceImpl" />
+	<bean id="germplasmNamingService" class="org.generationcp.middleware.ruleengine.naming.impl.GermplasmNamingServiceImpl" />
 
 	<bean id="ruleService"
-		class="org.generationcp.commons.ruleengine.impl.RulesServiceImpl" />
+		class="org.generationcp.middleware.ruleengine.impl.RulesServiceImpl" />
 	<!-- This component scan automatically registers all implementations of
 		the Rule interface into the Spring context. In conjunction with the RulesPostProcessor
 		above, this automatically populates the map in the RuleFactory -->
-	<context:component-scan base-package="org.generationcp.commons.ruleengine.naming" />
-	<context:component-scan base-package="org.generationcp.commons.ruleengine.naming.expression" />
-	<context:component-scan base-package="org.generationcp.commons.ruleengine.stockid" />
-	<context:component-scan base-package="org.generationcp.commons.ruleengine.cross" />
+	<context:component-scan base-package="org.generationcp.middleware.ruleengine.naming" />
+	<context:component-scan base-package="org.generationcp.middleware.ruleengine.naming.expression" />
+	<context:component-scan base-package="org.generationcp.middleware.ruleengine.stockid" />
+	<context:component-scan base-package="org.generationcp.middleware.ruleengine.cross" />
     <context:component-scan base-package="com.efficio.fieldbook.web.naming.expression.dataprocessor"/>
 
 	<!-- Singleton bean as there is nothing request specific in here. -->
-	<bean id="germplasmNamingProperties" class="org.generationcp.commons.service.GermplasmNamingProperties">
+	<bean id="germplasmNamingProperties" class="org.generationcp.middleware.ruleengine.service.GermplasmNamingProperties">
 		<property name="germplasmOriginStudiesDefault" value="${germplasm.origin.studies.default}"/>
 		<property name="germplasmOriginStudiesWheat" value="${germplasm.origin.studies.wheat}"/>
 		<property name="germplasmOriginStudiesMaize" value="${germplasm.origin.studies.maize}"/>
@@ -486,10 +486,10 @@
 		<aop:scoped-proxy />
 	</bean>
 
-	<bean id="seedSourceGenerator" class="org.generationcp.commons.ruleengine.generator.SeedSourceGenerator">
+	<bean id="seedSourceGenerator" class="org.generationcp.middleware.ruleengine.generator.SeedSourceGenerator">
 	</bean>
 
-    <bean id="breedersCrossIDGenerator" class="org.generationcp.commons.ruleengine.generator.BreedersCrossIDGenerator">
+    <bean id="breedersCrossIDGenerator" class="org.generationcp.middleware.ruleengine.generator.BreedersCrossIDGenerator">
 	</bean>
 
 	<bean id="pedigreeService" factory-bean="managerFactory"
