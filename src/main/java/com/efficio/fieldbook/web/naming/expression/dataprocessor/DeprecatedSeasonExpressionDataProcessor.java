@@ -18,8 +18,9 @@ import org.springframework.stereotype.Component;
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
 import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
 
+@Deprecated
 @Component
-public class SeasonExpressionDataProcessor implements ExpressionDataProcessor {
+public class DeprecatedSeasonExpressionDataProcessor implements DeprecatedExpressionDataProcessor {
 
 	@Override
 	public void processEnvironmentLevelData(final AdvancingSource source, final Workbook workbook, final AdvancingStudy nurseryInfo,

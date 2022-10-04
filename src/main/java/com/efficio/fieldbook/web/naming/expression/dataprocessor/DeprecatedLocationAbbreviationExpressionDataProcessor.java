@@ -15,8 +15,9 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
+@Deprecated
 @Component
-public class LocationAbbreviationExpressionDataProcessor implements ExpressionDataProcessor {
+public class DeprecatedLocationAbbreviationExpressionDataProcessor implements DeprecatedExpressionDataProcessor {
 
     @Resource
     private LocationService locationService;

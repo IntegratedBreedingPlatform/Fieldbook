@@ -11,9 +11,9 @@ import org.generationcp.middleware.domain.etl.Workbook;
 import org.generationcp.middleware.domain.oms.TermId;
 import org.springframework.stereotype.Component;
 
-
+@Deprecated
 @Component
-public class ChangeLocationExpressionDataProcessor implements ExpressionDataProcessor {
+public class DeprecatedChangeLocationExpressionDataProcessor implements DeprecatedExpressionDataProcessor {
 
     @Override
     public void processEnvironmentLevelData(AdvancingSource source, Workbook workbook, AdvancingStudy nurseryInfo, Study study) throws FieldbookException {

@@ -1,8 +1,8 @@
 package com.efficio.fieldbook.web.naming.impl;
 
 import com.efficio.fieldbook.util.FieldbookException;
-import com.efficio.fieldbook.web.naming.expression.dataprocessor.ExpressionDataProcessor;
-import com.efficio.fieldbook.web.naming.expression.dataprocessor.ExpressionDataProcessorFactory;
+import com.efficio.fieldbook.web.naming.expression.dataprocessor.DeprecatedExpressionDataProcessor;
+import com.efficio.fieldbook.web.naming.expression.dataprocessor.DeprecatedExpressionDataProcessorFactory;
 import com.efficio.fieldbook.web.trial.bean.AdvanceType;
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -39,6 +39,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Deprecated
 @Service
 @Transactional
 public class AdvancingSourceListFactory {
@@ -50,7 +51,7 @@ public class AdvancingSourceListFactory {
 	private ResourceBundleMessageSource messageSource;
 
 	@Resource
-	private ExpressionDataProcessorFactory dataProcessorFactory;
+	private DeprecatedExpressionDataProcessorFactory dataProcessorFactory;
 
 	@Resource
 	private StudyDataManager studyDataManager;
@@ -70,7 +71,7 @@ public class AdvancingSourceListFactory {
 		}
 
 		final AdvancingSource environmentLevel = new AdvancingSource();
-		final ExpressionDataProcessor dataProcessor = this.dataProcessorFactory.retrieveExecutorProcessor();
+		final DeprecatedExpressionDataProcessor dataProcessor = this.dataProcessorFactory.retrieveExecutorProcessor();
 
 		final AdvancingSourceList advancingSourceList = new AdvancingSourceList();
 
@@ -120,6 +121,7 @@ public class AdvancingSourceListFactory {
 				advancingSourceCandidate.setStudyType(workbook.getStudyDetails().getStudyType());
 
 				// Setting conditions for Breeders Cross ID
+				// NOTE: Conditions are variables from datasets, is not right to add conditions to each source
 				advancingSourceCandidate.setConditions(workbook.getConditions());
 				advancingSourceCandidate.setReplicationNumber(row.getMeasurementDataValue(TermId.REP_NO.getId()));
 

@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SelectionTraitExpressionDataProcessorTest {
+public class DeprecatedSelectionTraitDeprecatedExpressionDataProcessorTest {
 
     public static final String TEST_PROGRAM_UUID = "ABCD";
     public static final Integer TEST_TERM_ID = 1;
@@ -38,7 +38,7 @@ public class SelectionTraitExpressionDataProcessorTest {
     private ContextUtil contextUtil;
 
     @InjectMocks
-    private SelectionTraitExpressionDataProcessor unitUnderTest;
+    private DeprecatedSelectionTraitExpressionDataProcessor unitUnderTest;
 
     @Before
     public void setUp() throws Exception {
@@ -50,7 +50,7 @@ public class SelectionTraitExpressionDataProcessorTest {
         final Workbook workbook = WorkbookDataUtil.getTestWorkbook(10, StudyTypeDto.getNurseryDto());
         final String testValue = "test";
         final MeasurementVariable detail = new MeasurementVariable();
-        detail.setProperty(SelectionTraitExpressionDataProcessor.SELECTION_TRAIT_PROPERTY);
+        detail.setProperty(DeprecatedSelectionTraitExpressionDataProcessor.SELECTION_TRAIT_PROPERTY);
         detail.setPossibleValues(Lists.newArrayList(new ValueReference(1,"name","test")));
         detail.setValue(testValue);
         detail.setTermId(1);
@@ -74,7 +74,7 @@ public class SelectionTraitExpressionDataProcessorTest {
         final Workbook workbook = WorkbookDataUtil.getTestWorkbook(10, StudyTypeDto.getNurseryDto());
         final String testValue = "test";
         final MeasurementVariable detail = new MeasurementVariable();
-        detail.setProperty(SelectionTraitExpressionDataProcessor.SELECTION_TRAIT_PROPERTY);
+        detail.setProperty(DeprecatedSelectionTraitExpressionDataProcessor.SELECTION_TRAIT_PROPERTY);
         detail.setPossibleValues(Lists.newArrayList(new ValueReference(1,"name","test")));
         detail.setValue(testValue);
         detail.setTermId(1);

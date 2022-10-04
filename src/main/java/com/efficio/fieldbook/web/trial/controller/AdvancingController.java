@@ -195,6 +195,7 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 
 		try {
 
+			// NOTE: method choice represents if the user has check to use the same breeding method for each advance
 			if (advancingStudy.getMethodChoice() != null && !advancingStudy.getMethodChoice().isEmpty()) {
 				final Method method = this.fieldbookMiddlewareService.getMethodById(Integer.parseInt(advancingStudy.getBreedingMethodId()));
 				if ("GEN".equals(method.getMtype())) {
@@ -211,7 +212,9 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 			}
 
 			final List<AdvanceGermplasmChangeDetail> changeDetails = new ArrayList<>();
+			// NOTE: This is create a list of original germplasms -> aka source germplasms
 			final AdvancingSourceList list = this.getAdvancingSourceList(advancingStudy);
+			// NOTE: Finally, creates the advanced germplasms
 			final List<ImportedGermplasm> importedGermplasmList = this.createAdvanceList(advancingStudy, changeDetails, list);
 			final long id = DateUtil.getCurrentDate().getTime();
 			this.getPaginationListSelection().addAdvanceDetails(Long.toString(id), form);
@@ -372,6 +375,7 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 			germplasm.setMgid(source.getGermplasm().getMgid());
 		}
 
+		// NOTE: why is setting this trialInstanceNumber and replicatin to germplasm???
 		germplasm.setTrialInstanceNumber(source.getTrialInstanceNumber());
 		germplasm.setReplicationNumber(source.getReplicationNumber());
 		germplasm.setPlotNumber(source.getPlotNumber());

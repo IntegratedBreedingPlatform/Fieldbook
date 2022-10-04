@@ -13,13 +13,14 @@ import org.mockito.Mockito;
 
 import java.util.List;
 
-public class ChangeLocationExpressionDataProcessorTest {
+@Deprecated
+public class DeprecatedChangeLocationDeprecatedExpressionDataProcessorTest {
 
-    ChangeLocationExpressionDataProcessor changeLocationExpressionDataProcessor;
+    DeprecatedChangeLocationExpressionDataProcessor deprecatedChangeLocationExpressionDataProcessor;
 
     @Before
     public void setup(){
-        changeLocationExpressionDataProcessor = new ChangeLocationExpressionDataProcessor();
+        deprecatedChangeLocationExpressionDataProcessor = new DeprecatedChangeLocationExpressionDataProcessor();
     }
 
     @Test
@@ -28,7 +29,7 @@ public class ChangeLocationExpressionDataProcessorTest {
         final AdvancingStudy advancingStudy = new AdvancingStudy();
         advancingStudy.setHarvestLocationId("205");
 
-        changeLocationExpressionDataProcessor.processEnvironmentLevelData(source, null, advancingStudy, null);
+        deprecatedChangeLocationExpressionDataProcessor.processEnvironmentLevelData(source, null, advancingStudy, null);
         Mockito.verify(source).setHarvestLocationId(205);
     }
 
@@ -37,7 +38,7 @@ public class ChangeLocationExpressionDataProcessorTest {
         final AdvancingSource source = Mockito.mock(AdvancingSource.class);
         final AdvancingStudy advancingStudy = new AdvancingStudy();
 
-        changeLocationExpressionDataProcessor.processEnvironmentLevelData(source, null, advancingStudy, null);
+        deprecatedChangeLocationExpressionDataProcessor.processEnvironmentLevelData(source, null, advancingStudy, null);
         Mockito.verify(source).setHarvestLocationId(null);
     }
 
@@ -57,7 +58,7 @@ public class ChangeLocationExpressionDataProcessorTest {
         Mockito.when(source.getTrailInstanceObservation()).thenReturn(measurementRow);
 
 
-        changeLocationExpressionDataProcessor.processPlotLevelData(source, null);
+        deprecatedChangeLocationExpressionDataProcessor.processPlotLevelData(source, null);
 
         Mockito.verify(source).setHarvestLocationId(205);
     }
@@ -78,7 +79,7 @@ public class ChangeLocationExpressionDataProcessorTest {
         Mockito.when(source.getTrailInstanceObservation()).thenReturn(measurementRow);
 
 
-        changeLocationExpressionDataProcessor.processPlotLevelData(source, null);
+        deprecatedChangeLocationExpressionDataProcessor.processPlotLevelData(source, null);
 
         Mockito.verify(source, Mockito.never()).setHarvestLocationId(205);
     }
@@ -91,7 +92,7 @@ public class ChangeLocationExpressionDataProcessorTest {
         Mockito.when(source.getTrailInstanceObservation()).thenReturn(measurementRow);
 
 
-        changeLocationExpressionDataProcessor.processPlotLevelData(source, null);
+        deprecatedChangeLocationExpressionDataProcessor.processPlotLevelData(source, null);
 
         Mockito.verify(source, Mockito.never()).setHarvestLocationId(205);
     }

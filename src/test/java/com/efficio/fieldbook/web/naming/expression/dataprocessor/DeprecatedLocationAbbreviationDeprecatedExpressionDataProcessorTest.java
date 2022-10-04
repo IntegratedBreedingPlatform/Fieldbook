@@ -20,13 +20,13 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
-public class LocationAbbreviationExpressionDataProcessorTest {
+public class DeprecatedLocationAbbreviationDeprecatedExpressionDataProcessorTest {
 
     @Mock
     private LocationService locationService;
 
     @InjectMocks
-    private LocationAbbreviationExpressionDataProcessor locationAbbreviationExpressionDataProcessor;
+    private DeprecatedLocationAbbreviationExpressionDataProcessor deprecatedLocationAbbreviationExpressionDataProcessor;
 
 
     @Test
@@ -36,7 +36,7 @@ public class LocationAbbreviationExpressionDataProcessorTest {
         final AdvancingStudy advancingStudy = new AdvancingStudy();
         advancingStudy.setHarvestLocationAbbreviation("abbr");
 
-        locationAbbreviationExpressionDataProcessor.processEnvironmentLevelData(source, null, advancingStudy, null);
+        deprecatedLocationAbbreviationExpressionDataProcessor.processEnvironmentLevelData(source, null, advancingStudy, null);
         Mockito.verify(source).setLocationAbbreviation("abbr");
     }
 
@@ -46,7 +46,7 @@ public class LocationAbbreviationExpressionDataProcessorTest {
         final AdvancingSource source = Mockito.mock(AdvancingSource.class);
         final AdvancingStudy advancingStudy = new AdvancingStudy();
 
-        locationAbbreviationExpressionDataProcessor.processEnvironmentLevelData(source, null, advancingStudy, null);
+        deprecatedLocationAbbreviationExpressionDataProcessor.processEnvironmentLevelData(source, null, advancingStudy, null);
         Mockito.verify(source).setLocationAbbreviation(null);
 
     }
@@ -71,7 +71,7 @@ public class LocationAbbreviationExpressionDataProcessorTest {
         Mockito.when(source.getTrailInstanceObservation()).thenReturn(measurementRow);
         Mockito.when(locationService.getLocationByID(11)).thenReturn(location);
 
-        locationAbbreviationExpressionDataProcessor.processPlotLevelData(source, null);
+        deprecatedLocationAbbreviationExpressionDataProcessor.processPlotLevelData(source, null);
 
         Mockito.verify(source).setLocationAbbreviation("IND");
     }
@@ -91,7 +91,7 @@ public class LocationAbbreviationExpressionDataProcessorTest {
         Mockito.when(measurementRow.getDataList()).thenReturn(listMeasurementData);
         Mockito.when(source.getTrailInstanceObservation()).thenReturn(measurementRow);
 
-        locationAbbreviationExpressionDataProcessor.processPlotLevelData(source, null);
+        deprecatedLocationAbbreviationExpressionDataProcessor.processPlotLevelData(source, null);
 
         Mockito.verify(source, Mockito.never()).setLocationAbbreviation("IND");
     }
@@ -103,7 +103,7 @@ public class LocationAbbreviationExpressionDataProcessorTest {
         Mockito.when(measurementRow.getDataList()).thenReturn(null);
         Mockito.when(source.getTrailInstanceObservation()).thenReturn(measurementRow);
 
-        locationAbbreviationExpressionDataProcessor.processPlotLevelData(source, null);
+        deprecatedLocationAbbreviationExpressionDataProcessor.processPlotLevelData(source, null);
 
         Mockito.verify(source, Mockito.never()).setLocationAbbreviation("IND");
     }

@@ -7,7 +7,8 @@ import org.generationcp.middleware.domain.dms.Study;
 import org.generationcp.middleware.domain.etl.MeasurementRow;
 import org.generationcp.middleware.domain.etl.Workbook;
 
-public interface ExpressionDataProcessor {
+@Deprecated
+public interface DeprecatedExpressionDataProcessor {
 
     /**
      * Method that should be implemented if the expression needs environment level data. The required data

@@ -21,8 +21,9 @@ import org.springframework.stereotype.Component;
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
 import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
 
+@Deprecated
 @Component
-public class SelectionTraitExpressionDataProcessor implements ExpressionDataProcessor {
+public class DeprecatedSelectionTraitExpressionDataProcessor implements DeprecatedExpressionDataProcessor {
 
 	public static final String SELECTION_TRAIT_PROPERTY = "Selection Criteria";
 

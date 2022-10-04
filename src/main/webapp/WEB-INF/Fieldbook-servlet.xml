@@ -410,13 +410,16 @@
         automatic registration of component-scanned classes into a target factory / registry instead of having
         to have a separate class for each bean post processor
         -->
-    <bean id="postProcessorFactory" class="org.generationcp.middleware.spring.util.ComponentPostProcessorFactory"/>
+	<!--	TODO: deprecated! -->
+    <bean id="deprecatedPostProcessorFactory" class="org.generationcp.middleware.spring.util.ComponentPostProcessorFactory"/>
 
-    <bean id="dataProcessorFactory" class="com.efficio.fieldbook.web.naming.expression.dataprocessor.ExpressionDataProcessorFactory"/>
+	<!--	TODO: deprecated! -->
+    <bean id="deprecatedDataProcessorFactory" class="com.efficio.fieldbook.web.naming.expression.dataprocessor.DeprecatedExpressionDataProcessorFactory"/>
 
-    <bean factory-bean="postProcessorFactory" factory-method="generatePostProcessorFactory">
-        <constructor-arg name="componentClass" type="java.lang.Class" value="com.efficio.fieldbook.web.naming.expression.dataprocessor.ExpressionDataProcessor"/>
-        <constructor-arg name="factoryInstance" ref="dataProcessorFactory"/>
+	<!--	TODO: deprecated! -->
+    <bean factory-bean="deprecatedPostProcessorFactory" factory-method="generatePostProcessorFactory">
+        <constructor-arg name="componentClass" type="java.lang.Class" value="com.efficio.fieldbook.web.naming.expression.dataprocessor.DeprecatedExpressionDataProcessor"/>
+        <constructor-arg name="factoryInstance" ref="deprecatedDataProcessorFactory"/>
     </bean>
 
 	<bean id="germplasmNamingService" class="org.generationcp.middleware.ruleengine.naming.impl.GermplasmNamingServiceImpl" />

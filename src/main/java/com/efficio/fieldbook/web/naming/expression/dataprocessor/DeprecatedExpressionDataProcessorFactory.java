@@ -11,42 +11,43 @@ import org.generationcp.middleware.domain.etl.Workbook;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExpressionDataProcessorFactory implements ComponentFactory<ExpressionDataProcessor> {
+@Deprecated
+public class DeprecatedExpressionDataProcessorFactory implements ComponentFactory<DeprecatedExpressionDataProcessor> {
     
-    private List<ExpressionDataProcessor> dataProcessorList;
+    private List<DeprecatedExpressionDataProcessor> dataProcessorList;
 
-    public ExpressionDataProcessorFactory() {
+    public DeprecatedExpressionDataProcessorFactory() {
         dataProcessorList = new ArrayList<>();
     }
 
     @Override
-    public void addComponent(ExpressionDataProcessor expressionDataProcessor) {
-        dataProcessorList.add(expressionDataProcessor);
+    public void addComponent(DeprecatedExpressionDataProcessor deprecatedExpressionDataProcessor) {
+        dataProcessorList.add(deprecatedExpressionDataProcessor);
     }
 
-    public List<ExpressionDataProcessor> getDataProcessorList() {
+    public List<DeprecatedExpressionDataProcessor> getDataProcessorList() {
         return dataProcessorList;
     }
 
-    public ExpressionDataProcessor retrieveExecutorProcessor() {
+    public DeprecatedExpressionDataProcessor retrieveExecutorProcessor() {
         // DEV NOTE : in the future, we could possibly streamline the data processing flow by providing
         // a different processor that performs filtering. e.g. specify that some processors should only be used for
         // a target crop / program, etc
         return new ExecuteAllAvailableDataProcessor();
     }
     
-    class ExecuteAllAvailableDataProcessor implements ExpressionDataProcessor {
+    class ExecuteAllAvailableDataProcessor implements DeprecatedExpressionDataProcessor {
         @Override
         public void processEnvironmentLevelData(AdvancingSource source, Workbook workbook, AdvancingStudy nurseryInfo, Study study) throws FieldbookException {
-            for (ExpressionDataProcessor expressionDataProcessor : dataProcessorList) {
-                expressionDataProcessor.processEnvironmentLevelData(source, workbook, nurseryInfo, study);
+            for (DeprecatedExpressionDataProcessor deprecatedExpressionDataProcessor : dataProcessorList) {
+                deprecatedExpressionDataProcessor.processEnvironmentLevelData(source, workbook, nurseryInfo, study);
             }
         }
 
         @Override
         public void processPlotLevelData(AdvancingSource source, MeasurementRow row) throws FieldbookException {
-            for (ExpressionDataProcessor expressionDataProcessor : dataProcessorList) {
-                expressionDataProcessor.processPlotLevelData(source, row);
+            for (DeprecatedExpressionDataProcessor deprecatedExpressionDataProcessor : dataProcessorList) {
+                deprecatedExpressionDataProcessor.processPlotLevelData(source, row);
             }
         }
     }

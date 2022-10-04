@@ -63,6 +63,7 @@ public class NamingConventionServiceImpl implements NamingConventionService {
 	private ResourceBundleMessageSource messageSource;
 
 	@SuppressWarnings("unchecked")
+	@Deprecated
 	@Override
 	public void generateAdvanceListNames(final List<AdvancingSource> advancingSourceItems, final boolean checkForDuplicateName,
 		final List<ImportedGermplasm> germplasmList) throws MiddlewareQueryException, RuleException {
@@ -98,6 +99,7 @@ public class NamingConventionServiceImpl implements NamingConventionService {
 		timer.stop();
 	}
 
+	@Deprecated
 	protected void assignNames(final ImportedGermplasm germplasm) {
 		final List<Name> names = new ArrayList<>();
 
