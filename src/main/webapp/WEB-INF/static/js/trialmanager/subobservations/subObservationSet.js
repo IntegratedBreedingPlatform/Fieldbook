@@ -893,12 +893,10 @@
 			}
 
 			function deleteObservationsValues() {
-				const filter = getFilter();
-				filter.variableHasValue = true;
 				var param = JSON.stringify({
 					instanceId: $scope.nested.selectedEnvironment.instanceId,
 					draftMode: $scope.isPendingView,
-					filter: filter
+					filter: getFilter()
 				});
 				datasetService.deleteVariableValues(subObservationSet.id, param).then(function () {
 					if ($scope.isPendingView) {
