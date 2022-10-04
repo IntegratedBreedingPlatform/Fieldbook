@@ -410,7 +410,7 @@
         automatic registration of component-scanned classes into a target factory / registry instead of having
         to have a separate class for each bean post processor
         -->
-    <bean id="postProcessorFactory" class="org.generationcp.commons.spring.util.ComponentPostProcessorFactory"/>
+    <bean id="postProcessorFactory" class="org.generationcp.middleware.spring.util.ComponentPostProcessorFactory"/>
 
     <bean id="dataProcessorFactory" class="com.efficio.fieldbook.web.naming.expression.dataprocessor.ExpressionDataProcessorFactory"/>
 
