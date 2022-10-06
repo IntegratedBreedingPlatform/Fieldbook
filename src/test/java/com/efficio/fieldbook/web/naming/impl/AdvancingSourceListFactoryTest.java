@@ -9,7 +9,7 @@ import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import org.generationcp.commons.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
 import org.generationcp.commons.pojo.AdvancingSourceList;
 import org.generationcp.commons.spring.util.ContextUtil;
 import org.generationcp.middleware.domain.dms.Study;

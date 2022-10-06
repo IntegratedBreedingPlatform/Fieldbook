@@ -2,7 +2,7 @@
 package com.efficio.fieldbook.web.util;
 
 import com.google.common.collect.Lists;
-import org.generationcp.commons.parsing.pojo.ImportedCross;
+import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
 import org.generationcp.commons.parsing.pojo.ImportedCrossesList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

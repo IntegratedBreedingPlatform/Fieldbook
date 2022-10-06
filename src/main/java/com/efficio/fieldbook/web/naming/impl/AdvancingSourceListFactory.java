@@ -6,8 +6,8 @@ import com.efficio.fieldbook.web.naming.expression.dataprocessor.ExpressionDataP
 import com.efficio.fieldbook.web.trial.bean.AdvanceType;
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.generationcp.commons.parsing.pojo.ImportedGermplasm;
-import org.generationcp.commons.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
+import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
 import org.generationcp.commons.pojo.AdvancingSourceList;
 import org.generationcp.middleware.domain.dms.Study;
 import org.generationcp.middleware.domain.dms.ValueReference;

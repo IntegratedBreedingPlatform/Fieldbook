@@ -1,7 +1,7 @@
 
 package com.efficio.fieldbook.web.common.bean;
 
-import org.generationcp.commons.settings.CrossSetting;
+import org.generationcp.middleware.ruleengine.settings.CrossSetting;
 
 /**
  * Created by IntelliJ IDEA. User: Daniel Villafuerte

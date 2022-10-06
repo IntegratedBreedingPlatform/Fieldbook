@@ -12,11 +12,11 @@
 package com.efficio.fieldbook.web.naming.service;
 
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
-import org.generationcp.commons.parsing.pojo.ImportedCross;
-import org.generationcp.commons.parsing.pojo.ImportedGermplasm;
-import org.generationcp.commons.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
+import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
+import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
 import org.generationcp.commons.pojo.AdvancingSourceList;
-import org.generationcp.commons.ruleengine.RuleException;
+import org.generationcp.middleware.ruleengine.RuleException;
 import org.generationcp.middleware.domain.etl.Workbook;
 import org.generationcp.middleware.exceptions.MiddlewareQueryException;
 

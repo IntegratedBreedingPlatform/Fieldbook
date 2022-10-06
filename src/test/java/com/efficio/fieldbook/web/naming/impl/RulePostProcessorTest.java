@@ -1,9 +1,9 @@
 
 package com.efficio.fieldbook.web.naming.impl;
 
-import org.generationcp.commons.ruleengine.Rule;
-import org.generationcp.commons.ruleengine.RuleFactory;
-import org.generationcp.commons.ruleengine.RulesPostProcessor;
+import org.generationcp.middleware.ruleengine.Rule;
+import org.generationcp.middleware.ruleengine.RuleFactory;
+import org.generationcp.middleware.ruleengine.RulesPostProcessor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -13,7 +13,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.context.ContextConfiguration;
 
-import org.generationcp.commons.ruleengine.naming.rules.CountRule;
+import org.generationcp.middleware.ruleengine.naming.rules.CountRule;
 import com.efficio.fieldbook.web.trial.controller.CreateTrialController;
 
 /**

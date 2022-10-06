@@ -9,9 +9,9 @@ import javax.annotation.Resource;
 
 import org.junit.Assert;
 
-import org.generationcp.commons.ruleengine.RuleException;
-import org.generationcp.commons.ruleengine.RuleFactory;
-import org.generationcp.commons.ruleengine.service.RulesService;
+import org.generationcp.middleware.ruleengine.RuleException;
+import org.generationcp.middleware.ruleengine.RuleFactory;
+import org.generationcp.middleware.ruleengine.service.RulesService;
 import org.generationcp.middleware.exceptions.MiddlewareQueryException;
 import org.generationcp.middleware.manager.api.GermplasmDataManager;
 import org.generationcp.middleware.pojos.Method;
@@ -24,10 +24,10 @@ import org.mockito.Mockito;
 import org.springframework.context.MessageSource;
 
 import com.efficio.fieldbook.AbstractBaseIntegrationTest;
-import org.generationcp.commons.ruleengine.naming.rules.EnforceUniqueNameRule;
-import org.generationcp.commons.ruleengine.naming.rules.NamingRuleExecutionContext;
-import org.generationcp.commons.ruleengine.naming.service.ProcessCodeService;
-import org.generationcp.commons.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.naming.rules.EnforceUniqueNameRule;
+import org.generationcp.middleware.ruleengine.naming.rules.NamingRuleExecutionContext;
+import org.generationcp.middleware.ruleengine.naming.service.ProcessCodeService;
+import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
 
 @Ignore(value ="BMS-1571. Ignoring temporarily. Please fix the failures and remove @Ignore.")
 public class RuleServiceImplTest extends AbstractBaseIntegrationTest {

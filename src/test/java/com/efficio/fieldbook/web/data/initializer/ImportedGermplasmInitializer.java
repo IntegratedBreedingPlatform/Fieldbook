@@ -1,6 +1,6 @@
 package com.efficio.fieldbook.web.data.initializer;
 
-import org.generationcp.commons.parsing.pojo.ImportedGermplasm;
+import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
 import org.generationcp.middleware.domain.gms.SystemDefinedEntryType;
 
 import java.util.ArrayList;
