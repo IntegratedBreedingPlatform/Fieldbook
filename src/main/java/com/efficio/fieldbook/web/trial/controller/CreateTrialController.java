@@ -186,13 +186,14 @@ public class CreateTrialController extends BaseTrialController {
 	}
 
 	void excludeObsoleteVariables(final Workbook trialWorkbook) {
-		final Set<Integer> obsoleteVariables = this.fieldbookMiddlewareService.getTermIdsByObsoleteFilter(true);
-		trialWorkbook.getFactors().removeIf(variable -> obsoleteVariables.contains(variable.getTermId()));
-		trialWorkbook.getTrialConditions().removeIf(variable -> obsoleteVariables.contains(variable.getTermId()));
-		trialWorkbook.getTrialConstants().removeIf(variable -> obsoleteVariables.contains(variable.getTermId()));
-		trialWorkbook.getStudyConditions().removeIf(variable -> obsoleteVariables.contains(variable.getTermId()));
-		trialWorkbook.getVariates().removeIf(variable -> obsoleteVariables.contains(variable.getTermId()));
-		trialWorkbook.getEntryDetails().removeIf(variable -> obsoleteVariables.contains(variable.getTermId()));
+		final Set<Integer> nonObsoleteVariables = this.fieldbookMiddlewareService.getVariableIdsByObsoleteFilter(true);
+
+		trialWorkbook.getFactors().removeIf(variable -> !nonObsoleteVariables.contains(variable.getTermId()));
+		trialWorkbook.getTrialConditions().removeIf(variable -> !nonObsoleteVariables.contains(variable.getTermId()));
+		trialWorkbook.getTrialConstants().removeIf(variable -> !nonObsoleteVariables.contains(variable.getTermId()));
+		trialWorkbook.getStudyConditions().removeIf(variable -> !nonObsoleteVariables.contains(variable.getTermId()));
+		trialWorkbook.getVariates().removeIf(variable -> !nonObsoleteVariables.contains(variable.getTermId()));
+		trialWorkbook.getEntryDetails().removeIf(variable -> !nonObsoleteVariables.contains(variable.getTermId()));
 	}
 
 	private CreateTrialForm addErrorMessageToResult(final MiddlewareException e) {
