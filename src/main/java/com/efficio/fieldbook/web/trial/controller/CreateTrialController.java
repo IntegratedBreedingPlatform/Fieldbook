@@ -57,6 +57,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.springframework.util.CollectionUtils.isEmpty;
@@ -146,6 +147,8 @@ public class CreateTrialController extends BaseTrialController {
 
 				this.excludeTreatmentFactorVariables(trialWorkbook);
 
+				this.excludeObsoleteVariables(trialWorkbook);
+
 				this.userSelection.setConstantsWithLabels(trialWorkbook.getConstants());
 
 				tabDetails.put("germplasmData", this.prepareGermplasmTabInfo(trialWorkbook.getFactors(), true));
@@ -180,6 +183,16 @@ public class CreateTrialController extends BaseTrialController {
 
 		trialWorkbook.getFactors().removeIf(variable -> treatmentFactorVariableIds.contains(variable.getTermId()));
 		trialWorkbook.setTreatmentFactors(new ArrayList<>());
+	}
+
+	void excludeObsoleteVariables(final Workbook trialWorkbook) {
+		final Set<Integer> obsoleteVariables = this.fieldbookMiddlewareService.getTermIdsByObsoleteFilter(true);
+		trialWorkbook.getFactors().removeIf(variable -> obsoleteVariables.contains(variable.getTermId()));
+		trialWorkbook.getTrialConditions().removeIf(variable -> obsoleteVariables.contains(variable.getTermId()));
+		trialWorkbook.getTrialConstants().removeIf(variable -> obsoleteVariables.contains(variable.getTermId()));
+		trialWorkbook.getStudyConditions().removeIf(variable -> obsoleteVariables.contains(variable.getTermId()));
+		trialWorkbook.getVariates().removeIf(variable -> obsoleteVariables.contains(variable.getTermId()));
+		trialWorkbook.getEntryDetails().removeIf(variable -> obsoleteVariables.contains(variable.getTermId()));
 	}
 
 	private CreateTrialForm addErrorMessageToResult(final MiddlewareException e) {
