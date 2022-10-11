@@ -246,8 +246,8 @@
 					.then(successHandler, failureHandler);
 			};
 
-			datasetService.updateDatasetProperties = function (variableIds) {
-				var request = $http.put(BASE_URL + studyContext.studyId + '/plot-datasets/properties', variableIds);
+			datasetService.updateDatasetProperties = function (plotDatasetProperties) {
+				var request = $http.put(BASE_URL + studyContext.studyId + '/plot-datasets/properties', plotDatasetProperties);
 				return request.then(successHandler, failureHandler);
 			};
 
