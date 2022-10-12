@@ -877,7 +877,7 @@ describe('SubObservationSetCtrl', function () {
 		]),
 		derivedVariableServiceMock = jasmine.createSpyObj('derivedVariableService', ['displayExecuteCalculateVariableMenu', 'showWarningIfDependenciesAreMissing']),
 		fileServiceMock = jasmine.createSpyObj('fileService', ['getFileStorageStatus']),
-		HasAnyAuthorityServiceMock = {},
+		HasAnyAuthorityServiceMock = jasmine.createSpyObj('HasAnyAuthorityService', ['hasAnyAuthority']),
 		PERMISSIONSMock = {}
 	;
 

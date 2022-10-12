@@ -32,7 +32,7 @@ describe('Location', function () {
     var derivedVariableService=  jasmine.createSpyObj('derivedVariableService', ['getFormulaVariables']);
     var formulaVariables;
     var fileServiceMock = jasmine.createSpyObj('fileService', ['getFileStorageStatus']);
-    var HasAnyAuthorityServiceMock = {};
+    var HasAnyAuthorityServiceMock = jasmine.createSpyObj('HasAnyAuthorityService', ['hasAnyAuthority']);
     var PERMISSIONSMock = {};
     var fileStorageMap = {
         status: false

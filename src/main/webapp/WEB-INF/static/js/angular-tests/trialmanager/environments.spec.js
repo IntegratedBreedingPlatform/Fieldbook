@@ -11,7 +11,7 @@ describe('Measurement Controller', function () {
 		programId: 1
 	};
 	var derivedVariableService = {};
-	var HasAnyAuthorityServiceMock = {};
+	var HasAnyAuthorityServiceMock = jasmine.createSpyObj('HasAnyAuthorityService', ['hasAnyAuthority']);
 	var PERMISSIONSMock = {};
 	var rootScopeMock = {
 		openConfirmModal: jasmine.createSpyObj('$scope', ['openConfirmModal', 'watch']),
