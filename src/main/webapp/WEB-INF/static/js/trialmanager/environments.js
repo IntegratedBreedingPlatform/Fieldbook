@@ -637,6 +637,8 @@
 									// so that it can be used to update the instance descriptor later.
 									instanceDataIdMap[variableId] = instanceDescriptorData.instanceDescriptorDataId;
 									refreshDisplay();
+								}, function (errResponse) {
+									showErrorMessage($.fieldbookMessages.errorServerError, errResponse.errors[0].message);
 								});
 							} else {
 								studyInstanceService.addInstanceObservation({
@@ -649,6 +651,8 @@
 									// so that it can be used to update the instance observation later.
 									instanceDataIdMap[variableId] = instanceObservationData.instanceObservationId;
 									refreshDisplay();
+								}, function (errResponse) {
+									showErrorMessage($.fieldbookMessages.errorServerError, errResponse.errors[0].message);
 								});
 							}
 						} else {
@@ -661,6 +665,8 @@
 								}).then(function (descriptorData) {
 									// Restore handler
 									refreshDisplay();
+								}, function (errResponse) {
+									showErrorMessage($.fieldbookMessages.errorServerError, errResponse.errors[0].message);
 								});
 							} else {
 								studyInstanceService.updateInstanceObservation({
@@ -671,6 +677,8 @@
 								}).then(function (observationData) {
 									// Restore handler
 									refreshDisplay();
+								}, function (errResponse) {
+									showErrorMessage($.fieldbookMessages.errorServerError, errResponse.errors[0].message);
 								});
 							}
 
