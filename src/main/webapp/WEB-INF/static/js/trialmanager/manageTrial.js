@@ -889,7 +889,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 					].indexOf($scope.tabSelected) >= 0);
 			};
 
-			$scope.showAction = function () {
+			$scope.showManageStudiesAction = function () {
 				return $scope.hasManageStudiesPermission && $scope.hasDesignGenerated;
 			}
 

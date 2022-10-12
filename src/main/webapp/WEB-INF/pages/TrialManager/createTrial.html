@@ -87,7 +87,7 @@
 							</li>
 
 							<!--Crossing options-->
-							<li ng-show="showAction()" class="dropdown-submenu pull-left">
+							<li ng-show="showManageStudiesAction()" class="dropdown-submenu pull-left">
 								<a tabindex="-1" href="#">Crossing options</a>
 								<ul class="dropdown-menu" style="margin-left: -48px;">
 									<!--Export crossing template-->
@@ -107,7 +107,7 @@
 									</li>
 								</ul>
 							</li>
-							<li ng-show="showAction()" class="dropdown-submenu pull-left">
+							<li ng-show="showManageStudiesAction()" class="dropdown-submenu pull-left">
 								<a tabindex="-1" href="#" th:text="#{study.studydetails.action.observationunits}">Observation unit options</a>
 								<ul class="dropdown-menu" style="margin-left: -25px;">
 									<li>
@@ -157,7 +157,7 @@
 										<a ng-click="showExportStudyModal()" id="export-study-link"
 										   th:text="#{study.studydetails.action.export.study}">Export Study Book</a>
 									</li>
-									<li ng-show="showAction()">
+									<li ng-show="showManageStudiesAction()">
 										<a href="" style="display: none" id="open-study-url"></a>
 										<a ng-click="showImportStudyModal()" id="open-study-url-link"
 										   th:text="#{study.studydetails.action.import.study}">Import Observations</a>
@@ -174,12 +174,12 @@
 								   th:text="#{study.option.execute.calculated.variable}">Execute calculated variable</a>
 							</li>
 
-							<li ng-show="showAction()" class="dropdown-submenu pull-left">
+							<li ng-show="showManageStudiesAction()" class="dropdown-submenu pull-left">
 								<a ng-click="showCreateSampleListModal()" id="sample-trial-link"
 								   th:text="#{study.studydetails.action.create.sample}">Create genotyping samples</a>
 							</li>
 
-							<li ng-show="showAction()" class="dropdown-submenu pull-left">
+							<li ng-show="showManageStudiesAction()" class="dropdown-submenu pull-left">
 								<a tabindex="-1" href="#">Advance study options</a>
 								<ul class="dropdown-menu" style="margin-left: -68px; width: 235px;">
 									<li>
