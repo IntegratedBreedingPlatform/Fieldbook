@@ -11,6 +11,8 @@ describe('Measurement Controller', function () {
 		programId: 1
 	};
 	var derivedVariableService = {};
+	var HasAnyAuthorityServiceMock = {};
+	var PERMISSIONSMock = {};
 	var rootScopeMock = {
 		openConfirmModal: jasmine.createSpyObj('$scope', ['openConfirmModal', 'watch']),
 	};
@@ -101,6 +103,8 @@ describe('Measurement Controller', function () {
 			$provide.value("studyContext", studyContext);
 			$provide.value("studyInstanceService", studyInstanceServiceMock);
 			$provide.value("fileService", fileServiceMock);
+			$provide.value("HasAnyAuthorityService", HasAnyAuthorityServiceMock);
+			$provide.value("PERMISSIONS", PERMISSIONSMock);
 		});
 
 	});
