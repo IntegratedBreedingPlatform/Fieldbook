@@ -14,7 +14,6 @@ package com.efficio.fieldbook.web.trial.controller;
 import com.efficio.fieldbook.web.AbstractBaseFieldbookController;
 import com.efficio.fieldbook.web.trial.form.ManageTrialForm;
 
-import org.generationcp.commons.security.AuthorizationService;
 import org.generationcp.middleware.manager.api.StudyDataManager;
 import org.generationcp.middleware.pojos.workbench.PermissionsEnum;
 import org.springframework.stereotype.Controller;
@@ -38,9 +37,6 @@ public class ManageTrialController extends AbstractBaseFieldbookController {
 
 	@Resource
 	protected StudyDataManager studyDataManager;
-
-	@Resource
-	private AuthorizationService authorizationService;
 
 	/**
 	 *
@@ -77,6 +73,4 @@ public class ManageTrialController extends AbstractBaseFieldbookController {
 	public String getProgramId() {
 		return this.contextUtil.getProjectInContext().getUniqueID();
 	}
-
-
 }
