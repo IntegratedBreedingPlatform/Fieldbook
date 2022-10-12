@@ -4,20 +4,20 @@
 
 	angular.module('manageTrialApp').controller('EnvironmentCtrl', ['$scope', '$q', 'TrialManagerDataService', '$uibModal', '$stateParams',
 		'$http', 'DTOptionsBuilder', 'LOCATION_ID', 'PROGRAM_DEFAULT_LOCATION_ID', '$timeout', 'studyInstanceService', 'studyStateService', 'derivedVariableService', 'studyContext',
-		'datasetService', '$compile', 'fileService',
+		'datasetService', '$compile', 'fileService', 'HasAnyAuthorityService', 'PERMISSIONS',
 		function ($scope, $q, TrialManagerDataService, $uibModal, $stateParams, $http, DTOptionsBuilder, LOCATION_ID, PROGRAM_DEFAULT_LOCATION_ID, $timeout, studyInstanceService,
-				  studyStateService, derivedVariableService, studyContext, datasetService, $compile, fileService) {
+				  studyStateService, derivedVariableService, studyContext, datasetService, $compile, fileService, HasAnyAuthorityService, PERMISSIONS) {
 
 			var ctrl = this;
 			var tableId = '#environment-table';
 
 			$scope.TRIAL_INSTANCE_NO_INDEX = 8170;
-			$scope.addVariable = true;
+			$scope.hasManageStudiesPermission = HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.MANAGE_STUDIES_PERMISSIONS);
+			console.log($scope.hasManageStudiesPermission);
 			$scope.instanceInfo = studyInstanceService.instanceInfo;
 			$scope.nested = {};
 			$scope.nested.dataTable = {};
 			$scope.isDisableAddInstance = false;
-			$scope.isHideDelete = false;
 			$scope.temp = {
 				settingMap: {},
 				numberOfInstances: $scope.instanceInfo.numberOfInstances

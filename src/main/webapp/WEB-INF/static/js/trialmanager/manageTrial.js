@@ -259,6 +259,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				  derivedVariableService, exportStudyModalService, importStudyModalService, createSampleModalService, derivedVariableModalService, $uibModal, $q, datasetService, InventoryService,
 				  studyContext, PERMISSIONS, LABEL_PRINTING_TYPE, HAS_LISTS_OR_SUB_OBS, HAS_GENERATED_DESIGN, germplasmStudySourceService, studyEntryService, HAS_MEANS_DATASET, advanceStudyModalService,
 				  STABRAPP_URL, DS_BRAPP_URL, FEEDBACK_ENABLED) {
+
 			$scope.dsBrappURL = DS_BRAPP_URL;
 			$scope.staBrappURL = STABRAPP_URL;
 
@@ -332,7 +333,6 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 
 			$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
 			$scope.PERMISSIONS = PERMISSIONS;
-
 			if ($scope.isOpenStudy()) {
 				$scope.trialTabs.push({
 					name: 'Germplasm & Checks',
@@ -625,10 +625,11 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			};
 
 			$scope.displayExecuteCalculatedVariableOnlyActions = function () {
-				return derivedVariableService.isStudyHasCalculatedVariables && studyStateService.hasGeneratedDesign();
+				return $scope.hasManageStudiesPermission && derivedVariableService.isStudyHasCalculatedVariables && studyStateService.hasGeneratedDesign();
 			};
 
 			$scope.reloadActionMenuConditions = function () {
+				$scope.hasManageStudiesPermission = $scope.hasAnyAuthority($scope.PERMISSIONS.MANAGE_STUDIES_PERMISSIONS);
 				$scope.hasDesignGenerated = studyStateService.hasGeneratedDesign();
 			};
 
@@ -881,14 +882,16 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			};
 
 			$scope.isSaveEnabled = function () {
-
-				return $scope.tabSelected && ([
-					"trialSettings",
-					"treatment"
-				].indexOf($scope.tabSelected) >= 0);
-
-
+				return $scope.hasAnyAuthority($scope.PERMISSIONS.MANAGE_STUDIES_PERMISSIONS)
+					&& $scope.tabSelected && ([
+						"trialSettings",
+						"treatment"
+					].indexOf($scope.tabSelected) >= 0);
 			};
+
+			$scope.showAction = function () {
+				return $scope.hasManageStudiesPermission && $scope.hasDesignGenerated;
+			}
 
 			$('body').on('DO_AUTO_SAVE', function () {
 				TrialManagerDataService.saveCurrentData();

@@ -9,9 +9,9 @@
 
 	var manageTrialApp = angular.module('manageTrialApp');
 
-	manageTrialApp.controller('TreatmentCtrl', ['$scope', 'TrialManagerDataService', '_', '$q', '$http', 'studyStateService',
-		function($scope, TrialManagerDataService, _, $q, $http, studyStateService) {
-
+	manageTrialApp.controller('TreatmentCtrl', ['$scope', 'TrialManagerDataService', '_', '$q', '$http', 'studyStateService', 'HasAnyAuthorityService', 'PERMISSIONS',
+		function($scope, TrialManagerDataService, _, $q, $http, studyStateService, HasAnyAuthorityService, PERMISSIONS) {
+			$scope.hasManageStudiesPermission = HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.MANAGE_STUDIES_PERMISSIONS);
 			$scope.disableTreatment = studyStateService.hasGeneratedDesign();
 
 			$scope.settings = TrialManagerDataService.settings.treatmentFactors;
