@@ -181,7 +181,7 @@
 					};
 
 					$scope.disableDesignTypeSelect = function () {
-						return !$scope.hasManageStudiesPermission && !!$scope.measurementDetails && $scope.measurementDetails.hasMeasurement;
+						return !$scope.hasManageStudiesPermission || (!!$scope.measurementDetails && $scope.measurementDetails.hasMeasurement);
 					};
 
 					$scope.onSwitchDesignTypes = function(newId) {

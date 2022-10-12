@@ -13,7 +13,6 @@
 
 			$scope.TRIAL_INSTANCE_NO_INDEX = 8170;
 			$scope.hasManageStudiesPermission = HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.MANAGE_STUDIES_PERMISSIONS);
-			console.log($scope.hasManageStudiesPermission);
 			$scope.instanceInfo = studyInstanceService.instanceInfo;
 			$scope.nested = {};
 			$scope.nested.dataTable = {};
