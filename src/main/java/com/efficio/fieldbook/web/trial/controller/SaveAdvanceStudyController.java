@@ -13,7 +13,7 @@ package com.efficio.fieldbook.web.trial.controller;
 
 import com.efficio.fieldbook.web.AbstractBaseFieldbookController;
 import com.efficio.fieldbook.web.trial.form.AdvancingStudyForm;
-import org.generationcp.commons.parsing.pojo.ImportedGermplasm;
+import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;

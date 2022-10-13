@@ -1,7 +1,7 @@
 
 package com.efficio.fieldbook.util;
 
-import org.generationcp.commons.parsing.pojo.ImportedCross;
+import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
 import org.generationcp.commons.util.FileUtils;
 import org.generationcp.middleware.domain.etl.MeasurementVariable;
 import org.generationcp.middleware.domain.etl.Workbook;

@@ -29,15 +29,15 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.generationcp.commons.constant.AppConstants;
-import org.generationcp.commons.parsing.pojo.ImportedCross;
+import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
 import org.generationcp.commons.parsing.pojo.ImportedCrossesList;
-import org.generationcp.commons.parsing.pojo.ImportedGermplasm;
-import org.generationcp.commons.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
+import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
 import org.generationcp.commons.pojo.AdvancingSourceList;
 import org.generationcp.commons.pojo.treeview.TreeTableNode;
-import org.generationcp.commons.ruleengine.RuleException;
-import org.generationcp.commons.ruleengine.RulesNotConfiguredException;
-import org.generationcp.commons.settings.CrossSetting;
+import org.generationcp.middleware.ruleengine.RuleException;
+import org.generationcp.middleware.ruleengine.RulesNotConfiguredException;
+import org.generationcp.middleware.ruleengine.settings.CrossSetting;
 import org.generationcp.commons.util.DateUtil;
 import org.generationcp.commons.util.TreeViewUtil;
 import org.generationcp.middleware.api.germplasm.GermplasmService;
@@ -55,6 +55,7 @@ import org.generationcp.middleware.pojos.Germplasm;
 import org.generationcp.middleware.pojos.GermplasmList;
 import org.generationcp.middleware.pojos.GermplasmListData;
 import org.generationcp.middleware.pojos.GermplasmStudySourceType;
+import org.generationcp.middleware.pojos.Method;
 import org.generationcp.middleware.pojos.Name;
 import org.generationcp.middleware.pojos.UserDefinedField;
 import org.generationcp.middleware.service.api.FieldbookService;
@@ -568,7 +569,7 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 
 			final Germplasm germplasm = new Germplasm();
 			germplasm.setGid(gid);
-			germplasm.setMethodId(importedCross.getBreedingMethodId());
+			germplasm.setMethod(new Method(importedCross.getBreedingMethodId()));
 
 			// Create list data items to save - Map<Germplasm,
 			// GermplasmListData>
@@ -689,9 +690,8 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 
 			final Integer trueGdate = !"".equals(harvestDate.trim()) ? Integer.valueOf(harvestDate) : gDate;
 			final Germplasm germplasm;
-			germplasm =
-				new Germplasm(gid, importedGermplasm.getBreedingMethodId(), importedGermplasm.getGnpgs(), importedGermplasm.getGpid1(),
-					importedGermplasm.getGpid2(), lgid, locationId, trueGdate, preferredName);
+			germplasm = new Germplasm(gid, importedGermplasm.getGnpgs(), importedGermplasm.getGpid1(), importedGermplasm.getGpid2(), lgid, locationId,
+			trueGdate, 0, 0, 0, preferredName, null, new Method(importedGermplasm.getBreedingMethodId()));
 			final Integer mgid = importedGermplasm.getMgid() == null ? 0 : importedGermplasm.getMgid();
 			germplasm.setMgid(mgid);
 			germplasms.add(new ImmutablePair<>(germplasm, names));

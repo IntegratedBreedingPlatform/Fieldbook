@@ -6,8 +6,8 @@ import com.efficio.fieldbook.web.naming.expression.dataprocessor.ExpressionDataP
 import com.efficio.fieldbook.web.trial.bean.AdvanceType;
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.generationcp.commons.parsing.pojo.ImportedGermplasm;
-import org.generationcp.commons.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
+import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
 import org.generationcp.commons.pojo.AdvancingSourceList;
 import org.generationcp.middleware.domain.dms.Study;
 import org.generationcp.middleware.domain.dms.ValueReference;
@@ -275,11 +275,11 @@ public class AdvancingSourceListFactory {
 					source.getGermplasm().setGpid2(germplasm.getGpid2());
 					source.getGermplasm().setGnpgs(germplasm.getGnpgs());
 					source.getGermplasm().setMgid(germplasm.getMgid());
-					final Method sourceMethod = breedingMethodMap.get(germplasm.getMethodId());
+					final Method sourceMethod = breedingMethodMap.get(germplasm.getMethod().getMid());
 					if (sourceMethod != null) {
 						source.setSourceMethod(sourceMethod);
 					}
-					source.getGermplasm().setBreedingMethodId(germplasm.getMethodId());
+					source.getGermplasm().setBreedingMethodId(germplasm.getMethod().getMid());
 				}
 			}
 

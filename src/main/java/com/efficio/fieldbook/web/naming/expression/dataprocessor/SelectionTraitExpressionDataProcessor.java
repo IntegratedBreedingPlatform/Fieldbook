@@ -19,7 +19,7 @@ import org.generationcp.middleware.manager.ontology.api.OntologyVariableDataMana
 import org.springframework.stereotype.Component;
 
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
-import org.generationcp.commons.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
 
 @Component
 public class SelectionTraitExpressionDataProcessor implements ExpressionDataProcessor {

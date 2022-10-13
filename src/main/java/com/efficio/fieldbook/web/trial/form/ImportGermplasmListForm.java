@@ -13,7 +13,7 @@ package com.efficio.fieldbook.web.trial.form;
 
 import java.util.List;
 
-import org.generationcp.commons.parsing.pojo.ImportedGermplasm;
+import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.efficio.fieldbook.web.common.bean.SettingDetail;

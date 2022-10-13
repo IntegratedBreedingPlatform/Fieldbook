@@ -8,10 +8,10 @@
 	manageTrialAppModule.controller('GermplasmCtrl',
 		['$scope', '$rootScope', '$q', '$compile', 'TrialManagerDataService', 'DTOptionsBuilder', 'studyStateService', 'studyEntryService', 'germplasmStudySourceService',
 			'datasetService', '$timeout', '$uibModal', 'germplasmDetailsModalService', 'studyEntryObservationService', 'feedbackService', 'DATASET_TYPES', 'VARIABLE_TYPES',
-			'$http', 'studyContext',
+			'$http', 'studyContext', 'breedingMethodModalService',
 			function ($scope, $rootScope, $q, $compile, TrialManagerDataService, DTOptionsBuilder, studyStateService, studyEntryService, germplasmStudySourceService,
 					  datasetService, $timeout, $uibModal, germplasmDetailsModalService, studyEntryObservationService, feedbackService, DATASET_TYPES, VARIABLE_TYPES,
-					  $http, studyContext) {
+					  $http, studyContext, breedingMethodModalService) {
 
 				var GID = 8240,
 					GROUPGID = 8330;
@@ -19,8 +19,7 @@
 				$scope.entryDetails = TrialManagerDataService.settings.entryDetails;
 				$scope.isLockedStudy = TrialManagerDataService.isLockedStudy;
 				$scope.trialMeasurement = {hasMeasurement: studyStateService.hasGeneratedDesign()};
-				$scope.isHideDelete = studyStateService.hasGeneratedDesign();
-				$scope.addVariable = !studyStateService.hasGeneratedDesign() && TrialManagerDataService.applicationData.germplasmListSelected;
+				$scope.addVariable = TrialManagerDataService.applicationData.germplasmListSelected;
 				$scope.showAddColumns = TrialManagerDataService.applicationData.germplasmListSelected;
 				$scope.selectedItems = [];
 				$scope.numberOfEntries = 0;
@@ -677,7 +676,8 @@
 						columnData.index = index;
 
 						function isObservationEditable() {
-							return columnData.termId !== 8230 && !studyStateService.hasGeneratedDesign();
+							return columnData.termId !== 8230 &&
+								(!columnData.systemVariable || (columnData.systemVariable && !studyStateService.hasGeneratedDesign()));
 						}
 
 						function getClassName() {
@@ -781,6 +781,23 @@
 										} else {
 											$(td).append(value);
 										}
+									}
+								},
+								render: function (data, type, full, meta) {
+									return '';
+								}
+							});
+						} else if (columnData.termId === 8254) {
+							// BREEDING_METHOD_ABBR
+							columnsDef.push({
+								targets: columns.length - 1,
+								orderable: false,
+								createdCell: function (td, cellData, rowData, rowIndex, colIndex) {
+									$(td).val("");
+									var value = rowData.properties['8254'].value;
+									if (value) {
+										$(td).append($compile('<a class="gid-link" href="javascript: void(0)" ' +
+											'ng-click="openBreedingMethodModal(\'' + value + '\')">' + value + '</a>')($scope));
 									}
 								},
 								render: function (data, type, full, meta) {
@@ -1298,7 +1315,13 @@
 								studyAlias: variableName
 							}).then(function () {
 								showSuccessfulMessage('', $.germplasmMessages.addVariableSuccess.replace("{0}", variableName));
-							})
+							}, function (response) {
+								if (response.errors && response.errors.length) {
+									showErrorMessage('', response.errors[0].message);
+								} else {
+									showErrorMessage('', ajaxGenericErrorMsg);
+								}
+							});
 						});
 					});
 				};
@@ -1369,6 +1392,10 @@
 
 				$scope.openGermplasmDetailsModal = function (gid) {
 					germplasmDetailsModalService.openGermplasmDetailsModal(gid, null);
+				};
+
+				$scope.openBreedingMethodModal = function (methodId) {
+					breedingMethodModalService.openBreedingMethodModal(methodId, null);
 				};
 
 				$scope.toggleShowCategoricalDescription = function () {

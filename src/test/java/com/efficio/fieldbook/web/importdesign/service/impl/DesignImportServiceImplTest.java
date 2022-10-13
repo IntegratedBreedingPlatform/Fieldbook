@@ -16,7 +16,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 import junit.framework.Assert;
 import org.generationcp.commons.parsing.FileParsingException;
-import org.generationcp.commons.parsing.pojo.ImportedGermplasm;
+import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
 import org.generationcp.commons.spring.util.ContextUtil;
 import org.generationcp.middleware.data.initializer.StandardVariableTestDataInitializer;
 import org.generationcp.middleware.data.initializer.WorkbookTestDataInitializer;

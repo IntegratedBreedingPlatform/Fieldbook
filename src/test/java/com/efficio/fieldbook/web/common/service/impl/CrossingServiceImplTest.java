@@ -5,15 +5,15 @@ import com.google.common.collect.Lists;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
-import org.generationcp.commons.parsing.pojo.ImportedCross;
+import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
 import org.generationcp.commons.parsing.pojo.ImportedCrossesList;
-import org.generationcp.commons.parsing.pojo.ImportedGermplasmParent;
-import org.generationcp.commons.ruleengine.generator.SeedSourceGenerator;
-import org.generationcp.commons.service.GermplasmNamingService;
-import org.generationcp.commons.settings.AdditionalDetailsSetting;
-import org.generationcp.commons.settings.BreedingMethodSetting;
-import org.generationcp.commons.settings.CrossNameSetting;
-import org.generationcp.commons.settings.CrossSetting;
+import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasmParent;
+import org.generationcp.middleware.ruleengine.generator.SeedSourceGenerator;
+import org.generationcp.middleware.ruleengine.naming.service.GermplasmNamingService;
+import org.generationcp.middleware.ruleengine.settings.AdditionalDetailsSetting;
+import org.generationcp.middleware.ruleengine.settings.BreedingMethodSetting;
+import org.generationcp.middleware.ruleengine.settings.CrossNameSetting;
+import org.generationcp.middleware.ruleengine.settings.CrossSetting;
 import org.generationcp.commons.spring.util.ContextUtil;
 import org.generationcp.commons.util.DateUtil;
 import org.generationcp.middleware.ContextHolder;
@@ -523,7 +523,7 @@ public class CrossingServiceImplTest {
 		final Germplasm result = this.crossingService.createGermplasm(cross, harvestLocationId, harvestDate);
 
 		assertSame(existingGermplasm, result);
-		assertEquals(breedingMethodId, result.getMethodId().intValue());
+		assertEquals(breedingMethodId, result.getMethod().getMid().intValue());
 		assertEquals(20190101, result.getGdate().intValue());
 		assertEquals(harvestLocationId, result.getLocationId().intValue());
 		assertNotEquals(TEST_FEMALE_GID_1, result.getGpid1());
@@ -545,7 +545,7 @@ public class CrossingServiceImplTest {
 
 		verify(this.germplasmDataManager, times(0)).getGermplasmByGID(anyInt());
 
-		assertEquals(cross.getBreedingMethodId(), result.getMethodId());
+		assertEquals(cross.getBreedingMethodId(), result.getMethod().getMid());
 		assertEquals(20190101, result.getGdate().intValue());
 		assertEquals(harvestLocationId, result.getLocationId().intValue());
 		assertEquals(USER_ID, result.getCreatedBy());

@@ -8,15 +8,15 @@ import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.generationcp.commons.parsing.FileParsingException;
-import org.generationcp.commons.parsing.pojo.ImportedCross;
+import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
 import org.generationcp.commons.parsing.pojo.ImportedCrossesList;
-import org.generationcp.commons.parsing.pojo.ImportedGermplasmParent;
-import org.generationcp.commons.ruleengine.generator.SeedSourceGenerator;
-import org.generationcp.commons.service.GermplasmNamingService;
-import org.generationcp.commons.settings.AdditionalDetailsSetting;
-import org.generationcp.commons.settings.BreedingMethodSetting;
-import org.generationcp.commons.settings.CrossNameSetting;
-import org.generationcp.commons.settings.CrossSetting;
+import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasmParent;
+import org.generationcp.middleware.ruleengine.generator.SeedSourceGenerator;
+import org.generationcp.middleware.ruleengine.naming.service.GermplasmNamingService;
+import org.generationcp.middleware.ruleengine.settings.AdditionalDetailsSetting;
+import org.generationcp.middleware.ruleengine.settings.BreedingMethodSetting;
+import org.generationcp.middleware.ruleengine.settings.CrossNameSetting;
+import org.generationcp.middleware.ruleengine.settings.CrossSetting;
 import org.generationcp.commons.spring.util.ContextUtil;
 import org.generationcp.commons.util.CrossingUtil;
 import org.generationcp.commons.util.DateUtil;
@@ -414,7 +414,7 @@ public class CrossingServiceImpl implements CrossingService {
 
 	private void verifyGermplasmMethodPresent(final List<Germplasm> germplasmList) {
 		for (final Germplasm germplasm : germplasmList) {
-			if (germplasm.getMethodId() == null || germplasm.getMethodId() == 0) {
+			if (germplasm.getMethod() == null || germplasm.getMethod().getMid() == 0) {
 				throw new MiddlewareQueryException(
 					this.messageSource.getMessage("error.save.cross.methods.unavailable", new Object[] {}, Locale.getDefault()));
 			}
@@ -544,7 +544,7 @@ public class CrossingServiceImpl implements CrossingService {
 		// exist as crosses are created in crossing manager and persisted.
 		if (cross.getGid() != null) {
 			germplasm = this.germplasmDataManager.getGermplasmByGID(Integer.valueOf(cross.getGid()));
-			germplasm.setMethodId(cross.getBreedingMethodId());
+			germplasm.setMethod(new Method(cross.getBreedingMethodId()));
 		} else {
 			germplasm = new Germplasm();
 			// In case of importing crosses, the crosses are not yet
@@ -554,7 +554,7 @@ public class CrossingServiceImpl implements CrossingService {
 			this.updateConstantFields(germplasm);
 			germplasm.setGpid1(Integer.valueOf(cross.getFemaleGid()));
 			germplasm.setGpid2(cross.getMaleGids().get(0));
-			germplasm.setMethodId(cross.getBreedingMethodId());
+			germplasm.setMethod(new Method(cross.getBreedingMethodId()));
 		}
 
 		// Set germplasm date based on user input or information from source

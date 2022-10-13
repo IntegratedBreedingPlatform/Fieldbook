@@ -16,7 +16,7 @@ import org.generationcp.middleware.domain.oms.TermId;
 import org.springframework.stereotype.Component;
 
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
-import org.generationcp.commons.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
 
 @Component
 public class SeasonExpressionDataProcessor implements ExpressionDataProcessor {
