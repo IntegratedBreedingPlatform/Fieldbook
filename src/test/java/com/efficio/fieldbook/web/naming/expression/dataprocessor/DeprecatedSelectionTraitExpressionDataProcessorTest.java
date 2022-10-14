@@ -25,8 +25,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 @RunWith(MockitoJUnitRunner.class)
-public class DeprecatedSelectionTraitDeprecatedExpressionDataProcessorTest {
+public class DeprecatedSelectionTraitExpressionDataProcessorTest {
 
     public static final String TEST_PROGRAM_UUID = "ABCD";
     public static final Integer TEST_TERM_ID = 1;

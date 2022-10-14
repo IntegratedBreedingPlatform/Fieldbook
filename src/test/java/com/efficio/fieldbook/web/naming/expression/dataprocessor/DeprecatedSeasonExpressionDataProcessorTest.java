@@ -25,8 +25,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Deprecated
 @RunWith(MockitoJUnitRunner.class)
-public class DeprecatedSeasonDeprecatedExpressionDataProcessorTest {
+public class DeprecatedSeasonExpressionDataProcessorTest {
 
 	private static final String EMPTY_STRING = "";
 	public static final String SEASON_NAME_WET = "1";
@@ -61,13 +62,13 @@ public class DeprecatedSeasonDeprecatedExpressionDataProcessorTest {
 		final Workbook workbook = this.workbookTestDataInitializer.createWorkbook(StudyTypeDto.getNurseryDto());
 
 		final MeasurementVariable seasonMeasurementVariable = MeasurementVariableTestDataInitializer.createMeasurementVariable(TermId.SEASON_MONTH.getId(),
-				DeprecatedSeasonDeprecatedExpressionDataProcessorTest.SEASON_MONTH_VALUE);
+				DeprecatedSeasonExpressionDataProcessorTest.SEASON_MONTH_VALUE);
 
 		workbook.setConditions(Lists.newArrayList(seasonMeasurementVariable));
 
 		this.deprecatedSeasonExpressionDataProcessor.processEnvironmentLevelData(this.advancingSource, workbook, null, null);
-		Assert.assertEquals("The season should be " + DeprecatedSeasonDeprecatedExpressionDataProcessorTest.SEASON_MONTH_VALUE,
-				DeprecatedSeasonDeprecatedExpressionDataProcessorTest.SEASON_MONTH_VALUE, this.advancingSource.getSeason());
+		Assert.assertEquals("The season should be " + DeprecatedSeasonExpressionDataProcessorTest.SEASON_MONTH_VALUE,
+				DeprecatedSeasonExpressionDataProcessorTest.SEASON_MONTH_VALUE, this.advancingSource.getSeason());
 	}
 
 	@Test
@@ -75,13 +76,13 @@ public class DeprecatedSeasonDeprecatedExpressionDataProcessorTest {
 		final Workbook workbook = this.workbookTestDataInitializer.createWorkbook(StudyTypeDto.getNurseryDto());
 
 		final MeasurementVariable seasonMeasurementVariable = MeasurementVariableTestDataInitializer.createMeasurementVariable(TermId.SEASON_VAR_TEXT.getId(),
-				DeprecatedSeasonDeprecatedExpressionDataProcessorTest.SEASON_CATEGORY_VALUE);
+				DeprecatedSeasonExpressionDataProcessorTest.SEASON_CATEGORY_VALUE);
 
 		workbook.setConditions(Lists.newArrayList(seasonMeasurementVariable));
 
 		this.deprecatedSeasonExpressionDataProcessor.processEnvironmentLevelData(this.advancingSource, workbook, null, null);
-		Assert.assertEquals("The season should be " + DeprecatedSeasonDeprecatedExpressionDataProcessorTest.SEASON_CATEGORY_VALUE,
-				DeprecatedSeasonDeprecatedExpressionDataProcessorTest.SEASON_CATEGORY_VALUE, this.advancingSource.getSeason());
+		Assert.assertEquals("The season should be " + DeprecatedSeasonExpressionDataProcessorTest.SEASON_CATEGORY_VALUE,
+				DeprecatedSeasonExpressionDataProcessorTest.SEASON_CATEGORY_VALUE, this.advancingSource.getSeason());
 	}
 
 	@Test
@@ -89,13 +90,13 @@ public class DeprecatedSeasonDeprecatedExpressionDataProcessorTest {
 		final Workbook workbook = this.workbookTestDataInitializer.createWorkbook(StudyTypeDto.getNurseryDto());
 
 		final MeasurementVariable seasonMeasurementVariable = MeasurementVariableTestDataInitializer.createMeasurementVariable(TermId.SEASON_VAR.getId(),
-				DeprecatedSeasonDeprecatedExpressionDataProcessorTest.SEASON_CATEGORY_VALUE);
+				DeprecatedSeasonExpressionDataProcessorTest.SEASON_CATEGORY_VALUE);
 
 		workbook.setConditions(Lists.newArrayList(seasonMeasurementVariable));
 
 		this.deprecatedSeasonExpressionDataProcessor.processEnvironmentLevelData(this.advancingSource, workbook, null, null);
-		Assert.assertEquals("The season should be " + DeprecatedSeasonDeprecatedExpressionDataProcessorTest.SEASON_CATEGORY_VALUE,
-				DeprecatedSeasonDeprecatedExpressionDataProcessorTest.SEASON_CATEGORY_VALUE, this.advancingSource.getSeason());
+		Assert.assertEquals("The season should be " + DeprecatedSeasonExpressionDataProcessorTest.SEASON_CATEGORY_VALUE,
+				DeprecatedSeasonExpressionDataProcessorTest.SEASON_CATEGORY_VALUE, this.advancingSource.getSeason());
 	}
 
 	@Test
@@ -103,15 +104,15 @@ public class DeprecatedSeasonDeprecatedExpressionDataProcessorTest {
 		final Workbook workbook = this.workbookTestDataInitializer.createWorkbook(StudyTypeDto.getNurseryDto());
 
 		final MeasurementVariable seasonMeasurementVariable = MeasurementVariableTestDataInitializer.createMeasurementVariable(TermId.SEASON_VAR.getId(),
-				DeprecatedSeasonDeprecatedExpressionDataProcessorTest.SEASON_CATEGORY_ID);
+				DeprecatedSeasonExpressionDataProcessorTest.SEASON_CATEGORY_ID);
 		seasonMeasurementVariable.setPossibleValues(Arrays.asList(this.valueReferenceTestDataInitializer
 				.createValueReference(Integer.parseInt(SEASON_CATEGORY_ID), SEASON_CATEGORY_VALUE)));
 
 		workbook.setConditions(Lists.newArrayList(seasonMeasurementVariable));
 
 		this.deprecatedSeasonExpressionDataProcessor.processEnvironmentLevelData(this.advancingSource, workbook, null, null);
-		Assert.assertEquals("The season should be " + DeprecatedSeasonDeprecatedExpressionDataProcessorTest.SEASON_CATEGORY_VALUE,
-				DeprecatedSeasonDeprecatedExpressionDataProcessorTest.SEASON_CATEGORY_VALUE, this.advancingSource.getSeason());
+		Assert.assertEquals("The season should be " + DeprecatedSeasonExpressionDataProcessorTest.SEASON_CATEGORY_VALUE,
+				DeprecatedSeasonExpressionDataProcessorTest.SEASON_CATEGORY_VALUE, this.advancingSource.getSeason());
 	}
 
 	@Test
@@ -120,7 +121,7 @@ public class DeprecatedSeasonDeprecatedExpressionDataProcessorTest {
 		workbook.setConditions(new ArrayList<MeasurementVariable>());
 
 		this.deprecatedSeasonExpressionDataProcessor.processEnvironmentLevelData(this.advancingSource, workbook, null, null);
-		Assert.assertEquals("The season should be an empty String", DeprecatedSeasonDeprecatedExpressionDataProcessorTest.EMPTY_STRING,
+		Assert.assertEquals("The season should be an empty String", DeprecatedSeasonExpressionDataProcessorTest.EMPTY_STRING,
 				this.advancingSource.getSeason());
 	}
 
@@ -130,7 +131,7 @@ public class DeprecatedSeasonDeprecatedExpressionDataProcessorTest {
 				.createMeasurementVariable(TermId.SEASON_MONTH.getId(), "");
 		final MeasurementData firstInstanceSeasonMeasurementData =
 				this.measurementDataTestDataInitializer
-						.createMeasurementData(DeprecatedSeasonDeprecatedExpressionDataProcessorTest.SEASON_MONTH_VALUE, firstInstanceSeasonMeasurementVariable);
+						.createMeasurementData(DeprecatedSeasonExpressionDataProcessorTest.SEASON_MONTH_VALUE, firstInstanceSeasonMeasurementVariable);
 
 		final MeasurementVariable firstInstanceMeasurementVariable = MeasurementVariableTestDataInitializer
 				.createMeasurementVariable(TermId.TRIAL_INSTANCE_FACTOR.getId(), "");
@@ -142,8 +143,8 @@ public class DeprecatedSeasonDeprecatedExpressionDataProcessorTest {
 		this.advancingSource.setTrailInstanceObservation(trialInstanceObservation);
 
 		this.deprecatedSeasonExpressionDataProcessor.processPlotLevelData(this.advancingSource, trialInstanceObservation);
-		Assert.assertEquals("The season should be " + DeprecatedSeasonDeprecatedExpressionDataProcessorTest.SEASON_MONTH_VALUE,
-				DeprecatedSeasonDeprecatedExpressionDataProcessorTest.SEASON_MONTH_VALUE, this.advancingSource.getSeason());
+		Assert.assertEquals("The season should be " + DeprecatedSeasonExpressionDataProcessorTest.SEASON_MONTH_VALUE,
+				DeprecatedSeasonExpressionDataProcessorTest.SEASON_MONTH_VALUE, this.advancingSource.getSeason());
 	}
 
 	@Test
@@ -152,7 +153,7 @@ public class DeprecatedSeasonDeprecatedExpressionDataProcessorTest {
 				.createMeasurementVariable(TermId.SEASON_VAR_TEXT.getId(), "");
 		final MeasurementData firstInstanceSeasonMeasurementData =
 				this.measurementDataTestDataInitializer
-						.createMeasurementData(DeprecatedSeasonDeprecatedExpressionDataProcessorTest.SEASON_CATEGORY_VALUE, firstInstanceSeasonMeasurementVariable);
+						.createMeasurementData(DeprecatedSeasonExpressionDataProcessorTest.SEASON_CATEGORY_VALUE, firstInstanceSeasonMeasurementVariable);
 
 		final MeasurementVariable firstTrialInstanceMeasurementVariable = MeasurementVariableTestDataInitializer
 				.createMeasurementVariable(TermId.TRIAL_INSTANCE_FACTOR.getId(), "");
@@ -164,8 +165,8 @@ public class DeprecatedSeasonDeprecatedExpressionDataProcessorTest {
 		this.advancingSource.setTrailInstanceObservation(trialInstanceObservation);
 
 		this.deprecatedSeasonExpressionDataProcessor.processPlotLevelData(this.advancingSource, trialInstanceObservation);
-		Assert.assertEquals("The season should be " + DeprecatedSeasonDeprecatedExpressionDataProcessorTest.SEASON_CATEGORY_VALUE,
-				DeprecatedSeasonDeprecatedExpressionDataProcessorTest.SEASON_CATEGORY_VALUE, this.advancingSource.getSeason());
+		Assert.assertEquals("The season should be " + DeprecatedSeasonExpressionDataProcessorTest.SEASON_CATEGORY_VALUE,
+				DeprecatedSeasonExpressionDataProcessorTest.SEASON_CATEGORY_VALUE, this.advancingSource.getSeason());
 	}
 
 	@Test
@@ -174,7 +175,7 @@ public class DeprecatedSeasonDeprecatedExpressionDataProcessorTest {
 				.createMeasurementVariable(TermId.SEASON_VAR.getId(), "");
 		final MeasurementData firstInstanceSeasonMeasurementData =
 				this.measurementDataTestDataInitializer
-						.createMeasurementData(DeprecatedSeasonDeprecatedExpressionDataProcessorTest.SEASON_CATEGORY_VALUE, firstInstanceSeasonMeasurementVariable);
+						.createMeasurementData(DeprecatedSeasonExpressionDataProcessorTest.SEASON_CATEGORY_VALUE, firstInstanceSeasonMeasurementVariable);
 
 		final MeasurementVariable firstTrialInstanceMeasurementVariable = MeasurementVariableTestDataInitializer
 				.createMeasurementVariable(TermId.TRIAL_INSTANCE_FACTOR.getId(), "");
@@ -186,8 +187,8 @@ public class DeprecatedSeasonDeprecatedExpressionDataProcessorTest {
 		this.advancingSource.setTrailInstanceObservation(trialInstanceObservation);
 
 		this.deprecatedSeasonExpressionDataProcessor.processPlotLevelData(this.advancingSource, trialInstanceObservation);
-		Assert.assertEquals("The season should be " + DeprecatedSeasonDeprecatedExpressionDataProcessorTest.SEASON_CATEGORY_VALUE,
-				DeprecatedSeasonDeprecatedExpressionDataProcessorTest.SEASON_CATEGORY_VALUE, this.advancingSource.getSeason());
+		Assert.assertEquals("The season should be " + DeprecatedSeasonExpressionDataProcessorTest.SEASON_CATEGORY_VALUE,
+				DeprecatedSeasonExpressionDataProcessorTest.SEASON_CATEGORY_VALUE, this.advancingSource.getSeason());
 	}
 
 	@Test
@@ -198,7 +199,7 @@ public class DeprecatedSeasonDeprecatedExpressionDataProcessorTest {
 				.createValueReference(Integer.parseInt(SEASON_CATEGORY_ID), SEASON_CATEGORY_VALUE)));
 		final MeasurementData firstInstanceSeasonMeasurementData =
 				this.measurementDataTestDataInitializer
-						.createMeasurementData(DeprecatedSeasonDeprecatedExpressionDataProcessorTest.SEASON_CATEGORY_ID, firstInstanceSeasonMeasurementVariable);
+						.createMeasurementData(DeprecatedSeasonExpressionDataProcessorTest.SEASON_CATEGORY_ID, firstInstanceSeasonMeasurementVariable);
 
 		final MeasurementVariable firstTrialInstanceMeasurementVariable = MeasurementVariableTestDataInitializer
 				.createMeasurementVariable(TermId.TRIAL_INSTANCE_FACTOR.getId(), "");
@@ -210,8 +211,8 @@ public class DeprecatedSeasonDeprecatedExpressionDataProcessorTest {
 		this.advancingSource.setTrailInstanceObservation(trialInstanceObservation);
 
 		this.deprecatedSeasonExpressionDataProcessor.processPlotLevelData(this.advancingSource, trialInstanceObservation);
-		Assert.assertEquals("The season should be " + DeprecatedSeasonDeprecatedExpressionDataProcessorTest.SEASON_CATEGORY_VALUE,
-				DeprecatedSeasonDeprecatedExpressionDataProcessorTest.SEASON_CATEGORY_VALUE, this.advancingSource.getSeason());
+		Assert.assertEquals("The season should be " + DeprecatedSeasonExpressionDataProcessorTest.SEASON_CATEGORY_VALUE,
+				DeprecatedSeasonExpressionDataProcessorTest.SEASON_CATEGORY_VALUE, this.advancingSource.getSeason());
 	}
 
 	@Test
@@ -226,7 +227,7 @@ public class DeprecatedSeasonDeprecatedExpressionDataProcessorTest {
 		this.advancingSource.setTrailInstanceObservation(trialInstanceObservation);
 
 		this.deprecatedSeasonExpressionDataProcessor.processPlotLevelData(this.advancingSource, trialInstanceObservation);
-		Assert.assertEquals("The season should be an empty String", DeprecatedSeasonDeprecatedExpressionDataProcessorTest.EMPTY_STRING,
+		Assert.assertEquals("The season should be an empty String", DeprecatedSeasonExpressionDataProcessorTest.EMPTY_STRING,
 				this.advancingSource.getSeason());
 	}
 

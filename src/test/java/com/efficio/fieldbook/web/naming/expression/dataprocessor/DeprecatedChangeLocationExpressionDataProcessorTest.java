@@ -14,7 +14,7 @@ import org.mockito.Mockito;
 import java.util.List;
 
 @Deprecated
-public class DeprecatedChangeLocationDeprecatedExpressionDataProcessorTest {
+public class DeprecatedChangeLocationExpressionDataProcessorTest {
 
     DeprecatedChangeLocationExpressionDataProcessor deprecatedChangeLocationExpressionDataProcessor;
 

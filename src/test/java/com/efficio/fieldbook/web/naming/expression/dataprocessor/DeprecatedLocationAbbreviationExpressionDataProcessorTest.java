@@ -19,8 +19,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 
+@Deprecated
 @RunWith(MockitoJUnitRunner.class)
-public class DeprecatedLocationAbbreviationDeprecatedExpressionDataProcessorTest {
+public class DeprecatedLocationAbbreviationExpressionDataProcessorTest {
 
     @Mock
     private LocationService locationService;
