@@ -33,7 +33,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-12 add-bottom-padding">
+						<div class="col-md-12 add-bottom-padding" ng-show="hasManageStudiesPermission">
 							<label class="control-label">Or <a class="import-design"
 								onclick="ImportDesign.showPopup(ImportDesign.hasGermplasmListSelected());">import</a>
 								an experimental design.
@@ -48,7 +48,7 @@
 										<span>{{currentDesignType.templateName}}</span>
 		                            </div>
 		                            <span class="pull-right">
-											<a ng-hide="!isImportedDesign()" class="add_top_padding add-bottom-padding">
+											<a ng-hide="!hasManageStudiesPermission || !isImportedDesign()" class="add_top_padding add-bottom-padding">
 												<input type="button" class="btn btn-info" value="Delete Design" ng-disabled="isDeleteDesignDisable()"
 													   ng-click="deleteDesign()"/>
 											</a>

@@ -32,6 +32,8 @@ describe('Location', function () {
     var derivedVariableService=  jasmine.createSpyObj('derivedVariableService', ['getFormulaVariables']);
     var formulaVariables;
     var fileServiceMock = jasmine.createSpyObj('fileService', ['getFileStorageStatus']);
+    var HasAnyAuthorityServiceMock = jasmine.createSpyObj('HasAnyAuthorityService', ['hasAnyAuthority']);
+    var PERMISSIONSMock = {};
     var fileStorageMap = {
         status: false
     }
@@ -47,6 +49,8 @@ describe('Location', function () {
             $provide.value("TrialManagerDataService", trialDataManagerService);
             $provide.value("PROGRAM_DEFAULT_LOCATION_ID", 1);
             $provide.value("fileService", fileServiceMock);
+            $provide.value("HasAnyAuthorityService", HasAnyAuthorityServiceMock);
+            $provide.value("PERMISSIONS", PERMISSIONSMock);
         });
 
 

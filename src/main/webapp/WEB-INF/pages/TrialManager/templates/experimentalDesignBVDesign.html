@@ -6,11 +6,11 @@
 					<strong class="sub-content-heading ng-binding" >SPECIFY DESIGN PARAMETERS</strong>
 					<div ng-include="currentParams"></div>
 				</div>
-				<div class="add_top_padding add-bottom-padding">
+				<div class="add_top_padding add-bottom-padding" ng-show="hasManageStudiesPermission">
 					<!-- TODO Localise Label -->
 					<input type="submit" class="btn btn-info" value="Generate Design" onclick="this.blur();"/>
 				</div>
-				<div class="add_top_padding add-bottom-padding">
+				<div class="add_top_padding add-bottom-padding" ng-show="hasManageStudiesPermission">
 					<input type="button" class="btn btn-info" value="Delete Design" ng-disabled="isDeleteDesignDisable()"
 						   ng-click="deleteDesign()"/>
 				</div>

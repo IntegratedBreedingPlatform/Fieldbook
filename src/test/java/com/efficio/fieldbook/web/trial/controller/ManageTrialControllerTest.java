@@ -18,6 +18,7 @@ import org.generationcp.middleware.pojos.workbench.CropType;
 import org.generationcp.middleware.pojos.workbench.Project;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -57,6 +58,7 @@ public class ManageTrialControllerTest {
         // in CI server when creating bean StudyDataManager since there's no program in DB)
         this.mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
 		Mockito.when(authorizationService.isSuperAdminUser()).thenReturn(Boolean.TRUE);
+		Mockito.when(authorizationService.hasAnyAuthority(ArgumentMatchers.anyList())).thenReturn(Boolean.TRUE);
 
 		final Project project = new Project();
 		project.setCropType(new CropType(CROP_NAME));
@@ -75,6 +77,7 @@ public class ManageTrialControllerTest {
 				.andExpect(MockMvcResultMatchers.model().attributeExists("preloadSummaryName"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("studyTypes"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("isSuperAdmin"))
+				.andExpect(MockMvcResultMatchers.model().attributeExists("hasManageStudiesPermission"))
 				.andExpect(MockMvcResultMatchers.model().attribute(AbstractBaseFieldbookController.TEMPLATE_NAME_ATTRIBUTE, "Common/manageStudy"));
 
 		// Used ModelAttribute annotation for this so cannot assert above so verify mock interaction instead
