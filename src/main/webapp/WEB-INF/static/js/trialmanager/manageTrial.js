@@ -878,7 +878,8 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			};
 
 			$scope.isSaveDisabled = function () {
-				return !$scope.isSaveEnabled() && !studyStateService.hasUnsavedData();
+				return !$scope.hasAnyAuthority($scope.PERMISSIONS.MANAGE_STUDIES_PERMISSIONS)
+				|| (!$scope.isSaveEnabled() && !studyStateService.hasUnsavedData());
 			};
 
 			$scope.isSaveEnabled = function () {
