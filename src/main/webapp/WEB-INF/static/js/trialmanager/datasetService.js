@@ -220,8 +220,8 @@
 
 			};
 
-			datasetService.getAllVariables = function (datasetId) {
-				var request = $http.get(BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/variables');
+			datasetService.getAllDatasetProperties = function (datasetId) {
+				var request = $http.get(BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/properties');
 				return request.then(successHandler, failureHandler);
 			};
 
