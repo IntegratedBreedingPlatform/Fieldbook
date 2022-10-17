@@ -10,9 +10,9 @@
 										   selected-variables="selectedVariables"
 										   variable-type="1808"
 										   callback="onAddVariable(result,1808)" on-hide-callback="onHideCallback"
-										   select-variable-callback="selectVariableCallback" hide-variable="addVariable">
+										   select-variable-callback="selectVariableCallback" hide-variable="hasManageStudiesPermission">
 
-							<dataset-settings hide-delete="isHideDelete" name="content" settings="traitVariables" variable-type="1808"
+							<dataset-settings hide-delete="!hasManageStudiesPermission" name="content" settings="traitVariables" variable-type="1808"
 											  predelete-function="onRemoveVariable"></dataset-settings>
 						</section-container>
 					</div>
@@ -23,9 +23,9 @@
 										   selected-variables="selectedVariables"
 										   variable-type="1807"
 										   callback="onAddVariable(result,1807)" on-hide-callback="onHideCallback"
-										   select-variable-callback="selectVariableCallback" hide-variable="addVariable">
+										   select-variable-callback="selectVariableCallback" hide-variable="hasManageStudiesPermission">
 
-							<dataset-settings hide-delete="isHideDelete" name="content" settings="selectionVariables" variable-type="1807"
+							<dataset-settings hide-delete="!hasManageStudiesPermission" name="content" settings="selectionVariables" variable-type="1807"
 											  predelete-function="onRemoveVariable"></dataset-settings>
 						</section-container>
 					</div>
@@ -91,7 +91,7 @@
 				</div>
 			</div>
 			<div class="row add_top_padding" ng-if="isPendingView">
-				<div class="col-xs-12">
+				<div class="col-xs-12" ng-show="hasManageStudiesPermission">
 					<div class="btn-group" role="group" style="float: right; margin-left: 5px">
 						<button type="button" class="btn btn-default" ng-click="rejectDraftData()">Discard</button>
 					</div>
@@ -139,7 +139,7 @@
 				<div class="row"><br></br>
 				</div>
 			</div>
-			<div class="col-xs-12" style="padding-left: 0px;">
+			<div class="col-xs-12" style="padding-left: 0px;" ng-show="hasManageStudiesPermission">
 				<label class="control-label section-toggle toggle-icon" ng-click="collapseBatchAction()" data-test="toggleBatchActionButton">
 					<img class="icn section-expanded" ng-show="toggleSectionBatchAction" src="/Fieldbook/static/img/expanded-arrow.png"/>
 					<img style="margin-left: 7px" class="icn section-collapsed" ng-show="!toggleSectionBatchAction" src="/Fieldbook/static/img/collapsed-arrow.png"/>

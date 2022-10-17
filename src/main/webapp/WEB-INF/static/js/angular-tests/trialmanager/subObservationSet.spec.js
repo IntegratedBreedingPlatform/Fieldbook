@@ -876,7 +876,9 @@ describe('SubObservationSetCtrl', function () {
 			'getObservationTableUrl'
 		]),
 		derivedVariableServiceMock = jasmine.createSpyObj('derivedVariableService', ['displayExecuteCalculateVariableMenu', 'showWarningIfDependenciesAreMissing']),
-		fileServiceMock = jasmine.createSpyObj('fileService', ['getFileStorageStatus'])
+		fileServiceMock = jasmine.createSpyObj('fileService', ['getFileStorageStatus']),
+		HasAnyAuthorityServiceMock = jasmine.createSpyObj('HasAnyAuthorityService', ['hasAnyAuthority']),
+		PERMISSIONSMock = {}
 	;
 
 	/**
@@ -905,6 +907,8 @@ describe('SubObservationSetCtrl', function () {
 			$provide.value("$uibModal", $uibModal);
 			$provide.value("studyContext", studyContext);
 			$provide.value("SEARCH_ORIGIN", ['MANAGE_STUDY_SOURCE', 'MANAGE_STUDY_PLOT']);
+			$provide.value("HasAnyAuthorityService", HasAnyAuthorityServiceMock);
+			$provide.value("PERMISSIONS", PERMISSIONSMock);
 		});
 
 		module('subObservation');

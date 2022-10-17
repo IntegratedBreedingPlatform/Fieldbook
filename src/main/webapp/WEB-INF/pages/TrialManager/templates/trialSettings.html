@@ -23,8 +23,7 @@
                                                    valuecontainer="data.userInput"></show-setting-form-element>
                     </div>
                 </div>
-
-                <div class="row form-group" ng-show="(managementDetails.keys() | removeHiddenAndDeletablesVariableFilter: managementDetails.vals() ).length &gt; 0">
+                <div class="row form-group" ng-show="hasManageStudiesPermission &amp;&amp; ((managementDetails.keys() | removeHiddenAndDeletablesVariableFilter: managementDetails.vals() ).length &gt; 0)">
                     <div class="col-md-12">
                         <label class="fbk-selectall-chk"><input type="checkbox" ng-model="managementDetailsOptions.selectAll" ng-change="doSelectAll(managementDetails, managementDetailsOptions)"/> Select All</label>
                         <a class="fbk-remove-link" href="javascript: void(0);" ng-click="removeSettings(VARIABLE_TYPES.STUDY_DETAIL, managementDetails, managementDetailsOptions)" >Remove</a>

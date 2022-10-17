@@ -16,7 +16,7 @@
 				<label class="h2_no_transform" th:text="#{browse.studies.header}"></label>
 				<label class="control-label"><a href="javascript: openStudyTree(1)">Browse</a> for a study to work with.</label>
 			</div>
-			<div class="col-xs-5 col-md-5">
+			<div class="col-xs-5 col-md-5" th:if="${hasManageStudiesPermission == true}">
 				<div style="float: right; padding-right: 10px;">
 					<a th:href="@{/TrialManager/createTrial}" class="btn btn-info"
 					th:utext="#{browse.study.start.new.study}">Start a New Study</a>

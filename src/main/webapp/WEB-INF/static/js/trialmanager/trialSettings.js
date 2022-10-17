@@ -5,10 +5,11 @@
 
 	var manageTrialApp = angular.module('manageTrialApp');
 
-	manageTrialApp.controller('TrialSettingsCtrl', ['$scope', 'TrialManagerDataService', '_', '$filter', 'studyStateService', function ($scope, TrialManagerDataService, _, $filter, studyStateService) {
+	manageTrialApp.controller('TrialSettingsCtrl', ['$scope', 'TrialManagerDataService', '_', '$filter', 'studyStateService', 'HasAnyAuthorityService', 'PERMISSIONS',
+		function ($scope, TrialManagerDataService, _, $filter, studyStateService, HasAnyAuthorityService, PERMISSIONS) {
 
 		$scope.data = TrialManagerDataService.currentData.trialSettings;
-		$scope.addVariable = true;
+		$scope.addVariable = HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.MANAGE_STUDIES_PERMISSIONS);
 
 		$scope.managementDetails = TrialManagerDataService.settings.trialSettings;
 

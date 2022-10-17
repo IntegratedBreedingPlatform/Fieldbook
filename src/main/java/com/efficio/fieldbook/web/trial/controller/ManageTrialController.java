@@ -15,6 +15,7 @@ import com.efficio.fieldbook.web.AbstractBaseFieldbookController;
 import com.efficio.fieldbook.web.trial.form.ManageTrialForm;
 
 import org.generationcp.middleware.manager.api.StudyDataManager;
+import org.generationcp.middleware.pojos.workbench.PermissionsEnum;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -48,6 +49,7 @@ public class ManageTrialController extends AbstractBaseFieldbookController {
 		model.addAttribute("preloadSummaryId", request.getParameter("summaryId") != null ? request.getParameter("summaryId") : "");
 		model.addAttribute("preloadSummaryName", request.getParameter("summaryName") != null ? request.getParameter("summaryName") : "");
 		model.addAttribute("studyTypes", this.studyDataManager.getAllVisibleStudyTypes());
+		model.addAttribute("hasManageStudiesPermission", this.authorizationService.hasAnyAuthority(PermissionsEnum.MANAGE_STUDIES_PERMISSIONS));
 		setIsSuperAdminAttribute(model);
 		return super.show(model);
 	}
@@ -71,6 +73,4 @@ public class ManageTrialController extends AbstractBaseFieldbookController {
 	public String getProgramId() {
 		return this.contextUtil.getProjectInContext().getUniqueID();
 	}
-
-
 }

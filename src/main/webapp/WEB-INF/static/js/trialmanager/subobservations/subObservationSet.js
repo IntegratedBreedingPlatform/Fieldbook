@@ -26,10 +26,10 @@
 
 	subObservationModule.controller('SubObservationSetCtrl', ['$scope', '$rootScope', 'TrialManagerDataService', '$stateParams',
 		'DTOptionsBuilder', 'DTColumnBuilder', '$http', '$q', '$compile', 'studyInstanceService', 'datasetService',
-		'derivedVariableService', 'fileService', '$timeout', '$uibModal', 'visualizationModalService', 'studyContext', 'germplasmDetailsModalService', 'SEARCH_ORIGIN',
+		'derivedVariableService', 'fileService', '$timeout', '$uibModal', 'visualizationModalService', 'studyContext', 'germplasmDetailsModalService', 'SEARCH_ORIGIN', 'HasAnyAuthorityService', 'PERMISSIONS',
 		function ($scope, $rootScope, TrialManagerDataService, $stateParams, DTOptionsBuilder, DTColumnBuilder, $http, $q, $compile,
 				  studyInstanceService, datasetService, derivedVariableService, fileService, $timeout, $uibModal, visualizationModalService,
-				  studyContext, germplasmDetailsModalService, SEARCH_ORIGIN
+				  studyContext, germplasmDetailsModalService, SEARCH_ORIGIN, HasAnyAuthorityService, PERMISSIONS
 		) {
 
 			// used also in tests - to call $rootScope.$apply()
@@ -50,8 +50,7 @@
 			$scope.selectVariableFilter = [];
 			$scope.traitVariables = new angular.OrderedHash();
 			$scope.selectionVariables = new angular.OrderedHash();
-			$scope.isHideDelete = false;
-			$scope.addVariable = true;
+			$scope.hasManageStudiesPermission = HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.MANAGE_STUDIES_PERMISSIONS);
 			var subObservationSet = $scope.subObservationSet = $stateParams.subObservationSet;
 			$scope.columnsObj = subObservationSet.columnsObj;
 			$scope.rows = subObservationSet.rows;
