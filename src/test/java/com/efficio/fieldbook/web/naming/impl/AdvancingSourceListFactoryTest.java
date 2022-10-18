@@ -2,8 +2,8 @@
 package com.efficio.fieldbook.web.naming.impl;
 
 import com.efficio.fieldbook.util.FieldbookException;
-import com.efficio.fieldbook.web.naming.expression.dataprocessor.DeprecatedExpressionDataProcessor;
-import com.efficio.fieldbook.web.naming.expression.dataprocessor.DeprecatedExpressionDataProcessorFactory;
+import com.efficio.fieldbook.web.naming.expression.dataprocessor.ExpressionDataProcessor;
+import com.efficio.fieldbook.web.naming.expression.dataprocessor.ExpressionDataProcessorFactory;
 import com.efficio.fieldbook.web.trial.bean.AdvanceType;
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
 import com.google.common.collect.Lists;
@@ -60,7 +60,7 @@ public class AdvancingSourceListFactoryTest {
     private ResourceBundleMessageSource messageSource;
 
     @Mock
-    private DeprecatedExpressionDataProcessorFactory dataProcessorFactory;
+    private ExpressionDataProcessorFactory dataProcessorFactory;
 
     @Mock
     private StudyInstanceService studyInstanceService;
@@ -76,10 +76,10 @@ public class AdvancingSourceListFactoryTest {
 	@SuppressWarnings("unchecked")
 	@Test
     public void testCreateAdvancingSourceListSuccess() throws FieldbookException {
-        final DeprecatedExpressionDataProcessor deprecatedExpressionDataProcessor = Mockito.mock(DeprecatedExpressionDataProcessor.class);
-        Mockito.when(this.dataProcessorFactory.retrieveExecutorProcessor()).thenReturn(deprecatedExpressionDataProcessor);
+        final ExpressionDataProcessor expressionDataProcessor = Mockito.mock(ExpressionDataProcessor.class);
+        Mockito.when(this.dataProcessorFactory.retrieveExecutorProcessor()).thenReturn(expressionDataProcessor);
 
-        Mockito.doNothing().when(deprecatedExpressionDataProcessor).processEnvironmentLevelData(Matchers.isA(AdvancingSource.class),
+        Mockito.doNothing().when(expressionDataProcessor).processEnvironmentLevelData(Matchers.isA(AdvancingSource.class),
 			Matchers.isA(Workbook.class), Matchers.isA(AdvancingStudy.class), Matchers.isNull(Study.class));
         final Map<Integer,List<Name>> mapNames = Maps.newHashMap();
         final List<Name> nameList = Lists.newArrayList();
@@ -176,10 +176,10 @@ public class AdvancingSourceListFactoryTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testCreateAdvancingSourceListSuccessWithSelectionVariateMethod() throws FieldbookException {
-        final DeprecatedExpressionDataProcessor deprecatedExpressionDataProcessor = Mockito.mock(DeprecatedExpressionDataProcessor.class);
-        Mockito.when(this.dataProcessorFactory.retrieveExecutorProcessor()).thenReturn(deprecatedExpressionDataProcessor);
+        final ExpressionDataProcessor expressionDataProcessor = Mockito.mock(ExpressionDataProcessor.class);
+        Mockito.when(this.dataProcessorFactory.retrieveExecutorProcessor()).thenReturn(expressionDataProcessor);
 
-        Mockito.doNothing().when(deprecatedExpressionDataProcessor).processEnvironmentLevelData(Matchers.isA(AdvancingSource.class),
+        Mockito.doNothing().when(expressionDataProcessor).processEnvironmentLevelData(Matchers.isA(AdvancingSource.class),
 			Matchers.isA(Workbook.class), Matchers.isA(AdvancingStudy.class), Matchers.isNull(Study.class));
         final Map<Integer,List<Name>> mapNames = Maps.newHashMap();
         final List<Name> nameList = Lists.newArrayList();

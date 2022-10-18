@@ -1,8 +1,8 @@
 package com.efficio.fieldbook.web.naming.impl;
 
 import com.efficio.fieldbook.util.FieldbookException;
-import com.efficio.fieldbook.web.naming.expression.dataprocessor.DeprecatedExpressionDataProcessor;
-import com.efficio.fieldbook.web.naming.expression.dataprocessor.DeprecatedExpressionDataProcessorFactory;
+import com.efficio.fieldbook.web.naming.expression.dataprocessor.ExpressionDataProcessor;
+import com.efficio.fieldbook.web.naming.expression.dataprocessor.ExpressionDataProcessorFactory;
 import com.efficio.fieldbook.web.trial.bean.AdvanceType;
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -51,7 +51,7 @@ public class AdvancingSourceListFactory {
 	private ResourceBundleMessageSource messageSource;
 
 	@Resource
-	private DeprecatedExpressionDataProcessorFactory dataProcessorFactory;
+	private ExpressionDataProcessorFactory dataProcessorFactory;
 
 	@Resource
 	private StudyDataManager studyDataManager;
@@ -71,7 +71,7 @@ public class AdvancingSourceListFactory {
 		}
 
 		final AdvancingSource environmentLevel = new AdvancingSource();
-		final DeprecatedExpressionDataProcessor dataProcessor = this.dataProcessorFactory.retrieveExecutorProcessor();
+		final ExpressionDataProcessor dataProcessor = this.dataProcessorFactory.retrieveExecutorProcessor();
 
 		final AdvancingSourceList advancingSourceList = new AdvancingSourceList();
 

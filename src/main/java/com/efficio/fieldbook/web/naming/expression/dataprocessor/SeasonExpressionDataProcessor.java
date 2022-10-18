@@ -20,7 +20,7 @@ import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
 
 @Deprecated
 @Component
-public class DeprecatedSeasonExpressionDataProcessor implements DeprecatedExpressionDataProcessor {
+public class SeasonExpressionDataProcessor implements ExpressionDataProcessor {
 
 	@Override
 	public void processEnvironmentLevelData(final AdvancingSource source, final Workbook workbook, final AdvancingStudy nurseryInfo,

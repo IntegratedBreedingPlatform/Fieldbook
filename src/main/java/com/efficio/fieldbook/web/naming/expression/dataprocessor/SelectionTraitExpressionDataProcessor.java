@@ -23,7 +23,7 @@ import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
 
 @Deprecated
 @Component
-public class DeprecatedSelectionTraitExpressionDataProcessor implements DeprecatedExpressionDataProcessor {
+public class SelectionTraitExpressionDataProcessor implements ExpressionDataProcessor {
 
 	public static final String SELECTION_TRAIT_PROPERTY = "Selection Criteria";
 
