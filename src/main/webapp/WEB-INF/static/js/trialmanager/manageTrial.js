@@ -610,7 +610,11 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			};
 
 			$scope.showPreparePlantingInventoryAction = function () {
-				return HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.PREPARE_PLANTING_PERMISSIONS);
+				return $scope.hasDesignGenerated && HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.PREPARE_PLANTING_PERMISSIONS);
+			}
+
+			$scope.showDesignAndPlanningOptions = function () {
+				return $scope.showDesignAndPlanningOptions() || $scope.hasManageStudiesPermission;
 			}
 
 			$scope.showCreateLotsAction = function () {
@@ -619,7 +623,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			}
 
 			$scope.displayGermplasmOrMeasurmentOnlyActions = function () {
-				return this.hasGermplasmListSelected() || studyStateService.hasGeneratedDesign();
+				return studyStateService.hasGeneratedDesign() || ($scope.hasManageStudiesPermission && $scope.hasGermplasmListSelected());
 			};
 
 			$scope.displayExecuteCalculatedVariableOnlyActions = function () {
