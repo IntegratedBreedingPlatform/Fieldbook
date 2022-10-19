@@ -79,7 +79,7 @@
 										<a ng-click="printLabels()" id="label-printing-url-link"
 										   th:text="#{study.studydetails.action.printLabels}">Print Labels</a>
 									</li>
-									<lili ng-show="hasManageStudiesPermission &amp;&amp; hasDesignGenerated">
+									<li ng-show="hasManageStudiesPermission &amp;&amp; hasDesignGenerated">
 										<a ng-click="preparePlanting();" id="prepare-planting-inventory-link"
 										   th:text="#{study.studydetails.action.observationunits.prepare.plating}">Prepare planting inventory</a>
 									</li>
@@ -208,10 +208,10 @@
 							<li>
 								<a href="" th:text="#{study.studydetails.action.unlock.study}" ng-show="isLockedStudy() &amp;&amp;  userHasLockPermission()" ng-click="changeLockedStatus(0)">Unlock Study</a>
 							</li>
-							<li ng-show="staBrappURL">
+							<li ng-show="hasManageStudiesPermission &amp;&amp; staBrappURL">
 								<a href="" th:utext="#{study.studydetails.action.stabrapp}" ng-click="analyzeWithBrapp(staBrappURL)"></a>
 							</li>
-							<li ng-show="dsBrappURL">
+							<li ng-show="hasManageStudiesPermission &amp;&amp; dsBrappURL">
 								<a href="" th:utext="#{study.studydetails.action.dsbrapp}" ng-click="analyzeWithBrapp(dsBrappURL)"></a>
 							</li>
 						</ul>
