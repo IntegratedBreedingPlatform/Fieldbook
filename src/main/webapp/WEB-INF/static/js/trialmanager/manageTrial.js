@@ -614,7 +614,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			}
 
 			$scope.showDesignAndPlanningOptions = function () {
-				return $scope.showDesignAndPlanningOptions() || $scope.hasManageStudiesPermission;
+				return $scope.showPreparePlantingInventoryAction() || $scope.hasManageStudiesPermission;
 			}
 
 			$scope.showCreateLotsAction = function () {
