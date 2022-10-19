@@ -8,18 +8,19 @@
 	manageTrialAppModule.controller('GermplasmCtrl',
 		['$scope', '$rootScope', '$q', '$compile', 'TrialManagerDataService', 'DTOptionsBuilder', 'studyStateService', 'studyEntryService', 'germplasmStudySourceService',
 			'datasetService', '$timeout', '$uibModal', 'germplasmDetailsModalService', 'studyEntryObservationService', 'feedbackService', 'DATASET_TYPES', 'VARIABLE_TYPES',
-			'$http', 'studyContext', 'breedingMethodModalService',
+			'$http', 'studyContext', 'breedingMethodModalService', 'HasAnyAuthorityService', 'PERMISSIONS',
 			function ($scope, $rootScope, $q, $compile, TrialManagerDataService, DTOptionsBuilder, studyStateService, studyEntryService, germplasmStudySourceService,
 					  datasetService, $timeout, $uibModal, germplasmDetailsModalService, studyEntryObservationService, feedbackService, DATASET_TYPES, VARIABLE_TYPES,
-					  $http, studyContext, breedingMethodModalService) {
+					  $http, studyContext, breedingMethodModalService, HasAnyAuthorityService, PERMISSIONS) {
 
 				var GID = 8240,
 					GROUPGID = 8330;
+				$scope.hasManageStudiesPermission = HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.MANAGE_STUDIES_PERMISSIONS);
 
 				$scope.entryDetails = TrialManagerDataService.settings.entryDetails;
 				$scope.isLockedStudy = TrialManagerDataService.isLockedStudy;
 				$scope.trialMeasurement = {hasMeasurement: studyStateService.hasGeneratedDesign()};
-				$scope.addVariable = TrialManagerDataService.applicationData.germplasmListSelected;
+				$scope.addVariable = TrialManagerDataService.applicationData.germplasmListSelected && $scope.hasManageStudiesPermission;
 				$scope.showAddColumns = TrialManagerDataService.applicationData.germplasmListSelected;
 				$scope.selectedItems = [];
 				$scope.numberOfEntries = 0;
@@ -1139,15 +1140,15 @@
 				};
 
 				$scope.showUpdateImportList = function () {
-					return $scope.showUpdateImportListButton;
+					return $scope.hasManageStudiesPermission && $scope.showUpdateImportListButton;
 				};
 
 				$scope.showClearListButton = function () {
-					return $scope.showClearList;
+					return $scope.hasManageStudiesPermission && $scope.showClearList;
 				}
 
 				$scope.showImportList = function () {
-					return $scope.showImportListBrowser;
+					return $scope.hasManageStudiesPermission && $scope.showImportListBrowser;
 				};
 
 				$scope.showStudyTable = function () {
@@ -1230,7 +1231,11 @@
 							$scope.showUpdateImportListButton = true;
 							$scope.showStudyEntriesTable = true;
 							$scope.showClearList = true;
+						}, function (errResponse) {
+							showErrorMessage($.fieldbookMessages.errorServerError, errResponse.errors[0].message);
 						});
+					}, function (errResponse) {
+						showErrorMessage($.fieldbookMessages.errorServerError, errResponse.errors[0].message);
 					});
 				};
 
@@ -1246,6 +1251,8 @@
 								$scope.showClearList = false;
 								$scope.reloadStudyEntryTableData();
 								TrialManagerDataService.applicationData.germplasmListSelected = false;
+							}, function (errResponse) {
+								showErrorMessage($.fieldbookMessages.errorServerError, errResponse.errors[0].message);
 							});
 						}
 					});

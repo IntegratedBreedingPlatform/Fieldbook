@@ -31,10 +31,13 @@ import org.generationcp.middleware.domain.etl.MeasurementVariable;
 import org.generationcp.middleware.domain.etl.TreatmentVariable;
 import org.generationcp.middleware.domain.etl.Workbook;
 import org.generationcp.middleware.domain.oms.TermId;
+import org.generationcp.middleware.domain.ontology.Variable;
 import org.generationcp.middleware.domain.ontology.VariableType;
 import org.generationcp.middleware.exceptions.MiddlewareException;
 import org.generationcp.middleware.exceptions.MiddlewareQueryException;
 import org.generationcp.middleware.manager.Operation;
+import org.generationcp.middleware.manager.ontology.api.OntologyVariableDataManager;
+import org.generationcp.middleware.manager.ontology.daoElements.VariableFilter;
 import org.generationcp.middleware.pojos.workbench.settings.Dataset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +60,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.springframework.util.CollectionUtils.isEmpty;
@@ -87,6 +91,9 @@ public class CreateTrialController extends BaseTrialController {
 
 	@Resource
 	private ErrorHandlerService errorHandlerService;
+
+	@Resource
+	private OntologyVariableDataManager ontologyVariableDataManager;
 
 	/*
 	 * (non-Javadoc)
@@ -146,6 +153,8 @@ public class CreateTrialController extends BaseTrialController {
 
 				this.excludeTreatmentFactorVariables(trialWorkbook);
 
+				this.excludeObsoleteVariables(trialWorkbook);
+
 				this.userSelection.setConstantsWithLabels(trialWorkbook.getConstants());
 
 				tabDetails.put("germplasmData", this.prepareGermplasmTabInfo(trialWorkbook.getFactors(), true));
@@ -180,6 +189,22 @@ public class CreateTrialController extends BaseTrialController {
 
 		trialWorkbook.getFactors().removeIf(variable -> treatmentFactorVariableIds.contains(variable.getTermId()));
 		trialWorkbook.setTreatmentFactors(new ArrayList<>());
+	}
+
+	void excludeObsoleteVariables(final Workbook trialWorkbook) {
+		final VariableFilter variableFilterOptions = new VariableFilter();
+		variableFilterOptions.setProgramUuid(contextUtil.getCurrentProgramUUID());
+		variableFilterOptions.setShowObsoletes(false);
+
+		final Set<Integer> nonObsoleteVariables = this.ontologyVariableDataManager.getWithFilter(variableFilterOptions)
+			.stream().map(Variable::getId).collect(Collectors.toSet());
+
+		trialWorkbook.getFactors().removeIf(variable -> !nonObsoleteVariables.contains(variable.getTermId()));
+		trialWorkbook.getTrialConditions().removeIf(variable -> !nonObsoleteVariables.contains(variable.getTermId()));
+		trialWorkbook.getTrialConstants().removeIf(variable -> !nonObsoleteVariables.contains(variable.getTermId()));
+		trialWorkbook.getStudyConditions().removeIf(variable -> !nonObsoleteVariables.contains(variable.getTermId()));
+		trialWorkbook.getVariates().removeIf(variable -> !nonObsoleteVariables.contains(variable.getTermId()));
+		trialWorkbook.getEntryDetails().removeIf(variable -> !nonObsoleteVariables.contains(variable.getTermId()));
 	}
 
 	private CreateTrialForm addErrorMessageToResult(final MiddlewareException e) {

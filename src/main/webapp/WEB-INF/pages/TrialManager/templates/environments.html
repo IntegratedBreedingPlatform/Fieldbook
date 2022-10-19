@@ -7,18 +7,18 @@
 					<div class="col-xs-6 col-md-6">
 						<section-container icon="bms-mgt-details"
 										   th:attr="heading=#{study.managesettings.environment.management.details}" help-tool-type="MANAGE_STUDIES_ENVIRONMENT"
-										   add-variable="true" hide-variable="addVariable" model-data="settings.managementDetails"
+										   add-variable="true" hide-variable="hasManageStudiesPermission" model-data="settings.managementDetails"
 										   variable-type="1806" callback="onAddVariable(result, 1806)">
-							<display-settings hide-delete="isHideDelete" name="content" predelete-function="onRemoveVariable" settings="settings.managementDetails"
+							<display-settings hide-delete="!hasManageStudiesPermission" name="content" predelete-function="onRemoveVariable" settings="settings.managementDetails"
 											  variable-type="1806"></display-settings>
 						</section-container>
 					</div>
 					<div class="col-xs-6 col-md-6">
 						<section-container
 							th:attr="heading=#{study.managesettings.environment.condition.details},help-tooltip=#{study.managesettings.conditions.tooltip},icon-img=@{/static/svg/conditions.svg}"
-							icon-size="22" add-variable="true" hide-variable="addVariable" model-data="settings.trialConditionDetails"
+							icon-size="22" add-variable="true" hide-variable="hasManageStudiesPermission" model-data="settings.trialConditionDetails"
 							variable-type="1802" callback="onAddVariable(result, 1802)">
-							<display-settings hide-delete="isHideDelete" name="content" predelete-function="onRemoveVariable" settings="settings.trialConditionDetails"
+							<display-settings hide-delete="!hasManageStudiesPermission" name="content" predelete-function="onRemoveVariable" settings="settings.trialConditionDetails"
 											  variable-type="1802"></display-settings>
 						</section-container>
 					</div>
@@ -32,16 +32,16 @@
 								<label class="control-label label-bold add_top_padding col-xs-7" style="text-align: left" th:text="#{study.managesettings.environment.specify.level.no}">Specify the number of environments for this study:</label>
 								<div class="col-xs-4">
 									<div class="input-group">
-										<input maxlength="3" valid-number="" class="form-control input-sm" ng-model="temp.numberOfInstances" ng-disabled="isDesignAlreadyGenerated()"/>
+										<input maxlength="3" valid-number="" class="form-control input-sm" ng-model="temp.numberOfInstances" ng-disabled="!hasManageStudiesPermission || isDesignAlreadyGenerated()"/>
 										<span class="input-group-btn">
-                                              <input ng-click="updateInstanceCount()" ng-hide="isDesignAlreadyGenerated()" class="btn btn-info btn-sm"
+                                              <input ng-click="updateInstanceCount()" ng-hide="!hasManageStudiesPermission || isDesignAlreadyGenerated()" class="btn btn-info btn-sm"
 													 style="padding: 6px 10px 5px; font-size: 11px;" type="button" value="Ok"/>
                                         </span>
 									</div><!-- /input-group -->
 								</div>
 								<div class="col-xs-offset-0">
 									<div class="input-group">
-										<span ng-show="isDesignAlreadyGenerated()" class="glyphicon glyphicon-plus-sign fbk-add-sign" ng-click="(isDisableAddInstance) || addInstance()"></span>
+										<span ng-show="hasManageStudiesPermission &amp;&amp; isDesignAlreadyGenerated()" class="glyphicon glyphicon-plus-sign fbk-add-sign" ng-click="(isDisableAddInstance) || addInstance()"></span>
 									</div>
 								</div>
 							</div>

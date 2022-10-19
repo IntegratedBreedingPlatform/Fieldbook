@@ -28,6 +28,7 @@ import org.generationcp.middleware.domain.study.StudyTypeDto;
 import org.generationcp.middleware.exceptions.MiddlewareQueryException;
 import org.generationcp.middleware.manager.Operation;
 import org.generationcp.middleware.manager.api.StudyDataManager;
+import org.generationcp.middleware.manager.ontology.api.OntologyVariableDataManager;
 import org.generationcp.middleware.pojos.ErrorCode;
 import org.generationcp.middleware.pojos.Location;
 import org.generationcp.middleware.pojos.dms.StudyType;
@@ -55,6 +56,9 @@ public class CreateTrialControllerTest {
 
 	@Mock
 	private FieldbookService fieldbookMiddlewareService;
+
+	@Mock
+	private OntologyVariableDataManager ontologyVariableDataManager;
 
 	@Mock
 	private UserSelection userSelection;

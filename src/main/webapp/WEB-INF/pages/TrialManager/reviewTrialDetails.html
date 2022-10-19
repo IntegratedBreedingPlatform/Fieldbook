@@ -35,7 +35,7 @@
 							<a th:if="!${trialDetails.isLocked} OR ${trialDetails.ownerId} == ${currentCropUserId} OR ${isSuperAdmin}" href="javascript: openStudy('trial-table');" id="open-study-url-link" th:text="#{study.studydetails.action.edit}">Edit Study</a>
 						</li>
 						<!-- Delete Study -->
-						<li>
+                        <li th:if="${hasManageStudiesPermission == true}">
 							<a th:if="!${trialDetails.isLocked} OR ${trialDetails.ownerId} == ${currentCropUserId} OR ${isSuperAdmin}" href="javascript: openDeleteConfirmation();" th:text="#{browse.study.delete.study.name}">Delete Study</a>
 						</li>
                         <!-- Export Study book: will display export format & Data collection order options -->
@@ -43,12 +43,12 @@
 							<a href="javascript: showExportOptions();" id="export-study-link" th:text="#{study.studydetails.action.export.study}">Export Study Book</a>
 						</li>
                         <!-- Make Field Map: will allow user to create Field Map from Summary view -->
-						<li>
+                        <li th:if="${hasManageStudiesPermission == true}">
 							<a href="" style="display: none" id="fieldmap-url" th:href="@{/Fieldmap/enterFieldDetails/nursery}"></a>
 							<a th:if="!${trialDetails.isLocked} OR ${trialDetails.ownerId} == ${currentCropUserId} OR ${isSuperAdmin}" href="javascript: createFieldMap();" id="fieldmap-url-link" th:text="#{study.studydetails.action.createFieldmap}">Make Field Map</a>
 						</li>
                         <!-- Create Labels -->
-						<li>
+                        <li th:if="${hasManageStudiesPermission == true}">
 							<a href="" style="display: none" id="label-printing-url" th:href="@{/LabelPrinting/specifyLabelDetails/trial}"></a>
 							<a href="javascript: createLabelPrinting('trial-table');" id="label-printing-url-link" th:text="#{study.studydetails.action.printLabels}">Print Labels</a>
 						</li>

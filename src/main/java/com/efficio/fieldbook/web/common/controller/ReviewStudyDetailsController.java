@@ -33,6 +33,7 @@ import org.generationcp.middleware.domain.ontology.VariableType;
 import org.generationcp.middleware.exceptions.MiddlewareException;
 import org.generationcp.middleware.exceptions.MiddlewareQueryException;
 import org.generationcp.middleware.manager.api.StudyDataManager;
+import org.generationcp.middleware.pojos.workbench.PermissionsEnum;
 import org.generationcp.middleware.service.api.FieldbookService;
 import org.generationcp.middleware.service.api.OntologyService;
 import org.generationcp.middleware.service.api.study.StudyEntryService;
@@ -137,6 +138,7 @@ public class ReviewStudyDetailsController extends AbstractBaseFieldbookControlle
 		if (nonReplicatedEntriesCount.isPresent()) {
 			model.addAttribute("nonReplicatedEntriesCount", nonReplicatedEntriesCount.get());
 		}
+		model.addAttribute("hasManageStudiesPermission", this.authorizationService.hasAnyAuthority(PermissionsEnum.MANAGE_STUDIES_PERMISSIONS));
 		this.setIsSuperAdminAttribute(model);
 		return this.showAjaxPage(model, this.getContentName());
 	}

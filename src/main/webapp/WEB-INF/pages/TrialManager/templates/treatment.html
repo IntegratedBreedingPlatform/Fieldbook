@@ -7,7 +7,7 @@
                 <section-container icon="bms-treatment-factors" name="content"
                                    th:attr="heading=#{study.managesettings.treatment.factors}" help-tool-type="MANAGE_STUDIES_TREATMENT_FACTORS"
                                    add-variable="true" model-data="settings.details" variable-type="1809" callback="onAddVariable(result)"
-                                   hide-variable="!trialMeasurement.hasMeasurement">
+                                   hide-variable="hasManageStudiesPermission &amp;&amp; !trialMeasurement.hasMeasurement">
 
                     <div name="content">
                         <table class='factor-opts-tbl table table-curved table-condensed'>

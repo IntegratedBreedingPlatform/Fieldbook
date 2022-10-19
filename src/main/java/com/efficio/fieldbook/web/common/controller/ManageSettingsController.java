@@ -136,6 +136,7 @@ public class ManageSettingsController extends SettingsController {
 				final VariableFilter variableFilterOptions = new VariableFilter();
 				variableFilterOptions.setProgramUuid(contextUtil.getCurrentProgramUUID());
 				variableFilterOptions.addPropertyId(property.getId());
+				variableFilterOptions.setShowObsoletes(false);
 
 				variableFilterOptions.getVariableTypes().addAll(selectedVariableTypes);
 

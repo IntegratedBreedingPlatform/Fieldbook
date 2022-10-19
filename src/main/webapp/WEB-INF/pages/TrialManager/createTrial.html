@@ -33,7 +33,7 @@
 						</div>
 					</div>
 
-					<div ng-show="hasUnsavedData()" style="margin-top: 10px; margin-left: 10px; display: inline-block;">
+					<div ng-show="hasManageStudiesPermission &amp;&amp; hasUnsavedData()" style="margin-top: 10px; margin-left: 10px; display: inline-block;">
 						<span class="label label-warning">unsaved data</span>
 					</div>
 
@@ -56,30 +56,30 @@
 							<span th:text="#{study.studydetails.actions}">Actions</span>
 						</button>
 						<ul class="dropdown-menu fbk-right-button-drop-down" role="menu">
-							<li ng-if="isSaveEnabled()">
+							<li ng-show="isSaveEnabled()">
 								<a href="javascript: void(0);" ng-click="saveCurrentTrialData()"
 								   th:text="#{study.option.save}">Save Study</a>
 							</li>
 
-							<li class="dropdown-submenu pull-left">
+							<li class="dropdown-submenu pull-left" ng-show="showPreparePlantingInventoryAction()">
 								<a tabindex="-1" href="#">Design and planning options</a>
 								<ul class="dropdown-menu" style="margin-left: 8px; width: 192px">
-									<li>
+									<li ng-show="hasManageStudiesPermission">
 										<a href="javascript: void(0)" onclick="exportDesignTemplate()" class="export-design-template-link"
 										   th:text="#{study.studydetails.action.export.design.template}">Export Design Template</a>
 									</li>
-									<li ng-show="hasGermplasmListSelected()">
+									<li ng-show="hasManageStudiesPermission &amp;&amp; hasGermplasmListSelected()">
 										<a href="javascript: ImportDesign.showPopup(ImportDesign.hasGermplasmListSelected());"
 										   id="import-design-url-link"
 										   th:text="#{study.studydetails.action.import.design}">Import Design</a>
 									</li>
-									<li ng-show="hasDesignGenerated">
+									<li ng-show="hasManageStudiesPermission &amp;&amp; hasDesignGenerated">
 										<a href="" style="display: none" id="label-printing-url"
 										   th:href="@{/LabelPrinting/specifyLabelDetails/trial}"></a>
 										<a ng-click="printLabels()" id="label-printing-url-link"
 										   th:text="#{study.studydetails.action.printLabels}">Print Labels</a>
 									</li>
-									<li ng-show="showPreparePlantingInventoryAction()">
+									<li>
 										<a ng-click="preparePlanting();" id="prepare-planting-inventory-link"
 										   th:text="#{study.studydetails.action.observationunits.prepare.plating}">Prepare planting inventory</a>
 									</li>
@@ -87,7 +87,7 @@
 							</li>
 
 							<!--Crossing options-->
-							<li ng-show="hasDesignGenerated" class="dropdown-submenu pull-left">
+							<li ng-show="showManageStudiesAction()" class="dropdown-submenu pull-left">
 								<a tabindex="-1" href="#">Crossing options</a>
 								<ul class="dropdown-menu" style="margin-left: -48px;">
 									<!--Export crossing template-->
@@ -107,7 +107,7 @@
 									</li>
 								</ul>
 							</li>
-							<li ng-show="hasDesignGenerated" class="dropdown-submenu pull-left">
+							<li ng-show="showManageStudiesAction()" class="dropdown-submenu pull-left">
 								<a tabindex="-1" href="#" th:text="#{study.studydetails.action.observationunits}">Observation unit options</a>
 								<ul class="dropdown-menu" style="margin-left: -25px;">
 									<li>
@@ -125,7 +125,7 @@
 							<li ng-show="hasDesignGenerated" class="dropdown-submenu pull-left">
 								<a tabindex="-1" href="#">Field map options</a>
 								<ul class="dropdown-menu" style="margin-left: -20px;">
-									<li>
+									<li ng-show="hasManageStudiesPermission">
 										<a href="" style="display: none" id="fieldmap-url"
 										   th:href="@{/Fieldmap/enterFieldDetails/nursery}"></a>
 										<a href="javascript: createFieldMap(false);" id="fieldmap-url-link"
@@ -135,15 +135,15 @@
 										<a href="javascript: showFieldMap('trial-table');" id="view-fieldmap-url-link"
 										   th:text="#{study.edit.study.view.field.map}">View Field Map</a>
 									</li>
-									<li>
+									<li ng-show="hasManageStudiesPermission">
 										<a href="javascript: createFieldMap(true);" id="delete-fieldmap-url-link"
 										   th:text="#{study.edit.study.delete.field.map}">Delete Field Map</a>
 									</li>
-									<li>
+									<li ng-show="hasManageStudiesPermission">
 										<a ng-click="showGeoJSONModal()"
 										   th:text="#{study.studydetails.action.geojson.create}">Create georeference</a>
 									</li>
-									<li>
+									<li ng-show="hasManageStudiesPermission">
 										<a ng-click="showGeoJSONModal(true)"
 										   th:text="#{study.studydetails.action.geojson.edit}">Edit georeference</a>
 									</li>
@@ -157,7 +157,7 @@
 										<a ng-click="showExportStudyModal()" id="export-study-link"
 										   th:text="#{study.studydetails.action.export.study}">Export Study Book</a>
 									</li>
-									<li ng-show="hasDesignGenerated">
+									<li ng-show="showManageStudiesAction()">
 										<a href="" style="display: none" id="open-study-url"></a>
 										<a ng-click="showImportStudyModal()" id="open-study-url-link"
 										   th:text="#{study.studydetails.action.import.study}">Import Observations</a>
@@ -174,12 +174,12 @@
 								   th:text="#{study.option.execute.calculated.variable}">Execute calculated variable</a>
 							</li>
 
-							<li ng-show="hasDesignGenerated" class="dropdown-submenu pull-left">
+							<li ng-show="showManageStudiesAction()" class="dropdown-submenu pull-left">
 								<a ng-click="showCreateSampleListModal()" id="sample-trial-link"
 								   th:text="#{study.studydetails.action.create.sample}">Create genotyping samples</a>
 							</li>
 
-							<li ng-show="hasDesignGenerated" class="dropdown-submenu pull-left">
+							<li ng-show="showManageStudiesAction()" class="dropdown-submenu pull-left">
 								<a tabindex="-1" href="#">Advance study options</a>
 								<ul class="dropdown-menu" style="margin-left: -68px; width: 235px;">
 									<li>
@@ -198,7 +198,7 @@
 							<li>
 								<a th:href="@{/TrialManager}" th:text="#{study.studydetails.action.close.study}">Close Study</a>
 							</li>
-							<li>
+							<li ng-show="hasManageStudiesPermission">
 								<a id="delete-success-return-url" style="display:none;" th:href="@{/TrialManager}"></a>
 								<a href="javascript: openDeleteConfirmation();" th:text="#{browse.study.delete.study.name}">Delete Study</a>
 							</li>
