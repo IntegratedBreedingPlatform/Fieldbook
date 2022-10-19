@@ -1312,7 +1312,7 @@ public class SettingsUtil {
 		// FIXME this is OTT logic
 		for (final MeasurementData data : mrow.getDataList()) {
 			final boolean isVariableSample = data.getMeasurementVariable().getTermId() == TermId.SAMPLES.getId();
-			if (!varCache.keySet().contains(data.getMeasurementVariable().getTermId()) && !isVariableSample) {
+			if (data.getMeasurementVariable().getVariableType() != null && !varCache.keySet().contains(data.getMeasurementVariable().getTermId()) && !isVariableSample) {
 
 				// EHCached we hope
 				stdVar = ontologyService.getStandardVariable(data.getMeasurementVariable().getTermId(), programUUID);
