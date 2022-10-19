@@ -327,7 +327,6 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			$scope.studyTypes = [];
 			$scope.studyTypeSelected = undefined;
 			$scope.isChoosePreviousStudy = false;
-			$scope.hasUnsavedData = studyStateService.hasUnsavedData;
 			$scope.STABRAPP_URL = STABRAPP_URL;
 			$scope.FEEDBACK_ENABLED = FEEDBACK_ENABLED;
 
@@ -881,6 +880,10 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				return !$scope.hasAnyAuthority($scope.PERMISSIONS.MANAGE_STUDIES_PERMISSIONS)
 				|| (!$scope.isSaveEnabled() && !studyStateService.hasUnsavedData());
 			};
+
+			$scope.hasUnsavedData = function () {
+				return $scope.hasAnyAuthority($scope.PERMISSIONS.MANAGE_STUDIES_PERMISSIONS) && studyStateService.hasUnsavedData();
+			}
 
 			$scope.isSaveEnabled = function () {
 				return $scope.hasAnyAuthority($scope.PERMISSIONS.MANAGE_STUDIES_PERMISSIONS)
