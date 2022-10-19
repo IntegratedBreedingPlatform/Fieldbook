@@ -9,7 +9,7 @@
 		function ($scope, TrialManagerDataService, _, $filter, studyStateService, HasAnyAuthorityService, PERMISSIONS) {
 
 		$scope.data = TrialManagerDataService.currentData.trialSettings;
-		$scope.addVariable = HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.MANAGE_STUDIES_PERMISSIONS);
+		$scope.hasManageStudiesPermission = HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.MANAGE_STUDIES_PERMISSIONS);
 
 		$scope.managementDetails = TrialManagerDataService.settings.trialSettings;
 

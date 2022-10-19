@@ -4,7 +4,7 @@
 
         <section-container icon="bms-mgt-details"
                            th:attr="heading=#{study.managesettings.settings},reminder=#{section.reminder.to.add.records}"
-                           show-reminder="managementDetails.keys().length &lt;= 0" add-variable="true" hide-variable="addVariable"
+                           show-reminder="managementDetails.keys().length &lt;= 0" add-variable="true" hide-variable="hasManageStudiesPermission"
                            model-data="managementDetails" variable-type="1805" help-tool-type="MANAGE_STUDIES_SETTINGS">
             <div name="content">
                 <div class="row form-group" ng-repeat="key in filteredKeys = ( managementDetails.keys() | removeHiddenVariableFilter: managementDetails.vals() ) track by key">
