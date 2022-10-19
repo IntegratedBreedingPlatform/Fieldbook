@@ -610,8 +610,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			};
 
 			$scope.showPreparePlantingInventoryAction = function () {
-				return $scope.hasDesignGenerated &&
-					HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.PREPARE_PLANTING_PERMISSIONS);
+				return HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.PREPARE_PLANTING_PERMISSIONS);
 			}
 
 			$scope.showCreateLotsAction = function () {

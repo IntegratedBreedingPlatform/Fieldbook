@@ -79,7 +79,7 @@
 										<a ng-click="printLabels()" id="label-printing-url-link"
 										   th:text="#{study.studydetails.action.printLabels}">Print Labels</a>
 									</li>
-									<li>
+									<lili ng-show="hasManageStudiesPermission &amp;&amp; hasDesignGenerated">
 										<a ng-click="preparePlanting();" id="prepare-planting-inventory-link"
 										   th:text="#{study.studydetails.action.observationunits.prepare.plating}">Prepare planting inventory</a>
 									</li>
