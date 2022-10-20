@@ -327,7 +327,6 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			$scope.studyTypes = [];
 			$scope.studyTypeSelected = undefined;
 			$scope.isChoosePreviousStudy = false;
-			$scope.hasUnsavedData = studyStateService.hasUnsavedData;
 			$scope.STABRAPP_URL = STABRAPP_URL;
 			$scope.FEEDBACK_ENABLED = FEEDBACK_ENABLED;
 
@@ -611,8 +610,11 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			};
 
 			$scope.showPreparePlantingInventoryAction = function () {
-				return $scope.hasDesignGenerated &&
-					HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.PREPARE_PLANTING_PERMISSIONS);
+				return $scope.hasDesignGenerated && HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.PREPARE_PLANTING_PERMISSIONS);
+			}
+
+			$scope.showDesignAndPlanningOptions = function () {
+				return $scope.showPreparePlantingInventoryAction() || $scope.hasManageStudiesPermission;
 			}
 
 			$scope.showCreateLotsAction = function () {
@@ -621,7 +623,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			}
 
 			$scope.displayGermplasmOrMeasurmentOnlyActions = function () {
-				return this.hasGermplasmListSelected() || studyStateService.hasGeneratedDesign();
+				return studyStateService.hasGeneratedDesign() || ($scope.hasManageStudiesPermission && $scope.hasGermplasmListSelected());
 			};
 
 			$scope.displayExecuteCalculatedVariableOnlyActions = function () {
@@ -881,6 +883,10 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				return !$scope.hasAnyAuthority($scope.PERMISSIONS.MANAGE_STUDIES_PERMISSIONS)
 				|| (!$scope.isSaveEnabled() && !studyStateService.hasUnsavedData());
 			};
+
+			$scope.hasUnsavedData = function () {
+				return $scope.hasAnyAuthority($scope.PERMISSIONS.MANAGE_STUDIES_PERMISSIONS) && studyStateService.hasUnsavedData();
+			}
 
 			$scope.isSaveEnabled = function () {
 				return $scope.hasAnyAuthority($scope.PERMISSIONS.MANAGE_STUDIES_PERMISSIONS)
