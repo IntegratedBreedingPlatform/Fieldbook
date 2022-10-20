@@ -33,7 +33,7 @@
 						</div>
 					</div>
 
-					<div ng-show="hasManageStudiesPermission &amp;&amp; hasUnsavedData()" style="margin-top: 10px; margin-left: 10px; display: inline-block;">
+					<div ng-show="hasUnsavedData()" style="margin-top: 10px; margin-left: 10px; display: inline-block;">
 						<span class="label label-warning">unsaved data</span>
 					</div>
 
@@ -61,7 +61,7 @@
 								   th:text="#{study.option.save}">Save Study</a>
 							</li>
 
-							<li class="dropdown-submenu pull-left" ng-show="showPreparePlantingInventoryAction()">
+							<li class="dropdown-submenu pull-left" ng-show="showDesignAndPlanningOptions()">
 								<a tabindex="-1" href="#">Design and planning options</a>
 								<ul class="dropdown-menu" style="margin-left: 8px; width: 192px">
 									<li ng-show="hasManageStudiesPermission">
@@ -79,7 +79,7 @@
 										<a ng-click="printLabels()" id="label-printing-url-link"
 										   th:text="#{study.studydetails.action.printLabels}">Print Labels</a>
 									</li>
-									<li>
+									<li ng-show="showPreparePlantingInventoryAction()">
 										<a ng-click="preparePlanting();" id="prepare-planting-inventory-link"
 										   th:text="#{study.studydetails.action.observationunits.prepare.plating}">Prepare planting inventory</a>
 									</li>
@@ -162,7 +162,7 @@
 										<a ng-click="showImportStudyModal()" id="open-study-url-link"
 										   th:text="#{study.studydetails.action.import.study}">Import Observations</a>
 									</li>
-									<li ng-show="hasGermplasmListSelected()">
+									<li ng-show="hasManageStudiesPermission &amp;&amp; hasGermplasmListSelected()">
 										<a ng-click="exportStudyEntriesPrintingLabels()" id="export-germplasm-link"
 										   th:text="#{study.studydetails.action.export.study.entries}">Export study entries</a>
 									</li>
@@ -208,10 +208,10 @@
 							<li>
 								<a href="" th:text="#{study.studydetails.action.unlock.study}" ng-show="isLockedStudy() &amp;&amp;  userHasLockPermission()" ng-click="changeLockedStatus(0)">Unlock Study</a>
 							</li>
-							<li ng-show="staBrappURL">
+							<li ng-show="hasManageStudiesPermission &amp;&amp; staBrappURL">
 								<a href="" th:utext="#{study.studydetails.action.stabrapp}" ng-click="analyzeWithBrapp(staBrappURL)"></a>
 							</li>
-							<li ng-show="dsBrappURL">
+							<li ng-show="hasManageStudiesPermission &amp;&amp; dsBrappURL">
 								<a href="" th:utext="#{study.studydetails.action.dsbrapp}" ng-click="analyzeWithBrapp(dsBrappURL)"></a>
 							</li>
 						</ul>

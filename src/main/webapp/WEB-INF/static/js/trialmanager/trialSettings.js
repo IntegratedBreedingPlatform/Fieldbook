@@ -9,8 +9,6 @@
 		function ($scope, TrialManagerDataService, _, $filter, studyStateService, HasAnyAuthorityService, PERMISSIONS) {
 
 		$scope.data = TrialManagerDataService.currentData.trialSettings;
-		$scope.addVariable = HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.MANAGE_STUDIES_PERMISSIONS);
-
 		$scope.managementDetails = TrialManagerDataService.settings.trialSettings;
 
 		$scope.managementDetailsOptions = {
@@ -36,6 +34,10 @@
 				options.selectAll = false;
 				studyStateService.updateOccurred();
 			});
+		};
+
+		$scope.hasManageStudiesPermission = function () {
+			return HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.MANAGE_STUDIES_PERMISSIONS);
 		};
 
 		$scope.onLabelChange = function() {

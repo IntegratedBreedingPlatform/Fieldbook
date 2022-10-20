@@ -1116,6 +1116,7 @@
 
 				// function called whenever the user has successfully selected a germplasm list
 				$scope.germplasmListSelected = function () {
+					TrialManagerDataService.applicationData.germplasmListSelected = true;
 					// validation requiring user to re-generate experimental design after selecting new germplasm list is removed as per new maintain germplasm list functionality
 					$scope.updateOccurred = false;
 				};
