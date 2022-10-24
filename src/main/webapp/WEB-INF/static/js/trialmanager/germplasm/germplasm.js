@@ -1522,7 +1522,7 @@
 								$scope.passportColumns.push(column);
 							} else if (column.typeId === VARIABLE_TYPES.GERMPLASM_ATTRIBUTE) {
 								$scope.attributesColumns.push(column);
-							} else if (column.typeId === null) { // NAMES
+							} else if (column.typeId === null) {
 								$scope.namesColumns.push(column);
 							}
 						});
