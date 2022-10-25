@@ -69,7 +69,7 @@ public class LocationAbbreviationExpressionDataProcessorTest {
         location.setLabbr("IND");
 
         Mockito.when(measurementRow.getDataList()).thenReturn(listMeasurementData);
-        Mockito.when(source.getTrailInstanceObservation()).thenReturn(measurementRow);
+        Mockito.when(source.getTrailInstanceObservationMeasurementRow()).thenReturn(measurementRow);
         Mockito.when(locationService.getLocationByID(11)).thenReturn(location);
 
         locationAbbreviationExpressionDataProcessor.processPlotLevelData(source, null);
@@ -90,7 +90,7 @@ public class LocationAbbreviationExpressionDataProcessorTest {
         listMeasurementData.add(measurementData);
 
         Mockito.when(measurementRow.getDataList()).thenReturn(listMeasurementData);
-        Mockito.when(source.getTrailInstanceObservation()).thenReturn(measurementRow);
+        Mockito.when(source.getTrailInstanceObservationMeasurementRow()).thenReturn(measurementRow);
 
         locationAbbreviationExpressionDataProcessor.processPlotLevelData(source, null);
 
@@ -102,7 +102,7 @@ public class LocationAbbreviationExpressionDataProcessorTest {
         final AdvancingSource source = Mockito.mock(AdvancingSource.class);
         final MeasurementRow measurementRow = Mockito.mock(MeasurementRow.class);
         Mockito.when(measurementRow.getDataList()).thenReturn(null);
-        Mockito.when(source.getTrailInstanceObservation()).thenReturn(measurementRow);
+        Mockito.when(source.getTrailInstanceObservationMeasurementRow()).thenReturn(measurementRow);
 
         locationAbbreviationExpressionDataProcessor.processPlotLevelData(source, null);
 

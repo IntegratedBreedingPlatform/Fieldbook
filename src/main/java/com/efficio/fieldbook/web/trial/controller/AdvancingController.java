@@ -310,7 +310,7 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 				int selectionNumber = row.getCurrentMaxSequence() + 1;
 				final Iterator<SampleDTO> sampleIterator = row.getSamples().iterator();
 
-				final int iterationCount = row.isBulk() ? 1 : row.getPlantsSelected();
+				final int iterationCount = row.isBulkingMethod() ? 1 : row.getPlantsSelected();
 				for (int i = 0; i < iterationCount; i++) {
 					String sampleNo = null;
 					if (sampleIterator.hasNext()) {
@@ -335,7 +335,7 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 
 		String selectionNumberToApply = null;
 		final boolean allPlotsSelected = "1".equals(advancingParameters.getAllPlotsChoice());
-		if (source.isBulk()) {
+		if (source.isBulkingMethod()) {
 			if (allPlotsSelected) {
 				selectionNumberToApply = null;
 			} else {
@@ -430,9 +430,9 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 		if (list != null && list.getRows() != null && !list.getRows().isEmpty() && (lineChoiceSame && plantsSelected > 0
 			|| allPlotsChoice)) {
 			for (final AdvancingSource row : list.getRows()) {
-				if (!row.isBulk() && lineChoiceSame) {
+				if (!row.isBulkingMethod() && lineChoiceSame) {
 					row.setPlantsSelected(plantsSelected);
-				} else if (row.isBulk() && allPlotsChoice) {
+				} else if (row.isBulkingMethod() && allPlotsChoice) {
 					// set it to 1, it does not matter since it's bulked
 					row.setPlantsSelected(1);
 				}

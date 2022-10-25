@@ -53,8 +53,8 @@ public class SelectionTraitExpressionDataProcessor implements ExpressionDataProc
 	public void processPlotLevelData(final AdvancingSource source, final MeasurementRow row) {
 		final List<MeasurementData> rowData = row.getDataList();
 
-		if(source.getTrailInstanceObservation() != null){
-			rowData.addAll(source.getTrailInstanceObservation().getDataList());
+		if(source.getTrailInstanceObservationMeasurementRow() != null){
+			rowData.addAll(source.getTrailInstanceObservationMeasurementRow().getDataList());
 		}
 
 		for (final MeasurementData measurementData : rowData) {

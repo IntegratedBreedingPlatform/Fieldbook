@@ -115,7 +115,7 @@ public class AdvancingSourceListFactory {
 							.setValue(String.valueOf(studyInstanceMap.get(trialInstanceNumber).getLocationId()));
 					}
 
-					advancingSourceCandidate.setTrailInstanceObservation(trialInstanceObservations);
+					advancingSourceCandidate.setTrailInstanceObservationMeasurementRow(trialInstanceObservations);
 				}
 
 				advancingSourceCandidate.setStudyType(workbook.getStudyDetails().getStudyType());

@@ -55,7 +55,7 @@ public class ChangeLocationExpressionDataProcessorTest {
         listMeasurementData.add(locationId);
 
         Mockito.when(measurementRow.getDataList()).thenReturn(listMeasurementData);
-        Mockito.when(source.getTrailInstanceObservation()).thenReturn(measurementRow);
+        Mockito.when(source.getTrailInstanceObservationMeasurementRow()).thenReturn(measurementRow);
 
 
         changeLocationExpressionDataProcessor.processPlotLevelData(source, null);
@@ -76,7 +76,7 @@ public class ChangeLocationExpressionDataProcessorTest {
         listMeasurementData.add(locationId);
 
         Mockito.when(measurementRow.getDataList()).thenReturn(listMeasurementData);
-        Mockito.when(source.getTrailInstanceObservation()).thenReturn(measurementRow);
+        Mockito.when(source.getTrailInstanceObservationMeasurementRow()).thenReturn(measurementRow);
 
 
         changeLocationExpressionDataProcessor.processPlotLevelData(source, null);
@@ -89,7 +89,7 @@ public class ChangeLocationExpressionDataProcessorTest {
         final AdvancingSource source = Mockito.mock(AdvancingSource.class);
         final MeasurementRow measurementRow = Mockito.mock(MeasurementRow.class);
         Mockito.when(measurementRow.getDataList()).thenReturn(null);
-        Mockito.when(source.getTrailInstanceObservation()).thenReturn(measurementRow);
+        Mockito.when(source.getTrailInstanceObservationMeasurementRow()).thenReturn(measurementRow);
 
 
         changeLocationExpressionDataProcessor.processPlotLevelData(source, null);
