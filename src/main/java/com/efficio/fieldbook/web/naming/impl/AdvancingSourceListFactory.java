@@ -6,7 +6,6 @@ import com.efficio.fieldbook.web.naming.expression.dataprocessor.ExpressionDataP
 import com.efficio.fieldbook.web.trial.bean.AdvanceType;
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.generationcp.commons.pojo.AdvancingSourceList;
 import org.generationcp.middleware.domain.dms.Study;
 import org.generationcp.middleware.domain.etl.MeasurementData;
 import org.generationcp.middleware.domain.etl.MeasurementRow;
@@ -19,6 +18,7 @@ import org.generationcp.middleware.pojos.Germplasm;
 import org.generationcp.middleware.pojos.Method;
 import org.generationcp.middleware.pojos.Name;
 import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
 import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
 import org.generationcp.middleware.service.api.FieldbookService;
 import org.generationcp.middleware.service.api.study.StudyInstanceService;

@@ -5,11 +5,12 @@ import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
+import org.generationcp.middleware.ruleengine.naming.impl.NamingConventionServiceImpl;
 import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
 import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
 import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasmParent;
 import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
-import org.generationcp.commons.pojo.AdvancingSourceList;
+import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
 import org.generationcp.middleware.ruleengine.RuleException;
 import org.generationcp.middleware.ruleengine.RuleExecutionContext;
 import org.generationcp.middleware.ruleengine.RuleFactory;
@@ -155,7 +156,6 @@ public class NamingConventionServiceImplTest {
 		advancingSource.setBreedingMethodId(101);
 		rows.setRows(Collections.singletonList(advancingSource));
 
-		final AdvancingStudy advancingParameters = Mockito.mock(AdvancingStudy.class);
 		final Workbook workbook = Mockito.mock(Workbook.class);
 		final List<Integer> gids = Collections.singletonList(1);
 		final Method method = new Method();
@@ -169,7 +169,7 @@ public class NamingConventionServiceImplTest {
 			.thenReturn(Collections.singletonList("name"));
 		Mockito.when(this.ruleFactory.getRuleSequenceForNamespace("naming")).thenReturn(new String[] {"[COUNT]"});
 
-		this.namingConventionService.generateCrossesList(importedCrosses, rows, advancingParameters, workbook, gids);
+		this.namingConventionService.generateCrossesList(importedCrosses, rows, true, workbook, gids);
 		Assert.assertEquals("name", importedCross.getDesig());
 		Mockito.verify(this.fieldbookMiddlewareService).getAllBreedingMethods(false);
 		Mockito.verify(this.germplasmDataManager).isMethodNamingConfigurationValid(method);
