@@ -292,7 +292,7 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 				VariableType.ENVIRONMENT_DETAIL.getId()));
 		final Map<String, Integer> keySequenceMap = new HashMap<>();
 		for (final AdvancingSource row : rows.getRows()) {
-			if (row.getGermplasm() != null && !row.isCheck() && row.getPlantsSelected() != null && row.getBreedingMethod() != null
+			if (row.getGermplasm() != null && row.getPlantsSelected() != null && row.getBreedingMethod() != null
 				&& row.getPlantsSelected() > 0 && row.getBreedingMethod().isBulkingMethod() != null) {
 				row.setKeySequenceMap(keySequenceMap);
 

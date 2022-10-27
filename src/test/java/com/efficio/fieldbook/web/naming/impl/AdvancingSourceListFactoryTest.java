@@ -168,7 +168,6 @@ public class AdvancingSourceListFactoryTest {
         Assert.assertEquals(ENV_NUMBER,source.getTrialInstanceNumber());
         Assert.assertEquals(REPLICATION_NUMBER,source.getReplicationNumber());
 
-        Assert.assertTrue(source.isCheck());
         Assert.assertEquals("plotNumber14",source.getPlotNumber());
 
     }
