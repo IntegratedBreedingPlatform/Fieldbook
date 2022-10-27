@@ -361,15 +361,8 @@ public class CreateTrialController extends BaseTrialController {
 
 		for (final Integer initialSettingID : initialSettingIDs) {
 			try {
-				final String roleName;
-				if (initialSettingID.equals(TermId.OBS_UNIT_ID.getId())) {
-					roleName = VariableType.EXPERIMENTAL_DESIGN.getRole().name();
-				} else {
-					roleName = VariableType.GERMPLASM_DESCRIPTOR.getRole().name();
-				}
-
 				final SettingDetail detail =
-						this.createSettingDetail(initialSettingID, null, roleName);
+						this.createSettingDetail(initialSettingID, null, VariableType.GERMPLASM_DESCRIPTOR.getRole().name());
 				initialDetailList.add(detail);
 			} catch (final MiddlewareException e) {
 				CreateTrialController.LOG.error(e.getMessage(), e);
