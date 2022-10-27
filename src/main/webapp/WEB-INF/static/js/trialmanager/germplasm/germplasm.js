@@ -916,22 +916,6 @@
 											value += " (" + existingValue + ")";
 										}
 									}
-									if ($scope.isFileStorageConfigured
-										&& full
-										&& full.fileVariableIds
-										&& full.fileVariableIds.length
-										&& full.fileVariableIds.includes(columnData.termId.toString())) {
-
-										if (value === undefined) {
-											value = '';
-										}
-										value += '<i onclick="showFiles(\'' + full.variables['OBS_UNIT_ID'].value + '\''
-											+ ', \'' + columnData.name + '\')" '
-											+ ' class="glyphicon glyphicon-duplicate text-info" '
-											+ ' title="click to see associated files"'
-											+ ' style="font-size: 1.2em; margin-left: 10px; cursor: pointer"></i>';
-									}
-
 									return value;
 								}
 							});
