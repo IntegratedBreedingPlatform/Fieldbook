@@ -202,7 +202,6 @@ public class NamingConventionServiceImplTest {
 		as1.setNames(new ArrayList<>());
 		as1.setBreedingMethod(this.breedingMethod);
 		as1.setPlantsSelected(1);
-		as1.setCheck(false);
 		as1.setStudyName("Test One");
 		as1.setSeason("201412");
 		as1.setCurrentMaxSequence(0);

@@ -736,7 +736,6 @@ public class AdvancingControllerTest {
 		advancingSource.setBreedingMethod(breedingMethod);
 		advancingSource.setPlantsSelected(2);
 		advancingSource.setPlotNumber("2");
-		advancingSource.setCheck(false);
 		advancingSource.setStudyName("Test One");
 		advancingSource.setSeason("201412");
 		advancingSource.setCurrentMaxSequence(0);
@@ -844,7 +843,6 @@ public class AdvancingControllerTest {
 			advancingSource.setBreedingMethod(breedingMethod);
 			advancingSource.setPlantsSelected(2);
 			advancingSource.setPlotNumber("2");
-			advancingSource.setCheck(false);
 			advancingSource.setStudyName("Test One");
 			advancingSource.setSeason("201412");
 			advancingSource.setCurrentMaxSequence(0);

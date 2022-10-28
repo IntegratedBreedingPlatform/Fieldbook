@@ -19,7 +19,6 @@ import com.efficio.fieldbook.web.common.bean.SettingVariable;
 import com.efficio.fieldbook.web.common.bean.TableHeader;
 import com.efficio.fieldbook.web.common.bean.UserSelection;
 import com.efficio.fieldbook.web.naming.impl.AdvancingSourceListFactory;
-import org.generationcp.middleware.ruleengine.naming.service.NamingConventionService;
 import com.efficio.fieldbook.web.trial.bean.AdvanceType;
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
 import com.efficio.fieldbook.web.trial.form.AdvancingStudyForm;
@@ -28,12 +27,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.generationcp.commons.constant.AppConstants;
-import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
-import org.generationcp.middleware.ruleengine.pojo.AdvanceGermplasmChangeDetail;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
-import org.generationcp.middleware.ruleengine.RuleException;
-import org.generationcp.middleware.ruleengine.generator.SeedSourceGenerator;
 import org.generationcp.commons.util.DateUtil;
 import org.generationcp.middleware.constant.ColumnLabels;
 import org.generationcp.middleware.domain.dms.Study;
@@ -54,6 +47,13 @@ import org.generationcp.middleware.manager.api.StudyDataManager;
 import org.generationcp.middleware.pojos.Method;
 import org.generationcp.middleware.pojos.MethodType;
 import org.generationcp.middleware.pojos.Name;
+import org.generationcp.middleware.ruleengine.RuleException;
+import org.generationcp.middleware.ruleengine.generator.SeedSourceGenerator;
+import org.generationcp.middleware.ruleengine.naming.service.NamingConventionService;
+import org.generationcp.middleware.ruleengine.pojo.AdvanceGermplasmChangeDetail;
+import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
+import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
 import org.generationcp.middleware.service.api.FieldbookService;
 import org.generationcp.middleware.service.api.dataset.DatasetService;
 import org.generationcp.middleware.service.api.study.StudyInstanceService;
@@ -195,7 +195,6 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 
 		try {
 
-			// NOTE: method choice represents if the user has check to use the same breeding method for each advance
 			if (advancingStudy.getMethodChoice() != null && !advancingStudy.getMethodChoice().isEmpty()) {
 				final Method method = this.fieldbookMiddlewareService.getMethodById(Integer.parseInt(advancingStudy.getBreedingMethodId()));
 				if ("GEN".equals(method.getMtype())) {
@@ -212,9 +211,7 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 			}
 
 			final List<AdvanceGermplasmChangeDetail> changeDetails = new ArrayList<>();
-			// NOTE: This is create a list of original germplasms -> aka source germplasms
 			final AdvancingSourceList list = this.getAdvancingSourceList(advancingStudy);
-			// NOTE: Finally, creates the advanced germplasms
 			final List<ImportedGermplasm> importedGermplasmList = this.createAdvanceList(advancingStudy, changeDetails, list);
 			final long id = DateUtil.getCurrentDate().getTime();
 			this.getPaginationListSelection().addAdvanceDetails(Long.toString(id), form);
@@ -295,7 +292,7 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 				VariableType.ENVIRONMENT_DETAIL.getId()));
 		final Map<String, Integer> keySequenceMap = new HashMap<>();
 		for (final AdvancingSource row : rows.getRows()) {
-			if (row.getGermplasm() != null && !row.isCheck() && row.getPlantsSelected() != null && row.getBreedingMethod() != null
+			if (row.getGermplasm() != null && row.getPlantsSelected() != null && row.getBreedingMethod() != null
 				&& row.getPlantsSelected() > 0 && row.getBreedingMethod().isBulkingMethod() != null) {
 				row.setKeySequenceMap(keySequenceMap);
 
@@ -375,7 +372,6 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 			germplasm.setMgid(source.getGermplasm().getMgid());
 		}
 
-		// NOTE: why is setting this trialInstanceNumber and replicatin to germplasm???
 		germplasm.setTrialInstanceNumber(source.getTrialInstanceNumber());
 		germplasm.setReplicationNumber(source.getReplicationNumber());
 		germplasm.setPlotNumber(source.getPlotNumber());
