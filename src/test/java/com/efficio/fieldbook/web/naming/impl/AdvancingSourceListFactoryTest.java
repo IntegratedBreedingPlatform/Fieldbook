@@ -10,7 +10,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
-import org.generationcp.commons.pojo.AdvancingSourceList;
+import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
 import org.generationcp.commons.spring.util.ContextUtil;
 import org.generationcp.middleware.domain.dms.Study;
 import org.generationcp.middleware.domain.dms.ValueReference;
@@ -168,7 +168,6 @@ public class AdvancingSourceListFactoryTest {
         Assert.assertEquals(ENV_NUMBER,source.getTrialInstanceNumber());
         Assert.assertEquals(REPLICATION_NUMBER,source.getReplicationNumber());
 
-        Assert.assertTrue(source.isCheck());
         Assert.assertEquals("plotNumber14",source.getPlotNumber());
 
     }

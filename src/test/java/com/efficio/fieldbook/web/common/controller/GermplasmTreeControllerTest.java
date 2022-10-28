@@ -4,8 +4,6 @@ import com.efficio.fieldbook.web.common.bean.PaginationListSelection;
 import com.efficio.fieldbook.web.common.bean.UserSelection;
 import com.efficio.fieldbook.web.common.form.SaveListForm;
 import com.efficio.fieldbook.web.common.service.impl.CrossingServiceImpl;
-import com.efficio.fieldbook.web.naming.service.NamingConventionService;
-import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
 import com.efficio.fieldbook.web.trial.form.AdvancingStudyForm;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Lists;
@@ -13,17 +11,7 @@ import com.google.common.collect.Table;
 import org.apache.commons.lang.math.RandomUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.generationcp.commons.constant.AppConstants;
-import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
 import org.generationcp.commons.parsing.pojo.ImportedCrossesList;
-import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
-import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasmParent;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
-import org.generationcp.commons.pojo.AdvancingSourceList;
-import org.generationcp.middleware.ruleengine.RuleException;
-import org.generationcp.middleware.ruleengine.settings.AdditionalDetailsSetting;
-import org.generationcp.middleware.ruleengine.settings.BreedingMethodSetting;
-import org.generationcp.middleware.ruleengine.settings.CrossNameSetting;
-import org.generationcp.middleware.ruleengine.settings.CrossSetting;
 import org.generationcp.commons.spring.util.ContextUtil;
 import org.generationcp.commons.util.DateUtil;
 import org.generationcp.middleware.ContextHolder;
@@ -44,6 +32,17 @@ import org.generationcp.middleware.pojos.GermplasmListData;
 import org.generationcp.middleware.pojos.Name;
 import org.generationcp.middleware.pojos.workbench.CropType;
 import org.generationcp.middleware.pojos.workbench.Project;
+import org.generationcp.middleware.ruleengine.RuleException;
+import org.generationcp.middleware.ruleengine.naming.service.NamingConventionService;
+import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
+import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
+import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
+import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasmParent;
+import org.generationcp.middleware.ruleengine.settings.AdditionalDetailsSetting;
+import org.generationcp.middleware.ruleengine.settings.BreedingMethodSetting;
+import org.generationcp.middleware.ruleengine.settings.CrossNameSetting;
+import org.generationcp.middleware.ruleengine.settings.CrossSetting;
 import org.generationcp.middleware.service.api.FieldbookService;
 import org.generationcp.middleware.service.api.dataset.DatasetService;
 import org.generationcp.middleware.service.api.study.germplasm.source.GermplasmStudySourceService;
@@ -662,7 +661,7 @@ public class GermplasmTreeControllerTest {
 
 		final ArgumentCaptor<List> argumentCaptor1 = ArgumentCaptor.forClass(List.class);
 		final ArgumentCaptor<AdvancingSourceList> argumentCaptor2 = ArgumentCaptor.forClass(AdvancingSourceList.class);
-		final ArgumentCaptor<AdvancingStudy> argumentCaptor3 = ArgumentCaptor.forClass(AdvancingStudy.class);
+		final ArgumentCaptor<Boolean> argumentCaptor3 = ArgumentCaptor.forClass(Boolean.class);
 		final ArgumentCaptor<List> argumentCaptor4 = ArgumentCaptor.forClass(List.class);
 
 		Mockito.verify(this.namingConventionService)
@@ -672,13 +671,13 @@ public class GermplasmTreeControllerTest {
 
 		final List<ImportedCross> importedCrossArgument1 = argumentCaptor1.getValue();
 		final AdvancingSourceList importedCrossesArgument2 = argumentCaptor2.getValue();
-		final AdvancingStudy importedCrossesArgument3 = argumentCaptor3.getValue();
+		final Boolean importedCrossesArgument3 = argumentCaptor3.getValue();
 		final List<Integer> importedCrossesArgument4 = argumentCaptor4.getValue();
 
 		Assert.assertEquals(2, importedCrossArgument1.size());
 		Assert.assertEquals(2, importedCrossesArgument2.getRows().size());
 		Assert.assertEquals(2, importedCrossesArgument4.size());
-		Assert.assertTrue(importedCrossesArgument3.isCheckAdvanceLinesUnique());
+		Assert.assertTrue(importedCrossesArgument3);
 
 	}
 

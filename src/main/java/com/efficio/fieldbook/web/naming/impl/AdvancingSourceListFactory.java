@@ -6,11 +6,7 @@ import com.efficio.fieldbook.web.naming.expression.dataprocessor.ExpressionDataP
 import com.efficio.fieldbook.web.trial.bean.AdvanceType;
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
-import org.generationcp.commons.pojo.AdvancingSourceList;
 import org.generationcp.middleware.domain.dms.Study;
-import org.generationcp.middleware.domain.dms.ValueReference;
 import org.generationcp.middleware.domain.etl.MeasurementData;
 import org.generationcp.middleware.domain.etl.MeasurementRow;
 import org.generationcp.middleware.domain.etl.Workbook;
@@ -21,6 +17,9 @@ import org.generationcp.middleware.manager.api.StudyDataManager;
 import org.generationcp.middleware.pojos.Germplasm;
 import org.generationcp.middleware.pojos.Method;
 import org.generationcp.middleware.pojos.Name;
+import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
+import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
 import org.generationcp.middleware.service.api.FieldbookService;
 import org.generationcp.middleware.service.api.study.StudyInstanceService;
 import org.generationcp.middleware.service.impl.study.StudyInstance;
@@ -57,8 +56,6 @@ public class AdvancingSourceListFactory {
 
 	@Resource
 	private StudyInstanceService studyInstanceService;
-
-	private static final String DEFAULT_TEST_VALUE = "T";
 
 	public AdvancingSourceList createAdvancingSourceList(final Workbook workbook, final AdvancingStudy advanceInfo, final Study study,
 			final Map<Integer, Method> breedingMethodMap, final Map<String, Method> breedingMethodCodeMap) throws FieldbookException {
@@ -143,26 +140,6 @@ public class AdvancingSourceListFactory {
 					gids.add(Integer.valueOf(germplasm.getGid()));
 				}
 
-				final MeasurementData checkData = row.getMeasurementData(TermId.ENTRY_TYPE.getId());
-				String check = null;
-				if (checkData != null) {
-					check = checkData.getcValueId();
-					if (checkData != null && checkData.getMeasurementVariable() != null
-							&& checkData.getMeasurementVariable().getPossibleValues() != null && !checkData.getMeasurementVariable()
-							.getPossibleValues().isEmpty() && check != null && NumberUtils.isNumber(check)) {
-
-						for (final ValueReference valref : checkData.getMeasurementVariable().getPossibleValues()) {
-							if (valref.getId().equals(Double.valueOf(check).intValue())) {
-								check = valref.getName();
-								break;
-							}
-						}
-					}
-				}
-
-				final boolean isCheck =
-						check != null && !"".equals(check) && !AdvancingSourceListFactory.DEFAULT_TEST_VALUE.equalsIgnoreCase(check);
-
 				final MeasurementData plotNumberData = row.getMeasurementData(TermId.PLOT_NO.getId());
 				if (plotNumberData != null) {
 					advancingSourceCandidate.setPlotNumber(plotNumberData.getValue());
@@ -195,7 +172,6 @@ public class AdvancingSourceListFactory {
 					advancingSourceCandidate.setNames(names);
 					advancingSourceCandidate.setPlantsSelected(plantsSelected);
 					advancingSourceCandidate.setBreedingMethod(breedingMethod);
-					advancingSourceCandidate.setCheck(isCheck);
 					advancingSourceCandidate.setStudyName(studyName);
 					advancingSourceCandidate.setStudyId(studyId);
 					advancingSourceCandidate.setEnvironmentDatasetId(workbook.getTrialDatasetId());
