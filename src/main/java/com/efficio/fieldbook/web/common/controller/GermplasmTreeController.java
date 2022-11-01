@@ -17,7 +17,7 @@ import com.efficio.fieldbook.web.common.bean.UserSelection;
 import com.efficio.fieldbook.web.common.form.SaveListForm;
 import com.efficio.fieldbook.web.common.service.CrossingService;
 import com.efficio.fieldbook.web.common.service.impl.CrossingServiceImpl;
-import com.efficio.fieldbook.web.naming.service.NamingConventionService;
+import org.generationcp.middleware.ruleengine.naming.service.NamingConventionService;
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
 import com.efficio.fieldbook.web.trial.form.AdvancingStudyForm;
 import com.google.common.collect.HashBasedTable;
@@ -33,7 +33,7 @@ import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
 import org.generationcp.commons.parsing.pojo.ImportedCrossesList;
 import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
 import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
-import org.generationcp.commons.pojo.AdvancingSourceList;
+import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
 import org.generationcp.commons.pojo.treeview.TreeTableNode;
 import org.generationcp.middleware.ruleengine.RuleException;
 import org.generationcp.middleware.ruleengine.RulesNotConfiguredException;
@@ -419,11 +419,8 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 		final AdvancingSourceList advancingSourceList = new AdvancingSourceList();
 		advancingSourceList.setRows(advancingSources);
 
-		final AdvancingStudy advancingParameters = new AdvancingStudy();
-		advancingParameters.setCheckAdvanceLinesUnique(true);
-
 		final List<ImportedCross> crosses = this.namingConventionService
-			.generateCrossesList(importedCrosses, advancingSourceList, advancingParameters, this.userSelection.getWorkbook(), gids);
+			.generateCrossesList(importedCrosses, advancingSourceList, true, this.userSelection.getWorkbook(), gids);
 
 		importedCrossesList.setImportedGermplasms(crosses);
 		this.userSelection.setImportedCrossesList(importedCrossesList);
