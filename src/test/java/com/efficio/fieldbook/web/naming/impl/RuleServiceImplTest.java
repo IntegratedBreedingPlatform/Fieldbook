@@ -27,7 +27,7 @@ import com.efficio.fieldbook.AbstractBaseIntegrationTest;
 import org.generationcp.middleware.ruleengine.naming.rules.EnforceUniqueNameRule;
 import org.generationcp.middleware.ruleengine.naming.rules.NamingRuleExecutionContext;
 import org.generationcp.middleware.ruleengine.naming.service.ProcessCodeService;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 
 @Ignore(value ="BMS-1571. Ignoring temporarily. Please fix the failures and remove @Ignore.")
 public class RuleServiceImplTest extends AbstractBaseIntegrationTest {
@@ -47,7 +47,7 @@ public class RuleServiceImplTest extends AbstractBaseIntegrationTest {
 	private GermplasmDataManager germplasmDataManager;
 
 	private Method breedingMethod;
-	private AdvancingSource row;
+	private DeprecatedAdvancingSource row;
 	private String testGermplasmName;
 	private Integer breedingMethodSnameType;
 
@@ -61,7 +61,7 @@ public class RuleServiceImplTest extends AbstractBaseIntegrationTest {
 		this.breedingMethod.setSeparator("-");
 		this.breedingMethod.setCount("[NUMBER]");
 		this.breedingMethod.setSuffix("suff");
-		this.row = new AdvancingSource();
+		this.row = new DeprecatedAdvancingSource();
 		this.row.setBreedingMethod(this.breedingMethod);
 		this.row.setPlantsSelected(2);
 		this.testGermplasmName = "test-germplasm-name";

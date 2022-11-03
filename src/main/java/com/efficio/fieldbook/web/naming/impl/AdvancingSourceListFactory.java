@@ -17,7 +17,7 @@ import org.generationcp.middleware.manager.api.StudyDataManager;
 import org.generationcp.middleware.pojos.Germplasm;
 import org.generationcp.middleware.pojos.Method;
 import org.generationcp.middleware.pojos.Name;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
 import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
 import org.generationcp.middleware.service.api.FieldbookService;
@@ -66,12 +66,12 @@ public class AdvancingSourceListFactory {
 			samplesMap = this.studyDataManager.getExperimentSamplesDTOMap(studyId);
 		}
 
-		final AdvancingSource environmentLevel = new AdvancingSource();
+		final DeprecatedAdvancingSource environmentLevel = new DeprecatedAdvancingSource();
 		final ExpressionDataProcessor dataProcessor = this.dataProcessorFactory.retrieveExecutorProcessor();
 
 		final AdvancingSourceList advancingSourceList = new AdvancingSourceList();
 
-		final List<AdvancingSource> advancingPlotRows = new ArrayList<>();
+		final List<DeprecatedAdvancingSource> advancingPlotRows = new ArrayList<>();
 
 		final Integer methodVariateId = advanceInfo.getMethodVariateId();
 		final Integer lineVariateId = advanceInfo.getLineVariateId();
@@ -94,15 +94,15 @@ public class AdvancingSourceListFactory {
 					.collect(Collectors.toMap(StudyInstance::getInstanceNumber, i -> i));
 
 			for (final MeasurementRow row : workbook.getObservations()) {
-				final AdvancingSource advancingSourceCandidate = environmentLevel.copy();
+				final DeprecatedAdvancingSource deprecatedAdvancingSourceCandidate = environmentLevel.copy();
 
-				advancingSourceCandidate.setTrialInstanceNumber(row.getMeasurementDataValue(TermId.TRIAL_INSTANCE_FACTOR.getId()));
+				deprecatedAdvancingSourceCandidate.setTrialInstanceNumber(row.getMeasurementDataValue(TermId.TRIAL_INSTANCE_FACTOR.getId()));
 
 				// If study is Trial, then setting data if trial instance is not null
-				if (advancingSourceCandidate.getTrialInstanceNumber() != null) {
-					final Integer trialInstanceNumber = Integer.valueOf(advancingSourceCandidate.getTrialInstanceNumber());
+				if (deprecatedAdvancingSourceCandidate.getTrialInstanceNumber() != null) {
+					final Integer trialInstanceNumber = Integer.valueOf(deprecatedAdvancingSourceCandidate.getTrialInstanceNumber());
 					final MeasurementRow trialInstanceObservations = workbook.getTrialObservationByTrialInstanceNo(
-							Integer.valueOf(advancingSourceCandidate.getTrialInstanceNumber()));
+							Integer.valueOf(deprecatedAdvancingSourceCandidate.getTrialInstanceNumber()));
 
 					// Workaround to correct outdated location ID in trial instance
 					if (studyInstanceMap.containsKey(trialInstanceNumber) &&
@@ -111,14 +111,14 @@ public class AdvancingSourceListFactory {
 							.setValue(String.valueOf(studyInstanceMap.get(trialInstanceNumber).getLocationId()));
 					}
 
-					advancingSourceCandidate.setTrailInstanceObservation(trialInstanceObservations);
+					deprecatedAdvancingSourceCandidate.setTrailInstanceObservation(trialInstanceObservations);
 				}
 
-				advancingSourceCandidate.setStudyType(workbook.getStudyDetails().getStudyType());
+				deprecatedAdvancingSourceCandidate.setStudyType(workbook.getStudyDetails().getStudyType());
 
 				// Setting conditions for Breeders Cross ID
-				advancingSourceCandidate.setConditions(workbook.getConditions());
-				advancingSourceCandidate.setReplicationNumber(row.getMeasurementDataValue(TermId.REP_NO.getId()));
+				deprecatedAdvancingSourceCandidate.setConditions(workbook.getConditions());
+				deprecatedAdvancingSourceCandidate.setReplicationNumber(row.getMeasurementDataValue(TermId.REP_NO.getId()));
 
 
 				Integer methodId = null;
@@ -142,7 +142,7 @@ public class AdvancingSourceListFactory {
 
 				final MeasurementData plotNumberData = row.getMeasurementData(TermId.PLOT_NO.getId());
 				if (plotNumberData != null) {
-					advancingSourceCandidate.setPlotNumber(plotNumberData.getValue());
+					deprecatedAdvancingSourceCandidate.setPlotNumber(plotNumberData.getValue());
 				}
 
 				Integer plantsSelected = null;
@@ -150,7 +150,7 @@ public class AdvancingSourceListFactory {
 				if (advanceInfo.getAdvanceType().equals(AdvanceType.SAMPLE)) {
 					if (samplesMap.containsKey(row.getExperimentId())) {
 						plantsSelected = samplesMap.get(row.getExperimentId()).size();
-						advancingSourceCandidate.setSamples(samplesMap.get(row.getExperimentId()));
+						deprecatedAdvancingSourceCandidate.setSamples(samplesMap.get(row.getExperimentId()));
 					} else {
 						continue;
 					}
@@ -168,18 +168,18 @@ public class AdvancingSourceListFactory {
 							}
 						}
 					}
-					advancingSourceCandidate.setGermplasm(germplasm);
-					advancingSourceCandidate.setNames(names);
-					advancingSourceCandidate.setPlantsSelected(plantsSelected);
-					advancingSourceCandidate.setBreedingMethod(breedingMethod);
-					advancingSourceCandidate.setStudyName(studyName);
-					advancingSourceCandidate.setStudyId(studyId);
-					advancingSourceCandidate.setEnvironmentDatasetId(workbook.getTrialDatasetId());
-					advancingSourceCandidate.setDesignationIsPreviewOnly(true);
+					deprecatedAdvancingSourceCandidate.setGermplasm(germplasm);
+					deprecatedAdvancingSourceCandidate.setNames(names);
+					deprecatedAdvancingSourceCandidate.setPlantsSelected(plantsSelected);
+					deprecatedAdvancingSourceCandidate.setBreedingMethod(breedingMethod);
+					deprecatedAdvancingSourceCandidate.setStudyName(studyName);
+					deprecatedAdvancingSourceCandidate.setStudyId(studyId);
+					deprecatedAdvancingSourceCandidate.setEnvironmentDatasetId(workbook.getTrialDatasetId());
+					deprecatedAdvancingSourceCandidate.setDesignationIsPreviewOnly(true);
 
-					dataProcessor.processPlotLevelData(advancingSourceCandidate, row);
+					dataProcessor.processPlotLevelData(deprecatedAdvancingSourceCandidate, row);
 
-					advancingPlotRows.add(advancingSourceCandidate);
+					advancingPlotRows.add(deprecatedAdvancingSourceCandidate);
 				}
 
 			}
@@ -191,10 +191,10 @@ public class AdvancingSourceListFactory {
 		return advancingSourceList;
 	}
 
-	private void setNamesToGermplasm(final List<AdvancingSource> rows, final List<Integer> gids) throws MiddlewareQueryException {
+	private void setNamesToGermplasm(final List<DeprecatedAdvancingSource> rows, final List<Integer> gids) throws MiddlewareQueryException {
 		if (rows != null && !rows.isEmpty()) {
 			final Map<Integer, List<Name>> map = this.fieldbookMiddlewareService.getNamesByGids(gids);
-			for (final AdvancingSource row : rows) {
+			for (final DeprecatedAdvancingSource row : rows) {
 				final String gid = row.getGermplasm().getGid();
 				if (gid != null && NumberUtils.isNumber(gid)) {
 					final List<Name> names = map.get(Integer.valueOf(gid));
@@ -235,7 +235,7 @@ public class AdvancingSourceListFactory {
 			for (final Germplasm germplasm : germplasmList) {
 				germplasmMap.put(germplasm.getGid().toString(), germplasm);
 			}
-			for (final AdvancingSource source : list.getRows()) {
+			for (final DeprecatedAdvancingSource source : list.getRows()) {
 				if (source.getGermplasm() != null && source.getGermplasm().getGid() != null && NumberUtils
 						.isNumber(source.getGermplasm().getGid())) {
 					final Germplasm germplasm = germplasmMap.get(source.getGermplasm().getGid().toString());

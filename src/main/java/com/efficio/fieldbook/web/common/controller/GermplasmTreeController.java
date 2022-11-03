@@ -18,7 +18,6 @@ import com.efficio.fieldbook.web.common.form.SaveListForm;
 import com.efficio.fieldbook.web.common.service.CrossingService;
 import com.efficio.fieldbook.web.common.service.impl.CrossingServiceImpl;
 import org.generationcp.middleware.ruleengine.naming.service.NamingConventionService;
-import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
 import com.efficio.fieldbook.web.trial.form.AdvancingStudyForm;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Lists;
@@ -32,7 +31,7 @@ import org.generationcp.commons.constant.AppConstants;
 import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
 import org.generationcp.commons.parsing.pojo.ImportedCrossesList;
 import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
 import org.generationcp.commons.pojo.treeview.TreeTableNode;
 import org.generationcp.middleware.ruleengine.RuleException;
@@ -403,21 +402,21 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 	protected ImportedCrossesList applyNamingRules(final ImportedCrossesList importedCrossesList)
 		throws RuleException {
 
-		final List<AdvancingSource> advancingSources = new ArrayList<>();
+		final List<DeprecatedAdvancingSource> deprecatedAdvancingSources = new ArrayList<>();
 		final List<Integer> gids = new ArrayList<>();
 		final List<ImportedCross> importedCrosses = importedCrossesList.getImportedCrosses();
 
 		for (final ImportedCross cross : importedCrosses) {
 
 			this.assignCrossNames(cross);
-			advancingSources.add(this.createAdvancingSource(cross));
+			deprecatedAdvancingSources.add(this.createAdvancingSource(cross));
 			if (cross.getGid() != null && NumberUtils.isNumber(cross.getGid())) {
 				gids.add(Integer.valueOf(cross.getGid()));
 			}
 		}
 
 		final AdvancingSourceList advancingSourceList = new AdvancingSourceList();
-		advancingSourceList.setRows(advancingSources);
+		advancingSourceList.setRows(deprecatedAdvancingSources);
 
 		final List<ImportedCross> crosses = this.namingConventionService
 			.generateCrossesList(importedCrosses, advancingSourceList, true, this.userSelection.getWorkbook(), gids);
@@ -437,16 +436,16 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 		cross.setNames(names);
 	}
 
-	protected AdvancingSource createAdvancingSource(final ImportedCross cross) {
-		final AdvancingSource advancingSource = new AdvancingSource(cross);
+	protected DeprecatedAdvancingSource createAdvancingSource(final ImportedCross cross) {
+		final DeprecatedAdvancingSource deprecatedAdvancingSource = new DeprecatedAdvancingSource(cross);
 		// TODO add trial instance number
 		final Workbook workbook = this.userSelection.getWorkbook();
-		advancingSource.setStudyId(workbook.getStudyDetails().getId());
-		advancingSource.setEnvironmentDatasetId(workbook.getTrialDatasetId());
-		advancingSource.setConditions(workbook.getConditions());
-		advancingSource.setStudyType(workbook.getStudyDetails().getStudyType());
-		advancingSource.setBreedingMethodId(cross.getBreedingMethodId());
-		return advancingSource;
+		deprecatedAdvancingSource.setStudyId(workbook.getStudyDetails().getId());
+		deprecatedAdvancingSource.setEnvironmentDatasetId(workbook.getTrialDatasetId());
+		deprecatedAdvancingSource.setConditions(workbook.getConditions());
+		deprecatedAdvancingSource.setStudyType(workbook.getStudyDetails().getStudyType());
+		deprecatedAdvancingSource.setBreedingMethodId(cross.getBreedingMethodId());
+		return deprecatedAdvancingSource;
 	}
 
 	/**
