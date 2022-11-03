@@ -697,8 +697,8 @@ public class AdvancingControllerTest {
 		rows.setRows(new ArrayList<>());
 
 		// Set up Advancing sources
-		final DeprecatedAdvancingSource deprecatedAdvancingSource = new DeprecatedAdvancingSource();
-		deprecatedAdvancingSource.setNames(new ArrayList<>());
+		final DeprecatedAdvancingSource advancingSource = new DeprecatedAdvancingSource();
+		advancingSource.setNames(new ArrayList<>());
 
 		// Germplasm
 		final ImportedGermplasm ig = new ImportedGermplasm();
@@ -710,8 +710,8 @@ public class AdvancingControllerTest {
 		ig.setGpid1(0);
 		ig.setGpid2(0);
 		ig.setGnpgs(-1);
-		deprecatedAdvancingSource.setStudyId(1);
-		deprecatedAdvancingSource.setGermplasm(ig);
+		advancingSource.setStudyId(1);
+		advancingSource.setGermplasm(ig);
 
 		// Names
 		final Name sourceGermplasmName = new Name(133);
@@ -722,8 +722,8 @@ public class AdvancingControllerTest {
 		sourceGermplasmName.setLocationId(9);
 		sourceGermplasmName.setNdate(19860501);
 		sourceGermplasmName.setReferenceId(1);
-		deprecatedAdvancingSource.setStudyId(1);
-		deprecatedAdvancingSource.getNames().add(sourceGermplasmName);
+		advancingSource.setStudyId(1);
+		advancingSource.getNames().add(sourceGermplasmName);
 
 		final Method breedingMethod =
 				new Method(40, "DER", "G", "SLF", "Self and Bulk", "Selfing a Single Plant or population and bulk seed", 0, -1, 1, 0,
@@ -733,15 +733,15 @@ public class AdvancingControllerTest {
 		breedingMethod.setPrefix("B");
 		breedingMethod.setCount("");
 
-		deprecatedAdvancingSource.setBreedingMethod(breedingMethod);
-		deprecatedAdvancingSource.setPlantsSelected(2);
-		deprecatedAdvancingSource.setPlotNumber("2");
-		deprecatedAdvancingSource.setBulk(false);
-		deprecatedAdvancingSource.setStudyName("Test One");
-		deprecatedAdvancingSource.setSeason("201412");
-		deprecatedAdvancingSource.setCurrentMaxSequence(0);
-		deprecatedAdvancingSource.setTrialInstanceNumber("1");
-		rows.getRows().add(deprecatedAdvancingSource);
+		advancingSource.setBreedingMethod(breedingMethod);
+		advancingSource.setPlantsSelected(2);
+		advancingSource.setPlotNumber("2");
+		advancingSource.setBulk(false);
+		advancingSource.setStudyName("Test One");
+		advancingSource.setSeason("201412");
+		advancingSource.setCurrentMaxSequence(0);
+		advancingSource.setTrialInstanceNumber("1");
+		rows.getRows().add(advancingSource);
 
 		final String testSeedSource1 = "MEX-DrySeason-N1-1-1";
 		Mockito.when(this.seedSourceGenerator.
@@ -816,10 +816,10 @@ public class AdvancingControllerTest {
 
 		for (int i = 0; i < size; i++) {
 			// Set up Advancing sources
-			final DeprecatedAdvancingSource deprecatedAdvancingSource = new DeprecatedAdvancingSource();
-			deprecatedAdvancingSource.setNames(new ArrayList<>());
-			deprecatedAdvancingSource.setStudyId(1);
-			deprecatedAdvancingSource.setGermplasm(germplasmList.get(i));
+			final DeprecatedAdvancingSource advancingSource = new DeprecatedAdvancingSource();
+			advancingSource.setNames(new ArrayList<>());
+			advancingSource.setStudyId(1);
+			advancingSource.setGermplasm(germplasmList.get(i));
 
 			// Names
 			final Name sourceGermplasmName = new Name(133);
@@ -830,8 +830,8 @@ public class AdvancingControllerTest {
 			sourceGermplasmName.setLocationId(9);
 			sourceGermplasmName.setNdate(19860501);
 			sourceGermplasmName.setReferenceId(1);
-			deprecatedAdvancingSource.setStudyId(1);
-			deprecatedAdvancingSource.getNames().add(sourceGermplasmName);
+			advancingSource.setStudyId(1);
+			advancingSource.getNames().add(sourceGermplasmName);
 
 			final Method breedingMethod =
 					new Method(40, "DER", "G", "SLF", "Self and Bulk", "Selfing a Single Plant or population and bulk seed", 0, -1, 1, 0,
@@ -841,15 +841,15 @@ public class AdvancingControllerTest {
 			breedingMethod.setPrefix("B");
 			breedingMethod.setCount("");
 
-			deprecatedAdvancingSource.setBreedingMethod(breedingMethod);
-			deprecatedAdvancingSource.setPlantsSelected(2);
-			deprecatedAdvancingSource.setPlotNumber("2");
-			deprecatedAdvancingSource.setBulk(false);
-			deprecatedAdvancingSource.setStudyName("Test One");
-			deprecatedAdvancingSource.setSeason("201412");
-			deprecatedAdvancingSource.setCurrentMaxSequence(0);
-			deprecatedAdvancingSource.setTrialInstanceNumber("1");
-			rows.getRows().add(deprecatedAdvancingSource);
+			advancingSource.setBreedingMethod(breedingMethod);
+			advancingSource.setPlantsSelected(2);
+			advancingSource.setPlotNumber("2");
+			advancingSource.setBulk(false);
+			advancingSource.setStudyName("Test One");
+			advancingSource.setSeason("201412");
+			advancingSource.setCurrentMaxSequence(0);
+			advancingSource.setTrialInstanceNumber("1");
+			rows.getRows().add(advancingSource);
 		}
 		return rows;
 	}

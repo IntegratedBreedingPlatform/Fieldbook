@@ -702,12 +702,12 @@ public class GermplasmTreeControllerTest {
 		final ImportedCross importedCross = importedCrossList.get(0);
 		final Workbook workbook = this.userSelection.getWorkbook();
 
-		final DeprecatedAdvancingSource deprecatedAdvancingSource = this.controller.createAdvancingSource(importedCross);
+		final DeprecatedAdvancingSource advancingSource = this.controller.createAdvancingSource(importedCross);
 
-		Assert.assertEquals(1, deprecatedAdvancingSource.getStudyId().intValue());
-		Assert.assertEquals(workbook.getConditions(), deprecatedAdvancingSource.getConditions());
-		Assert.assertEquals(workbook.getStudyDetails().getStudyType(), deprecatedAdvancingSource.getStudyType());
-		Assert.assertEquals(importedCross.getBreedingMethodId(), deprecatedAdvancingSource.getBreedingMethodId());
+		Assert.assertEquals(1, advancingSource.getStudyId().intValue());
+		Assert.assertEquals(workbook.getConditions(), advancingSource.getConditions());
+		Assert.assertEquals(workbook.getStudyDetails().getStudyType(), advancingSource.getStudyType());
+		Assert.assertEquals(importedCross.getBreedingMethodId(), advancingSource.getBreedingMethodId());
 
 	}
 
