@@ -94,15 +94,15 @@ public class AdvancingSourceListFactory {
 					.collect(Collectors.toMap(StudyInstance::getInstanceNumber, i -> i));
 
 			for (final MeasurementRow row : workbook.getObservations()) {
-				final DeprecatedAdvancingSource deprecatedAdvancingSourceCandidate = environmentLevel.copy();
+				final DeprecatedAdvancingSource advancingSourceCandidate = environmentLevel.copy();
 
-				deprecatedAdvancingSourceCandidate.setTrialInstanceNumber(row.getMeasurementDataValue(TermId.TRIAL_INSTANCE_FACTOR.getId()));
+				advancingSourceCandidate.setTrialInstanceNumber(row.getMeasurementDataValue(TermId.TRIAL_INSTANCE_FACTOR.getId()));
 
 				// If study is Trial, then setting data if trial instance is not null
-				if (deprecatedAdvancingSourceCandidate.getTrialInstanceNumber() != null) {
-					final Integer trialInstanceNumber = Integer.valueOf(deprecatedAdvancingSourceCandidate.getTrialInstanceNumber());
+				if (advancingSourceCandidate.getTrialInstanceNumber() != null) {
+					final Integer trialInstanceNumber = Integer.valueOf(advancingSourceCandidate.getTrialInstanceNumber());
 					final MeasurementRow trialInstanceObservations = workbook.getTrialObservationByTrialInstanceNo(
-							Integer.valueOf(deprecatedAdvancingSourceCandidate.getTrialInstanceNumber()));
+							Integer.valueOf(advancingSourceCandidate.getTrialInstanceNumber()));
 
 					// Workaround to correct outdated location ID in trial instance
 					if (studyInstanceMap.containsKey(trialInstanceNumber) &&
@@ -111,14 +111,14 @@ public class AdvancingSourceListFactory {
 							.setValue(String.valueOf(studyInstanceMap.get(trialInstanceNumber).getLocationId()));
 					}
 
-					deprecatedAdvancingSourceCandidate.setTrailInstanceObservation(trialInstanceObservations);
+					advancingSourceCandidate.setTrailInstanceObservation(trialInstanceObservations);
 				}
 
-				deprecatedAdvancingSourceCandidate.setStudyType(workbook.getStudyDetails().getStudyType());
+				advancingSourceCandidate.setStudyType(workbook.getStudyDetails().getStudyType());
 
 				// Setting conditions for Breeders Cross ID
-				deprecatedAdvancingSourceCandidate.setConditions(workbook.getConditions());
-				deprecatedAdvancingSourceCandidate.setReplicationNumber(row.getMeasurementDataValue(TermId.REP_NO.getId()));
+				advancingSourceCandidate.setConditions(workbook.getConditions());
+				advancingSourceCandidate.setReplicationNumber(row.getMeasurementDataValue(TermId.REP_NO.getId()));
 
 
 				Integer methodId = null;
@@ -142,7 +142,7 @@ public class AdvancingSourceListFactory {
 
 				final MeasurementData plotNumberData = row.getMeasurementData(TermId.PLOT_NO.getId());
 				if (plotNumberData != null) {
-					deprecatedAdvancingSourceCandidate.setPlotNumber(plotNumberData.getValue());
+					advancingSourceCandidate.setPlotNumber(plotNumberData.getValue());
 				}
 
 				Integer plantsSelected = null;
@@ -150,7 +150,7 @@ public class AdvancingSourceListFactory {
 				if (advanceInfo.getAdvanceType().equals(AdvanceType.SAMPLE)) {
 					if (samplesMap.containsKey(row.getExperimentId())) {
 						plantsSelected = samplesMap.get(row.getExperimentId()).size();
-						deprecatedAdvancingSourceCandidate.setSamples(samplesMap.get(row.getExperimentId()));
+						advancingSourceCandidate.setSamples(samplesMap.get(row.getExperimentId()));
 					} else {
 						continue;
 					}
@@ -168,18 +168,18 @@ public class AdvancingSourceListFactory {
 							}
 						}
 					}
-					deprecatedAdvancingSourceCandidate.setGermplasm(germplasm);
-					deprecatedAdvancingSourceCandidate.setNames(names);
-					deprecatedAdvancingSourceCandidate.setPlantsSelected(plantsSelected);
-					deprecatedAdvancingSourceCandidate.setBreedingMethod(breedingMethod);
-					deprecatedAdvancingSourceCandidate.setStudyName(studyName);
-					deprecatedAdvancingSourceCandidate.setStudyId(studyId);
-					deprecatedAdvancingSourceCandidate.setEnvironmentDatasetId(workbook.getTrialDatasetId());
-					deprecatedAdvancingSourceCandidate.setDesignationIsPreviewOnly(true);
+					advancingSourceCandidate.setGermplasm(germplasm);
+					advancingSourceCandidate.setNames(names);
+					advancingSourceCandidate.setPlantsSelected(plantsSelected);
+					advancingSourceCandidate.setBreedingMethod(breedingMethod);
+					advancingSourceCandidate.setStudyName(studyName);
+					advancingSourceCandidate.setStudyId(studyId);
+					advancingSourceCandidate.setEnvironmentDatasetId(workbook.getTrialDatasetId());
+					advancingSourceCandidate.setDesignationIsPreviewOnly(true);
 
-					dataProcessor.processPlotLevelData(deprecatedAdvancingSourceCandidate, row);
+					dataProcessor.processPlotLevelData(advancingSourceCandidate, row);
 
-					advancingPlotRows.add(deprecatedAdvancingSourceCandidate);
+					advancingPlotRows.add(advancingSourceCandidate);
 				}
 
 			}

@@ -145,7 +145,7 @@ public class AdvancingStudyForm {
 
 	private String advanceType;
 
-	private List<DeprecatedAdvancingSource> deprecatedAdvancingSourceItems;
+	private List<DeprecatedAdvancingSource> advancingSourceItems;
 
     
 	public Set<String> getSelectedTrialInstances() {
@@ -900,11 +900,11 @@ public class AdvancingStudyForm {
 	}
 
 	public List<DeprecatedAdvancingSource> getAdvancingSourceItems() {
-		return deprecatedAdvancingSourceItems;
+		return advancingSourceItems;
 	}
 
-	public void setAdvancingSourceItems(List<DeprecatedAdvancingSource> deprecatedAdvancingSourceItems) {
-		this.deprecatedAdvancingSourceItems = deprecatedAdvancingSourceItems;
+	public void setAdvancingSourceItems(List<DeprecatedAdvancingSource> advancingSourceItems) {
+		this.advancingSourceItems = advancingSourceItems;
 	}
 
 	@Override
