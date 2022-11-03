@@ -437,15 +437,15 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 	}
 
 	protected DeprecatedAdvancingSource createAdvancingSource(final ImportedCross cross) {
-		final DeprecatedAdvancingSource deprecatedAdvancingSource = new DeprecatedAdvancingSource(cross);
+		final DeprecatedAdvancingSource advancingSource = new DeprecatedAdvancingSource(cross);
 		// TODO add trial instance number
 		final Workbook workbook = this.userSelection.getWorkbook();
-		deprecatedAdvancingSource.setStudyId(workbook.getStudyDetails().getId());
-		deprecatedAdvancingSource.setEnvironmentDatasetId(workbook.getTrialDatasetId());
-		deprecatedAdvancingSource.setConditions(workbook.getConditions());
-		deprecatedAdvancingSource.setStudyType(workbook.getStudyDetails().getStudyType());
-		deprecatedAdvancingSource.setBreedingMethodId(cross.getBreedingMethodId());
-		return deprecatedAdvancingSource;
+		advancingSource.setStudyId(workbook.getStudyDetails().getId());
+		advancingSource.setEnvironmentDatasetId(workbook.getTrialDatasetId());
+		advancingSource.setConditions(workbook.getConditions());
+		advancingSource.setStudyType(workbook.getStudyDetails().getStudyType());
+		advancingSource.setBreedingMethodId(cross.getBreedingMethodId());
+		return advancingSource;
 	}
 
 	/**

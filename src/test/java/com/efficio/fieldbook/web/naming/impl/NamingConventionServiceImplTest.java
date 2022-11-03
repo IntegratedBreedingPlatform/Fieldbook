@@ -151,9 +151,9 @@ public class NamingConventionServiceImplTest {
 		importedCrosses.add(importedCross);
 
 		final AdvancingSourceList rows = new AdvancingSourceList();
-		final DeprecatedAdvancingSource deprecatedAdvancingSource = new DeprecatedAdvancingSource();
-		deprecatedAdvancingSource.setBreedingMethodId(101);
-		rows.setRows(Collections.singletonList(deprecatedAdvancingSource));
+		final DeprecatedAdvancingSource advancingSource = new DeprecatedAdvancingSource();
+		advancingSource.setBreedingMethodId(101);
+		rows.setRows(Collections.singletonList(advancingSource));
 
 		final Workbook workbook = Mockito.mock(Workbook.class);
 		final List<Integer> gids = Collections.singletonList(1);
@@ -174,7 +174,7 @@ public class NamingConventionServiceImplTest {
 		Mockito.verify(this.germplasmDataManager).isMethodNamingConfigurationValid(method);
 		Mockito.verify(this.rulesService).runRules(ArgumentMatchers.any(RuleExecutionContext.class));
 		Mockito.verify(this.ruleFactory).getRuleSequenceForNamespace("naming");
-		Assert.assertEquals(0, deprecatedAdvancingSource.getCurrentMaxSequence());
+		Assert.assertEquals(0, advancingSource.getCurrentMaxSequence());
 	}
 
 	private ImportedGermplasm createImportedGermplasm(final int gid) {
