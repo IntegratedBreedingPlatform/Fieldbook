@@ -56,6 +56,7 @@ import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
 import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
 import org.generationcp.middleware.service.api.FieldbookService;
 import org.generationcp.middleware.service.api.dataset.DatasetService;
+import org.generationcp.middleware.service.api.dataset.ObservationUnitRow;
 import org.generationcp.middleware.service.api.study.StudyInstanceService;
 import org.generationcp.middleware.service.impl.study.StudyInstance;
 import org.generationcp.middleware.util.TimerWatch;
@@ -345,9 +346,10 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 		// StudyId + InstanceNo -> Get the Instance with the locationId and pass a locations map by id and get the abbreviation
 
 		// set the seed source string for the new Germplasm
+		final ObservationUnitRow observationUnitRow = fromMeasurementRow(
+			this.userSelection.getWorkbook().getTrialObservationByTrialInstanceNo(Integer.valueOf(source.getTrialInstanceNumber())));
 		final String seedSource = this.seedSourceGenerator
-			.generateSeedSource(fromMeasurementRow(
-				this.userSelection.getWorkbook().getTrialObservationByTrialInstanceNo(Integer.valueOf(source.getTrialInstanceNumber()))),
+			.generateSeedSource(observationUnitRow == null ? new ArrayList<>() : observationUnitRow.getVariables().values(),
 				this.userSelection.getWorkbook().getConditions(), selectionNumberToApply, source.getPlotNumber(),
 				this.userSelection.getWorkbook().getStudyName(), plantNo, locationIdNameMap, studyInstanceMap, environmentVariables);
 
