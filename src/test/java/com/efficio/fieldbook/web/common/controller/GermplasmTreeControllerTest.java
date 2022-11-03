@@ -786,17 +786,17 @@ public class GermplasmTreeControllerTest {
 	private AdvancingStudyForm createAdvancingStudyForm(final boolean withReplicationNumber) {
 		final AdvancingStudyForm advancingStudyForm = new AdvancingStudyForm();
 		final List<ImportedGermplasm> importedGermplasmList = new ArrayList<>();
-		final List<DeprecatedAdvancingSource> deprecatedAdvancingSourceList = new ArrayList<>();
+		final List<DeprecatedAdvancingSource> advancingSourceList = new ArrayList<>();
 		for (int i = 1; i <= 3; i++) {
 			final ImportedGermplasm importedGermplasm = this.createImportedGermplasm(i, withReplicationNumber);
 			importedGermplasmList.add(importedGermplasm);
-			deprecatedAdvancingSourceList.add(new DeprecatedAdvancingSource(importedGermplasm));
+			advancingSourceList.add(new DeprecatedAdvancingSource(importedGermplasm));
 		}
 		advancingStudyForm.setHarvestYear("2015");
 		advancingStudyForm.setHarvestMonth("08");
 		advancingStudyForm.setHarvestLocationId("252");
 		advancingStudyForm.setGermplasmList(importedGermplasmList);
-		advancingStudyForm.setAdvancingSourceItems(deprecatedAdvancingSourceList);
+		advancingStudyForm.setAdvancingSourceItems(advancingSourceList);
 		return advancingStudyForm;
 	}
 

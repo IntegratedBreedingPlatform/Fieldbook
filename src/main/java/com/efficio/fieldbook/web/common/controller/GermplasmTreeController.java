@@ -402,21 +402,21 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 	protected ImportedCrossesList applyNamingRules(final ImportedCrossesList importedCrossesList)
 		throws RuleException {
 
-		final List<DeprecatedAdvancingSource> deprecatedAdvancingSources = new ArrayList<>();
+		final List<DeprecatedAdvancingSource> advancingSources = new ArrayList<>();
 		final List<Integer> gids = new ArrayList<>();
 		final List<ImportedCross> importedCrosses = importedCrossesList.getImportedCrosses();
 
 		for (final ImportedCross cross : importedCrosses) {
 
 			this.assignCrossNames(cross);
-			deprecatedAdvancingSources.add(this.createAdvancingSource(cross));
+			advancingSources.add(this.createAdvancingSource(cross));
 			if (cross.getGid() != null && NumberUtils.isNumber(cross.getGid())) {
 				gids.add(Integer.valueOf(cross.getGid()));
 			}
 		}
 
 		final AdvancingSourceList advancingSourceList = new AdvancingSourceList();
-		advancingSourceList.setRows(deprecatedAdvancingSources);
+		advancingSourceList.setRows(advancingSources);
 
 		final List<ImportedCross> crosses = this.namingConventionService
 			.generateCrossesList(importedCrosses, advancingSourceList, true, this.userSelection.getWorkbook(), gids);
