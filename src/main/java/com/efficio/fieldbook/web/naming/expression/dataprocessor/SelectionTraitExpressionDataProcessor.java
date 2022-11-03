@@ -19,7 +19,7 @@ import org.generationcp.middleware.manager.ontology.api.OntologyVariableDataMana
 import org.springframework.stereotype.Component;
 
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 
 @Deprecated
 @Component
@@ -34,7 +34,7 @@ public class SelectionTraitExpressionDataProcessor implements ExpressionDataProc
 	private ContextUtil contextUtil;
 
 	@Override
-	public void processEnvironmentLevelData(final AdvancingSource source, final Workbook workbook, final AdvancingStudy nurseryInfo,
+	public void processEnvironmentLevelData(final DeprecatedAdvancingSource source, final Workbook workbook, final AdvancingStudy nurseryInfo,
 			final Study study) {
         // management details / study details are stored within the workbook conditions. study conditions are stored in the workbook
 		// constants
@@ -50,7 +50,7 @@ public class SelectionTraitExpressionDataProcessor implements ExpressionDataProc
 	}
 
 	@Override
-	public void processPlotLevelData(final AdvancingSource source, final MeasurementRow row) {
+	public void processPlotLevelData(final DeprecatedAdvancingSource source, final MeasurementRow row) {
 		final List<MeasurementData> rowData = row.getDataList();
 
 		if(source.getTrailInstanceObservationMeasurementRow() != null){
@@ -65,7 +65,7 @@ public class SelectionTraitExpressionDataProcessor implements ExpressionDataProc
 		}
 	}
 
-	protected void setSelectionTraitValue(final String categoricalValue, final AdvancingSource source, final int termID, final List<ValueReference> possibleValuesForSelectionTraitProperty){
+	protected void setSelectionTraitValue(final String categoricalValue, final DeprecatedAdvancingSource source, final int termID, final List<ValueReference> possibleValuesForSelectionTraitProperty){
 		if(StringUtils.isNumeric(categoricalValue)){
 			source.setSelectionTraitValue(extractValue(categoricalValue, termID));
 		}

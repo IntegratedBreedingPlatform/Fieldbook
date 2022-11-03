@@ -1,7 +1,6 @@
 
 package com.efficio.fieldbook.web.naming.impl;
 
-import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
@@ -9,7 +8,7 @@ import org.generationcp.middleware.ruleengine.naming.impl.NamingConventionServic
 import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
 import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
 import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasmParent;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
 import org.generationcp.middleware.ruleengine.RuleException;
 import org.generationcp.middleware.ruleengine.RuleExecutionContext;
@@ -67,7 +66,7 @@ public class NamingConventionServiceImplTest {
 	private final NamingConventionServiceImpl namingConventionService = new NamingConventionServiceImpl();
 
 	private Method breedingMethod;
-	private AdvancingSource row;
+	private DeprecatedAdvancingSource row;
 	private Integer breedingMethodSnameType;
 	private Workbook workbook;
 
@@ -78,7 +77,7 @@ public class NamingConventionServiceImplTest {
 		this.breedingMethod = new Method();
 		this.breedingMethod.setSnametype(this.breedingMethodSnameType);
 		this.breedingMethod.setGeneq(TermId.NON_BULKING_BREEDING_METHOD_CLASS.getId());
-		this.row = new AdvancingSource();
+		this.row = new DeprecatedAdvancingSource();
 		this.row.setBreedingMethod(this.breedingMethod);
 		this.workbook = new Workbook();
 		final StudyDetails studyDetails = new StudyDetails();
@@ -92,8 +91,8 @@ public class NamingConventionServiceImplTest {
 	@Test
 	public void testGenerateAdvanceListNames() throws MiddlewareQueryException, RuleException {
 		try {
-			final AdvancingSource as1 = this.createAdvancingSource();
-			final List<AdvancingSource> rows = Collections.singletonList(as1);
+			final DeprecatedAdvancingSource as1 = this.createAdvancingSource();
+			final List<DeprecatedAdvancingSource> rows = Collections.singletonList(as1);
 
 			Mockito.when(this.rulesService.runRules(ArgumentMatchers.any(RuleExecutionContext.class)))
 				.thenReturn(Collections.singletonList("name"));
@@ -114,8 +113,8 @@ public class NamingConventionServiceImplTest {
 
 	@Test
 	public void testGenerateAdvanceListNames_HasExceedLengthError() throws MiddlewareQueryException, RuleException {
-		final AdvancingSource as1 = this.createAdvancingSource();
-		final List<AdvancingSource> rows = Collections.singletonList(as1);
+		final DeprecatedAdvancingSource as1 = this.createAdvancingSource();
+		final List<DeprecatedAdvancingSource> rows = Collections.singletonList(as1);
 
 		Mockito.when(this.rulesService.runRules(ArgumentMatchers.any(RuleExecutionContext.class)))
 			.thenReturn(Collections.singletonList("name"));
@@ -152,9 +151,9 @@ public class NamingConventionServiceImplTest {
 		importedCrosses.add(importedCross);
 
 		final AdvancingSourceList rows = new AdvancingSourceList();
-		final AdvancingSource advancingSource = new AdvancingSource();
-		advancingSource.setBreedingMethodId(101);
-		rows.setRows(Collections.singletonList(advancingSource));
+		final DeprecatedAdvancingSource deprecatedAdvancingSource = new DeprecatedAdvancingSource();
+		deprecatedAdvancingSource.setBreedingMethodId(101);
+		rows.setRows(Collections.singletonList(deprecatedAdvancingSource));
 
 		final Workbook workbook = Mockito.mock(Workbook.class);
 		final List<Integer> gids = Collections.singletonList(1);
@@ -175,7 +174,7 @@ public class NamingConventionServiceImplTest {
 		Mockito.verify(this.germplasmDataManager).isMethodNamingConfigurationValid(method);
 		Mockito.verify(this.rulesService).runRules(ArgumentMatchers.any(RuleExecutionContext.class));
 		Mockito.verify(this.ruleFactory).getRuleSequenceForNamespace("naming");
-		Assert.assertEquals(0, advancingSource.getCurrentMaxSequence());
+		Assert.assertEquals(0, deprecatedAdvancingSource.getCurrentMaxSequence());
 	}
 
 	private ImportedGermplasm createImportedGermplasm(final int gid) {
@@ -197,8 +196,8 @@ public class NamingConventionServiceImplTest {
 		return germplasm;
 	}
 
-	private AdvancingSource createAdvancingSource() {
-		final AdvancingSource as1 = new AdvancingSource();
+	private DeprecatedAdvancingSource createAdvancingSource() {
+		final DeprecatedAdvancingSource as1 = new DeprecatedAdvancingSource();
 		as1.setNames(new ArrayList<>());
 		as1.setBreedingMethod(this.breedingMethod);
 		as1.setPlantsSelected(1);

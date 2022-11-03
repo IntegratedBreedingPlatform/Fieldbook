@@ -2,7 +2,7 @@ package com.efficio.fieldbook.web.naming.expression.dataprocessor;
 
 import com.efficio.fieldbook.utils.test.WorkbookDataUtil;
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 import com.google.common.collect.Lists;
 import org.junit.Assert;
 import org.generationcp.commons.spring.util.ContextUtil;
@@ -59,7 +59,7 @@ public class SelectionTraitExpressionDataProcessorTest {
         // study details are placed within the conditions portion of the workbook
         workbook.getConditions().add(detail);
 
-        final AdvancingSource source = Mockito.mock(AdvancingSource.class);
+        final DeprecatedAdvancingSource source = Mockito.mock(DeprecatedAdvancingSource.class);
         final AdvancingStudy advancingStudy = Mockito.mock(AdvancingStudy.class);
         final Study study = Mockito.mock(Study.class);
 
@@ -83,7 +83,7 @@ public class SelectionTraitExpressionDataProcessorTest {
         // advancingStudy conditions are placed within the constants section of the workbook
         workbook.getConstants().add(detail);
 
-        final AdvancingSource source = Mockito.mock(AdvancingSource.class);
+        final DeprecatedAdvancingSource source = Mockito.mock(DeprecatedAdvancingSource.class);
         final AdvancingStudy advancingStudy = Mockito.mock(AdvancingStudy.class);
         final Study study = Mockito.mock(Study.class);
 
@@ -132,7 +132,7 @@ public class SelectionTraitExpressionDataProcessorTest {
         final MeasurementRow measurementRow = new MeasurementRow();
         setMeasurementRow(measurementRow,1,"name","test",unitUnderTest.SELECTION_TRAIT_PROPERTY);
 
-        final AdvancingSource source = Mockito.mock(AdvancingSource.class);
+        final DeprecatedAdvancingSource source = Mockito.mock(DeprecatedAdvancingSource.class);
 
         Mockito.when(ontologyVariableDataManager.retrieveVariableCategoricalNameValue(TEST_PROGRAM_UUID, TEST_TERM_ID, Integer.parseInt("1"), true)).thenReturn(testValue);
 
@@ -149,7 +149,7 @@ public class SelectionTraitExpressionDataProcessorTest {
         setMeasurementRow(measurementRow,1,"name","test",unitUnderTest.SELECTION_TRAIT_PROPERTY);
         setMeasurementRow(measurementRow,-2,"SAMPLES","samples description",null);
 
-        final AdvancingSource source = Mockito.mock(AdvancingSource.class);
+        final DeprecatedAdvancingSource source = Mockito.mock(DeprecatedAdvancingSource.class);
 
         Mockito.when(ontologyVariableDataManager.retrieveVariableCategoricalNameValue(TEST_PROGRAM_UUID, TEST_TERM_ID, Integer.parseInt("1"), true)).thenReturn(testValue);
 

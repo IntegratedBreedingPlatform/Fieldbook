@@ -17,7 +17,7 @@ import org.generationcp.middleware.manager.api.StudyDataManager;
 import org.generationcp.middleware.pojos.Germplasm;
 import org.generationcp.middleware.pojos.Method;
 import org.generationcp.middleware.pojos.Name;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
 import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
 import org.generationcp.middleware.service.api.FieldbookService;
@@ -67,12 +67,12 @@ public class AdvancingSourceListFactory {
 			samplesMap = this.studyDataManager.getExperimentSamplesDTOMap(studyId);
 		}
 
-		final AdvancingSource environmentLevel = new AdvancingSource();
+		final DeprecatedAdvancingSource environmentLevel = new DeprecatedAdvancingSource();
 		final ExpressionDataProcessor dataProcessor = this.dataProcessorFactory.retrieveExecutorProcessor();
 
 		final AdvancingSourceList advancingSourceList = new AdvancingSourceList();
 
-		final List<AdvancingSource> advancingPlotRows = new ArrayList<>();
+		final List<DeprecatedAdvancingSource> advancingPlotRows = new ArrayList<>();
 
 		final Integer methodVariateId = advanceInfo.getMethodVariateId();
 		final Integer lineVariateId = advanceInfo.getLineVariateId();
@@ -95,7 +95,7 @@ public class AdvancingSourceListFactory {
 					.collect(Collectors.toMap(StudyInstance::getInstanceNumber, i -> i));
 
 			for (final MeasurementRow row : workbook.getObservations()) {
-				final AdvancingSource advancingSourceCandidate = environmentLevel.copy();
+				final DeprecatedAdvancingSource advancingSourceCandidate = environmentLevel.copy();
 
 				advancingSourceCandidate.setTrialInstanceNumber(row.getMeasurementDataValue(TermId.TRIAL_INSTANCE_FACTOR.getId()));
 
@@ -192,10 +192,10 @@ public class AdvancingSourceListFactory {
 		return advancingSourceList;
 	}
 
-	private void setNamesToGermplasm(final List<AdvancingSource> rows, final List<Integer> gids) throws MiddlewareQueryException {
+	private void setNamesToGermplasm(final List<DeprecatedAdvancingSource> rows, final List<Integer> gids) throws MiddlewareQueryException {
 		if (rows != null && !rows.isEmpty()) {
 			final Map<Integer, List<Name>> map = this.fieldbookMiddlewareService.getNamesByGids(gids);
-			for (final AdvancingSource row : rows) {
+			for (final DeprecatedAdvancingSource row : rows) {
 				final String gid = row.getGermplasm().getGid();
 				if (gid != null && NumberUtils.isNumber(gid)) {
 					final List<Name> names = map.get(Integer.valueOf(gid));
@@ -236,7 +236,7 @@ public class AdvancingSourceListFactory {
 			for (final Germplasm germplasm : germplasmList) {
 				germplasmMap.put(germplasm.getGid().toString(), germplasm);
 			}
-			for (final AdvancingSource source : list.getRows()) {
+			for (final DeprecatedAdvancingSource source : list.getRows()) {
 				if (source.getGermplasm() != null && source.getGermplasm().getGid() != null && NumberUtils
 						.isNumber(source.getGermplasm().getGid())) {
 					final Germplasm germplasm = germplasmMap.get(source.getGermplasm().getGid().toString());

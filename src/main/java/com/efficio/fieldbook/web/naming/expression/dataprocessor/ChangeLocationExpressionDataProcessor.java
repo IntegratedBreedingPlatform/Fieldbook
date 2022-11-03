@@ -1,7 +1,7 @@
 package com.efficio.fieldbook.web.naming.expression.dataprocessor;
 
 import com.efficio.fieldbook.util.FieldbookException;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
 import org.apache.commons.lang3.StringUtils;
 import org.generationcp.middleware.domain.dms.Study;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class ChangeLocationExpressionDataProcessor implements ExpressionDataProcessor {
 
     @Override
-    public void processEnvironmentLevelData(AdvancingSource source, Workbook workbook, AdvancingStudy nurseryInfo, Study study) throws FieldbookException {
+    public void processEnvironmentLevelData(DeprecatedAdvancingSource source, Workbook workbook, AdvancingStudy nurseryInfo, Study study) throws FieldbookException {
         String locationIdString = nurseryInfo.getHarvestLocationId();
         Integer locationId = StringUtils.isEmpty(locationIdString) ? null : Integer.valueOf(locationIdString);
 
@@ -24,7 +24,7 @@ public class ChangeLocationExpressionDataProcessor implements ExpressionDataProc
     }
 
     @Override
-    public void processPlotLevelData(AdvancingSource source, MeasurementRow row) throws FieldbookException {
+    public void processPlotLevelData(DeprecatedAdvancingSource source, MeasurementRow row) throws FieldbookException {
 		if(source.getTrailInstanceObservationMeasurementRow() != null &&
                 source.getTrailInstanceObservationMeasurementRow().getDataList() != null &&  !source.getTrailInstanceObservationMeasurementRow().getDataList().isEmpty()){
             for(MeasurementData measurementData : source.getTrailInstanceObservationMeasurementRow().getDataList()){

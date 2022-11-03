@@ -16,14 +16,14 @@ import org.generationcp.middleware.domain.oms.TermId;
 import org.springframework.stereotype.Component;
 
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 
 @Deprecated
 @Component
 public class SeasonExpressionDataProcessor implements ExpressionDataProcessor {
 
 	@Override
-	public void processEnvironmentLevelData(final AdvancingSource source, final Workbook workbook, final AdvancingStudy nurseryInfo,
+	public void processEnvironmentLevelData(final DeprecatedAdvancingSource source, final Workbook workbook, final AdvancingStudy nurseryInfo,
 			final Study study) {
 		final Map<Integer, String> measurementVariablesValues = new HashMap<Integer, String>();
 		for (final MeasurementVariable mv : workbook.getConditions()) {
@@ -33,7 +33,7 @@ public class SeasonExpressionDataProcessor implements ExpressionDataProcessor {
 	}
 
 	@Override
-	public void processPlotLevelData(final AdvancingSource source, final MeasurementRow row) {
+	public void processPlotLevelData(final DeprecatedAdvancingSource source, final MeasurementRow row) {
 		if (StringUtils.isBlank(source.getSeason())
 				&& source.getTrailInstanceObservationMeasurementRow() != null && source.getTrailInstanceObservationMeasurementRow().getDataList() != null) {
 			final Map<Integer, String> measurementVariablesValues = new HashMap<>();

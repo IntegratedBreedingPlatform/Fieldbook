@@ -3,7 +3,7 @@ package com.efficio.fieldbook.web.naming.expression.dataprocessor;
 import com.efficio.fieldbook.util.FieldbookException;
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
 import com.google.common.collect.Lists;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 import org.generationcp.middleware.api.location.LocationService;
 import org.generationcp.middleware.domain.etl.MeasurementData;
 import org.generationcp.middleware.domain.etl.MeasurementRow;
@@ -33,7 +33,7 @@ public class LocationAbbreviationExpressionDataProcessorTest {
     @Test
     public void testProcessEnvironmentLevelDataWithHarvestLocationAbbr() throws FieldbookException {
 
-        final AdvancingSource source = Mockito.mock(AdvancingSource.class);
+        final DeprecatedAdvancingSource source = Mockito.mock(DeprecatedAdvancingSource.class);
         final AdvancingStudy advancingStudy = new AdvancingStudy();
         advancingStudy.setHarvestLocationAbbreviation("abbr");
 
@@ -44,7 +44,7 @@ public class LocationAbbreviationExpressionDataProcessorTest {
     @Test
     public void testProcessEnvironmentLevelDataWithNoHarvestLocationAbbr() throws FieldbookException {
 
-        final AdvancingSource source = Mockito.mock(AdvancingSource.class);
+        final DeprecatedAdvancingSource source = Mockito.mock(DeprecatedAdvancingSource.class);
         final AdvancingStudy advancingStudy = new AdvancingStudy();
 
         locationAbbreviationExpressionDataProcessor.processEnvironmentLevelData(source, null, advancingStudy, null);
@@ -54,7 +54,7 @@ public class LocationAbbreviationExpressionDataProcessorTest {
 
     @Test
     public void testProcessPlotLevelDataWithLocationMeasurementData() throws FieldbookException {
-        final AdvancingSource source = Mockito.mock(AdvancingSource.class);
+        final DeprecatedAdvancingSource source = Mockito.mock(DeprecatedAdvancingSource.class);
 
         final MeasurementRow measurementRow = Mockito.mock(MeasurementRow.class);
         final List<MeasurementData> listMeasurementData = Lists.newArrayList();
@@ -79,7 +79,7 @@ public class LocationAbbreviationExpressionDataProcessorTest {
 
     @Test
     public void testProcessPlotLevelDataWithoutLocationMeasurementData() throws FieldbookException {
-        final AdvancingSource source = Mockito.mock(AdvancingSource.class);
+        final DeprecatedAdvancingSource source = Mockito.mock(DeprecatedAdvancingSource.class);
         final MeasurementRow measurementRow = Mockito.mock(MeasurementRow.class);
         final List<MeasurementData> listMeasurementData = Lists.newArrayList();
         final MeasurementData measurementData = new MeasurementData();
@@ -99,7 +99,7 @@ public class LocationAbbreviationExpressionDataProcessorTest {
 
     @Test
     public void testProcessPlotLevelDataWithNoMeasurementData() throws Exception {
-        final AdvancingSource source = Mockito.mock(AdvancingSource.class);
+        final DeprecatedAdvancingSource source = Mockito.mock(DeprecatedAdvancingSource.class);
         final MeasurementRow measurementRow = Mockito.mock(MeasurementRow.class);
         Mockito.when(measurementRow.getDataList()).thenReturn(null);
         Mockito.when(source.getTrailInstanceObservationMeasurementRow()).thenReturn(measurementRow);

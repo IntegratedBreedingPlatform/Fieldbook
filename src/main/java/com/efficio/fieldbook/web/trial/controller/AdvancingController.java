@@ -51,11 +51,12 @@ import org.generationcp.middleware.ruleengine.RuleException;
 import org.generationcp.middleware.ruleengine.generator.SeedSourceGenerator;
 import org.generationcp.middleware.ruleengine.naming.service.NamingConventionService;
 import org.generationcp.middleware.ruleengine.pojo.AdvanceGermplasmChangeDetail;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
 import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
 import org.generationcp.middleware.service.api.FieldbookService;
 import org.generationcp.middleware.service.api.dataset.DatasetService;
+import org.generationcp.middleware.service.api.dataset.ObservationUnitRow;
 import org.generationcp.middleware.service.api.study.StudyInstanceService;
 import org.generationcp.middleware.service.impl.study.StudyInstance;
 import org.generationcp.middleware.util.TimerWatch;
@@ -251,7 +252,7 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 		throws RuleException {
 		this.updatePlantsSelectedIfNecessary(list, advanceInfo);
 
-		for (final AdvancingSource source : list.getRows()) {
+		for (final DeprecatedAdvancingSource source : list.getRows()) {
 			if (source.getChangeDetail() != null) {
 				changeDetails.add(source.getChangeDetail());
 			}
@@ -291,7 +292,7 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 			this.datasetService.getObservationSetVariables(this.userSelection.getWorkbook().getTrialDatasetId(), Collections.singletonList(
 				VariableType.ENVIRONMENT_DETAIL.getId()));
 		final Map<String, Integer> keySequenceMap = new HashMap<>();
-		for (final AdvancingSource row : rows.getRows()) {
+		for (final DeprecatedAdvancingSource row : rows.getRows()) {
 			if (row.getGermplasm() != null && row.getPlantsSelected() != null && row.getBreedingMethod() != null
 				&& row.getPlantsSelected() > 0 && row.getBreedingMethod().isBulkingMethod() != null) {
 				row.setKeySequenceMap(keySequenceMap);
@@ -324,7 +325,7 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 		return list;
 	}
 
-	protected void addImportedGermplasmToList(final List<ImportedGermplasm> list, final AdvancingSource source,
+	protected void addImportedGermplasmToList(final List<ImportedGermplasm> list, final DeprecatedAdvancingSource source,
 		final Method breedingMethod, final int index, final int selectionNumber,
 		final AdvancingStudy advancingParameters, final String plantNo, final Map<String, String> locationIdNameMap,
 		final Map<Integer, StudyInstance> studyInstanceMap,
@@ -345,9 +346,10 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 		// StudyId + InstanceNo -> Get the Instance with the locationId and pass a locations map by id and get the abbreviation
 
 		// set the seed source string for the new Germplasm
+		final ObservationUnitRow observationUnitRow = fromMeasurementRow(
+			this.userSelection.getWorkbook().getTrialObservationByTrialInstanceNo(Integer.valueOf(source.getTrialInstanceNumber())));
 		final String seedSource = this.seedSourceGenerator
-			.generateSeedSource(fromMeasurementRow(
-				this.userSelection.getWorkbook().getTrialObservationByTrialInstanceNo(Integer.valueOf(source.getTrialInstanceNumber()))),
+			.generateSeedSource(observationUnitRow == null ? new ArrayList<>() : observationUnitRow.getVariables().values(),
 				this.userSelection.getWorkbook().getConditions(), selectionNumberToApply, source.getPlotNumber(),
 				this.userSelection.getWorkbook().getStudyName(), plantNo, locationIdNameMap, studyInstanceMap, environmentVariables);
 
@@ -425,7 +427,7 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 		}
 		if (list != null && list.getRows() != null && !list.getRows().isEmpty() && (lineChoiceSame && plantsSelected > 0
 			|| allPlotsChoice)) {
-			for (final AdvancingSource row : list.getRows()) {
+			for (final DeprecatedAdvancingSource row : list.getRows()) {
 				if (!row.isBulkingMethod() && lineChoiceSame) {
 					row.setPlantsSelected(plantsSelected);
 				} else if (row.isBulkingMethod() && allPlotsChoice) {
@@ -729,11 +731,11 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 	}
 
 	public void updateRemovedSelectedPlant(final String uniqueId, final String[] deletedEntries) {
-		final List<AdvancingSource> sources = this.getPaginationListSelection().getAdvanceDetails(uniqueId).getAdvancingSourceItems();
+		final List<DeprecatedAdvancingSource> sources = this.getPaginationListSelection().getAdvanceDetails(uniqueId).getAdvancingSourceItems();
 		if (!CollectionUtils.isEmpty(sources)) {
 			int index = 1;
 			final List<String> deletedEntriesList = Arrays.asList(deletedEntries);
-			for (final AdvancingSource source : sources) {
+			for (final DeprecatedAdvancingSource source : sources) {
 				int startPlantSelected = source.getPlantsSelected() == null ? 0 : source.getPlantsSelected();
 				for (int i=1; i <= startPlantSelected; i ++) {
 					int newPlantSelected = source.getPlantsSelected() == null ? 0 : source.getPlantsSelected();
