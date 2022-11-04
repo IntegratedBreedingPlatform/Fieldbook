@@ -139,7 +139,7 @@ public class FileUploadControllerTest {
 		this.obsUnitIdMeasurementVariable = MeasurementVariableTestDataInitializer
 				.createMeasurementVariable(TermId.OBS_UNIT_ID.getId(), TermId.OBS_UNIT_ID.name(), null);
 		Mockito.when(this.fieldbookService.createMeasurementVariable(String.valueOf(TermId.OBS_UNIT_ID.getId()), "",
-				Operation.ADD, PhenotypicType.GERMPLASM)).thenReturn(this.obsUnitIdMeasurementVariable);
+				Operation.ADD, PhenotypicType.TRIAL_DESIGN)).thenReturn(this.obsUnitIdMeasurementVariable);
 
 		Mockito.when(this.fieldbookMiddlewareService.getMeasurementVariableByPropertyScaleMethodAndRole(
 				Matchers.anyString(), Matchers.anyString(), Matchers.anyString(), Matchers.any(PhenotypicType.class),
