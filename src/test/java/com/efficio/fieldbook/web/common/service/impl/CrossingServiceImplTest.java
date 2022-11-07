@@ -5,15 +5,7 @@ import com.google.common.collect.Lists;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
-import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
 import org.generationcp.commons.parsing.pojo.ImportedCrossesList;
-import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasmParent;
-import org.generationcp.middleware.ruleengine.generator.SeedSourceGenerator;
-import org.generationcp.middleware.ruleengine.naming.service.GermplasmNamingService;
-import org.generationcp.middleware.ruleengine.settings.AdditionalDetailsSetting;
-import org.generationcp.middleware.ruleengine.settings.BreedingMethodSetting;
-import org.generationcp.middleware.ruleengine.settings.CrossNameSetting;
-import org.generationcp.middleware.ruleengine.settings.CrossSetting;
 import org.generationcp.commons.spring.util.ContextUtil;
 import org.generationcp.commons.util.DateUtil;
 import org.generationcp.middleware.ContextHolder;
@@ -36,6 +28,14 @@ import org.generationcp.middleware.pojos.UserDefinedField;
 import org.generationcp.middleware.pojos.germplasm.GermplasmNameSetting;
 import org.generationcp.middleware.pojos.workbench.CropType;
 import org.generationcp.middleware.pojos.workbench.Project;
+import org.generationcp.middleware.ruleengine.generator.SeedSourceGenerator;
+import org.generationcp.middleware.ruleengine.naming.service.GermplasmNamingService;
+import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
+import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasmParent;
+import org.generationcp.middleware.ruleengine.settings.AdditionalDetailsSetting;
+import org.generationcp.middleware.ruleengine.settings.BreedingMethodSetting;
+import org.generationcp.middleware.ruleengine.settings.CrossNameSetting;
+import org.generationcp.middleware.ruleengine.settings.CrossSetting;
 import org.generationcp.middleware.service.api.FieldbookService;
 import org.generationcp.middleware.service.api.dataset.DatasetService;
 import org.generationcp.middleware.service.api.study.StudyInstanceService;
@@ -445,9 +445,7 @@ public class CrossingServiceImplTest {
 		assertEquals(cross1.getFemaleGid(), germplasm1.getGpid1().toString());
 		assertEquals(cross1.getMaleGids().get(0), germplasm1.getGpid2());
 		assertEquals(0, germplasm1.getGrplce().intValue());
-		assertEquals(0, germplasm1.getLgid().intValue());
 		assertEquals(0, germplasm1.getGrplce().intValue());
-		assertEquals(0, germplasm1.getLgid().intValue());
 		assertEquals(99, germplasm1.getLocationId().intValue());
 		assertEquals(0, germplasm1.getMgid().intValue());
 		Assert.assertNull(germplasm1.getPreferredAbbreviation());
@@ -479,9 +477,7 @@ public class CrossingServiceImplTest {
 		assertEquals(cross2.getFemaleGid(), germplasm2.getGpid1().toString());
 		assertEquals(cross2.getMaleGids().get(0), germplasm2.getGpid2());
 		assertEquals(0, germplasm2.getGrplce().intValue());
-		assertEquals(0, germplasm2.getLgid().intValue());
 		assertEquals(0, germplasm2.getGrplce().intValue());
-		assertEquals(0, germplasm2.getLgid().intValue());
 		assertEquals(99, germplasm2.getLocationId().intValue());
 		assertEquals(0, germplasm2.getMgid().intValue());
 		Assert.assertNull(null, germplasm2.getPreferredAbbreviation());
@@ -554,7 +550,6 @@ public class CrossingServiceImplTest {
 
 		assertEquals(CrossingServiceImpl.GERMPLASM_GNPGS, result.getGnpgs());
 		assertEquals(CrossingServiceImpl.GERMPLASM_GRPLCE, result.getGrplce());
-		assertEquals(CrossingServiceImpl.GERMPLASM_LGID, result.getLgid());
 		assertEquals(CrossingServiceImpl.GERMPLASM_MGID, result.getMgid());
 		assertEquals(CrossingServiceImpl.GERMPLASM_REFID, result.getReferenceId());
 
