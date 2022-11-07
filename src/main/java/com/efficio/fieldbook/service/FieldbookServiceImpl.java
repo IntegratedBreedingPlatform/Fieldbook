@@ -841,7 +841,7 @@ public class FieldbookServiceImpl implements FieldbookService {
 		final Workbook workbook,
 		final boolean addObsUnitIdToMeasurementRows) {
 		final MeasurementVariable obsUnitIdMeasurementVariable = this.createMeasurementVariable(
-			String.valueOf(TermId.OBS_UNIT_ID.getId()), "", Operation.ADD, PhenotypicType.GERMPLASM);
+			String.valueOf(TermId.OBS_UNIT_ID.getId()), "", Operation.ADD, PhenotypicType.TRIAL_DESIGN);
 		obsUnitIdMeasurementVariable.setFactor(true);
 
 		// OBS_UNIT_ID is not required in processing the Fieldbook data file,

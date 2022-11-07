@@ -705,9 +705,14 @@ public class DesignImportControllerTest {
 	@Test
 	public void testGenerateMeasurements() {
 		final Workbook workbook = WorkbookDataUtil.getTestWorkbookForStudy(5, 1);
+		StandardVariable obUnitVar = new StandardVariable();
+		obUnitVar.setId(TermId.OBS_UNIT_ID.getId());
 
 		Mockito.doReturn(workbook).when(this.userSelection).getTemporaryWorkbook();
 		Mockito.doReturn(workbook).when(this.userSelection).getWorkbook();
+		Mockito.when(this.fieldbookMiddlewareService.getStandardVariable(TermId.OBS_UNIT_ID.getId(), //
+				this.contextUtil.getCurrentProgramUUID())).thenReturn(obUnitVar);
+
 		final InstanceInfo instanceInfo = this.createEnvironmentData(1);
 		final GenerateDesignInput input = new GenerateDesignInput(instanceInfo, ExperimentDesignType.CUSTOM_IMPORT, null, null, false);
 		input.setTrialSettings(new TrialSettingsBean());

@@ -61,6 +61,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -621,6 +622,15 @@ public class DesignImportController extends SettingsController {
 
 		expDesignVariables = this.designImportService.getDesignRequiredStandardVariables(workbook, designImportData);
 
+		final Optional<StandardVariable> obsUniId = //
+			expDesignVariables.stream().filter((standarVar -> standarVar.getId() == TermId.OBS_UNIT_ID.getId())).findFirst();
+
+		if(!obsUniId.isPresent()){
+			final StandardVariable obsUnitIdVariable = //
+				this.fieldbookMiddlewareService.getStandardVariable(TermId.OBS_UNIT_ID.getId(),this.contextUtil.getCurrentProgramUUID());
+			expDesignVariables.add(obsUnitIdVariable);
+		}
+
 		workbook.setExpDesignVariables(new ArrayList<>(expDesignVariables));
 
 		experimentalDesignMeasurementVariables = this.designImportService.getDesignRequiredMeasurementVariable(workbook, designImportData);
@@ -825,6 +835,18 @@ public class DesignImportController extends SettingsController {
 		final Set<MeasurementVariable> uniqueFactors = new HashSet<>(workbook.getFactors());
 		uniqueFactors.addAll(
 			this.designImportService.extractMeasurementVariable(PhenotypicType.TRIAL_ENVIRONMENT, designImportData.getMappedHeaders()));
+
+		final Optional<MeasurementVariable> obsUniId = //
+			workbook.getFactors().stream(). //
+				filter((measurementVariable -> measurementVariable.getTermId() == TermId.OBS_UNIT_ID.getId())).findFirst();
+
+		if (!obsUniId.isPresent()) {
+			final MeasurementVariable obsUnitIdMeasurementVariable = //
+				this.fieldbookService.createMeasurementVariable(
+				String.valueOf(TermId.OBS_UNIT_ID.getId()), "", Operation.ADD, PhenotypicType.TRIAL_DESIGN);
+			obsUnitIdMeasurementVariable.setFactor(true);
+			uniqueFactors.add(obsUnitIdMeasurementVariable);
+		}
 
 		for (final MeasurementVariable mvar : uniqueFactors) {
 			final MeasurementVariable tempMvar = this.getMeasurementVariableInListByTermId(mvar.getTermId(), workbook.getConditions());
