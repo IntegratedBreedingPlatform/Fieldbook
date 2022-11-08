@@ -8,15 +8,7 @@ import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.generationcp.commons.parsing.FileParsingException;
-import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
 import org.generationcp.commons.parsing.pojo.ImportedCrossesList;
-import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasmParent;
-import org.generationcp.middleware.ruleengine.generator.SeedSourceGenerator;
-import org.generationcp.middleware.ruleengine.naming.service.GermplasmNamingService;
-import org.generationcp.middleware.ruleengine.settings.AdditionalDetailsSetting;
-import org.generationcp.middleware.ruleengine.settings.BreedingMethodSetting;
-import org.generationcp.middleware.ruleengine.settings.CrossNameSetting;
-import org.generationcp.middleware.ruleengine.settings.CrossSetting;
 import org.generationcp.commons.spring.util.ContextUtil;
 import org.generationcp.commons.util.CrossingUtil;
 import org.generationcp.commons.util.DateUtil;
@@ -39,6 +31,14 @@ import org.generationcp.middleware.pojos.Name;
 import org.generationcp.middleware.pojos.Progenitor;
 import org.generationcp.middleware.pojos.UserDefinedField;
 import org.generationcp.middleware.pojos.germplasm.GermplasmNameSetting;
+import org.generationcp.middleware.ruleengine.generator.SeedSourceGenerator;
+import org.generationcp.middleware.ruleengine.naming.service.GermplasmNamingService;
+import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
+import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasmParent;
+import org.generationcp.middleware.ruleengine.settings.AdditionalDetailsSetting;
+import org.generationcp.middleware.ruleengine.settings.BreedingMethodSetting;
+import org.generationcp.middleware.ruleengine.settings.CrossNameSetting;
+import org.generationcp.middleware.ruleengine.settings.CrossSetting;
 import org.generationcp.middleware.service.api.FieldbookService;
 import org.generationcp.middleware.service.api.PedigreeService;
 import org.generationcp.middleware.service.api.dataset.DatasetService;
@@ -71,7 +71,6 @@ public class CrossingServiceImpl implements CrossingService {
 	public static final int MAX_CROSS_NAME_SIZE = 4985;
 	static final Integer GERMPLASM_GNPGS = 2;
 	static final Integer GERMPLASM_GRPLCE = 0;
-	static final Integer GERMPLASM_LGID = 0;
 	static final Integer GERMPLASM_MGID = 0;
 	static final Integer GERMPLASM_REFID = 0;
 	static final Integer NAME_REFID = 0;
@@ -640,7 +639,6 @@ public class CrossingServiceImpl implements CrossingService {
 	private void updateConstantFields(final Germplasm germplasm) {
 		germplasm.setGnpgs(CrossingServiceImpl.GERMPLASM_GNPGS);
 		germplasm.setGrplce(CrossingServiceImpl.GERMPLASM_GRPLCE);
-		germplasm.setLgid(CrossingServiceImpl.GERMPLASM_LGID);
 		germplasm.setMgid(CrossingServiceImpl.GERMPLASM_MGID);
 		germplasm.setReferenceId(CrossingServiceImpl.GERMPLASM_REFID);
 	}
