@@ -588,6 +588,8 @@
 						if (columnData.variableType === 'GERMPLASM_PASSPORT' ||
 							columnData.variableType === 'GERMPLASM_ATTRIBUTE') {
 							sort = 'VARIABLE_' + sort;
+						} else if (columnData.variableType === null) {
+							sort = 'NAME_' + sort;
 						}
 						pageQuery += '&sort=' + sort + ',' + order.dir;
 					}
@@ -1452,6 +1454,7 @@
 				$scope.germplasmDescriptorColumns = [];
 				$scope.passportColumns = [];
 				$scope.attributesColumns = [];
+				$scope.namesColumns = [];
 
 				// This is being used as a workaround to manually close the 'Columns' dropdown when the 'Actions' dropdown is clicked.
 				$scope.entryColumnsPopover = {
@@ -1470,8 +1473,14 @@
 				}
 
 				$scope.selectEntryTableColumns = function () {
-					var selectedPropertyIds = concatAllColumns().filter((column) => column.selected).map((column) => column.id);
-					datasetService.updateDatasetProperties(selectedPropertyIds).then(function () {
+					var selectedPropertyIds = concatAllColumns().filter((column) => column.selected && column.typeId !== null).map((column) => column.id);
+					var selectedNameTypeIds = concatAllColumns().filter((column) => column.selected && column.typeId === null).map((column) => column.id);
+					datasetService.updateDatasetProperties(
+						{
+							variableIds: selectedPropertyIds,
+							nameTypeIds: selectedNameTypeIds
+						}
+							).then(function () {
 						$rootScope.navigateToTab('germplasm', {reload: true});
 					}, function (response) {
 						if (response.errors && response.errors.length) {
@@ -1500,6 +1509,7 @@
 					$scope.germplasmDescriptorColumns = [];
 					$scope.passportColumns = [];
 					$scope.attributesColumns = [];
+					$scope.namesColumns = [];
 				}
 
 				function loadStudyEntryColumns() {
@@ -1513,6 +1523,8 @@
 								$scope.passportColumns.push(column);
 							} else if (column.typeId === VARIABLE_TYPES.GERMPLASM_ATTRIBUTE) {
 								$scope.attributesColumns.push(column);
+							} else if (column.typeId === null) {
+								$scope.namesColumns.push(column);
 							}
 						});
 
@@ -1533,7 +1545,7 @@
 				}
 
 				function concatAllColumns() {
-					return [].concat($scope.germplasmDescriptorColumns, $scope.passportColumns, $scope.attributesColumns);
+					return [].concat($scope.germplasmDescriptorColumns, $scope.passportColumns, $scope.attributesColumns, $scope.namesColumns);
 				}
 
 			}]);
