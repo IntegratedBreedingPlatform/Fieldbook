@@ -249,6 +249,20 @@ $(document).ready(function() {
 					</div>
 				</div>
 			</div>
+
+			<div ng-if="checkAreColumnsVisible(namesColumns)" class="categoryContainer">
+				<label th:text="#{study.studydetails.columns.label.names}" class="category">NAMES</label>
+				<hr />
+				<div ng-repeat="column in namesColumns">
+					<div ng-if="column.visible">
+						<input  type="checkbox" ng-model="column.selected"
+								id="check-attributes-{{column.id}}" name="'check-attributes-{{column.id}}'" />
+						<label for="check-attributes-{{column.id}}">
+							{{column.displayName}}
+						</label>
+					</div>
+				</div>
+			</div>
 		</div>
 		<hr />
 		<div class="text-center"><br/>
