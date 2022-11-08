@@ -2,7 +2,7 @@ package com.efficio.fieldbook.web.naming.expression.dataprocessor;
 
 import com.efficio.fieldbook.util.FieldbookException;
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 import org.generationcp.middleware.domain.dms.Study;
 import org.generationcp.middleware.domain.etl.MeasurementRow;
 import org.generationcp.middleware.domain.etl.Workbook;
@@ -18,7 +18,7 @@ public interface ExpressionDataProcessor {
      * @param nurseryInfo
      * @param study
      */
-    void processEnvironmentLevelData(AdvancingSource source, Workbook workbook, AdvancingStudy nurseryInfo,
+    void processEnvironmentLevelData(DeprecatedAdvancingSource source, Workbook workbook, AdvancingStudy nurseryInfo,
                                             Study study) throws FieldbookException;
 
     /**
@@ -28,5 +28,5 @@ public interface ExpressionDataProcessor {
      * @param source
      * @param row
      */
-    void processPlotLevelData(AdvancingSource source, MeasurementRow row) throws FieldbookException;
+    void processPlotLevelData(DeprecatedAdvancingSource source, MeasurementRow row) throws FieldbookException;
 }

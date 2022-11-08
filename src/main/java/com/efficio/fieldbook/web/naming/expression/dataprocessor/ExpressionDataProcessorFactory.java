@@ -2,7 +2,7 @@ package com.efficio.fieldbook.web.naming.expression.dataprocessor;
 
 import com.efficio.fieldbook.util.FieldbookException;
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 import org.generationcp.middleware.spring.util.ComponentFactory;
 import org.generationcp.middleware.domain.dms.Study;
 import org.generationcp.middleware.domain.etl.MeasurementRow;
@@ -37,14 +37,14 @@ public class ExpressionDataProcessorFactory implements ComponentFactory<Expressi
     
     class ExecuteAllAvailableDataProcessor implements ExpressionDataProcessor {
         @Override
-        public void processEnvironmentLevelData(AdvancingSource source, Workbook workbook, AdvancingStudy nurseryInfo, Study study) throws FieldbookException {
+        public void processEnvironmentLevelData(DeprecatedAdvancingSource source, Workbook workbook, AdvancingStudy nurseryInfo, Study study) throws FieldbookException {
             for (ExpressionDataProcessor expressionDataProcessor : dataProcessorList) {
                 expressionDataProcessor.processEnvironmentLevelData(source, workbook, nurseryInfo, study);
             }
         }
 
         @Override
-        public void processPlotLevelData(AdvancingSource source, MeasurementRow row) throws FieldbookException {
+        public void processPlotLevelData(DeprecatedAdvancingSource source, MeasurementRow row) throws FieldbookException {
             for (ExpressionDataProcessor expressionDataProcessor : dataProcessorList) {
                 expressionDataProcessor.processPlotLevelData(source, row);
             }

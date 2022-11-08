@@ -34,7 +34,7 @@ import org.generationcp.middleware.pojos.workbench.CropType;
 import org.generationcp.middleware.pojos.workbench.Project;
 import org.generationcp.middleware.ruleengine.RuleException;
 import org.generationcp.middleware.ruleengine.naming.service.NamingConventionService;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
 import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
 import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
@@ -702,7 +702,7 @@ public class GermplasmTreeControllerTest {
 		final ImportedCross importedCross = importedCrossList.get(0);
 		final Workbook workbook = this.userSelection.getWorkbook();
 
-		final AdvancingSource advancingSource = this.controller.createAdvancingSource(importedCross);
+		final DeprecatedAdvancingSource advancingSource = this.controller.createAdvancingSource(importedCross);
 
 		Assert.assertEquals(1, advancingSource.getStudyId().intValue());
 		Assert.assertEquals(workbook.getConditions(), advancingSource.getConditions());
@@ -786,11 +786,11 @@ public class GermplasmTreeControllerTest {
 	private AdvancingStudyForm createAdvancingStudyForm(final boolean withReplicationNumber) {
 		final AdvancingStudyForm advancingStudyForm = new AdvancingStudyForm();
 		final List<ImportedGermplasm> importedGermplasmList = new ArrayList<>();
-		final List<AdvancingSource> advancingSourceList = new ArrayList<>();
+		final List<DeprecatedAdvancingSource> advancingSourceList = new ArrayList<>();
 		for (int i = 1; i <= 3; i++) {
 			final ImportedGermplasm importedGermplasm = this.createImportedGermplasm(i, withReplicationNumber);
 			importedGermplasmList.add(importedGermplasm);
-			advancingSourceList.add(new AdvancingSource(importedGermplasm));
+			advancingSourceList.add(new DeprecatedAdvancingSource(importedGermplasm));
 		}
 		advancingStudyForm.setHarvestYear("2015");
 		advancingStudyForm.setHarvestMonth("08");

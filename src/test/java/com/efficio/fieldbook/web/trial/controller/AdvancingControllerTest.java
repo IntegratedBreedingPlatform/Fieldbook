@@ -16,7 +16,7 @@ import org.apache.commons.lang.math.RandomUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
 import org.generationcp.middleware.ruleengine.pojo.AdvanceGermplasmChangeDetail;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
 import org.generationcp.middleware.ruleengine.RuleException;
 import org.generationcp.middleware.ruleengine.generator.SeedSourceGenerator;
@@ -223,11 +223,11 @@ public class AdvancingControllerTest {
 	}
 
 	private AdvancingSourceList createTestAdvancingSourceList() {
-		final List<AdvancingSource> rows = new ArrayList<>();
+		final List<DeprecatedAdvancingSource> rows = new ArrayList<>();
 		final Method breedingMethod = new Method();
 		breedingMethod.setGeneq(TermId.NON_BULKING_BREEDING_METHOD_CLASS.getId());
 		for (int i = 1; i <= 3; i++) {
-			final AdvancingSource row = new AdvancingSource(this.createImportedGermplasm(i));
+			final DeprecatedAdvancingSource row = new DeprecatedAdvancingSource(this.createImportedGermplasm(i));
 			row.setPlotNumber(String.valueOf(i));
 			row.setTrialInstanceNumber("1");
 			row.setPlantsSelected(1);
@@ -355,7 +355,7 @@ public class AdvancingControllerTest {
 		final String[] entries = {"1", "2", "3"};
 		importedGermplasms = this.advancingController.deleteImportedGermplasmEntries(importedGermplasms, entries);
 		this.advancingController.updateRemovedSelectedPlant("1", entries);
-		final List<AdvancingSource> sources = this.advancingController.getPaginationListSelection().getAdvanceDetails("1").getAdvancingSourceItems();
+		final List<DeprecatedAdvancingSource> sources = this.advancingController.getPaginationListSelection().getAdvanceDetails("1").getAdvancingSourceItems();
 		Assert.assertEquals("Should have a total of 7 germplasms remaining", 7, importedGermplasms.size());
 		Assert.assertEquals(0, sources.get(0).getPlantsSelected().intValue());
 		Assert.assertEquals(1, sources.get(1).getPlantsSelected().intValue());
@@ -697,7 +697,7 @@ public class AdvancingControllerTest {
 		rows.setRows(new ArrayList<>());
 
 		// Set up Advancing sources
-		final AdvancingSource advancingSource = new AdvancingSource();
+		final DeprecatedAdvancingSource advancingSource = new DeprecatedAdvancingSource();
 		advancingSource.setNames(new ArrayList<>());
 
 		// Germplasm
@@ -816,7 +816,7 @@ public class AdvancingControllerTest {
 
 		for (int i = 0; i < size; i++) {
 			// Set up Advancing sources
-			final AdvancingSource advancingSource = new AdvancingSource();
+			final DeprecatedAdvancingSource advancingSource = new DeprecatedAdvancingSource();
 			advancingSource.setNames(new ArrayList<>());
 			advancingSource.setStudyId(1);
 			advancingSource.setGermplasm(germplasmList.get(i));

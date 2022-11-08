@@ -1,7 +1,7 @@
 package com.efficio.fieldbook.web.naming.expression.dataprocessor;
 
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 import com.google.common.collect.Lists;
 import org.generationcp.middleware.domain.etl.MeasurementData;
 import org.generationcp.middleware.domain.etl.MeasurementRow;
@@ -24,7 +24,7 @@ public class ChangeLocationExpressionDataProcessorTest {
 
     @Test
     public void testProcessEnvironmentLevelDataWithHarvestLocationId() throws Exception {
-        final AdvancingSource source = Mockito.mock(AdvancingSource.class);
+        final DeprecatedAdvancingSource source = Mockito.mock(DeprecatedAdvancingSource.class);
         final AdvancingStudy advancingStudy = new AdvancingStudy();
         advancingStudy.setHarvestLocationId("205");
 
@@ -34,7 +34,7 @@ public class ChangeLocationExpressionDataProcessorTest {
 
     @Test
     public void testProcessEnvironmentLevelDataWithNoHarvestLocationId() throws Exception {
-        final AdvancingSource source = Mockito.mock(AdvancingSource.class);
+        final DeprecatedAdvancingSource source = Mockito.mock(DeprecatedAdvancingSource.class);
         final AdvancingStudy advancingStudy = new AdvancingStudy();
 
         changeLocationExpressionDataProcessor.processEnvironmentLevelData(source, null, advancingStudy, null);
@@ -43,7 +43,7 @@ public class ChangeLocationExpressionDataProcessorTest {
 
     @Test
     public void testProcessPlotLevelDataWithLocationMeasurementData() throws Exception {
-        final AdvancingSource source = Mockito.mock(AdvancingSource.class);
+        final DeprecatedAdvancingSource source = Mockito.mock(DeprecatedAdvancingSource.class);
         final MeasurementRow measurementRow = Mockito.mock(MeasurementRow.class);
         final List<MeasurementData> listMeasurementData = Lists.newArrayList();
         final MeasurementData locationId = new MeasurementData();
@@ -64,7 +64,7 @@ public class ChangeLocationExpressionDataProcessorTest {
 
     @Test
     public void testProcessPlotLevelDataWithoutLocationMeasurementData() throws Exception {
-        final AdvancingSource source = Mockito.mock(AdvancingSource.class);
+        final DeprecatedAdvancingSource source = Mockito.mock(DeprecatedAdvancingSource.class);
         final MeasurementRow measurementRow = Mockito.mock(MeasurementRow.class);
         final List<MeasurementData> listMeasurementData = Lists.newArrayList();
         final MeasurementData locationId = new MeasurementData();
@@ -85,7 +85,7 @@ public class ChangeLocationExpressionDataProcessorTest {
 
     @Test
     public void testProcessPlotLevelDataWithNoMeasurementData() throws Exception {
-        final AdvancingSource source = Mockito.mock(AdvancingSource.class);
+        final DeprecatedAdvancingSource source = Mockito.mock(DeprecatedAdvancingSource.class);
         final MeasurementRow measurementRow = Mockito.mock(MeasurementRow.class);
         Mockito.when(measurementRow.getDataList()).thenReturn(null);
         Mockito.when(source.getTrailInstanceObservation()).thenReturn(measurementRow);

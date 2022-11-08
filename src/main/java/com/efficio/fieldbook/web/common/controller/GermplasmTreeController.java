@@ -17,6 +17,7 @@ import com.efficio.fieldbook.web.common.bean.UserSelection;
 import com.efficio.fieldbook.web.common.form.SaveListForm;
 import com.efficio.fieldbook.web.common.service.CrossingService;
 import com.efficio.fieldbook.web.common.service.impl.CrossingServiceImpl;
+import org.generationcp.middleware.ruleengine.naming.service.NamingConventionService;
 import com.efficio.fieldbook.web.trial.form.AdvancingStudyForm;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Lists;
@@ -27,8 +28,15 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.generationcp.commons.constant.AppConstants;
+import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
 import org.generationcp.commons.parsing.pojo.ImportedCrossesList;
+import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
 import org.generationcp.commons.pojo.treeview.TreeTableNode;
+import org.generationcp.middleware.ruleengine.RuleException;
+import org.generationcp.middleware.ruleengine.RulesNotConfiguredException;
+import org.generationcp.middleware.ruleengine.settings.CrossSetting;
 import org.generationcp.commons.util.DateUtil;
 import org.generationcp.commons.util.TreeViewUtil;
 import org.generationcp.middleware.api.germplasm.GermplasmService;
@@ -49,14 +57,6 @@ import org.generationcp.middleware.pojos.GermplasmStudySourceType;
 import org.generationcp.middleware.pojos.Method;
 import org.generationcp.middleware.pojos.Name;
 import org.generationcp.middleware.pojos.UserDefinedField;
-import org.generationcp.middleware.ruleengine.RuleException;
-import org.generationcp.middleware.ruleengine.RulesNotConfiguredException;
-import org.generationcp.middleware.ruleengine.naming.service.NamingConventionService;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
-import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
-import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
-import org.generationcp.middleware.ruleengine.settings.CrossSetting;
 import org.generationcp.middleware.service.api.FieldbookService;
 import org.generationcp.middleware.service.api.dataset.DatasetService;
 import org.generationcp.middleware.service.api.study.germplasm.source.GermplasmStudySourceInput;
@@ -402,7 +402,7 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 	protected ImportedCrossesList applyNamingRules(final ImportedCrossesList importedCrossesList)
 		throws RuleException {
 
-		final List<AdvancingSource> advancingSources = new ArrayList<>();
+		final List<DeprecatedAdvancingSource> advancingSources = new ArrayList<>();
 		final List<Integer> gids = new ArrayList<>();
 		final List<ImportedCross> importedCrosses = importedCrossesList.getImportedCrosses();
 
@@ -436,8 +436,8 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 		cross.setNames(names);
 	}
 
-	protected AdvancingSource createAdvancingSource(final ImportedCross cross) {
-		final AdvancingSource advancingSource = new AdvancingSource(cross);
+	protected DeprecatedAdvancingSource createAdvancingSource(final ImportedCross cross) {
+		final DeprecatedAdvancingSource advancingSource = new DeprecatedAdvancingSource(cross);
 		// TODO add trial instance number
 		final Workbook workbook = this.userSelection.getWorkbook();
 		advancingSource.setStudyId(workbook.getStudyDetails().getId());
