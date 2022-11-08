@@ -133,23 +133,29 @@
 			};
 
 			$scope.validateNewVariables = function () {
-				return datasetService.getAllVariables(datasetId).then(function (columnsData) {
+				return datasetService.getAllProperties(datasetId).then(function (projectProperties) {
 					var importedData = $scope.importedData[0];
 					var newVariables = [];
 					var existingVariableNames = [];
 					var existingVariableAliases = [];
+					var existingNameTypes = [];
 
-					$.each(columnsData, function (i, e) {
+					$.each(projectProperties.variables, function (i, e) {
 						existingVariableAliases.push(e.alias)
 						existingVariableNames.push(e.name)
 					});
 
+					$.each(projectProperties.nameTypes, function (i, e) {
+						existingNameTypes.push(e.code)
+					});
+
 					for (var i = 0; i < importedData.length; i++) {
-						if (!existingVariableAliases.includes(importedData[i]) && !existingVariableNames.includes(importedData[i])) {
+						if (!existingVariableAliases.includes(importedData[i]) &&
+							!existingVariableNames.includes(importedData[i]) &&
+							!existingNameTypes.includes(importedData[i])) {
 							newVariables.push(importedData[i]);
 						}
 					}
-
 					return newVariables;
 				});
 			};
