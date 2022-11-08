@@ -628,7 +628,6 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 		final String harvestDate = LocalDate.now().format(formatter);
 
 		// Common germplasm fields
-		final Integer lgid = 0;
 		final Integer gDate = DateUtil.getCurrentDateAsIntegerValue();
 
 		// Common germplasm list data fields
@@ -686,7 +685,7 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 
 			final Integer trueGdate = !"".equals(harvestDate.trim()) ? Integer.valueOf(harvestDate) : gDate;
 			final Germplasm germplasm;
-			germplasm = new Germplasm(gid, importedGermplasm.getGnpgs(), importedGermplasm.getGpid1(), importedGermplasm.getGpid2(), lgid, locationId,
+			germplasm = new Germplasm(gid, importedGermplasm.getGnpgs(), importedGermplasm.getGpid1(), importedGermplasm.getGpid2(), locationId,
 			trueGdate, 0, 0, 0, preferredName, null, new Method(importedGermplasm.getBreedingMethodId()));
 			final Integer mgid = importedGermplasm.getMgid() == null ? 0 : importedGermplasm.getMgid();
 			germplasm.setMgid(mgid);
