@@ -16,7 +16,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 import org.generationcp.middleware.domain.oms.StandardVariableReference;
 
 /**
@@ -145,7 +145,7 @@ public class AdvancingStudyForm {
 
 	private String advanceType;
 
-	private List<AdvancingSource> advancingSourceItems;
+	private List<DeprecatedAdvancingSource> advancingSourceItems;
 
     
 	public Set<String> getSelectedTrialInstances() {
@@ -899,11 +899,11 @@ public class AdvancingStudyForm {
 		this.advanceType = advanceType;
 	}
 
-	public List<AdvancingSource> getAdvancingSourceItems() {
+	public List<DeprecatedAdvancingSource> getAdvancingSourceItems() {
 		return advancingSourceItems;
 	}
 
-	public void setAdvancingSourceItems(List<AdvancingSource> advancingSourceItems) {
+	public void setAdvancingSourceItems(List<DeprecatedAdvancingSource> advancingSourceItems) {
 		this.advancingSourceItems = advancingSourceItems;
 	}
 
