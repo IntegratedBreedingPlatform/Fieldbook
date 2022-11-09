@@ -6,7 +6,6 @@ import com.efficio.fieldbook.web.common.bean.PaginationListSelection;
 import com.efficio.fieldbook.web.common.bean.TableHeader;
 import com.efficio.fieldbook.web.common.bean.UserSelection;
 import com.efficio.fieldbook.web.naming.impl.AdvancingSourceListFactory;
-import org.generationcp.middleware.ruleengine.naming.service.NamingConventionService;
 import com.efficio.fieldbook.web.trial.bean.AdvanceType;
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
 import com.efficio.fieldbook.web.trial.form.AdvancingStudyForm;
@@ -14,12 +13,6 @@ import com.efficio.fieldbook.web.util.FieldbookProperties;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.math.RandomUtils;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
-import org.generationcp.middleware.ruleengine.pojo.AdvanceGermplasmChangeDetail;
-import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
-import org.generationcp.middleware.ruleengine.RuleException;
-import org.generationcp.middleware.ruleengine.generator.SeedSourceGenerator;
 import org.generationcp.commons.spring.util.ContextUtil;
 import org.generationcp.middleware.domain.dms.Study;
 import org.generationcp.middleware.domain.etl.MeasurementData;
@@ -27,6 +20,7 @@ import org.generationcp.middleware.domain.etl.MeasurementRow;
 import org.generationcp.middleware.domain.etl.MeasurementVariable;
 import org.generationcp.middleware.domain.etl.StudyDetails;
 import org.generationcp.middleware.domain.etl.Workbook;
+import org.generationcp.middleware.domain.germplasm.BasicNameDTO;
 import org.generationcp.middleware.domain.oms.Term;
 import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.domain.ontology.DataType;
@@ -43,6 +37,13 @@ import org.generationcp.middleware.pojos.Germplasm;
 import org.generationcp.middleware.pojos.Method;
 import org.generationcp.middleware.pojos.MethodType;
 import org.generationcp.middleware.pojos.Name;
+import org.generationcp.middleware.ruleengine.RuleException;
+import org.generationcp.middleware.ruleengine.generator.SeedSourceGenerator;
+import org.generationcp.middleware.ruleengine.naming.service.NamingConventionService;
+import org.generationcp.middleware.ruleengine.pojo.AdvanceGermplasmChangeDetail;
+import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
 import org.generationcp.middleware.service.api.FieldbookService;
 import org.generationcp.middleware.service.api.dataset.DatasetService;
 import org.generationcp.middleware.service.api.study.StudyInstanceService;
@@ -714,14 +715,12 @@ public class AdvancingControllerTest {
 		advancingSource.setGermplasm(ig);
 
 		// Names
-		final Name sourceGermplasmName = new Name(133);
-		sourceGermplasmName.setGermplasm(new Germplasm(133));
+		final BasicNameDTO sourceGermplasmName = new BasicNameDTO();
+		sourceGermplasmName.setNid(133);
+		sourceGermplasmName.setGid(133);
 		sourceGermplasmName.setTypeId(6);
 		sourceGermplasmName.setNstat(1);
 		sourceGermplasmName.setNval("BARRA DE ORO DULCE");
-		sourceGermplasmName.setLocationId(9);
-		sourceGermplasmName.setNdate(19860501);
-		sourceGermplasmName.setReferenceId(1);
 		advancingSource.setStudyId(1);
 		advancingSource.getNames().add(sourceGermplasmName);
 
@@ -821,14 +820,12 @@ public class AdvancingControllerTest {
 			advancingSource.setGermplasm(germplasmList.get(i));
 
 			// Names
-			final Name sourceGermplasmName = new Name(133);
-			sourceGermplasmName.setGermplasm(new Germplasm(133));
+			final BasicNameDTO sourceGermplasmName = new BasicNameDTO();
+			sourceGermplasmName.setNid(133);
+			sourceGermplasmName.setGid(133);
 			sourceGermplasmName.setTypeId(6);
 			sourceGermplasmName.setNstat(1);
 			sourceGermplasmName.setNval("BARRA DE ORO DULCE");
-			sourceGermplasmName.setLocationId(9);
-			sourceGermplasmName.setNdate(19860501);
-			sourceGermplasmName.setReferenceId(1);
 			advancingSource.setStudyId(1);
 			advancingSource.getNames().add(sourceGermplasmName);
 
