@@ -1036,7 +1036,7 @@
 					if (columnData.variableType === 'GERMPLASM_PASSPORT' ||
 						columnData.variableType === 'GERMPLASM_ATTRIBUTE') {
 						sort = 'VARIABLE_' + sort;
-					} else if (columnData.variableType === null) {
+					} else if (columnData.variableType === null && columnData.termId > 0) {
 						sort = 'NAME_' + sort;
 					}
 					pageQuery += '&sort=' + sort + ',' + order.dir;
