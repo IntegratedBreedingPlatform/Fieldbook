@@ -30,7 +30,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -192,7 +194,7 @@ public class AdvancingSourceListFactory {
 
 	private void setNamesToGermplasm(final List<DeprecatedAdvancingSource> rows, final List<Integer> gids) throws MiddlewareQueryException {
 		if (rows != null && !rows.isEmpty()) {
-			final Map<Integer, List<BasicNameDTO>> map = this.fieldbookMiddlewareService.getNamesByGids(gids);
+			final Map<Integer, List<BasicNameDTO>> map = this.fieldbookMiddlewareService.getNamesByGids(new HashSet<>(gids));
 			for (final DeprecatedAdvancingSource row : rows) {
 				final String gid = row.getGermplasm().getGid();
 				if (gid != null && NumberUtils.isNumber(gid)) {
