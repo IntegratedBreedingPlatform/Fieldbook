@@ -62,6 +62,26 @@
 				});
 			};
 
+			advanceStudyModalService.openNewAdvanceStudyModal = function (selectedTrialInstances, advanceType, noOfReplications) {
+				$uibModal.open({
+					templateUrl: '/Fieldbook/static/js/trialmanager/advance/advanceStudy.html',
+					controller: "AdvanceStudyModalCtrl",
+					size: 'lg',
+					resolve: {
+						advanceType: function () {
+							return advanceType;
+						},
+						trialInstances: function () {
+							return selectedTrialInstances;
+						},
+						noOfReplications: function () {
+							return noOfReplications;
+						}
+					}
+				}).result.finally(function () {
+					$rootScope.navigateToTab('crossesAndSelectionsTab', {reload: true});
+				});
+			};
 			return advanceStudyModalService;
 
 		}
@@ -403,11 +423,16 @@
 						}
 					});
 
-					advanceStudyModalService.openAdvanceStudyModal(selectedTrialInstances, $scope.noOfReplications, selectedLocationDetails,
-						$scope.applicationData.advanceType, null);
-					$uibModalInstance.close();
-				}
+					if ($scope.applicationData.advanceType === 'Study') {
+						advanceStudyModalService.openNewAdvanceStudyModal(selectedTrialInstances, $scope.applicationData.advanceType, $scope.noOfReplications);
+						$uibModalInstance.close();
+					} else {
+						advanceStudyModalService.openAdvanceStudyModal(selectedTrialInstances, $scope.noOfReplications, selectedLocationDetails,
+							$scope.applicationData.advanceType, null);
+							$uibModalInstance.close();
+					}
 
+				}
 			};
 
 			$scope.close = function () {
