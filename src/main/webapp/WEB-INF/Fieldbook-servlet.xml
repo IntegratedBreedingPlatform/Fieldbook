@@ -382,7 +382,7 @@
 	<bean id="springAppContextProvider" class="org.generationcp.commons.util.SpringAppContextProvider" />
 
 	<bean
-		class="org.generationcp.middleware.ruleengine.naming.expression.ComponentPostProcessor">
+		class="org.generationcp.middleware.ruleengine.naming.newexpression.ComponentPostProcessor">
 		<property name="ruleFactory" ref="ruleFactory" />
 		<property name="processCodeFactory" ref="processCodeFactory" />
 	</bean>
