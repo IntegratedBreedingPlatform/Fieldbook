@@ -13,7 +13,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.context.ContextConfiguration;
 
-import org.generationcp.middleware.ruleengine.naming.rules.CountRule;
+import org.generationcp.middleware.ruleengine.naming.deprecated.rules.DeprecatedCountRule;
 import com.efficio.fieldbook.web.trial.controller.CreateTrialController;
 
 /**
@@ -33,7 +33,7 @@ public class RulePostProcessorTest {
 	@Test
 	public void testPostProcessingForRule() {
 		// verify that Rule objects are processed correctly by the class
-		Rule rule = new CountRule();
+		Rule rule = new DeprecatedCountRule();
 
 		this.postProcessor.postProcessAfterInitialization(rule, rule.getKey());
 		Mockito.verify(this.factory).addRule(rule);

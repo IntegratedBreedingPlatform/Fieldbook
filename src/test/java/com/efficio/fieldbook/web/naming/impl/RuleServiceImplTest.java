@@ -24,8 +24,8 @@ import org.mockito.Mockito;
 import org.springframework.context.MessageSource;
 
 import com.efficio.fieldbook.AbstractBaseIntegrationTest;
-import org.generationcp.middleware.ruleengine.naming.rules.EnforceUniqueNameRule;
-import org.generationcp.middleware.ruleengine.naming.rules.NamingRuleExecutionContext;
+import org.generationcp.middleware.ruleengine.naming.deprecated.rules.DeprecatedEnforceUniqueNameRule;
+import org.generationcp.middleware.ruleengine.naming.deprecated.rules.DeprecatedNamingRuleExecutionContext;
 import org.generationcp.middleware.ruleengine.naming.service.ProcessCodeService;
 import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 
@@ -88,9 +88,9 @@ public class RuleServiceImplTest extends AbstractBaseIntegrationTest {
 			Mockito.when(this.germplasmDataManager.checkIfMatches(Matchers.anyString())).thenReturn(false);
 			List<String> sequenceList = Arrays.asList(this.ruleFactory.getRuleSequenceForNamespace("naming"));
 			sequenceList = new ArrayList<>(sequenceList);
-			sequenceList.add(EnforceUniqueNameRule.KEY);
-			NamingRuleExecutionContext ruleExecutionContext =
-					new NamingRuleExecutionContext(sequenceList, this.processCodeService, this.row, this.germplasmDataManager,
+			sequenceList.add(DeprecatedEnforceUniqueNameRule.KEY);
+			DeprecatedNamingRuleExecutionContext ruleExecutionContext =
+					new DeprecatedNamingRuleExecutionContext(sequenceList, this.processCodeService, this.row, this.germplasmDataManager,
 							new ArrayList<String>());
 			ruleExecutionContext.setMessageSource(this.messageSource);
 			List<String> results = (List<String>) this.rulesService.runRules(ruleExecutionContext);
@@ -123,10 +123,10 @@ public class RuleServiceImplTest extends AbstractBaseIntegrationTest {
 
 			List<String> sequenceList = Arrays.asList(this.ruleFactory.getRuleSequenceForNamespace("naming"));
 			sequenceList = new ArrayList<>(sequenceList);
-			sequenceList.add(EnforceUniqueNameRule.KEY);
+			sequenceList.add(DeprecatedEnforceUniqueNameRule.KEY);
 
-			NamingRuleExecutionContext ruleExecutionContext =
-					new NamingRuleExecutionContext(sequenceList, this.processCodeService, this.row, this.germplasmDataManager,
+			DeprecatedNamingRuleExecutionContext ruleExecutionContext =
+					new DeprecatedNamingRuleExecutionContext(sequenceList, this.processCodeService, this.row, this.germplasmDataManager,
 							new ArrayList<String>());
 			ruleExecutionContext.setMessageSource(this.messageSource);
 
