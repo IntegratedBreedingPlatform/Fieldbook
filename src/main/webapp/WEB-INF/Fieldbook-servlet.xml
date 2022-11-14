@@ -382,7 +382,7 @@
 	<bean id="springAppContextProvider" class="org.generationcp.commons.util.SpringAppContextProvider" />
 
 	<bean
-		class="org.generationcp.middleware.ruleengine.naming.expression.ComponentPostProcessor">
+		class="org.generationcp.middleware.ruleengine.naming.deprecated.expression.DeprecatedComponentPostProcessor">
 		<property name="ruleFactory" ref="ruleFactory" />
 		<property name="processCodeFactory" ref="processCodeFactory" />
 	</bean>
@@ -427,7 +427,7 @@
 		the Rule interface into the Spring context. In conjunction with the RulesPostProcessor
 		above, this automatically populates the map in the RuleFactory -->
 	<context:component-scan base-package="org.generationcp.middleware.ruleengine.naming" />
-	<context:component-scan base-package="org.generationcp.middleware.ruleengine.naming.expression" />
+	<context:component-scan base-package="org.generationcp.middleware.ruleengine.naming.deprecated.expression" />
 	<context:component-scan base-package="org.generationcp.middleware.ruleengine.stockid" />
 	<context:component-scan base-package="org.generationcp.middleware.ruleengine.cross" />
     <context:component-scan base-package="com.efficio.fieldbook.web.naming.expression.dataprocessor"/>
