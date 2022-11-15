@@ -187,6 +187,10 @@
 										   th:text="#{study.studydetails.action.advance.study}">Advance Study</a>
 									</li>
 									<li>
+										<a ng-click="newStartAdvance('Study')" id="advance-trial-link"
+										   th:text="#{study.studydetails.action.new.advance.study}">New Advance Study</a>
+									</li>
+									<li>
 										<a ng-click="startAdvance('sample')" id="advance-sample-link"
 										   th:text="#{study.studydetails.action.advance.sample}">Advance sampled plants</a>
 									</li>
@@ -828,6 +832,7 @@
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/environments.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/experimentalDesign.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/advance/advance.js}"></script>
+	<script type="text/javascript" th:src="@{/static/js/trialmanager/advance/advanceStudy.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/saveList.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/r-package/r-package.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/visualization/visualization.js}"></script>
