@@ -26,7 +26,7 @@ import org.springframework.context.MessageSource;
 import com.efficio.fieldbook.AbstractBaseIntegrationTest;
 import org.generationcp.middleware.ruleengine.naming.deprecated.rules.DeprecatedEnforceUniqueNameRule;
 import org.generationcp.middleware.ruleengine.naming.deprecated.rules.DeprecatedNamingRuleExecutionContext;
-import org.generationcp.middleware.ruleengine.naming.service.ProcessCodeService;
+import org.generationcp.middleware.ruleengine.naming.deprecated.service.DeprecatedProcessCodeService;
 import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 
 @Ignore(value ="BMS-1571. Ignoring temporarily. Please fix the failures and remove @Ignore.")
@@ -36,7 +36,7 @@ public class RuleServiceImplTest extends AbstractBaseIntegrationTest {
 	RulesService rulesService;
 
 	@Resource
-	private ProcessCodeService processCodeService;
+	private DeprecatedProcessCodeService processCodeService;
 
 	@Resource
 	private RuleFactory ruleFactory;

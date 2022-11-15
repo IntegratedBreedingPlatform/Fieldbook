@@ -392,7 +392,7 @@
 		init-method="init" />
 
 	<bean id="processCodeFactory"
-		  class="org.generationcp.middleware.ruleengine.naming.impl.ProcessCodeFactory"
+		  class="org.generationcp.middleware.ruleengine.naming.deprecated.impl.DeprecatedProcessCodeFactory"
 		  init-method="init" />
 
 	<bean id="ruleConfigProvider"
