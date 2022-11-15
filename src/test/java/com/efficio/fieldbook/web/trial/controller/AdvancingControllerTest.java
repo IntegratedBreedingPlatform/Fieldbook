@@ -6,7 +6,7 @@ import com.efficio.fieldbook.web.common.bean.PaginationListSelection;
 import com.efficio.fieldbook.web.common.bean.TableHeader;
 import com.efficio.fieldbook.web.common.bean.UserSelection;
 import com.efficio.fieldbook.web.naming.impl.AdvancingSourceListFactory;
-import org.generationcp.middleware.ruleengine.naming.service.NamingConventionService;
+import org.generationcp.middleware.ruleengine.namingdeprecated.service.DeprecatedNamingConventionService;
 import com.efficio.fieldbook.web.trial.bean.AdvanceType;
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
 import com.efficio.fieldbook.web.trial.form.AdvancingStudyForm;
@@ -122,7 +122,7 @@ public class AdvancingControllerTest {
 	private StudyDataManager studyDataManager;
 
 	@Mock
-	private NamingConventionService namingConventionService;
+	private DeprecatedNamingConventionService namingConventionService;
 
 	@Mock
 	private StudyInstanceService studyInstanceService;

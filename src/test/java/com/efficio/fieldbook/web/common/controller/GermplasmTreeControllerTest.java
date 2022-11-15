@@ -33,7 +33,7 @@ import org.generationcp.middleware.pojos.Name;
 import org.generationcp.middleware.pojos.workbench.CropType;
 import org.generationcp.middleware.pojos.workbench.Project;
 import org.generationcp.middleware.ruleengine.RuleException;
-import org.generationcp.middleware.ruleengine.naming.service.NamingConventionService;
+import org.generationcp.middleware.ruleengine.namingdeprecated.service.DeprecatedNamingConventionService;
 import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
 import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
@@ -117,7 +117,7 @@ public class GermplasmTreeControllerTest {
 	private CrossingServiceImpl crossingService;
 
 	@Mock
-	private NamingConventionService namingConventionService;
+	private DeprecatedNamingConventionService namingConventionService;
 
 	@Mock
 	private DatasetService datasetService;

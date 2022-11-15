@@ -4,7 +4,7 @@ package com.efficio.fieldbook.web.naming.impl;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
-import org.generationcp.middleware.ruleengine.naming.impl.NamingConventionServiceImpl;
+import org.generationcp.middleware.ruleengine.namingdeprecated.impl.DeprecatedNamingConventionServiceImpl;
 import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
 import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
 import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasmParent;
@@ -13,7 +13,7 @@ import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
 import org.generationcp.middleware.ruleengine.RuleException;
 import org.generationcp.middleware.ruleengine.RuleExecutionContext;
 import org.generationcp.middleware.ruleengine.RuleFactory;
-import org.generationcp.middleware.ruleengine.naming.deprecated.service.DeprecatedProcessCodeService;
+import org.generationcp.middleware.ruleengine.namingdeprecated.service.DeprecatedProcessCodeService;
 import org.generationcp.middleware.ruleengine.service.RulesService;
 import org.generationcp.middleware.domain.etl.StudyDetails;
 import org.generationcp.middleware.domain.etl.Workbook;
@@ -42,7 +42,7 @@ import java.util.Random;
 
 import static org.hamcrest.CoreMatchers.is;
 
-public class NamingConventionServiceImplTest {
+public class DeprecatedDeprecatedNamingConventionServiceImplTest {
 
 	@Mock
 	private FieldbookService fieldbookMiddlewareService;
@@ -63,7 +63,7 @@ public class NamingConventionServiceImplTest {
 	private ResourceBundleMessageSource messageSource;
 
 	@InjectMocks
-	private final NamingConventionServiceImpl namingConventionService = new NamingConventionServiceImpl();
+	private final DeprecatedNamingConventionServiceImpl namingConventionService = new DeprecatedNamingConventionServiceImpl();
 
 	private Method breedingMethod;
 	private DeprecatedAdvancingSource row;

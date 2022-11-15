@@ -13,7 +13,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.context.ContextConfiguration;
 
-import org.generationcp.middleware.ruleengine.naming.deprecated.rules.DeprecatedCountRule;
+import org.generationcp.middleware.ruleengine.namingdeprecated.rules.DeprecatedCountRule;
 import com.efficio.fieldbook.web.trial.controller.CreateTrialController;
 
 /**
