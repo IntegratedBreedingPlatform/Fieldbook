@@ -20,7 +20,6 @@ import org.generationcp.middleware.domain.etl.MeasurementRow;
 import org.generationcp.middleware.domain.etl.MeasurementVariable;
 import org.generationcp.middleware.domain.etl.StudyDetails;
 import org.generationcp.middleware.domain.etl.Workbook;
-import org.generationcp.middleware.domain.germplasm.BasicNameDTO;
 import org.generationcp.middleware.domain.oms.Term;
 import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.domain.ontology.DataType;
@@ -39,7 +38,7 @@ import org.generationcp.middleware.pojos.MethodType;
 import org.generationcp.middleware.pojos.Name;
 import org.generationcp.middleware.ruleengine.RuleException;
 import org.generationcp.middleware.ruleengine.generator.SeedSourceGenerator;
-import org.generationcp.middleware.ruleengine.newnaming.service.NamingConventionService;
+import org.generationcp.middleware.ruleengine.namingdeprecated.service.DeprecatedNamingConventionService;
 import org.generationcp.middleware.ruleengine.pojo.AdvanceGermplasmChangeDetail;
 import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
 import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
@@ -123,7 +122,7 @@ public class AdvancingControllerTest {
 	private StudyDataManager studyDataManager;
 
 	@Mock
-	private NamingConventionService namingConventionService;
+	private DeprecatedNamingConventionService namingConventionService;
 
 	@Mock
 	private StudyInstanceService studyInstanceService;
@@ -715,9 +714,9 @@ public class AdvancingControllerTest {
 		advancingSource.setGermplasm(ig);
 
 		// Names
-		final BasicNameDTO sourceGermplasmName = new BasicNameDTO();
+		final Name sourceGermplasmName = new Name();
 		sourceGermplasmName.setNid(133);
-		sourceGermplasmName.setGid(133);
+		sourceGermplasmName.setGermplasm(new Germplasm(133));
 		sourceGermplasmName.setTypeId(6);
 		sourceGermplasmName.setNstat(1);
 		sourceGermplasmName.setNval("BARRA DE ORO DULCE");
@@ -820,9 +819,9 @@ public class AdvancingControllerTest {
 			advancingSource.setGermplasm(germplasmList.get(i));
 
 			// Names
-			final BasicNameDTO sourceGermplasmName = new BasicNameDTO();
+			final Name sourceGermplasmName = new Name();
 			sourceGermplasmName.setNid(133);
-			sourceGermplasmName.setGid(133);
+			sourceGermplasmName.setGermplasm(new Germplasm(133));
 			sourceGermplasmName.setTypeId(6);
 			sourceGermplasmName.setNstat(1);
 			sourceGermplasmName.setNval("BARRA DE ORO DULCE");

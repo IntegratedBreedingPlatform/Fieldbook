@@ -4,17 +4,6 @@ package com.efficio.fieldbook.web.naming.impl;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
-import org.generationcp.middleware.ruleengine.newnaming.impl.NamingConventionServiceImpl;
-import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
-import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
-import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasmParent;
-import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
-import org.generationcp.middleware.ruleengine.RuleException;
-import org.generationcp.middleware.ruleengine.RuleExecutionContext;
-import org.generationcp.middleware.ruleengine.RuleFactory;
-import org.generationcp.middleware.ruleengine.newnaming.service.ProcessCodeService;
-import org.generationcp.middleware.ruleengine.service.RulesService;
 import org.generationcp.middleware.domain.etl.StudyDetails;
 import org.generationcp.middleware.domain.etl.Workbook;
 import org.generationcp.middleware.domain.oms.TermId;
@@ -24,6 +13,17 @@ import org.generationcp.middleware.manager.GermplasmNameType;
 import org.generationcp.middleware.manager.api.GermplasmDataManager;
 import org.generationcp.middleware.pojos.Method;
 import org.generationcp.middleware.pojos.Name;
+import org.generationcp.middleware.ruleengine.RuleException;
+import org.generationcp.middleware.ruleengine.RuleExecutionContext;
+import org.generationcp.middleware.ruleengine.RuleFactory;
+import org.generationcp.middleware.ruleengine.namingdeprecated.impl.DeprecatedNamingConventionServiceImpl;
+import org.generationcp.middleware.ruleengine.namingdeprecated.service.DeprecatedProcessCodeService;
+import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
+import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
+import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasmParent;
+import org.generationcp.middleware.ruleengine.service.RulesService;
 import org.generationcp.middleware.service.api.FieldbookService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -42,7 +42,7 @@ import java.util.Random;
 
 import static org.hamcrest.CoreMatchers.is;
 
-public class NamingConventionServiceImplTest {
+public class DeprecatedNamingConventionServiceImplTest {
 
 	@Mock
 	private FieldbookService fieldbookMiddlewareService;
@@ -54,7 +54,7 @@ public class NamingConventionServiceImplTest {
 	private GermplasmDataManager germplasmDataManager;
 
 	@Mock
-	private ProcessCodeService processCodeService;
+	private DeprecatedProcessCodeService processCodeService;
 
 	@Mock
 	private RuleFactory ruleFactory;
@@ -63,7 +63,7 @@ public class NamingConventionServiceImplTest {
 	private ResourceBundleMessageSource messageSource;
 
 	@InjectMocks
-	private final NamingConventionServiceImpl namingConventionService = new NamingConventionServiceImpl();
+	private final DeprecatedNamingConventionServiceImpl namingConventionService = new DeprecatedNamingConventionServiceImpl();
 
 	private Method breedingMethod;
 	private DeprecatedAdvancingSource row;
@@ -201,6 +201,7 @@ public class NamingConventionServiceImplTest {
 		as1.setNames(new ArrayList<>());
 		as1.setBreedingMethod(this.breedingMethod);
 		as1.setPlantsSelected(1);
+		as1.setBulk(false);
 		as1.setStudyName("Test One");
 		as1.setSeason("201412");
 		as1.setCurrentMaxSequence(0);

@@ -49,7 +49,7 @@ import org.generationcp.middleware.pojos.MethodType;
 import org.generationcp.middleware.pojos.Name;
 import org.generationcp.middleware.ruleengine.RuleException;
 import org.generationcp.middleware.ruleengine.generator.SeedSourceGenerator;
-import org.generationcp.middleware.ruleengine.newnaming.service.NamingConventionService;
+import org.generationcp.middleware.ruleengine.namingdeprecated.service.DeprecatedNamingConventionService;
 import org.generationcp.middleware.ruleengine.pojo.AdvanceGermplasmChangeDetail;
 import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
@@ -140,7 +140,7 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 	private DatasetService datasetService;
 
 	@Resource
-	private NamingConventionService namingConventionService;
+	private DeprecatedNamingConventionService namingConventionService;
 
 	@Resource
 	private AdvancingSourceListFactory advancingSourceListFactory;
@@ -308,7 +308,7 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 				int selectionNumber = row.getCurrentMaxSequence() + 1;
 				final Iterator<SampleDTO> sampleIterator = row.getSamples().iterator();
 
-				final int iterationCount = row.isBulkingMethod() ? 1 : row.getPlantsSelected();
+				final int iterationCount = row.isBulk() ? 1 : row.getPlantsSelected();
 				for (int i = 0; i < iterationCount; i++) {
 					String sampleNo = null;
 					if (sampleIterator.hasNext()) {
@@ -333,7 +333,7 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 
 		String selectionNumberToApply = null;
 		final boolean allPlotsSelected = "1".equals(advancingParameters.getAllPlotsChoice());
-		if (source.isBulkingMethod()) {
+		if (source.isBulk()) {
 			if (allPlotsSelected) {
 				selectionNumberToApply = null;
 			} else {
@@ -428,9 +428,9 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 		if (list != null && list.getRows() != null && !list.getRows().isEmpty() && (lineChoiceSame && plantsSelected > 0
 			|| allPlotsChoice)) {
 			for (final DeprecatedAdvancingSource row : list.getRows()) {
-				if (!row.isBulkingMethod() && lineChoiceSame) {
+				if (!row.isBulk() && lineChoiceSame) {
 					row.setPlantsSelected(plantsSelected);
-				} else if (row.isBulkingMethod() && allPlotsChoice) {
+				} else if (row.isBulk() && allPlotsChoice) {
 					// set it to 1, it does not matter since it's bulked
 					row.setPlantsSelected(1);
 				}
