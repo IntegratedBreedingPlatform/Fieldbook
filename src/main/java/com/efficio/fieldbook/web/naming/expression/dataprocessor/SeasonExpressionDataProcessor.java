@@ -1,10 +1,7 @@
 
 package com.efficio.fieldbook.web.naming.expression.dataprocessor;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
 import org.apache.commons.lang3.StringUtils;
 import org.generationcp.middleware.domain.dms.Study;
 import org.generationcp.middleware.domain.dms.ValueReference;
@@ -13,10 +10,12 @@ import org.generationcp.middleware.domain.etl.MeasurementRow;
 import org.generationcp.middleware.domain.etl.MeasurementVariable;
 import org.generationcp.middleware.domain.etl.Workbook;
 import org.generationcp.middleware.domain.oms.TermId;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 import org.springframework.stereotype.Component;
 
-import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
-import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Deprecated
 @Component
@@ -35,9 +34,9 @@ public class SeasonExpressionDataProcessor implements ExpressionDataProcessor {
 	@Override
 	public void processPlotLevelData(final DeprecatedAdvancingSource source, final MeasurementRow row) {
 		if (StringUtils.isBlank(source.getSeason())
-				&& source.getTrailInstanceObservationMeasurementRow() != null && source.getTrailInstanceObservationMeasurementRow().getDataList() != null) {
+				&& source.getTrailInstanceObservation() != null && source.getTrailInstanceObservation().getDataList() != null) {
 			final Map<Integer, String> measurementVariablesValues = new HashMap<>();
-			for (final MeasurementData measurementData : source.getTrailInstanceObservationMeasurementRow().getDataList()) {
+			for (final MeasurementData measurementData : source.getTrailInstanceObservation().getDataList()) {
 				final int termId = measurementData.getMeasurementVariable().getTermId();
 				final List<ValueReference> possibleValues = measurementData.getMeasurementVariable().getPossibleValues();
 				this.addValueToMeasurementVariablesValues(measurementData.getValue(), possibleValues, termId, measurementVariablesValues);

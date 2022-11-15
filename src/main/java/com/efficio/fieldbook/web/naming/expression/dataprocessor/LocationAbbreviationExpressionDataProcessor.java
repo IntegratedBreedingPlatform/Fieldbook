@@ -30,9 +30,9 @@ public class LocationAbbreviationExpressionDataProcessor implements ExpressionDa
 
     @Override
     public void processPlotLevelData(DeprecatedAdvancingSource source, MeasurementRow row) throws FieldbookException {
-        if(source.getTrailInstanceObservationMeasurementRow() != null &&
-                source.getTrailInstanceObservationMeasurementRow().getDataList() != null &&  !source.getTrailInstanceObservationMeasurementRow().getDataList().isEmpty()){
-                for(MeasurementData measurementData : source.getTrailInstanceObservationMeasurementRow().getDataList()){
+        if(source.getTrailInstanceObservation() != null &&
+                source.getTrailInstanceObservation().getDataList() != null &&  !source.getTrailInstanceObservation().getDataList().isEmpty()){
+                for(MeasurementData measurementData : source.getTrailInstanceObservation().getDataList()){
                 if(measurementData.getMeasurementVariable().getTermId() == TermId.LOCATION_ID.getId()){
                     String locationAbbreviation = null;
                     String locationIdString = measurementData.getValue();

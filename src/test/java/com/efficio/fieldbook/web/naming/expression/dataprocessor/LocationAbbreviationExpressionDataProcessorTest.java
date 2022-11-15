@@ -3,13 +3,13 @@ package com.efficio.fieldbook.web.naming.expression.dataprocessor;
 import com.efficio.fieldbook.util.FieldbookException;
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
 import com.google.common.collect.Lists;
-import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 import org.generationcp.middleware.api.location.LocationService;
 import org.generationcp.middleware.domain.etl.MeasurementData;
 import org.generationcp.middleware.domain.etl.MeasurementRow;
 import org.generationcp.middleware.domain.etl.MeasurementVariable;
 import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.pojos.Location;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -69,7 +69,7 @@ public class LocationAbbreviationExpressionDataProcessorTest {
         location.setLabbr("IND");
 
         Mockito.when(measurementRow.getDataList()).thenReturn(listMeasurementData);
-        Mockito.when(source.getTrailInstanceObservationMeasurementRow()).thenReturn(measurementRow);
+        Mockito.when(source.getTrailInstanceObservation()).thenReturn(measurementRow);
         Mockito.when(locationService.getLocationByID(11)).thenReturn(location);
 
         locationAbbreviationExpressionDataProcessor.processPlotLevelData(source, null);
@@ -90,7 +90,7 @@ public class LocationAbbreviationExpressionDataProcessorTest {
         listMeasurementData.add(measurementData);
 
         Mockito.when(measurementRow.getDataList()).thenReturn(listMeasurementData);
-        Mockito.when(source.getTrailInstanceObservationMeasurementRow()).thenReturn(measurementRow);
+        Mockito.when(source.getTrailInstanceObservation()).thenReturn(measurementRow);
 
         locationAbbreviationExpressionDataProcessor.processPlotLevelData(source, null);
 
@@ -102,7 +102,7 @@ public class LocationAbbreviationExpressionDataProcessorTest {
         final DeprecatedAdvancingSource source = Mockito.mock(DeprecatedAdvancingSource.class);
         final MeasurementRow measurementRow = Mockito.mock(MeasurementRow.class);
         Mockito.when(measurementRow.getDataList()).thenReturn(null);
-        Mockito.when(source.getTrailInstanceObservationMeasurementRow()).thenReturn(measurementRow);
+        Mockito.when(source.getTrailInstanceObservation()).thenReturn(measurementRow);
 
         locationAbbreviationExpressionDataProcessor.processPlotLevelData(source, null);
 

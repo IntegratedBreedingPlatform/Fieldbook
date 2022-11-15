@@ -1,12 +1,7 @@
 
 package com.efficio.fieldbook.web.naming.expression.dataprocessor;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-import javax.annotation.Resource;
-
+import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
 import org.apache.commons.lang3.StringUtils;
 import org.generationcp.commons.spring.util.ContextUtil;
 import org.generationcp.middleware.domain.dms.Study;
@@ -16,10 +11,13 @@ import org.generationcp.middleware.domain.etl.MeasurementRow;
 import org.generationcp.middleware.domain.etl.MeasurementVariable;
 import org.generationcp.middleware.domain.etl.Workbook;
 import org.generationcp.middleware.manager.ontology.api.OntologyVariableDataManager;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 import org.springframework.stereotype.Component;
 
-import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
-import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Deprecated
 @Component
@@ -53,8 +51,8 @@ public class SelectionTraitExpressionDataProcessor implements ExpressionDataProc
 	public void processPlotLevelData(final DeprecatedAdvancingSource source, final MeasurementRow row) {
 		final List<MeasurementData> rowData = row.getDataList();
 
-		if(source.getTrailInstanceObservationMeasurementRow() != null){
-			rowData.addAll(source.getTrailInstanceObservationMeasurementRow().getDataList());
+		if(source.getTrailInstanceObservation() != null){
+			rowData.addAll(source.getTrailInstanceObservation().getDataList());
 		}
 
 		for (final MeasurementData measurementData : rowData) {
