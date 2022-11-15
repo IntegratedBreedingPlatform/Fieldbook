@@ -10,7 +10,7 @@ import org.generationcp.middleware.ruleengine.RuleException;
 import org.generationcp.middleware.ruleengine.RuleFactory;
 import org.generationcp.middleware.ruleengine.naming.newrules.EnforceUniqueNameRule;
 import org.generationcp.middleware.ruleengine.naming.newrules.NamingRuleExecutionContext;
-import org.generationcp.middleware.ruleengine.naming.service.ProcessCodeService;
+import org.generationcp.middleware.ruleengine.naming.newservice.ProcessCodeService;
 import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 import org.generationcp.middleware.ruleengine.service.RulesService;
 import org.junit.Assert;
