@@ -17,12 +17,12 @@ import org.generationcp.middleware.domain.etl.MeasurementRow;
 import org.generationcp.middleware.domain.etl.MeasurementVariable;
 import org.generationcp.middleware.domain.etl.StudyDetails;
 import org.generationcp.middleware.domain.etl.Workbook;
-import org.generationcp.middleware.domain.germplasm.BasicNameDTO;
 import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.domain.study.StudyTypeDto;
 import org.generationcp.middleware.manager.ontology.api.OntologyVariableDataManager;
 import org.generationcp.middleware.pojos.Germplasm;
 import org.generationcp.middleware.pojos.Method;
+import org.generationcp.middleware.pojos.Name;
 import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
 import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 import org.generationcp.middleware.service.api.FieldbookService;
@@ -82,9 +82,9 @@ public class DeprecatedAdvancingSourceListFactoryTest {
 
         Mockito.doNothing().when(expressionDataProcessor).processEnvironmentLevelData(Matchers.isA(DeprecatedAdvancingSource.class),
 			Matchers.isA(Workbook.class), Matchers.isA(AdvancingStudy.class), Matchers.isNull(Study.class));
-        final Map<Integer, List<BasicNameDTO>> mapNames = Maps.newHashMap();
-        final List<BasicNameDTO> nameList = Lists.newArrayList();
-        final BasicNameDTO name = new BasicNameDTO();
+        final Map<Integer, List<Name>> mapNames = Maps.newHashMap();
+        final List<Name> nameList = Lists.newArrayList();
+        final Name name = new Name();
         name.setNid(32);
         name.setNval("nVal");
         name.setTypeId(23);
@@ -93,7 +93,7 @@ public class DeprecatedAdvancingSourceListFactoryTest {
         nameList.add(name);
         mapNames.put(13, nameList);
 
-        Mockito.when(this.fieldbookMiddlewareService.getNamesByGids(ArgumentMatchers.anySet())).thenReturn(mapNames);
+        Mockito.when(this.fieldbookMiddlewareService.getNamesByGids(ArgumentMatchers.anyList())).thenReturn(mapNames);
 
         final List<Germplasm> germplasmList = Lists.newArrayList();
         final Germplasm germplasm = new Germplasm();
@@ -181,9 +181,9 @@ public class DeprecatedAdvancingSourceListFactoryTest {
 
         Mockito.doNothing().when(expressionDataProcessor).processEnvironmentLevelData(Matchers.isA(DeprecatedAdvancingSource.class),
 			Matchers.isA(Workbook.class), Matchers.isA(AdvancingStudy.class), Matchers.isNull(Study.class));
-        final Map<Integer, List<BasicNameDTO>> mapNames = Maps.newHashMap();
-        final List<BasicNameDTO> nameList = Lists.newArrayList();
-        final BasicNameDTO name = new BasicNameDTO();
+        final Map<Integer, List<Name>> mapNames = Maps.newHashMap();
+        final List<Name> nameList = Lists.newArrayList();
+        final Name name = new Name();
         name.setNid(32);
         name.setNval("nVal");
         name.setTypeId(23);
@@ -192,7 +192,7 @@ public class DeprecatedAdvancingSourceListFactoryTest {
         nameList.add(name);
         mapNames.put(13, nameList);
 
-        Mockito.when(this.fieldbookMiddlewareService.getNamesByGids(ArgumentMatchers.anySet())).thenReturn(mapNames);
+        Mockito.when(this.fieldbookMiddlewareService.getNamesByGids(ArgumentMatchers.anyList())).thenReturn(mapNames);
 
         final List<Germplasm> germplasmList = Lists.newArrayList();
         final Germplasm germplasm = new Germplasm();
@@ -203,7 +203,7 @@ public class DeprecatedAdvancingSourceListFactoryTest {
         germplasm.setMethod(new Method(14));
 
         germplasmList.add(germplasm);
-        Mockito.when(this.fieldbookMiddlewareService.getGermplasms(Matchers.isA(List.class))).thenReturn(germplasmList);
+        Mockito.when(this.fieldbookMiddlewareService.getGermplasms(ArgumentMatchers.anyList())).thenReturn(germplasmList);
 
         final Workbook workBook = new Workbook();
         final StudyDetails studyDetails = new StudyDetails();

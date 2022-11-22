@@ -77,6 +77,7 @@ public class AdvancingSourceListFactory {
 		final Integer methodVariateId = advanceInfo.getMethodVariateId();
 		final Integer lineVariateId = advanceInfo.getLineVariateId();
 		final Integer plotVariateId = advanceInfo.getPlotVariateId();
+		final List<Name> names = null;
 
 		String studyName = null;
 		if (study != null) {
@@ -169,6 +170,7 @@ public class AdvancingSourceListFactory {
 						}
 					}
 					advancingSourceCandidate.setGermplasm(germplasm);
+					advancingSourceCandidate.setNames(names);
 					advancingSourceCandidate.setPlantsSelected(plantsSelected);
 					advancingSourceCandidate.setBreedingMethod(breedingMethod);
 					advancingSourceCandidate.setStudyName(studyName);
