@@ -619,7 +619,7 @@
 						var newValue = valueContainer[variableId];
 
 						// Do not update if data did not change or value is empty
-						if (angular.equals(oldValue, newValue) || !newValue) {
+						if (!newValue || angular.equals(oldValue, newValue)) {
 							refreshDisplay();
 							return;
 						}
