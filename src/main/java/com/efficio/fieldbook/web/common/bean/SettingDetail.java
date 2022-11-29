@@ -24,13 +24,9 @@ public class SettingDetail implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private SettingVariable variable;
 	private List<ValueReference> possibleValues;
-	private List<ValueReference> possibleValuesFavorite;
 	private List<ValueReference> allValues;
-	private List<ValueReference> allFavoriteValues;
 	private String possibleValuesJson;
-	private String possibleValuesFavoriteJson;
 	private String allValuesJson;
-	private String allFavoriteValuesJson;
 	private String value;
 	private boolean isDeletable;
 	private boolean isFavorite;
@@ -69,13 +65,6 @@ public class SettingDetail implements Serializable {
 		this.possibleValues = possibleValues;
 	}
 
-	public List<ValueReference> getPossibleValuesFavorite() {
-		return this.possibleValuesFavorite;
-	}
-
-	public void setPossibleValuesFavorite(final List<ValueReference> possibleValuesFavorite) {
-		this.possibleValuesFavorite = possibleValuesFavorite;
-	}
 
 	public String getPossibleValuesJson() {
 		return this.possibleValuesJson;
@@ -93,24 +82,6 @@ public class SettingDetail implements Serializable {
 			this.setPossibleValuesJson("err");
 		}
 	}
-
-	public String getPossibleValuesFavoriteJson() {
-		return this.possibleValuesFavoriteJson;
-	}
-
-	public void setPossibleValuesFavoriteJson(final String possibleValuesFavoriteJson) {
-		this.possibleValuesFavoriteJson = possibleValuesFavoriteJson;
-	}
-
-	public void setPossibleValuesFavoriteToJson(final List<ValueReference> possibleValuesFavorite) {
-		try {
-			final ObjectMapper om = new ObjectMapper();
-			this.setPossibleValuesFavoriteJson(om.writeValueAsString(possibleValuesFavorite));
-		} catch (final Exception e) {
-			this.setPossibleValuesFavoriteJson("err");
-		}
-	}
-
 	public String getValue() {
 		return this.value;
 	}
@@ -210,12 +181,8 @@ public class SettingDetail implements Serializable {
 		builder.append(this.variable);
 		builder.append(", possibleValues=");
 		builder.append(this.possibleValues);
-		builder.append(", possibleValuesFavorite=");
-		builder.append(this.possibleValuesFavorite);
 		builder.append(", possibleValuesJson=");
 		builder.append(this.possibleValuesJson);
-		builder.append(", possibleValuesFavoriteJson=");
-		builder.append(this.possibleValuesFavoriteJson);
 		builder.append(", value=");
 		builder.append(this.value);
 		builder.append(", isDeletable=");
@@ -241,9 +208,7 @@ public class SettingDetail implements Serializable {
 		Debug.println(indent, "Setting Detail: ");
 		Debug.println(indent + 3, "variable: " + this.variable);
 		Debug.println(indent + 3, "possibleValues: " + this.possibleValues);
-		Debug.println(indent + 3, "possibleValuesFavorite: " + this.possibleValuesFavorite);
 		Debug.println(indent + 3, "possibleValuesJson: " + this.possibleValuesJson);
-		Debug.println(indent + 3, "possibleValuesFavoriteJson: " + this.possibleValuesFavoriteJson);
 		Debug.println(indent + 3, "value: " + this.value);
 		Debug.println(indent + 3, "isDeletable: " + this.isDeletable);
 		Debug.println(indent + 3, "isFavorite: " + this.isFavorite);
@@ -276,34 +241,8 @@ public class SettingDetail implements Serializable {
 			final ObjectMapper om = new ObjectMapper();
 			this.setAllValuesJson(om.writeValueAsString(allValues));
 		} catch (final Exception e) {
-			this.setPossibleValuesFavoriteJson("err");
+			this.setAllValuesJson("err");
 		}
-	}
-
-	public List<ValueReference> getAllFavoriteValues() {
-		return this.allFavoriteValues;
-	}
-
-	public void setAllFavoriteValues(final List<ValueReference> allFavoriteValues) {
-		this.allFavoriteValues = allFavoriteValues;
-	}
-
-	public void setAllFavoriteValuesToJson(final List<ValueReference> allFavoriteValuesJson) {
-		try {
-			final ObjectMapper om = new ObjectMapper();
-			this.setAllFavoriteValuesJson(om.writeValueAsString(allFavoriteValuesJson));
-		} catch (final Exception e) {
-			this.setPossibleValuesFavoriteJson("err");
-		}
-
-	}
-
-	public String getAllFavoriteValuesJson() {
-		return this.allFavoriteValuesJson;
-	}
-
-	public void setAllFavoriteValuesJson(final String allFavoriteValuesJson) {
-		this.allFavoriteValuesJson = allFavoriteValuesJson;
 	}
 
 	@Override

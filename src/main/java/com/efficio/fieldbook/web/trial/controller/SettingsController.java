@@ -150,23 +150,10 @@ public abstract class SettingsController extends AbstractBaseFieldbookController
 				settingDetail.setValue(AppConstants.PLEASE_CHOOSE.getString());
 			}
 			settingDetail.setPossibleValuesToJson(possibleValues);
-			final List<ValueReference> possibleValuesFavorite =
-				this.fieldbookService.getAllPossibleValuesFavorite(id, this.getCurrentProject().getUniqueID(), true);
-			settingDetail.setPossibleValuesFavorite(possibleValuesFavorite);
-			settingDetail.setPossibleValuesFavoriteToJson(possibleValuesFavorite);
 
 			final List<ValueReference> allValues = this.fieldbookService.getAllPossibleValuesWithFilter(svar.getCvTermId(), false);
 			settingDetail.setAllValues(allValues);
 			settingDetail.setAllValuesToJson(allValues);
-
-			final List<ValueReference> allFavoriteValues =
-				this.fieldbookService.getAllPossibleValuesFavorite(svar.getCvTermId(), this.getCurrentProject().getUniqueID(), null);
-
-			final List<ValueReference> intersection = SettingsUtil.intersection(allValues, allFavoriteValues);
-
-			settingDetail.setAllFavoriteValues(intersection);
-			settingDetail.setAllFavoriteValuesToJson(intersection);
-
 			return settingDetail;
 		} else {
 			final SettingVariable svar = new SettingVariable();
@@ -227,10 +214,6 @@ public abstract class SettingsController extends AbstractBaseFieldbookController
 			settingDetail.setValue(AppConstants.PLEASE_CHOOSE.getString());
 		}
 		settingDetail.setPossibleValuesToJson(possibleValues);
-		final List<ValueReference> possibleValuesFavorite =
-			this.fieldbookService.getAllPossibleValuesFavorite(id, this.getCurrentProject().getUniqueID(), false);
-		settingDetail.setPossibleValuesFavorite(possibleValuesFavorite);
-		settingDetail.setPossibleValuesFavoriteToJson(possibleValuesFavorite);
 		return settingDetail;
 	}
 

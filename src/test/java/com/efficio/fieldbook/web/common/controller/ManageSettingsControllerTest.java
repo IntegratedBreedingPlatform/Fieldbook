@@ -116,15 +116,11 @@ public class ManageSettingsControllerTest {
 		final ValueReference location2 = new ValueReference(2, "Location2");
 
 		final List<ValueReference> possibleValues = Collections.list(location1, location2);
-		final List<ValueReference> possibleValuesFavorite = Collections.list(location2);
 		final List<ValueReference> allValues = Collections.list(location1, location2);
-		final List<ValueReference> allFavoriteValues =  Collections.list(location2);
 
 		Mockito.when(this.formulaService.getByTargetId(cvTermId)).thenReturn(Optional.of(formulaDto));
 		Mockito.when(this.fieldbookService.getAllPossibleValues(cvTermId)).thenReturn(possibleValues);
-		Mockito.when(this.fieldbookService.getAllPossibleValuesFavorite(cvTermId, PROGRAM_UUID, true)).thenReturn(possibleValuesFavorite);
 		Mockito.when(this.fieldbookService.getAllPossibleValuesWithFilter(cvTermId, false)).thenReturn(allValues);
-		Mockito.when(this.fieldbookService.getAllPossibleValuesFavorite(cvTermId, PROGRAM_UUID, null)).thenReturn(allFavoriteValues);
 
 		// Add the variable in TRAIT settings.
 		this.controller.addSettings(createTrialForm, VariableType.TRAIT.getId());
@@ -141,11 +137,7 @@ public class ManageSettingsControllerTest {
 		Assert.assertSame(formulaDto, addedSettingDetail.getVariable().getFormula());
 		Assert.assertSame(Operation.ADD, addedSettingDetail.getVariable().getOperation());
 		Assert.assertSame(allValues, addedSettingDetail.getAllValues());
-		Assert.assertSame(possibleValuesFavorite, addedSettingDetail.getPossibleValuesFavorite());
-		Assert.assertEquals(SettingsUtil.intersection(allValues, allFavoriteValues), addedSettingDetail.getAllFavoriteValues());
-		Assert.assertNotNull(addedSettingDetail.getAllFavoriteValuesJson());
 		Assert.assertNotNull(addedSettingDetail.getPossibleValuesJson());
-		Assert.assertNotNull(addedSettingDetail.getPossibleValuesFavoriteJson());
 		Assert.assertNotNull(addedSettingDetail.getAllValuesJson());
 
 	}

@@ -49,15 +49,6 @@ public interface FieldbookService {
 	List<ValueReference> getAllPossibleValues(Variable variable);
 
 	/**
-	 * Gets the all possible values favorite.
-	 *
-	 * @param id the id
-	 * @param programUUID the project id
-	 * @return the all possible values favorite
-	 */
-	public List<ValueReference> getAllPossibleValuesFavorite(final int id, final String programUUID, Boolean filtered);
-
-	/**
 	 * Gets the value.
 	 *
 	 * @param id the id

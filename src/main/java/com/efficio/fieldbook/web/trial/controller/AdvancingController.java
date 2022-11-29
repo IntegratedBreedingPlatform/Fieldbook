@@ -718,10 +718,6 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 			settingDetail.setValue(AppConstants.PLEASE_CHOOSE.getString());
 		}
 		settingDetail.setPossibleValuesToJson(possibleValues);
-		final List<ValueReference> possibleValuesFavorite =
-			this.fieldbookService.getAllPossibleValuesFavorite(id, this.getCurrentProject().getUniqueID(), false);
-		settingDetail.setPossibleValuesFavorite(possibleValuesFavorite);
-		settingDetail.setPossibleValuesFavoriteToJson(possibleValuesFavorite);
 		return settingDetail;
 	}
 

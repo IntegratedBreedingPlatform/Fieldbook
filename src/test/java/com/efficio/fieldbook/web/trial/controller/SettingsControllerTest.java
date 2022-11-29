@@ -89,9 +89,6 @@ public class SettingsControllerTest {
 		Mockito.when(this.variableDataManager.getVariable(Matchers.any(String.class), Matchers.any(Integer.class), Matchers.anyBoolean()))
 				.thenReturn(this.testVariable);
 		Mockito.when(this.fieldbookService.getAllPossibleValues(Matchers.anyInt())).thenReturn(Arrays.asList(this.testValueReference));
-		Mockito.when(
-				this.fieldbookService.getAllPossibleValuesFavorite(Matchers.anyInt(), Matchers.any(String.class), Matchers.anyBoolean()))
-				.thenReturn(Arrays.asList(this.testValueReference));
 	}
 
 	private List<SettingDetail> createSettingDetailVariables() {
@@ -143,19 +140,10 @@ public class SettingsControllerTest {
 				settingDetail.getPossibleValuesJson().contains(this.testValueReference.getDescription()));
 		Assert.assertTrue("Error in Key of PossibleValuesToJson",
 				settingDetail.getPossibleValuesJson().contains(this.testValueReference.getKey()));
-		Assert.assertTrue("Error in Name of PossibleValuesFavoriteToJson",
-				settingDetail.getPossibleValuesFavoriteJson().contains(this.testValueReference.getName()));
-		Assert.assertTrue("Error in Description of PossibleValuesFavoriteToJson",
-				settingDetail.getPossibleValuesFavoriteJson().contains(this.testValueReference.getDescription()));
-		Assert.assertTrue("Error in Key of PossibleValuesFavoriteToJson",
-				settingDetail.getPossibleValuesFavoriteJson().contains(this.testValueReference.getKey()));
-
 		Mockito.verify(this.variableDataManager, Mockito.times(1)).getVariable(this.contextUtil.getCurrentProgramUUID(),
 				this.testVariable.getId(), false);
 		Mockito.verify(this.fieldbookService, Mockito.times(1)).getAllPossibleValues(this.testVariable.getId());
 		Mockito.verify(this.contextUtil, Mockito.times(1)).getProjectInContext();
-		Mockito.verify(this.fieldbookService, Mockito.times(1)).getAllPossibleValuesFavorite(this.testVariable.getId(),
-				this.controller.getCurrentProject().getUniqueID(), false);
 	}
 
 	@Test

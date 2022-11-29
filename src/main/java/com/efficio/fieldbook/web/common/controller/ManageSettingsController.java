@@ -261,25 +261,11 @@ public class ManageSettingsController extends SettingsController {
 					}
 
 					final SettingDetail newSetting = new SettingDetail(settingVariable, possibleValues, null, true);
-					final List<ValueReference> possibleValuesFavoriteFiltered =
-							this.fieldbookService.getAllPossibleValuesFavorite(settingVariable.getCvTermId(), programUUID, true);
-
 					final List<ValueReference> allValues =
 							this.fieldbookService.getAllPossibleValuesWithFilter(settingVariable.getCvTermId(), false);
-
-					final List<ValueReference> allFavoriteValues =
-							this.fieldbookService.getAllPossibleValuesFavorite(settingVariable.getCvTermId(), programUUID, null);
-
-					final List<ValueReference> intersection = SettingsUtil.intersection(allValues, allFavoriteValues);
-
-					newSetting.setAllFavoriteValues(intersection);
-					newSetting.setAllFavoriteValuesToJson(intersection);
-
-					newSetting.setPossibleValuesFavorite(possibleValuesFavoriteFiltered);
 					newSetting.setAllValues(allValues);
 
 					newSetting.setPossibleValuesToJson(possibleValues);
-					newSetting.setPossibleValuesFavoriteToJson(possibleValuesFavoriteFiltered);
 					newSetting.setAllValuesToJson(allValues);
 					newSettings.add(newSetting);
 				}
