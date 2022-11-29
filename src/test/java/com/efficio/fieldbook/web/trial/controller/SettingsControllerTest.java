@@ -20,7 +20,6 @@ import org.generationcp.middleware.domain.ontology.Variable;
 import org.generationcp.middleware.domain.ontology.VariableType;
 import org.generationcp.middleware.manager.ontology.api.OntologyVariableDataManager;
 import org.generationcp.middleware.pojos.Method;
-import org.generationcp.middleware.pojos.workbench.Project;
 import org.generationcp.middleware.service.api.OntologyService;
 import org.generationcp.middleware.utils.test.UnitTestDaoIDGenerator;
 import org.junit.Before;
@@ -121,8 +120,6 @@ public class SettingsControllerTest {
 	@Test
 	public void testCreateSettingDetailWithVariableType() {
 		ContextHolder.setCurrentCrop("maize");
-		this.createTestProject();
-
 		final String alias = "nEarsSel_Local";
 		final SettingDetail settingDetail =
 				this.controller.createSettingDetailWithVariableType(this.testVariable.getId(), alias, VariableType.SELECTION_METHOD);
@@ -143,14 +140,10 @@ public class SettingsControllerTest {
 		Mockito.verify(this.variableDataManager, Mockito.times(1)).getVariable(this.contextUtil.getCurrentProgramUUID(),
 				this.testVariable.getId(), false);
 		Mockito.verify(this.fieldbookService, Mockito.times(1)).getAllPossibleValues(this.testVariable.getId());
-		Mockito.verify(this.contextUtil, Mockito.times(1)).getProjectInContext();
 	}
 
 	@Test
 	public void testCreateSettingDetailWithVariableTypeWhenAliasIsNull() {
-		ContextHolder.setCurrentCrop("maize");
-		this.createTestProject();
-
 		final SettingDetail settingDetail =
 				this.controller.createSettingDetailWithVariableType(this.testVariable.getId(), null, VariableType.SELECTION_METHOD);
 		Assert.assertEquals("Error in Role for settingDetail", VariableType.SELECTION_METHOD.getRole().name(),
@@ -165,9 +158,6 @@ public class SettingsControllerTest {
 
 	@Test
 	public void testCreateSettingDetailWithVariableTypeWhenAliasIsEmpty() {
-		ContextHolder.setCurrentCrop("maize");
-		this.createTestProject();
-
 		final SettingDetail settingDetail =
 				this.controller.createSettingDetailWithVariableType(this.testVariable.getId(), "", VariableType.SELECTION_METHOD);
 		Assert.assertEquals("Error in Role for settingDetail", VariableType.SELECTION_METHOD.getRole().name(),
@@ -236,14 +226,6 @@ public class SettingsControllerTest {
 		// Expecting first variable to have been removed
 		Assert.assertEquals(originalSize - 1, variables.size());
 		Assert.assertFalse(variables.contains(firstVariable));
-	}
-
-	private void createTestProject() {
-		final Project project = new Project();
-		project.setUniqueID(this.programUUID);
-
-		Mockito.when(this.controller.getCurrentProject()).thenReturn(project);
-		Mockito.when(this.contextUtil.getProjectInContext()).thenReturn(project);
 	}
 
 	private void createTestVariable() {
