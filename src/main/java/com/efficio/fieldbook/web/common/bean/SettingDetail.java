@@ -145,7 +145,7 @@ public class SettingDetail implements Serializable {
 	}
 
 	public PhenotypicType getRole() {
-		return role;
+		return this.role;
 	}
 
 	public void setRole(final PhenotypicType role) {
@@ -153,7 +153,7 @@ public class SettingDetail implements Serializable {
 	}
 
 	public VariableType getVariableType() {
-		return variableType;
+		return this.variableType;
 	}
 
 	public void setVariableType(final VariableType variableType) {

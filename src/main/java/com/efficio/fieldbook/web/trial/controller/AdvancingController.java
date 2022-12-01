@@ -642,7 +642,7 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 	public String checkMethodTypeMode(@PathVariable final int methodVariateId, @RequestParam final Set<String> trialInstances)
 		throws MiddlewareQueryException {
 		final List<Method> methods = this.studyDataManager.getMethodsFromExperiments(this.userSelection.getWorkbook()
-			.getMeasurementDatesetId(), methodVariateId, new ArrayList<>(trialInstances));
+				.getMeasurementDatesetId(), methodVariateId, new ArrayList<>(trialInstances));
 
 		if (!methods.isEmpty()) {
 			boolean isBulk = false;
@@ -671,54 +671,7 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 				break;
 			}
 		}
-		return this.messageSource.getMessage("error.advancing.study.empty.method", new String[] {name}, locale);
-	}
-
-	protected SettingDetail createSettingDetailWithVariableType(final int id, final String alias, final VariableType variableType) {
-		final Variable variable = this.variableDataManager.getVariable(this.contextUtil.getCurrentProgramUUID(), id, false);
-
-		String variableName = variable.getName();
-		if (alias != null && !alias.isEmpty()) {
-			variableName = alias;
-		}
-
-		final Property property = variable.getProperty();
-		final Scale scale = variable.getScale();
-		final org.generationcp.middleware.domain.ontology.Method method = variable.getMethod();
-
-		final Double minValue = variable.getMinValue() == null ? null : Double.parseDouble(variable.getMinValue());
-		final Double maxValue = variable.getMaxValue() == null ? null : Double.parseDouble(variable.getMaxValue());
-
-		final SettingVariable settingVariable = new SettingVariable(variableName, variable.getDefinition(),
-			variable.getProperty().getName(), scale.getName(), method.getName(), variableType.getRole().name(),
-			scale.getDataType().getName(), scale.getDataType().getId(), minValue, maxValue);
-
-		// NOTE: Using variable type which is used in project properties
-		settingVariable.setVariableTypes(Collections.singleton(variableType));
-
-		settingVariable.setCvTermId(variable.getId());
-		settingVariable.setCropOntologyId(property.getCropOntologyId());
-
-		if (variable.getFormula() != null) {
-			settingVariable.setFormula(variable.getFormula());
-		}
-
-		if (!property.getClasses().isEmpty()) {
-			settingVariable.setTraitClass(property.getClasses().iterator().next());
-		}
-
-		settingVariable.setOperation(Operation.ADD);
-		final List<ValueReference> possibleValues = this.fieldbookService.getAllPossibleValues(id);
-
-		final SettingDetail settingDetail = new SettingDetail(settingVariable, possibleValues, null, false);
-		settingDetail.setRole(variableType.getRole());
-		settingDetail.setVariableType(variableType);
-
-		if (id == TermId.BREEDING_METHOD_ID.getId() || id == TermId.BREEDING_METHOD_CODE.getId()) {
-			settingDetail.setValue(AppConstants.PLEASE_CHOOSE.getString());
-		}
-		settingDetail.setPossibleValuesToJson(possibleValues);
-		return settingDetail;
+		return this.messageSource.getMessage("error.advancing.study.empty.method", new String[]{name}, locale);
 	}
 
 	@RequestMapping(value = "/selectEnvironmentModal", method = RequestMethod.GET)
@@ -732,9 +685,9 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 			int index = 1;
 			final List<String> deletedEntriesList = Arrays.asList(deletedEntries);
 			for (final DeprecatedAdvancingSource source : sources) {
-				int startPlantSelected = source.getPlantsSelected() == null ? 0 : source.getPlantsSelected();
+				final int startPlantSelected = source.getPlantsSelected() == null ? 0 : source.getPlantsSelected();
 				for (int i=1; i <= startPlantSelected; i ++) {
-					int newPlantSelected = source.getPlantsSelected() == null ? 0 : source.getPlantsSelected();
+					final int newPlantSelected = source.getPlantsSelected() == null ? 0 : source.getPlantsSelected();
 					if (deletedEntriesList.contains(String.valueOf(index))) {
 						if (newPlantSelected - 1 >= 0) {
 							source.setPlantsSelected(newPlantSelected - 1);
@@ -744,10 +697,6 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 				}
 			}
 		}
-	}
-
-	public int getAdvanceLinesThreshold() {
-		return this.advanceLinesThreshold;
 	}
 
 	public void setAdvanceLinesThreshold(final int advanceLinesThreshold) {

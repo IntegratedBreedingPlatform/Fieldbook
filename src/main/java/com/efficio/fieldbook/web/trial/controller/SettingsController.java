@@ -609,7 +609,7 @@ public abstract class SettingsController extends AbstractBaseFieldbookController
 		this.fieldbookService = fieldbookService;
 	}
 
-	public void setOntologyService(OntologyService ontologyService) {
+	public void setOntologyService(final OntologyService ontologyService) {
 		this.ontologyService = ontologyService;
 	}
 

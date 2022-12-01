@@ -45,7 +45,6 @@ import org.generationcp.middleware.manager.ontology.api.OntologyVariableDataMana
 import org.generationcp.middleware.manager.ontology.api.TermDataManager;
 import org.generationcp.middleware.pojos.dms.DmsProject;
 import org.generationcp.middleware.pojos.dms.StudyType;
-import org.generationcp.middleware.pojos.workbench.Project;
 import org.generationcp.middleware.service.api.FieldbookService;
 import org.generationcp.middleware.service.api.SampleListService;
 import org.generationcp.middleware.service.api.dataset.DatasetService;

@@ -24,7 +24,6 @@ import java.util.List;
 public class SettingsServiceImpl implements SettingsService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SettingsServiceImpl.class);
-	private static final String TRIAL_INSTANCE = "TRIAL_INSTANCE";
 
 	/**
 	 * The fieldbook service.
