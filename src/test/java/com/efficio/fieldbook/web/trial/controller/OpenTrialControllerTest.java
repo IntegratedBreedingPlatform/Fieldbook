@@ -176,9 +176,6 @@ public class OpenTrialControllerTest {
 		Mockito.when(this.studyDataManager.getProject(1)).thenReturn(dmsProject);
 		Mockito.when(this.contextUtil.getCurrentProgramUUID()).thenReturn(OpenTrialControllerTest.PROGRAM_UUID);
 
-		final Project testProject = new Project();
-		testProject.setProjectId(1L);
-		Mockito.when(this.contextUtil.getProjectInContext()).thenReturn(testProject);
 		final Workbook workbook = WorkbookTestDataInitializer.getTestWorkbook();
 		workbook.setTrialDatasetId(1);
 		workbook.setMeasurementDatesetId(1);
