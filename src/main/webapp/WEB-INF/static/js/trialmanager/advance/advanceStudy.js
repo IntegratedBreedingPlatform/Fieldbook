@@ -10,6 +10,7 @@
 				'&programUUID=' + studyContext.programId +
 				'&studyId=' + studyContext.studyId +
 				'&trialDatasetId=' + studyContext.trialDatasetId +
+				'&plotDatasetId=' + studyContext.measurementDatasetId +
 				'&noOfReplications=' + noOfReplications +
 				'&trialInstances=' + trialInstances;
 
