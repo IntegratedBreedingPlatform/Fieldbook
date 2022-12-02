@@ -185,31 +185,6 @@ public class FieldbookServiceImpl implements FieldbookService {
 		return this.fieldbookMiddlewareService.getAllBreedingLocations();
 	}
 
-	@Override
-	public List<ValueReference> getAllPossibleValuesFavorite(
-		final int id, final String programUUID,
-		final Boolean filtered) {
-		final Variable variable = this.ontologyVariableDataManager.getVariable(programUUID, id, true);
-
-		assert !Objects.equals(variable, null);
-
-		List<ValueReference> possibleValuesFavorite = new ArrayList<>();
-		DataType dataType = variable.getScale().getDataType();
-
-		if (DataType.LOCATION.equals(dataType)) {
-			final List<Integer> locationIds = this.fieldbookMiddlewareService
-				.getFavoriteProjectLocationIds(programUUID);
-
-			if (locationIds != null && !locationIds.isEmpty()) {
-				possibleValuesFavorite = this.convertLocationsToValueReferences(
-					this.fieldbookMiddlewareService.getFavoriteLocationByLocationIDs(locationIds, filtered));
-
-			}
-
-		}
-		return possibleValuesFavorite;
-	}
-
 
 	@Override
 	public List<ValueReference> getAllBreedingMethods(final boolean isFilterOutGenerative) {
