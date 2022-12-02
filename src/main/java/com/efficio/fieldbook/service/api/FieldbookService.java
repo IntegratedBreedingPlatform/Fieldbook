@@ -12,23 +12,15 @@
 package com.efficio.fieldbook.service.api;
 
 import com.efficio.fieldbook.web.common.bean.SettingDetail;
-import com.efficio.fieldbook.web.common.bean.UserSelection;
-import com.efficio.fieldbook.web.trial.form.ImportGermplasmListForm;
 import org.generationcp.middleware.domain.dms.Enumeration;
 import org.generationcp.middleware.domain.dms.PhenotypicType;
-import org.generationcp.middleware.domain.dms.StandardVariable;
 import org.generationcp.middleware.domain.dms.ValueReference;
 import org.generationcp.middleware.domain.etl.MeasurementRow;
 import org.generationcp.middleware.domain.etl.MeasurementVariable;
 import org.generationcp.middleware.domain.etl.Workbook;
-import org.generationcp.middleware.domain.oms.StandardVariableReference;
-import org.generationcp.middleware.domain.oms.Term;
 import org.generationcp.middleware.domain.ontology.Variable;
 import org.generationcp.middleware.manager.Operation;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -47,15 +39,6 @@ public interface FieldbookService {
 	List<ValueReference> getAllPossibleValues(int id);
 
 	List<ValueReference> getAllPossibleValues(Variable variable);
-
-	/**
-	 * Gets the all possible values favorite.
-	 *
-	 * @param id the id
-	 * @param programUUID the project id
-	 * @return the all possible values favorite
-	 */
-	public List<ValueReference> getAllPossibleValuesFavorite(final int id, final String programUUID, Boolean filtered);
 
 	/**
 	 * Gets the value.
@@ -152,7 +135,7 @@ public interface FieldbookService {
 
 	void saveStudyColumnOrdering(Integer studyId, String columnOrderDelimited, Workbook workbook);
 
-	public List<ValueReference> getAllPossibleValuesWithFilter(final int id, boolean filtered);
+	List<ValueReference> getAllPossibleValuesWithFilter(final int id, boolean filtered);
 
 	/**
 	 * Adds the specified variable to the measurementVariable list if it does not yet exist in the list.

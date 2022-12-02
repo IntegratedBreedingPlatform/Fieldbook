@@ -20,7 +20,6 @@ import org.generationcp.middleware.domain.ontology.Variable;
 import org.generationcp.middleware.domain.ontology.VariableType;
 import org.generationcp.middleware.manager.ontology.api.OntologyVariableDataManager;
 import org.generationcp.middleware.pojos.Method;
-import org.generationcp.middleware.pojos.workbench.Project;
 import org.generationcp.middleware.service.api.OntologyService;
 import org.generationcp.middleware.utils.test.UnitTestDaoIDGenerator;
 import org.junit.Before;
@@ -89,9 +88,6 @@ public class SettingsControllerTest {
 		Mockito.when(this.variableDataManager.getVariable(Matchers.any(String.class), Matchers.any(Integer.class), Matchers.anyBoolean()))
 				.thenReturn(this.testVariable);
 		Mockito.when(this.fieldbookService.getAllPossibleValues(Matchers.anyInt())).thenReturn(Arrays.asList(this.testValueReference));
-		Mockito.when(
-				this.fieldbookService.getAllPossibleValuesFavorite(Matchers.anyInt(), Matchers.any(String.class), Matchers.anyBoolean()))
-				.thenReturn(Arrays.asList(this.testValueReference));
 	}
 
 	private List<SettingDetail> createSettingDetailVariables() {
@@ -124,8 +120,6 @@ public class SettingsControllerTest {
 	@Test
 	public void testCreateSettingDetailWithVariableType() {
 		ContextHolder.setCurrentCrop("maize");
-		this.createTestProject();
-
 		final String alias = "nEarsSel_Local";
 		final SettingDetail settingDetail =
 				this.controller.createSettingDetailWithVariableType(this.testVariable.getId(), alias, VariableType.SELECTION_METHOD);
@@ -143,26 +137,13 @@ public class SettingsControllerTest {
 				settingDetail.getPossibleValuesJson().contains(this.testValueReference.getDescription()));
 		Assert.assertTrue("Error in Key of PossibleValuesToJson",
 				settingDetail.getPossibleValuesJson().contains(this.testValueReference.getKey()));
-		Assert.assertTrue("Error in Name of PossibleValuesFavoriteToJson",
-				settingDetail.getPossibleValuesFavoriteJson().contains(this.testValueReference.getName()));
-		Assert.assertTrue("Error in Description of PossibleValuesFavoriteToJson",
-				settingDetail.getPossibleValuesFavoriteJson().contains(this.testValueReference.getDescription()));
-		Assert.assertTrue("Error in Key of PossibleValuesFavoriteToJson",
-				settingDetail.getPossibleValuesFavoriteJson().contains(this.testValueReference.getKey()));
-
 		Mockito.verify(this.variableDataManager, Mockito.times(1)).getVariable(this.contextUtil.getCurrentProgramUUID(),
 				this.testVariable.getId(), false);
 		Mockito.verify(this.fieldbookService, Mockito.times(1)).getAllPossibleValues(this.testVariable.getId());
-		Mockito.verify(this.contextUtil, Mockito.times(1)).getProjectInContext();
-		Mockito.verify(this.fieldbookService, Mockito.times(1)).getAllPossibleValuesFavorite(this.testVariable.getId(),
-				this.controller.getCurrentProject().getUniqueID(), false);
 	}
 
 	@Test
 	public void testCreateSettingDetailWithVariableTypeWhenAliasIsNull() {
-		ContextHolder.setCurrentCrop("maize");
-		this.createTestProject();
-
 		final SettingDetail settingDetail =
 				this.controller.createSettingDetailWithVariableType(this.testVariable.getId(), null, VariableType.SELECTION_METHOD);
 		Assert.assertEquals("Error in Role for settingDetail", VariableType.SELECTION_METHOD.getRole().name(),
@@ -177,9 +158,6 @@ public class SettingsControllerTest {
 
 	@Test
 	public void testCreateSettingDetailWithVariableTypeWhenAliasIsEmpty() {
-		ContextHolder.setCurrentCrop("maize");
-		this.createTestProject();
-
 		final SettingDetail settingDetail =
 				this.controller.createSettingDetailWithVariableType(this.testVariable.getId(), "", VariableType.SELECTION_METHOD);
 		Assert.assertEquals("Error in Role for settingDetail", VariableType.SELECTION_METHOD.getRole().name(),
@@ -248,14 +226,6 @@ public class SettingsControllerTest {
 		// Expecting first variable to have been removed
 		Assert.assertEquals(originalSize - 1, variables.size());
 		Assert.assertFalse(variables.contains(firstVariable));
-	}
-
-	private void createTestProject() {
-		final Project project = new Project();
-		project.setUniqueID(this.programUUID);
-
-		Mockito.when(this.controller.getCurrentProject()).thenReturn(project);
-		Mockito.when(this.contextUtil.getProjectInContext()).thenReturn(project);
 	}
 
 	private void createTestVariable() {
