@@ -323,6 +323,8 @@ function displayStudyListTree(treeName, choosingTypeParam, selectStudyFunctionPa
 				 */
 				if (sourceNode.hasChildren()) {
 					showErrorMessage('page-study-tree-message-modal', cannotMove + ' ' + sourceNode.data.title + ' ' + hasChildrenString);
+				} else if (!hasManageStudiesPermission) {
+					showErrorMessage('page-study-tree-message-modal', noPermissionToMoveStudyError);
 				} else if (sourceNode.data.isFolder === false && userLacksPermissionForStudy(sourceNode)) { 
 					showStudyIsLockedError(sourceNode);
 				} else if (node.data.isFolder === false) {
