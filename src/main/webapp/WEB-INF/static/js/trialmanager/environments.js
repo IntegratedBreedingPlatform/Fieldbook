@@ -167,6 +167,8 @@
 								fileVariableIdsMap.get(currentInstanceId) : null;
 						}
 					});
+
+					$scope.nested.dataTable.rerender();
 				});
 			};
 
