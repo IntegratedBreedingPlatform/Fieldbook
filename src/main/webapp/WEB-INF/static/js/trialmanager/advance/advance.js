@@ -8,7 +8,7 @@
 
 			var advanceStudyModalService = {};
 
-			advanceStudyModalService.startAdvance = function (advanceType) {
+			advanceStudyModalService.deprecatedStartAdvance = function (advanceType) {
 				if (advanceType === 'sample') {
 					studyService.studyHasSamples().then(function (response) {
 						if (response && response.data) {

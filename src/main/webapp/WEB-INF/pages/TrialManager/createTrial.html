@@ -183,16 +183,16 @@
 								<a tabindex="-1" href="#">Advance study options</a>
 								<ul class="dropdown-menu" style="margin-left: -68px; width: 235px;">
 									<li>
-										<a ng-click="startAdvance('trial')" id="advance-trial-link"
-										   th:text="#{study.studydetails.action.advance.study}">Advance Study</a>
+										<a ng-click="deprecatedStartAdvance('trial')" id="advance-trial-link"
+										   th:text="#{study.studydetails.action.deprecated.advance.study}">Advance Study</a>
 									</li>
 									<li>
-										<a ng-click="newStartAdvance('Study')" id="advance-trial-link"
-										   th:text="#{study.studydetails.action.new.advance.study}">New Advance Study</a>
+										<a ng-click="newStartAdvance('Study')" id="new-advance-trial-link"
+										   th:text="#{study.studydetails.action.advance.study}">Advance Study (Beta)</a>
 									</li>
 									<li>
-										<a ng-click="startAdvance('sample')" id="advance-sample-link"
-										   th:text="#{study.studydetails.action.advance.sample}">Advance sampled plants</a>
+										<a ng-click="deprecatedStartAdvance('sample')" id="advance-sample-link"
+										   th:text="#{study.studydetails.action.advance.sample}">Advance Sampled plants</a>
 									</li>
 								</ul>
                             </li>

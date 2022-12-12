@@ -35,7 +35,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 		$translateProvider.useSanitizeValueStrategy('sanitize');
 		$translateProvider.translations('en', {
 			'study.studydetails.action.advance.sample': 'Advance sampled plants from plots',
-			'study.studydetails.action.advance.study': 'Advance study',
+			'study.studydetails.action.deprecated.advance.study': 'Advance study',
 			'study.studydetails.action.new.advance.study': 'New Advance Study',
 			'advancing.study.mandatory.fields': 'indicates a mandatory field',
 			'advancing.study.method': 'METHODS',
@@ -1090,8 +1090,8 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				derivedVariableModalService.openDatasetOptionModal();
 			}
 
-			$scope.startAdvance = function (advanceType) {
-				advanceStudyModalService.startAdvance(advanceType);
+			$scope.deprecatedStartAdvance = function (advanceType) {
+				advanceStudyModalService.deprecatedStartAdvance(advanceType);
 			}
 
 			$scope.newStartAdvance = function (advanceType) {
