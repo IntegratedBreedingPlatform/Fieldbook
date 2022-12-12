@@ -47,7 +47,7 @@
 			</div>
 
 			<div class="col-md-12 nopadding-right">
-				<section-container heading="BASIC DETAILS" collapsible="isOpenStudy()" toggle-section="true">
+				<section-container heading="BASIC DETAILS" collapsible="isOpenStudy()" toggle-section="true" ng-click="reloadPermissions()">
 				<span name="action-buttons" ng-show="isOpenStudy() &amp;&amp; !hasUnsavedData()">
 					<span class='bms-locked' style='position: relative; top:7px; right: 5px; color: #666666;font-size: 23px; font-weight: bold;' ng-show="isLockedStudy() &amp;&amp;  userHasLockPermission()" ng-click="changeLockedStatus(0)"/>
 					<span class='bms-lock-open' style='position: relative; top:7px; right: 5px; color: #666666;font-size: 23px; font-weight: bold;' ng-show="!isLockedStudy() &amp;&amp; userHasLockPermission()" ng-click="changeLockedStatus(1)"/>
@@ -294,7 +294,7 @@
 												<label class="control-label" id="folderNameLabel" ng-bind="data.folderNameLabel"></label>
 											</div>
 
-											<a class="pull-right" href="javascript: void(0)" id="chooseLocation"
+											<a ng-show="hasManageStudiesPermission" class="pull-right" href="javascript: void(0)" id="chooseLocation"
 											   ng-click="changeFolderLocation()">Change Folder</a>
 										</div>
 									</div>

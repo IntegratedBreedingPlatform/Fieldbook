@@ -631,8 +631,12 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				return $scope.hasManageStudiesPermission && derivedVariableService.isStudyHasCalculatedVariables && studyStateService.hasGeneratedDesign();
 			};
 
-			$scope.reloadActionMenuConditions = function () {
+			$scope.reloadPermissions = function () {
 				$scope.hasManageStudiesPermission = $scope.hasAnyAuthority($scope.PERMISSIONS.MANAGE_STUDIES_PERMISSIONS);
+			}
+
+			$scope.reloadActionMenuConditions = function () {
+				$scope.reloadPermissions();
 				$scope.hasDesignGenerated = studyStateService.hasGeneratedDesign();
 			};
 
