@@ -34,7 +34,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 	manageTrialApp.config(function ($translateProvider) {
 		$translateProvider.useSanitizeValueStrategy('sanitize');
 		$translateProvider.translations('en', {
-			'study.studydetails.action.advance.sample': 'Advance sampled plants from plots',
+			'study.studydetails.action.deprecated.advance.sample': 'Advance sampled plants from plots',
 			'study.studydetails.action.deprecated.advance.study': 'Advance study',
 			'study.studydetails.action.new.advance.study': 'New Advance Study',
 			'advancing.study.mandatory.fields': 'indicates a mandatory field',
@@ -1094,11 +1094,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				derivedVariableModalService.openDatasetOptionModal();
 			}
 
-			$scope.deprecatedStartAdvance = function (advanceType) {
-				advanceStudyModalService.deprecatedStartAdvance(advanceType);
-			}
-
-			$scope.newStartAdvance = function (advanceType) {
+			$scope.startAdvance = function (advanceType) {
 				advanceStudyModalService.startAdvance(advanceType);
 			}
 

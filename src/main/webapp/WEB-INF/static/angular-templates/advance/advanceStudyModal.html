@@ -8,8 +8,9 @@
 
 		<div class="row form-group">
 			<div class="col-xs-11 col-md-11" id="advanceTrialModalHeader">
-				<label class="modal-title fbk-modal-title" ng-if="advanceType == 'sample'">{{'study.studydetails.action.advance.sample' | translate}}</label>
-				<label class="modal-title fbk-modal-title" ng-if="advanceType != 'sample'">{{'study.studydetails.action.deprecated.advance.study' | translate}}</label>
+				<label class="modal-title fbk-modal-title" ng-if="advanceType == 'deprecatedSample'">{{'study.studydetails.action.deprecated.advance.sample' | translate}}</label>
+				<label class="modal-title fbk-modal-title" ng-if="advanceType == 'samples'">{{'study.studydetails.action.advance.sample' | translate}}</label>
+				<label class="modal-title fbk-modal-title" ng-if="advanceType != 'deprecatedSample'">{{'study.studydetails.action.deprecated.advance.study' | translate}}</label>
 			</div>
 			<div class="col-xs-1 col-md-1">
 				<button id="closeAdvanceStudyModal" type="button" class="close  pull-right glyphicon glyphicon-remove" data-dismiss="modal" aria-hidden="true" ng-click="close()"/>
@@ -31,16 +32,16 @@
 			<div class="row form-group">
 				<label class="control-label col-xs-12">
 					<strong class="sub-content-heading">{{'advancing.study.method' | translate}}</strong><span
-					class="required" ng-if="advanceType == 'sample'">*</span>
+					class="required" ng-if="advanceType == 'deprecatedSample'">*</span>
 				</label>
 			</div>
 
 			<div class="row form-group">
-				<label ng-if="advanceType != 'sample'" class="control-label col-xs-6">
+				<label ng-if="advanceType != 'deprecatedSample'" class="control-label col-xs-6">
 					<input type="checkbox" name="methodChoice" value="1" id="methodChoice" ng-model="valueContainer.methodChoice" ng-change="validateMethodChoice()"/>
 					<span class="label-bold">{{'advancing.study.breeding.method.the.same' | translate}}</span>
 				</label>
-				<label ng-if="advanceType == 'sample'" class="control-label col-xs-6">
+				<label ng-if="advanceType == 'deprecatedSample'" class="control-label col-xs-6">
 									<span class="label-bold">
 										{{'study.advance.sample.breeding.method.label' | translate}}
 									</span>
@@ -49,7 +50,7 @@
 				<div class="row col-xs-6">
 					<div class="col-xs-10 method-selection-div">
 						<methods-select on-method-select="methodChanged" enable-dropdown="valueContainer.methodChoice" show-gen-methods-radio="false" show-der-man-methods-radio="true" method-type="1"
-										disable-method-types-radio="true" non-bulking-only="advanceType === 'sample'" valuecontainer="valuecontainer" targetkey="targetkey"></methods-select>
+										disable-method-types-radio="true" non-bulking-only="advanceType === 'deprecatedSample'" valuecontainer="valuecontainer" targetkey="targetkey"></methods-select>
 					</div>
 					<div class="col-xs-2 method-selection-div help-tooltip-col">
 						<a href="https://ibplatform.atlassian.net/wiki/spaces/BMS/pages/2627669814/v22+Manage+Crop+Settings#Breeding-Methods" target="_blank">
@@ -58,7 +59,7 @@
 				</div>
 			</div>
 
-			<div class="row form-group" id="method-variates-section" ng-if="advanceType != 'sample' && !valueContainer.methodChoice">
+			<div class="row form-group" id="method-variates-section" ng-if="advanceType != 'deprecatedSample' && !valueContainer.methodChoice">
 				<div class="col-xs-6">
 					<label class="control-label label-bold">{{'advancing.study.method.variate' | translate}}:</label>
 				</div>
@@ -70,7 +71,7 @@
 			</div>
 		</div>
 
-		<div class="lines-section" ng-if="advanceType != 'sample'" ng-show="!valueContainer.methodChoice || !isBulkingMethod()">
+		<div class="lines-section" ng-if="advanceType != 'deprecatedSample'" ng-show="!valueContainer.methodChoice || !isBulkingMethod()">
 			<div class="row form-group">
 				<label class="control-label col-xs-12 add_top_padding"><strong class="sub-content-heading">{{'advancing.study.lines' | translate}}</strong></label>
 			</div>
@@ -98,7 +99,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="bulk-section" ng-if="advanceType != 'sample'" ng-show="!valueContainer.methodChoice || isBulkingMethod()">
+		<div class="bulk-section" ng-if="advanceType != 'deprecatedSample'" ng-show="!valueContainer.methodChoice || isBulkingMethod()">
 			<div class="row form-group">
 				<label class="control-label col-xs-12 add_top_padding"><strong class="sub-content-heading">{{'advancing.study.bulks' | translate}}</strong> </label>
 			</div>
@@ -121,7 +122,7 @@
 			</div>
 		</div>
 
-		<div class="plants-section" ng-if="advanceType == 'sample'">
+		<div class="plants-section" ng-if="advanceType == 'deprecatedSample'">
 			<!-- static content for now -->
 			<!-- Functionality may be added in the future -->
 			<div class="row form-group">
@@ -156,7 +157,7 @@
 
 		<div id="harvest-details-section" ng-style="{'display': (advanceType != 'trial') ? 'block': 'none'}"> <!-- harvest details -->
 			<div class="row form-group">
-				<label class="control-label col-xs-12 add_top_padding"><strong class="sub-content-heading">{{'advancing.study.harvest.information' | translate}}</strong><span class="required" ng-if="advanceType == 'sample' ">*</span></label>
+				<label class="control-label col-xs-12 add_top_padding"><strong class="sub-content-heading">{{'advancing.study.harvest.information' | translate}}</strong><span class="required" ng-if="advanceType == 'deprecatedSample' ">*</span></label>
 			</div>
 			<div class="row form-group">
 				<label class="control-label label-bold col-xs-6">{{'advancing.study.harvest.date' | translate}}</label><span class="required"></span>

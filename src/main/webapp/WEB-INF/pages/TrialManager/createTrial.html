@@ -182,17 +182,23 @@
 							<li ng-show="showManageStudiesAction()" class="dropdown-submenu pull-left">
 								<a tabindex="-1" href="#">Advance study options</a>
 								<ul class="dropdown-menu" style="margin-left: -68px; width: 235px;">
+									<!-- Deprecated -->
 									<li>
-										<a ng-click="deprecatedStartAdvance('trial')" id="advance-trial-link"
+										<a ng-click="startAdvance('trial')" id="deprecated-advance-trial-link"
 										   th:text="#{study.studydetails.action.deprecated.advance.study}">Advance Study</a>
 									</li>
 									<li>
-										<a ng-click="newStartAdvance('Study')" id="new-advance-trial-link"
+										<a ng-click="startAdvance('study')" id="advance-trial-link"
 										   th:text="#{study.studydetails.action.advance.study}">Advance Study (Beta)</a>
 									</li>
+									<!-- Deprecated -->
 									<li>
-										<a ng-click="deprecatedStartAdvance('sample')" id="advance-sample-link"
-										   th:text="#{study.studydetails.action.advance.sample}">Advance Sampled plants</a>
+										<a ng-click="startAdvance('deprecatedSample')" id="deprecated-advance-sample-link"
+										   th:text="#{study.studydetails.action.deprecated.advance.sample}">Advance Sampled plants</a>
+									</li>
+									<li>
+										<a ng-click="startAdvance('samples')" id="advance-sample-link"
+										   th:text="#{study.studydetails.action.advance.sample}">Advance Sampled plants (Beta)</a>
 									</li>
 								</ul>
                             </li>
@@ -832,7 +838,6 @@
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/environments.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/experimentalDesign.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/advance/advance.js}"></script>
-	<script type="text/javascript" th:src="@{/static/js/trialmanager/advance/advanceStudy.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/saveList.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/r-package/r-package.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/visualization/visualization.js}"></script>

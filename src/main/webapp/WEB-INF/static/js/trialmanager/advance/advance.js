@@ -8,8 +8,8 @@
 
 			var advanceStudyModalService = {};
 
-			advanceStudyModalService.deprecatedStartAdvance = function (advanceType) {
-				if (advanceType === 'sample') {
+			advanceStudyModalService.startAdvance = function (advanceType) {
+				if (advanceType === 'deprecatedSample' || advanceType === 'samples') {
 					studyService.studyHasSamples().then(function (response) {
 						if (response && response.data) {
 							advanceStudyModalService.openSelectEnvironmentModal(advanceType);
@@ -25,7 +25,6 @@
 			advanceStudyModalService.openSelectEnvironmentModal = function (advanceType) {
 				$uibModal.open({
 					templateUrl: '/Fieldbook/StudyManager/advance/study/selectEnvironmentModal',
-					//templateUrl: '/Fieldbook/static/angular-templates/advance/selectEnvironmentModal.html',
 					controller: "selectEnvironmentModalCtrl",
 					size: 'md',
 					resolve: {
@@ -36,7 +35,8 @@
 				});
 			};
 
-			advanceStudyModalService.openAdvanceStudyModal = function (trialInstances, noOfReplications, locationsSelected, advanceType, values) {
+			// Deprecated
+			advanceStudyModalService.openDeprecatedAdvanceStudyModal = function (trialInstances, noOfReplications, locationsSelected, advanceType, values) {
 
 				$uibModal.open({
 					templateUrl: '/Fieldbook/static/angular-templates/advance/advanceStudyModal.html',
@@ -62,10 +62,10 @@
 				});
 			};
 
-			advanceStudyModalService.openNewAdvanceStudyModal = function (selectedTrialInstances, advanceType, noOfReplications) {
+			advanceStudyModalService.openAdvanceModal = function (selectedTrialInstances, advanceType, noOfReplications) {
 				$uibModal.open({
-					templateUrl: '/Fieldbook/static/js/trialmanager/advance/advanceStudy.html',
-					controller: "AdvanceStudyModalCtrl",
+					templateUrl: '/Fieldbook/static/js/trialmanager/advance/advanceIframeContainer.html',
+					controller: "AdvanceModalCtrl",
 					size: 'lg',
 					resolve: {
 						advanceType: function () {
@@ -82,11 +82,13 @@
 					$rootScope.navigateToTab('crossesAndSelectionsTab', {reload: true});
 				});
 			};
+
 			return advanceStudyModalService;
 
 		}
 	]);
 
+	// Deprecated
 	manageTrialApp.controller('advanceStudyModalController', ['$scope', '$uibModalInstance', 'studyContext', 'advanceType', 'advanceStudyModalService', 'locationsSelected',
 		'datasetService', 'trialInstances', 'noOfReplications', 'values',
 		function ($scope, $uibModalInstance, studyContext, advanceType, advanceStudyModalService, locationsSelected, datasetService, trialInstances, noOfReplications, values) {
@@ -423,11 +425,11 @@
 						}
 					});
 
-					if ($scope.applicationData.advanceType === 'Study') {
-						advanceStudyModalService.openNewAdvanceStudyModal(selectedTrialInstances, $scope.applicationData.advanceType, $scope.noOfReplications);
+					if ($scope.applicationData.advanceType === 'study' || $scope.applicationData.advanceType === 'samples') {
+						advanceStudyModalService.openAdvanceModal(selectedTrialInstances, $scope.applicationData.advanceType, $scope.noOfReplications);
 						$uibModalInstance.close();
 					} else {
-						advanceStudyModalService.openAdvanceStudyModal(selectedTrialInstances, $scope.noOfReplications, selectedLocationDetails,
+						advanceStudyModalService.openDeprecatedAdvanceStudyModal(selectedTrialInstances, $scope.noOfReplications, selectedLocationDetails,
 							$scope.applicationData.advanceType, null);
 							$uibModalInstance.close();
 					}
@@ -446,6 +448,29 @@
 			};
 
 			$scope.init();
+		}]);
+
+	manageTrialApp.controller('AdvanceModalCtrl', ['$scope', '$q', 'studyContext', '$uibModalInstance', 'trialInstances', 'advanceType', 'noOfReplications', 'advanceStudyModalService',
+		function ($scope, $q, studyContext, $uibModalInstance, trialInstances, advanceType, noOfReplications, advanceStudyModalService) {
+
+			$scope.url = `/ibpworkbench/controller/jhipster#/advance-${advanceType}?restartApplication` +
+				'&cropName=' + studyContext.cropName +
+				'&programUUID=' + studyContext.programId +
+				'&studyId=' + studyContext.studyId +
+				'&noOfReplications=' + noOfReplications +
+				'&trialInstances=' + trialInstances;
+
+			$scope.advanceType = advanceType;
+
+			window.closeModal = function() {
+				$uibModalInstance.close(null);
+				advanceStudyModalService.startAdvance(this.advanceType);
+			};
+
+			$scope.cancel = function() {
+				$uibModalInstance.close(null);
+			};
+
 		}]);
 
 })();

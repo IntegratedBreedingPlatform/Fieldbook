@@ -1843,7 +1843,7 @@ function validateLocationMatch() {
 
 function showAdvanceStudyModal(trialInstances, noOfReplications, locationsSelected, advanceType, values) {
 	'use strict';
-	return angular.element('#mainApp').injector().get('advanceStudyModalService').openAdvanceStudyModal(trialInstances, noOfReplications, locationsSelected, advanceType, values);
+	return angular.element('#mainApp').injector().get('advanceStudyModalService').openDeprecatedAdvanceStudyModal(trialInstances, noOfReplications, locationsSelected, advanceType, values);
 }
 
 function openFeedbackSurvey(feedbackEnabled, feature, feedbackService) {
