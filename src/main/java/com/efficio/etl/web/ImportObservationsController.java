@@ -13,6 +13,7 @@ import org.generationcp.middleware.domain.dms.PhenotypicType;
 import org.generationcp.middleware.domain.dms.StandardVariable;
 import org.generationcp.middleware.domain.etl.Constants;
 import org.generationcp.middleware.domain.etl.MeasurementVariable;
+import org.generationcp.middleware.domain.ontology.VariableType;
 import org.generationcp.middleware.enumeration.DatasetTypeEnum;
 import org.generationcp.middleware.exceptions.PhenotypeException;
 import org.generationcp.middleware.service.api.DataImportService;
@@ -252,7 +253,9 @@ public class ImportObservationsController extends AbstractBaseETLController {
 			final StandardVariable stdVar =
 				this.fieldbookService.getStandardVariableByName(item.getName(), this.contextUtil.getCurrentProgramUUID());
 
-			if (stdVar != null) {
+			if (stdVar != null &&
+				(stdVar.getVariableTypes().contains(VariableType.TRAIT) ||
+				 stdVar.getVariableTypes().contains(VariableType.SELECTION_METHOD))) {
 				stdVar.setPhenotypicType(PhenotypicType.VARIATE);
 				item.setVariable(stdVar);
 				newMappingResults.add(item);
