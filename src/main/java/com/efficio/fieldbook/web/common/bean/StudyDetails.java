@@ -22,6 +22,7 @@ import org.generationcp.middleware.domain.etl.ExperimentalDesignVariable;
  *
  * @author Chezka Camille Arevalo
  */
+@Deprecated
 public class StudyDetails {
 
 	private Integer id;
