@@ -6,11 +6,9 @@ import com.efficio.fieldbook.web.common.bean.SettingDetail;
 import com.efficio.fieldbook.web.common.bean.SettingVariable;
 import com.efficio.fieldbook.web.common.bean.UserSelection;
 import com.efficio.fieldbook.web.util.SettingsUtil;
-import org.generationcp.commons.constant.AppConstants;
 import org.generationcp.commons.spring.util.ContextUtil;
 import org.generationcp.middleware.domain.dms.StandardVariable;
 import org.generationcp.middleware.domain.dms.ValueReference;
-import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.domain.ontology.VariableType;
 import org.generationcp.middleware.exceptions.MiddlewareException;
 import org.generationcp.middleware.manager.Operation;
@@ -26,7 +24,6 @@ import java.util.List;
 public class SettingsServiceImpl implements SettingsService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SettingsServiceImpl.class);
-	private static final String TRIAL_INSTANCE = "TRIAL_INSTANCE";
 
 	/**
 	 * The fieldbook service.
@@ -76,9 +73,6 @@ public class SettingsServiceImpl implements SettingsService {
 			final List<ValueReference> possibleValues = this.fieldbookService.getAllPossibleValues(id);
 			final SettingDetail settingDetail = new SettingDetail(svar, possibleValues, null, false);
 			settingDetail.setPossibleValuesToJson(possibleValues);
-			final List<ValueReference> possibleValuesFavorite = this.fieldbookService.getAllPossibleValuesFavorite(id, programUUID, false);
-			settingDetail.setPossibleValuesFavorite(possibleValuesFavorite);
-			settingDetail.setPossibleValuesFavoriteToJson(possibleValuesFavorite);
 			return settingDetail;
 		} else {
 			final SettingVariable svar = new SettingVariable();

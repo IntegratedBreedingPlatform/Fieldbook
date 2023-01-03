@@ -167,6 +167,8 @@
 								fileVariableIdsMap.get(currentInstanceId) : null;
 						}
 					});
+
+					$scope.nested.dataTable.rerender();
 				});
 			};
 
@@ -618,8 +620,8 @@
 
 						var newValue = valueContainer[variableId];
 
-						// Do not update if data did not change.
-						if (angular.equals(oldValue, newValue)) {
+						// Do not update if data did not change or value is empty
+						if (!newValue || angular.equals(oldValue, newValue)) {
 							refreshDisplay();
 							return;
 						}

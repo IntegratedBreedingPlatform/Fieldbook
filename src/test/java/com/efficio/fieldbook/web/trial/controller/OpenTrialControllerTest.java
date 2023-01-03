@@ -45,7 +45,6 @@ import org.generationcp.middleware.manager.ontology.api.OntologyVariableDataMana
 import org.generationcp.middleware.manager.ontology.api.TermDataManager;
 import org.generationcp.middleware.pojos.dms.DmsProject;
 import org.generationcp.middleware.pojos.dms.StudyType;
-import org.generationcp.middleware.pojos.workbench.Project;
 import org.generationcp.middleware.service.api.FieldbookService;
 import org.generationcp.middleware.service.api.SampleListService;
 import org.generationcp.middleware.service.api.dataset.DatasetService;
@@ -176,9 +175,6 @@ public class OpenTrialControllerTest {
 		Mockito.when(this.studyDataManager.getProject(1)).thenReturn(dmsProject);
 		Mockito.when(this.contextUtil.getCurrentProgramUUID()).thenReturn(OpenTrialControllerTest.PROGRAM_UUID);
 
-		final Project testProject = new Project();
-		testProject.setProjectId(1L);
-		Mockito.when(this.contextUtil.getProjectInContext()).thenReturn(testProject);
 		final Workbook workbook = WorkbookTestDataInitializer.getTestWorkbook();
 		workbook.setTrialDatasetId(1);
 		workbook.setMeasurementDatesetId(1);

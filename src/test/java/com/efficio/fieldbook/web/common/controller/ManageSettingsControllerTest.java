@@ -1,9 +1,5 @@
 package com.efficio.fieldbook.web.common.controller;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,14 +10,11 @@ import com.efficio.fieldbook.web.common.bean.PropertyTreeSummary;
 import com.efficio.fieldbook.web.common.bean.SettingDetail;
 import com.efficio.fieldbook.web.common.bean.SettingVariable;
 import com.efficio.fieldbook.web.trial.form.CreateTrialForm;
-import com.efficio.fieldbook.web.util.SettingsUtil;
 import com.google.common.base.Optional;
 import org.fest.util.Collections;
 import org.generationcp.commons.spring.util.ContextUtil;
 import org.generationcp.middleware.domain.dms.ValueReference;
 import org.generationcp.middleware.domain.oms.TermId;
-import org.generationcp.middleware.domain.etl.MeasurementRow;
-import org.generationcp.middleware.domain.etl.StudyDetails;
 import org.generationcp.middleware.domain.ontology.FormulaDto;
 import org.generationcp.middleware.domain.ontology.FormulaVariable;
 import org.generationcp.middleware.domain.ontology.Property;
@@ -116,15 +109,11 @@ public class ManageSettingsControllerTest {
 		final ValueReference location2 = new ValueReference(2, "Location2");
 
 		final List<ValueReference> possibleValues = Collections.list(location1, location2);
-		final List<ValueReference> possibleValuesFavorite = Collections.list(location2);
 		final List<ValueReference> allValues = Collections.list(location1, location2);
-		final List<ValueReference> allFavoriteValues =  Collections.list(location2);
 
 		Mockito.when(this.formulaService.getByTargetId(cvTermId)).thenReturn(Optional.of(formulaDto));
 		Mockito.when(this.fieldbookService.getAllPossibleValues(cvTermId)).thenReturn(possibleValues);
-		Mockito.when(this.fieldbookService.getAllPossibleValuesFavorite(cvTermId, PROGRAM_UUID, true)).thenReturn(possibleValuesFavorite);
 		Mockito.when(this.fieldbookService.getAllPossibleValuesWithFilter(cvTermId, false)).thenReturn(allValues);
-		Mockito.when(this.fieldbookService.getAllPossibleValuesFavorite(cvTermId, PROGRAM_UUID, null)).thenReturn(allFavoriteValues);
 
 		// Add the variable in TRAIT settings.
 		this.controller.addSettings(createTrialForm, VariableType.TRAIT.getId());
@@ -141,11 +130,7 @@ public class ManageSettingsControllerTest {
 		Assert.assertSame(formulaDto, addedSettingDetail.getVariable().getFormula());
 		Assert.assertSame(Operation.ADD, addedSettingDetail.getVariable().getOperation());
 		Assert.assertSame(allValues, addedSettingDetail.getAllValues());
-		Assert.assertSame(possibleValuesFavorite, addedSettingDetail.getPossibleValuesFavorite());
-		Assert.assertEquals(SettingsUtil.intersection(allValues, allFavoriteValues), addedSettingDetail.getAllFavoriteValues());
-		Assert.assertNotNull(addedSettingDetail.getAllFavoriteValuesJson());
 		Assert.assertNotNull(addedSettingDetail.getPossibleValuesJson());
-		Assert.assertNotNull(addedSettingDetail.getPossibleValuesFavoriteJson());
 		Assert.assertNotNull(addedSettingDetail.getAllValuesJson());
 
 	}
