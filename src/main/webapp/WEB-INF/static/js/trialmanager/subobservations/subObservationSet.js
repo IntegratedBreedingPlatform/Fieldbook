@@ -915,6 +915,18 @@
 				});
 			}
 
+			function getColumnVisibilityMap() {
+				var columnVisibilityMap = {};
+				$scope.columnsObj.columns.forEach(function (column, index) {
+					if (column && column.name) {
+						// If datatable is already initialized and loaded, get the visibility value from the datatable (ColVis),
+						// else return the default visibility of the column
+						columnVisibilityMap[column.name] = $scope.nested.dtInstance ? table().columns().visible()[index] : column.visible;
+					}
+				});
+				return columnVisibilityMap;
+			}
+
 			function getFilter() {
 				var variableId = $scope.nested.selectedVariableFilter && $scope.nested.selectedVariableFilter.termId;
 				return {
@@ -1004,7 +1016,8 @@
 									draw: d.draw,
 									instanceId: $scope.nested.selectedEnvironment.instanceId,
 									draftMode: $scope.isPendingView,
-									filter: getFilter()
+									filter: getFilter(),
+									columnVisibilityMap: getColumnVisibilityMap()
 								}),
 								success: function (res, status, xhr) {
 									let json = {recordsTotal: 0, recordsFiltered: 0}
@@ -1127,6 +1140,7 @@
 				});
 				adjustColumns();
 				tableRenderedResolve();
+				addColumnVisibilityCallback();
 			}
 
 			function headerCallback(thead, data, start, end, display) {
@@ -1459,6 +1473,18 @@
 				}
 			}
 
+			function addColumnVisibilityCallback() {
+				try {
+					table().on('column-visibility.dt', function (e, settings, column, state) {
+						console.log(
+							'Column ' + column + ' has changed to ' + (state ? 'visible' : 'hidden')
+						);
+						table().ajax.reload(null, false);
+					});
+				} catch (e) {
+				}
+			}
+
 			function getCategoricalValueId(cellDataValue, columnData) {
 				if (columnData.possibleValues
 					&& cellDataValue !== 'missing') {
@@ -1597,6 +1623,14 @@
 						});
 					}
 					columnData.index = index;
+
+					// If the variable of a column is an Entry Detail, Germplasm Name or Germplasm Attributes/Passport, the column should be hidden
+					// by default
+					// TODO: Avoid ENTRY_NO and ENTRY_TYPE from automatically hidden by default
+					if (columnData.variableType === null || columnData.variableType === 'ENTRY_DETAIL' || columnData.variableType === 'GERMPLASM_ATTRIBUTE'
+						|| columnData.variableType === 'GERMPLASM_PASSPORT') {
+						hiddenColumns.push(columnData.termId);
+					}
 
 					function isColumnVisible() {
 
