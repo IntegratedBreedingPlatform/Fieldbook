@@ -14,8 +14,6 @@ package com.efficio.fieldbook.web.trial.controller;
 import com.efficio.fieldbook.util.FieldbookException;
 import com.efficio.fieldbook.util.FieldbookUtil;
 import com.efficio.fieldbook.web.AbstractBaseFieldbookController;
-import com.efficio.fieldbook.web.common.bean.SettingDetail;
-import com.efficio.fieldbook.web.common.bean.SettingVariable;
 import com.efficio.fieldbook.web.common.bean.TableHeader;
 import com.efficio.fieldbook.web.common.bean.UserSelection;
 import com.efficio.fieldbook.web.naming.impl.AdvancingSourceListFactory;
@@ -26,22 +24,15 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.generationcp.commons.constant.AppConstants;
 import org.generationcp.commons.util.DateUtil;
 import org.generationcp.middleware.constant.ColumnLabels;
 import org.generationcp.middleware.domain.dms.Study;
-import org.generationcp.middleware.domain.dms.ValueReference;
 import org.generationcp.middleware.domain.etl.MeasurementVariable;
 import org.generationcp.middleware.domain.etl.Workbook;
-import org.generationcp.middleware.domain.oms.TermId;
-import org.generationcp.middleware.domain.ontology.Property;
-import org.generationcp.middleware.domain.ontology.Scale;
-import org.generationcp.middleware.domain.ontology.Variable;
 import org.generationcp.middleware.domain.ontology.VariableType;
 import org.generationcp.middleware.domain.sample.SampleDTO;
 import org.generationcp.middleware.exceptions.MiddlewareException;
 import org.generationcp.middleware.exceptions.MiddlewareQueryException;
-import org.generationcp.middleware.manager.Operation;
 import org.generationcp.middleware.manager.api.OntologyDataManager;
 import org.generationcp.middleware.manager.api.StudyDataManager;
 import org.generationcp.middleware.pojos.Method;
@@ -52,7 +43,7 @@ import org.generationcp.middleware.ruleengine.generator.SeedSourceGenerator;
 import org.generationcp.middleware.ruleengine.namingdeprecated.service.DeprecatedNamingConventionService;
 import org.generationcp.middleware.ruleengine.pojo.AdvanceGermplasmChangeDetail;
 import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSourceList;
 import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
 import org.generationcp.middleware.service.api.FieldbookService;
 import org.generationcp.middleware.service.api.dataset.DatasetService;
@@ -212,7 +203,7 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 			}
 
 			final List<AdvanceGermplasmChangeDetail> changeDetails = new ArrayList<>();
-			final AdvancingSourceList list = this.getAdvancingSourceList(advancingStudy);
+			final DeprecatedAdvancingSourceList list = this.getAdvancingSourceList(advancingStudy);
 			final List<ImportedGermplasm> importedGermplasmList = this.createAdvanceList(advancingStudy, changeDetails, list);
 			final long id = DateUtil.getCurrentDate().getTime();
 			this.getPaginationListSelection().addAdvanceDetails(Long.toString(id), form);
@@ -248,7 +239,7 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 	}
 
 	private List<ImportedGermplasm> createAdvanceList(final AdvancingStudy advanceInfo,
-		final List<AdvanceGermplasmChangeDetail> changeDetails, final AdvancingSourceList list)
+		final List<AdvanceGermplasmChangeDetail> changeDetails, final DeprecatedAdvancingSourceList list)
 		throws RuleException {
 		this.updatePlantsSelectedIfNecessary(list, advanceInfo);
 
@@ -264,7 +255,7 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 		return germplasmList;
 	}
 
-	private AdvancingSourceList getAdvancingSourceList(final AdvancingStudy advanceInfo) throws FieldbookException {
+	private DeprecatedAdvancingSourceList getAdvancingSourceList(final AdvancingStudy advanceInfo) throws FieldbookException {
 		final Map<Integer, Method> breedingMethodMap = new HashMap<>();
 		final Map<String, Method> breedingMethodCodeMap = new HashMap<>();
 		final List<Method> methodList = this.fieldbookMiddlewareService.getAllBreedingMethods(false);
@@ -277,7 +268,7 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 		return this.createAdvancingSourceList(advanceInfo, breedingMethodMap, breedingMethodCodeMap);
 	}
 
-	List<ImportedGermplasm> generateGermplasmList(final AdvancingSourceList rows, final AdvancingStudy advancingParameters) {
+	List<ImportedGermplasm> generateGermplasmList(final DeprecatedAdvancingSourceList rows, final AdvancingStudy advancingParameters) {
 
 		final List<ImportedGermplasm> list = new ArrayList<>();
 		int index = 1;
@@ -404,7 +395,7 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 		}
 	}
 
-	private AdvancingSourceList createAdvancingSourceList(final AdvancingStudy advanceInfo,
+	private DeprecatedAdvancingSourceList createAdvancingSourceList(final AdvancingStudy advanceInfo,
 		final Map<Integer, Method> breedingMethodMap, final Map<String, Method> breedingMethodCodeMap) throws FieldbookException {
 
 		final Study study = advanceInfo.getStudy();
@@ -416,7 +407,7 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 			.createAdvancingSourceList(workbook, advanceInfo, study, breedingMethodMap, breedingMethodCodeMap);
 	}
 
-	private void updatePlantsSelectedIfNecessary(final AdvancingSourceList list, final AdvancingStudy info) {
+	private void updatePlantsSelectedIfNecessary(final DeprecatedAdvancingSourceList list, final AdvancingStudy info) {
 		boolean lineChoiceSame = info.getLineChoice() != null && "1".equals(info.getLineChoice());
 		final boolean allPlotsChoice = info.getAllPlotsChoice() != null && "1".equals(info.getAllPlotsChoice());
 		int plantsSelected = 0;

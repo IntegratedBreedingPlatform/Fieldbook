@@ -23,7 +23,7 @@ import org.generationcp.middleware.manager.ontology.api.OntologyVariableDataMana
 import org.generationcp.middleware.pojos.Germplasm;
 import org.generationcp.middleware.pojos.Method;
 import org.generationcp.middleware.pojos.Name;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSourceList;
 import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 import org.generationcp.middleware.service.api.FieldbookService;
 import org.generationcp.middleware.service.api.study.StudyInstanceService;
@@ -140,7 +140,8 @@ public class DeprecatedAdvancingSourceListFactoryTest {
         advanceInfo.setSelectedReplications(Sets.newHashSet(REPLICATION_NUMBER));
         advanceInfo.setAdvanceType(AdvanceType.STUDY);
         
-        final AdvancingSourceList advancingSourceList = this.factory.createAdvancingSourceList(workBook, advanceInfo, study, breedingMethodMap, breedingMethodCodeMap);
+        final DeprecatedAdvancingSourceList
+            advancingSourceList = this.factory.createAdvancingSourceList(workBook, advanceInfo, study, breedingMethodMap, breedingMethodCodeMap);
 
         Assert.assertEquals("Expected number of advancing source rows were not generated.", 1, advancingSourceList.getRows().size());
         final DeprecatedAdvancingSource source = advancingSourceList.getRows().get(0);
@@ -256,7 +257,8 @@ public class DeprecatedAdvancingSourceListFactoryTest {
         advanceInfo.setSelectedReplications(Sets.newHashSet(REPLICATION_NUMBER));
         advanceInfo.setAdvanceType(AdvanceType.STUDY);
 
-        final AdvancingSourceList advancingSourceList = this.factory.createAdvancingSourceList(workBook, advanceInfo, study, breedingMethodMap, breedingMethodCodeMap);
+        final DeprecatedAdvancingSourceList
+            advancingSourceList = this.factory.createAdvancingSourceList(workBook, advanceInfo, study, breedingMethodMap, breedingMethodCodeMap);
 
         Assert.assertEquals("Expected number of advancing source rows were not generated.", 1, advancingSourceList.getRows().size());
         final DeprecatedAdvancingSource source = advancingSourceList.getRows().get(0);

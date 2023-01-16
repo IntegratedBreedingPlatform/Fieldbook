@@ -18,7 +18,7 @@ import org.generationcp.middleware.ruleengine.RuleExecutionContext;
 import org.generationcp.middleware.ruleengine.RuleFactory;
 import org.generationcp.middleware.ruleengine.namingdeprecated.impl.DeprecatedNamingConventionServiceImpl;
 import org.generationcp.middleware.ruleengine.namingdeprecated.service.DeprecatedProcessCodeService;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSourceList;
 import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
 import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
@@ -150,7 +150,7 @@ public class DeprecatedNamingConventionServiceImplTest {
 		importedCross.setMaleParents(Collections.singletonList(maleParent));
 		importedCrosses.add(importedCross);
 
-		final AdvancingSourceList rows = new AdvancingSourceList();
+		final DeprecatedAdvancingSourceList rows = new DeprecatedAdvancingSourceList();
 		final DeprecatedAdvancingSource advancingSource = new DeprecatedAdvancingSource();
 		advancingSource.setBreedingMethodId(101);
 		rows.setRows(Collections.singletonList(advancingSource));

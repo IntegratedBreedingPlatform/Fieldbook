@@ -35,7 +35,7 @@ import org.generationcp.middleware.pojos.workbench.Project;
 import org.generationcp.middleware.ruleengine.RuleException;
 import org.generationcp.middleware.ruleengine.namingdeprecated.service.DeprecatedNamingConventionService;
 import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSourceList;
 import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
 import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
 import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasmParent;
@@ -660,7 +660,7 @@ public class GermplasmTreeControllerTest {
 		this.controller.applyNamingRules(importedCrossesList);
 
 		final ArgumentCaptor<List> argumentCaptor1 = ArgumentCaptor.forClass(List.class);
-		final ArgumentCaptor<AdvancingSourceList> argumentCaptor2 = ArgumentCaptor.forClass(AdvancingSourceList.class);
+		final ArgumentCaptor<DeprecatedAdvancingSourceList> argumentCaptor2 = ArgumentCaptor.forClass(DeprecatedAdvancingSourceList.class);
 		final ArgumentCaptor<Boolean> argumentCaptor3 = ArgumentCaptor.forClass(Boolean.class);
 		final ArgumentCaptor<List> argumentCaptor4 = ArgumentCaptor.forClass(List.class);
 
@@ -670,7 +670,7 @@ public class GermplasmTreeControllerTest {
 		Mockito.verify(this.userSelection).setImportedCrossesList(importedCrossesList);
 
 		final List<ImportedCross> importedCrossArgument1 = argumentCaptor1.getValue();
-		final AdvancingSourceList importedCrossesArgument2 = argumentCaptor2.getValue();
+		final DeprecatedAdvancingSourceList importedCrossesArgument2 = argumentCaptor2.getValue();
 		final Boolean importedCrossesArgument3 = argumentCaptor3.getValue();
 		final List<Integer> importedCrossesArgument4 = argumentCaptor4.getValue();
 
