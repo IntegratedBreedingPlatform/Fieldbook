@@ -90,8 +90,9 @@
 
 	// Deprecated
 	manageTrialApp.controller('advanceStudyModalController', ['$scope', '$uibModalInstance', 'studyContext', 'advanceType', 'advanceStudyModalService', 'locationsSelected',
-		'datasetService', 'trialInstances', 'noOfReplications', 'values',
-		function ($scope, $uibModalInstance, studyContext, advanceType, advanceStudyModalService, locationsSelected, datasetService, trialInstances, noOfReplications, values) {
+		'datasetService', 'trialInstances', 'noOfReplications', 'values', 'helpLinkService',
+		function ($scope, $uibModalInstance, studyContext, advanceType, advanceStudyModalService, locationsSelected, datasetService,
+				  trialInstances, noOfReplications, values, helpLinkService) {
 
 
 			if (values) {
@@ -124,6 +125,10 @@
 			$scope.locationsSelected = locationsSelected;
 			$scope.advanceType = advanceType;
 			$scope.selectedTrialsString = trialInstances.join(",")
+
+			helpLinkService.helpLink('MANAGE_CROP_BREEDING_METHODS').then(function (url) {
+				$scope.breedingMethodHelpLink = url;
+			});
 
 			$scope.isBulkingMethod = function () {
 				return $scope.valueContainer.selectedBreedingMethod && $scope.valueContainer.selectedBreedingMethod.isBulkingMethod;

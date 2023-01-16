@@ -284,6 +284,11 @@
 		<aop:scoped-proxy />
 	</bean>
 
+	<bean id="ontologyVariableService" factory-bean="managerFactory"
+		  factory-method="getOntologyVariableService" scope="request">
+		<aop:scoped-proxy />
+	</bean>
+
 	<bean id="breedingMethodService" factory-bean="managerFactory"
 		  factory-method="getBreedingMethodService" scope="request">
 		<aop:scoped-proxy />
