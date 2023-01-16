@@ -415,13 +415,10 @@
         automatic registration of component-scanned classes into a target factory / registry instead of having
         to have a separate class for each bean post processor
         -->
-	<!--	TODO: deprecated! -->
     <bean id="postProcessorFactory" class="org.generationcp.middleware.spring.util.ComponentPostProcessorFactory"/>
 
-	<!--	TODO: deprecated! -->
     <bean id="dataProcessorFactory" class="com.efficio.fieldbook.web.naming.expression.dataprocessor.ExpressionDataProcessorFactory"/>
 
-	<!--	TODO: deprecated! -->
     <bean factory-bean="postProcessorFactory" factory-method="generatePostProcessorFactory">
         <constructor-arg name="componentClass" type="java.lang.Class" value="com.efficio.fieldbook.web.naming.expression.dataprocessor.ExpressionDataProcessor"/>
         <constructor-arg name="factoryInstance" ref="dataProcessorFactory"/>
