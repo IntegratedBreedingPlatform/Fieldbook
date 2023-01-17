@@ -7,7 +7,7 @@ public class AdvanceTypeTest {
 
 	@Test
 	public void testfromLowerCaseName() {
-		Assert.assertEquals(AdvanceType.fromLowerCaseName("sample"), AdvanceType.SAMPLE);
+		Assert.assertEquals(AdvanceType.fromLowerCaseName("deprecatedSample"), AdvanceType.SAMPLE);
 		Assert.assertEquals(AdvanceType.fromLowerCaseName("study"), AdvanceType.STUDY);
 		Assert.assertEquals(AdvanceType.fromLowerCaseName(""), AdvanceType.NONE);
 		Assert.assertEquals(AdvanceType.fromLowerCaseName(null), AdvanceType.NONE);
