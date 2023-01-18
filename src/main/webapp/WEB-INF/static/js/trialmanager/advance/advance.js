@@ -467,9 +467,9 @@
 
 			$scope.advanceType = advanceType;
 
-			window.closeModal = function() {
+			window.closeModal = function(advanceType) {
 				$uibModalInstance.close(null);
-				advanceStudyModalService.startAdvance(this.advanceType);
+				advanceStudyModalService.startAdvance(advanceType);
 			};
 
 			$scope.cancel = function() {
