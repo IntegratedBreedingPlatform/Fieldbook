@@ -8,21 +8,21 @@
 
 			var advanceStudyModalService = {};
 
-			advanceStudyModalService.startAdvance = function (advanceType) {
+			advanceStudyModalService.startAdvance = function (advanceType, isBeta) {
 				if (advanceType === 'deprecatedSample' || advanceType === 'samples') {
 					studyService.studyHasSamples().then(function (response) {
 						if (response && response.data) {
-							advanceStudyModalService.openSelectEnvironmentModal(advanceType);
+							advanceStudyModalService.openSelectEnvironmentModal(advanceType, isBeta);
 						} else {
 							showErrorMessage('page-advance-modal-message', advanceSamplesError);
 						}
 					});
 				} else {
-					advanceStudyModalService.openSelectEnvironmentModal(advanceType);
+					advanceStudyModalService.openSelectEnvironmentModal(advanceType, isBeta);
 				}
 			};
 
-			advanceStudyModalService.openSelectEnvironmentModal = function (advanceType) {
+			advanceStudyModalService.openSelectEnvironmentModal = function (advanceType, isBeta) {
 				$uibModal.open({
 					templateUrl: '/Fieldbook/StudyManager/advance/study/selectEnvironmentModal',
 					controller: "selectEnvironmentModalCtrl",
@@ -30,6 +30,9 @@
 					resolve: {
 						advanceType: function () {
 							return advanceType;
+						},
+						isBeta: function() {
+							return isBeta;
 						}
 					}
 				});
@@ -345,9 +348,9 @@
 	]);
 
 	manageTrialApp.controller('selectEnvironmentModalCtrl', ['$scope', '$uibModalInstance', 'TrialManagerDataService', 'studyInstanceService',
-		'$timeout', 'studyContext', 'datasetService', 'advanceStudyModalService', 'advanceType', 'DESIGN_TYPE',
+		'$timeout', 'studyContext', 'datasetService', 'advanceStudyModalService', 'advanceType', 'isBeta', 'DESIGN_TYPE',
 		function ($scope, $uibModalInstance, TrialManagerDataService, studyInstanceService, $timeout, studyContext, datasetService,
-				  advanceStudyModalService, advanceType, DESIGN_TYPE) {
+				  advanceStudyModalService, advanceType, isBeta, DESIGN_TYPE) {
 
 			$scope.settings = TrialManagerDataService.settings.environments;
 			if (Object.keys($scope.settings).length === 0) {
@@ -363,6 +366,7 @@
 			$scope.instanceInfo = studyInstanceService.instanceInfo;
 
 			$scope.applicationData.advanceType = advanceType;
+			$scope.isBeta = isBeta;
 
 			$scope.$on('changeEnvironments', function () {
 				$scope.instanceInfo = studyInstanceService.instanceInfo;
@@ -469,7 +473,7 @@
 
 			window.closeModal = function(advanceType) {
 				$uibModalInstance.close(null);
-				advanceStudyModalService.startAdvance(advanceType);
+				advanceStudyModalService.startAdvance(advanceType, true);
 			};
 
 			$scope.cancel = function() {

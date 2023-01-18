@@ -1094,8 +1094,8 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				derivedVariableModalService.openDatasetOptionModal();
 			}
 
-			$scope.startAdvance = function (advanceType) {
-				advanceStudyModalService.startAdvance(advanceType);
+			$scope.startAdvance = function (advanceType, isBeta) {
+				advanceStudyModalService.startAdvance(advanceType, isBeta);
 			}
 
 			$scope.analyzeWithBrapp = function (brappURL) {

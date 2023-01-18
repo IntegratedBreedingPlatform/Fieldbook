@@ -2,7 +2,9 @@
   <div class="modal-body" id="advanceDialogModal">
     <div class="row form-group">
       <div class="col-xs-11 col-md-11">
-        <label class="modal-title fbk-modal-title" id="heading-modal">Advance {{advanceType}}</label>
+        <label class="modal-title fbk-modal-title" id="heading-modal">
+          {{advanceType == 'study' ? 'Advance Study (Beta)' : 'Advance sampled plants from plots (Beta)'}}
+        </label>
       </div>
       <div class="col-xs-1 col-md-1">
         <button class="close pull-right glyphicon glyphicon-remove" data-dismiss="modal" ng-click="cancel()"/>
