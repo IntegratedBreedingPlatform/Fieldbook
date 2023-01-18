@@ -35,6 +35,7 @@ public class SampleListController {
 	public static final String URL = "/sample/list";
 	private static final String SAVED_FINAL_LIST = "/StudyManager/savedFinalList";
 	protected static final String TABLE_HEADER_LIST = "tableHeaderList";
+	protected static final String IS_SUBOBSERVATION = "isSubobservation";
 	protected static final String SAMPLE_LIST = "sampleList";
 	private static final String SAMPLE_NAME = "sample.list.sample.name";
 	private static final String TAKEN_BY = "sample.list.taken.by";
@@ -48,6 +49,8 @@ public class SampleListController {
 	private static final String SAMPLE_NO = "sample.list.sample.no";
 	protected static final String TOTAL_NUMBER_OF_GERMPLASMS = "totalNumberOfGermplasms";
 	private static final String SAMPLE_ENTRY = "sample.list.sample.entry.no";
+
+	private static final String PLOT_NO_VAR_NAME = "PLOT_NO";
 
 	@Resource
 	private MessageSource messageSource;
@@ -75,7 +78,11 @@ public class SampleListController {
 			final String subObservationVariableName = this.sampleListService.getObservationVariableName(listId);
 			model.addAttribute(SampleListController.SAMPLE_LIST, sampleDetailsDTOs);
 			model.addAttribute(SampleListController.TOTAL_NUMBER_OF_GERMPLASMS, sampleDetailsDTOs.size());
-			model.addAttribute(SampleListController.TABLE_HEADER_LIST, this.getSampleListTableHeaders(subObservationVariableName));
+
+			final boolean isSubobservation = !StringUtils.equals(PLOT_NO_VAR_NAME, subObservationVariableName);
+			model.addAttribute(SampleListController.TABLE_HEADER_LIST,
+				this.getSampleListTableHeaders(subObservationVariableName, isSubobservation));
+			model.addAttribute(SampleListController.IS_SUBOBSERVATION, isSubobservation);
 
 			model.addAttribute("listId", listId);
 			model.addAttribute("listName", name);
@@ -87,7 +94,7 @@ public class SampleListController {
 		}
 	}
 
-	private List<TableHeader> getSampleListTableHeaders(final String subObservationVariableName) {
+	private List<TableHeader> getSampleListTableHeaders(final String subObservationVariableName, final boolean isSubobservation) {
 		final Locale locale = LocaleContextHolder.getLocale();
 		final List<TableHeader> tableHeaderList = new ArrayList<>();
 
@@ -95,6 +102,11 @@ public class SampleListController {
 			this.messageSource.getMessage(SampleListController.SAMPLE_ENTRY, null, locale)));
 		this.getCommonHeaders(locale, tableHeaderList);
 		tableHeaderList.add(new TableHeader(subObservationVariableName, subObservationVariableName));
+		// only add separate PLOT_NO on subobservations where parent plot no will be retrieved
+		if (isSubobservation) {
+			tableHeaderList.add(new TableHeader(this.messageSource.getMessage(SampleListController.PLOT_NO, null, locale),
+				this.messageSource.getMessage(SampleListController.PLOT_NO, null, locale)));
+		}
 		tableHeaderList.add(new TableHeader(this.messageSource.getMessage(SampleListController.SAMPLE_NO, null, locale),
 			this.messageSource.getMessage(SampleListController.SAMPLE_NO, null, locale)));
 		tableHeaderList.add(new TableHeader(this.messageSource.getMessage(SampleListController.SAMPLE_NAME, null, locale),

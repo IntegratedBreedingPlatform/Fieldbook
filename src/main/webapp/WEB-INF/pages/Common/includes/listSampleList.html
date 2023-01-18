@@ -27,6 +27,8 @@
 						   th:attrappend="data-desig=${sample.designation}"></a>
 					</td>
 					<td th:class="${row.even}? 'even' : 'odd'" th:text="${sample.observationUnitNumber}"></td>
+					<td th:if="*{isSubobservation}"
+						th:class="${row.even}? 'even' : 'odd'" th:text="${sample.plotNo}"></td>
 					<td th:class="${row.even}? 'even' : 'odd'" th:text="${sample.sampleNumber}"></td>
 					<td th:class="${row.even}? 'even' : 'odd'" th:text="${sample.sampleName}"></td>
 					<td th:class="${row.even}? 'even' : 'odd'" th:text="${sample.takenBy}"></td>
