@@ -915,16 +915,19 @@
 				});
 			}
 
-			function getColumnVisibilityMap() {
-				var columnVisibilityMap = {};
+			function getVisibleColumns() {
+				var visibleColumns = [];
 				$scope.columnsObj.columns.forEach(function (column, index) {
 					if (column && column.name) {
 						// If datatable is already initialized and loaded, get the visibility value from the datatable (ColVis),
 						// else return the default visibility of the column
-						columnVisibilityMap[column.name] = $scope.nested.dtInstance ? table().columns().visible()[index] : column.visible;
+						var isVisible = $scope.nested.dtInstance ? table().columns().visible()[index] : column.visible;
+						if (isVisible) {
+							visibleColumns.push(column.name);
+						}
 					}
 				});
-				return columnVisibilityMap;
+				return visibleColumns;
 			}
 
 			function getFilter() {
@@ -1017,7 +1020,7 @@
 									instanceId: $scope.nested.selectedEnvironment.instanceId,
 									draftMode: $scope.isPendingView,
 									filter: getFilter(),
-									columnVisibilityMap: getColumnVisibilityMap()
+									visibleColumns: getVisibleColumns()
 								}),
 								success: function (res, status, xhr) {
 									let json = {recordsTotal: 0, recordsFiltered: 0}

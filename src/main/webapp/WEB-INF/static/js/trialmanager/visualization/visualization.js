@@ -109,7 +109,7 @@
 			$scope.generate = function () {
 				if (validate($scope.selection.selectedRCall, $scope.selection.selectedVariableX, $scope.selection.selectedVariableY)) {
 					var rCall = prepareParameters(angular.copy($scope.selection.selectedRCall), $scope.selection.selectedVariableX, $scope.selection.selectedVariableY);
-					observationUnitsSearch.filterColumns = getFilterColumns($scope.selection.selectedRCall, $scope.selection.selectedVariableX, $scope.selection.selectedVariableY);
+					observationUnitsSearch.visibleColumns = getVisibleColumns($scope.selection.selectedRCall, $scope.selection.selectedVariableX, $scope.selection.selectedVariableY);
 					datasetService.getObservationForVisualization(datasetId, JSON.stringify(observationUnitsSearch)).then(function (data) {
 						rCall.parameters.data = JSON.stringify(data);
 						return rPackageService.executeRCall(rCall.endpoint, rCall.parameters);
@@ -137,14 +137,14 @@
 				}
 			}
 
-			function getFilterColumns(rCall, selectedVariableX, selectedVariableY) {
+			function getVisibleColumns(rCall, selectedVariableX, selectedVariableY) {
 				// Only the variables selected from the UI should be included in the data that will be sent to OpenCPU.
-				var filterColumns = [];
-				filterColumns.push(selectedVariableX.name);
+				var visibleColumns = [];
+				visibleColumns.push(selectedVariableX.name);
 				if ('Histogram' !== rCall.description) {
-					filterColumns.push(selectedVariableY.name);
+					visibleColumns.push(selectedVariableY.name);
 				}
-				return filterColumns;
+				return visibleColumns;
 			}
 
 			function prepareParameters(rCall, selectedVariableX, selectedVariableY) {
