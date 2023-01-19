@@ -3,6 +3,7 @@ package com.efficio.fieldbook.web.common.controller;
 import com.efficio.fieldbook.web.common.bean.TableHeader;
 import org.apache.commons.lang3.StringUtils;
 import org.generationcp.middleware.constant.ColumnLabels;
+import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.domain.sample.SampleDetailsDTO;
 import org.generationcp.middleware.exceptions.MiddlewareQueryException;
 import org.generationcp.middleware.manager.api.OntologyDataManager;
@@ -50,8 +51,6 @@ public class SampleListController {
 	protected static final String TOTAL_NUMBER_OF_GERMPLASMS = "totalNumberOfGermplasms";
 	private static final String SAMPLE_ENTRY = "sample.list.sample.entry.no";
 
-	private static final String PLOT_NO_VAR_NAME = "PLOT_NO";
-
 	@Resource
 	private MessageSource messageSource;
 
@@ -79,7 +78,7 @@ public class SampleListController {
 			model.addAttribute(SampleListController.SAMPLE_LIST, sampleDetailsDTOs);
 			model.addAttribute(SampleListController.TOTAL_NUMBER_OF_GERMPLASMS, sampleDetailsDTOs.size());
 
-			final boolean isSubobservation = !StringUtils.equals(PLOT_NO_VAR_NAME, subObservationVariableName);
+			final boolean isSubobservation = !StringUtils.equals(TermId.PLOT_NO.name(), subObservationVariableName);
 			model.addAttribute(SampleListController.TABLE_HEADER_LIST,
 				this.getSampleListTableHeaders(subObservationVariableName, isSubobservation));
 			model.addAttribute(SampleListController.IS_SUBOBSERVATION, isSubobservation);
