@@ -15,11 +15,11 @@ import org.generationcp.middleware.pojos.Method;
 import org.generationcp.middleware.pojos.Name;
 import org.generationcp.middleware.ruleengine.RuleException;
 import org.generationcp.middleware.ruleengine.RuleExecutionContext;
+import org.generationcp.middleware.ruleengine.RuleExecutionNamespace;
 import org.generationcp.middleware.ruleengine.RuleFactory;
 import org.generationcp.middleware.ruleengine.namingdeprecated.impl.DeprecatedNamingConventionServiceImpl;
-import org.generationcp.middleware.ruleengine.namingdeprecated.service.DeprecatedProcessCodeService;
-import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSourceList;
 import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSourceList;
 import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
 import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
 import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasmParent;
@@ -33,7 +33,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.context.support.ResourceBundleMessageSource;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,13 +53,7 @@ public class DeprecatedNamingConventionServiceImplTest {
 	private GermplasmDataManager germplasmDataManager;
 
 	@Mock
-	private DeprecatedProcessCodeService processCodeService;
-
-	@Mock
 	private RuleFactory ruleFactory;
-
-	@Mock
-	private ResourceBundleMessageSource messageSource;
 
 	@InjectMocks
 	private final DeprecatedNamingConventionServiceImpl namingConventionService = new DeprecatedNamingConventionServiceImpl();
@@ -96,7 +89,7 @@ public class DeprecatedNamingConventionServiceImplTest {
 
 			Mockito.when(this.rulesService.runRules(ArgumentMatchers.any(RuleExecutionContext.class)))
 				.thenReturn(Collections.singletonList("name"));
-			Mockito.when(this.ruleFactory.getRuleSequenceForNamespace("naming")).thenReturn(new String[] {"[COUNT]"});
+			Mockito.when(this.ruleFactory.getRuleSequenceForNamespace(RuleExecutionNamespace.NAMING)).thenReturn(new String[] {"[COUNT]"});
 			final String ruleGeneratedName = RandomStringUtils.randomAlphabetic(5001);
 			Mockito.when(this.rulesService.runRules(ArgumentMatchers.any(RuleExecutionContext.class))).thenReturn(
 				Lists.newArrayList(ruleGeneratedName));
@@ -118,7 +111,7 @@ public class DeprecatedNamingConventionServiceImplTest {
 
 		Mockito.when(this.rulesService.runRules(ArgumentMatchers.any(RuleExecutionContext.class)))
 			.thenReturn(Collections.singletonList("name"));
-		Mockito.when(this.ruleFactory.getRuleSequenceForNamespace("naming")).thenReturn(new String[] {"[COUNT]"});
+		Mockito.when(this.ruleFactory.getRuleSequenceForNamespace(RuleExecutionNamespace.NAMING)).thenReturn(new String[] {"[COUNT]"});
 		final String ruleGeneratedName = RandomStringUtils.randomAlphabetic(20);
 		Mockito.when(this.rulesService.runRules(ArgumentMatchers.any(RuleExecutionContext.class))).thenReturn(
 			Lists.newArrayList(ruleGeneratedName));
@@ -166,14 +159,14 @@ public class DeprecatedNamingConventionServiceImplTest {
 		Mockito.when(this.germplasmDataManager.isMethodNamingConfigurationValid(method)).thenReturn(true);
 		Mockito.when(this.rulesService.runRules(ArgumentMatchers.any(RuleExecutionContext.class)))
 			.thenReturn(Collections.singletonList("name"));
-		Mockito.when(this.ruleFactory.getRuleSequenceForNamespace("naming")).thenReturn(new String[] {"[COUNT]"});
+		Mockito.when(this.ruleFactory.getRuleSequenceForNamespace(RuleExecutionNamespace.NAMING)).thenReturn(new String[] {"[COUNT]"});
 
 		this.namingConventionService.generateCrossesList(importedCrosses, rows, true, workbook, gids);
 		Assert.assertEquals("name", importedCross.getDesig());
 		Mockito.verify(this.fieldbookMiddlewareService).getAllBreedingMethods(false);
 		Mockito.verify(this.germplasmDataManager).isMethodNamingConfigurationValid(method);
 		Mockito.verify(this.rulesService).runRules(ArgumentMatchers.any(RuleExecutionContext.class));
-		Mockito.verify(this.ruleFactory).getRuleSequenceForNamespace("naming");
+		Mockito.verify(this.ruleFactory).getRuleSequenceForNamespace(RuleExecutionNamespace.NAMING);
 		Assert.assertEquals(0, advancingSource.getCurrentMaxSequence());
 	}
 

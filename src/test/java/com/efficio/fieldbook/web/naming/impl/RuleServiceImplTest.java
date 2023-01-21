@@ -7,6 +7,7 @@ import org.generationcp.middleware.manager.api.GermplasmDataManager;
 import org.generationcp.middleware.pojos.Method;
 import org.generationcp.middleware.pojos.Name;
 import org.generationcp.middleware.ruleengine.RuleException;
+import org.generationcp.middleware.ruleengine.RuleExecutionNamespace;
 import org.generationcp.middleware.ruleengine.RuleFactory;
 import org.generationcp.middleware.ruleengine.namingdeprecated.rules.DeprecatedEnforceUniqueNameRule;
 import org.generationcp.middleware.ruleengine.namingdeprecated.rules.DeprecatedNamingRuleExecutionContext;
@@ -83,7 +84,7 @@ public class RuleServiceImplTest extends AbstractBaseIntegrationTest {
 
 		try {
 			Mockito.when(this.germplasmDataManager.checkIfMatches(Matchers.anyString())).thenReturn(false);
-			List<String> sequenceList = Arrays.asList(this.ruleFactory.getRuleSequenceForNamespace("naming"));
+			List<String> sequenceList = Arrays.asList(this.ruleFactory.getRuleSequenceForNamespace(RuleExecutionNamespace.NAMING));
 			sequenceList = new ArrayList<>(sequenceList);
 			sequenceList.add(DeprecatedEnforceUniqueNameRule.KEY);
 			DeprecatedNamingRuleExecutionContext ruleExecutionContext =
@@ -118,7 +119,7 @@ public class RuleServiceImplTest extends AbstractBaseIntegrationTest {
 			Mockito.when(this.germplasmDataManager.checkIfMatches(Matchers.anyString())).thenReturn(true).thenReturn(true)
 					.thenReturn(false);
 
-			List<String> sequenceList = Arrays.asList(this.ruleFactory.getRuleSequenceForNamespace("naming"));
+			List<String> sequenceList = Arrays.asList(this.ruleFactory.getRuleSequenceForNamespace(RuleExecutionNamespace.NAMING));
 			sequenceList = new ArrayList<>(sequenceList);
 			sequenceList.add(DeprecatedEnforceUniqueNameRule.KEY);
 
