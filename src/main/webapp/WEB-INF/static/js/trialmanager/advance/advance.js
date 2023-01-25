@@ -473,8 +473,15 @@
 
 			window.closeModal = function(advanceType) {
 				$uibModalInstance.close(null);
-				advanceStudyModalService.startAdvance(advanceType, true);
+				if (advanceType) {
+					advanceStudyModalService.startAdvance(advanceType, true);
+				}
 			};
+
+			window.showListCreationSuccess = function() {
+				$uibModalInstance.close(null);
+				showSuccessfulMessage('', saveListSuccessfullyMessage);
+			}
 
 			$scope.cancel = function() {
 				$uibModalInstance.close(null);
