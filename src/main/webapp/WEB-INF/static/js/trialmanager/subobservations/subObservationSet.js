@@ -19,7 +19,9 @@
 		GROUPGID = 8330,
 		LINE_GID = 8836,
 		TESTER_GID = 8839,
-		OBS_UNIT_ID = 8201;
+		OBS_UNIT_ID = 8201,
+	    ENTRY_NO = 8230,
+	    ENTRY_TYPE = 8255;
 	var SAMPLES = -2;
 	var STOCK_ID = -1727;
 	var hiddenColumns = [OBS_UNIT_ID, TRIAL_INSTANCE];
@@ -825,6 +827,26 @@
 				}
 			};
 
+			const reloadDataTableWithTimeout = {
+				reload() {
+					table().ajax.reload(null, false);
+				},
+
+				setup(timeout) {
+					if (typeof this.timeoutID === 'number') {
+						this.cancel();
+					}
+
+					this.timeoutID = setTimeout((msg) => {
+						this.reload();
+					}, timeout);
+				},
+
+				cancel() {
+					clearTimeout(this.timeoutID);
+				}
+			};
+
 
 			function table() {
 				return $scope.nested.dtInstance.DataTable;
@@ -1477,15 +1499,11 @@
 			}
 
 			function addColumnVisibilityCallback() {
-				try {
-					table().on('column-visibility.dt', function (e, settings, column, state) {
-						console.log(
-							'Column ' + column + ' has changed to ' + (state ? 'visible' : 'hidden')
-						);
-						table().ajax.reload(null, false);
-					});
-				} catch (e) {
-				}
+				table().on('column-visibility.dt', function (e, settings, column, state) {
+					// When this callback function is executed multiple times consecutively in a span of 1500 milliseconds
+					// Then make sure that the datatables is only reloaded once
+					reloadDataTableWithTimeout.setup(1500);
+				});
 			}
 
 			function getCategoricalValueId(cellDataValue, columnData) {
@@ -1629,7 +1647,6 @@
 
 					// If the variable of a column is an Entry Detail, Germplasm Name or Germplasm Attributes/Passport, the column should be hidden
 					// by default
-					// TODO: Avoid ENTRY_NO and ENTRY_TYPE from automatically hidden by default
 					if (columnData.variableType === null || columnData.variableType === 'ENTRY_DETAIL' || columnData.variableType === 'GERMPLASM_ATTRIBUTE'
 						|| columnData.variableType === 'GERMPLASM_PASSPORT') {
 						hiddenColumns.push(columnData.termId);
@@ -1640,6 +1657,11 @@
 						if (columnData.termId === TRIAL_INSTANCE) {
 							return $scope.nested.selectedEnvironment === $scope.environments[0]
 						}
+						// ENTRY_NO and ENTRY_TYPE should be visible in the table by default
+						if (columnData.termId === ENTRY_NO || columnData.termId === ENTRY_TYPE) {
+							return true;
+						}
+
 						return hiddenColumns.indexOf(columnData.termId) < 0;
 					}
 
