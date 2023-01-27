@@ -9,8 +9,6 @@ import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
 import org.generationcp.commons.spring.util.ContextUtil;
 import org.generationcp.middleware.domain.dms.Study;
 import org.generationcp.middleware.domain.dms.ValueReference;
@@ -25,11 +23,14 @@ import org.generationcp.middleware.manager.ontology.api.OntologyVariableDataMana
 import org.generationcp.middleware.pojos.Germplasm;
 import org.generationcp.middleware.pojos.Method;
 import org.generationcp.middleware.pojos.Name;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSourceList;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 import org.generationcp.middleware.service.api.FieldbookService;
 import org.generationcp.middleware.service.api.study.StudyInstanceService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
@@ -81,7 +82,7 @@ public class DeprecatedAdvancingSourceListFactoryTest {
 
         Mockito.doNothing().when(expressionDataProcessor).processEnvironmentLevelData(Matchers.isA(DeprecatedAdvancingSource.class),
 			Matchers.isA(Workbook.class), Matchers.isA(AdvancingStudy.class), Matchers.isNull(Study.class));
-        final Map<Integer,List<Name>> mapNames = Maps.newHashMap();
+        final Map<Integer, List<Name>> mapNames = Maps.newHashMap();
         final List<Name> nameList = Lists.newArrayList();
         final Name name = new Name();
         name.setNid(32);
@@ -92,7 +93,7 @@ public class DeprecatedAdvancingSourceListFactoryTest {
         nameList.add(name);
         mapNames.put(13, nameList);
 
-        Mockito.when(this.fieldbookMiddlewareService.getNamesByGids(Matchers.isA(List.class))).thenReturn(mapNames);
+        Mockito.when(this.fieldbookMiddlewareService.getNamesByGids(ArgumentMatchers.anyList())).thenReturn(mapNames);
 
         final List<Germplasm> germplasmList = Lists.newArrayList();
         final Germplasm germplasm = new Germplasm();
@@ -139,7 +140,8 @@ public class DeprecatedAdvancingSourceListFactoryTest {
         advanceInfo.setSelectedReplications(Sets.newHashSet(REPLICATION_NUMBER));
         advanceInfo.setAdvanceType(AdvanceType.STUDY);
         
-        final AdvancingSourceList advancingSourceList = this.factory.createAdvancingSourceList(workBook, advanceInfo, study, breedingMethodMap, breedingMethodCodeMap);
+        final DeprecatedAdvancingSourceList
+            advancingSourceList = this.factory.createAdvancingSourceList(workBook, advanceInfo, study, breedingMethodMap, breedingMethodCodeMap);
 
         Assert.assertEquals("Expected number of advancing source rows were not generated.", 1, advancingSourceList.getRows().size());
         final DeprecatedAdvancingSource source = advancingSourceList.getRows().get(0);
@@ -180,7 +182,7 @@ public class DeprecatedAdvancingSourceListFactoryTest {
 
         Mockito.doNothing().when(expressionDataProcessor).processEnvironmentLevelData(Matchers.isA(DeprecatedAdvancingSource.class),
 			Matchers.isA(Workbook.class), Matchers.isA(AdvancingStudy.class), Matchers.isNull(Study.class));
-        final Map<Integer,List<Name>> mapNames = Maps.newHashMap();
+        final Map<Integer, List<Name>> mapNames = Maps.newHashMap();
         final List<Name> nameList = Lists.newArrayList();
         final Name name = new Name();
         name.setNid(32);
@@ -191,7 +193,7 @@ public class DeprecatedAdvancingSourceListFactoryTest {
         nameList.add(name);
         mapNames.put(13, nameList);
 
-        Mockito.when(this.fieldbookMiddlewareService.getNamesByGids(Matchers.isA(List.class))).thenReturn(mapNames);
+        Mockito.when(this.fieldbookMiddlewareService.getNamesByGids(ArgumentMatchers.anyList())).thenReturn(mapNames);
 
         final List<Germplasm> germplasmList = Lists.newArrayList();
         final Germplasm germplasm = new Germplasm();
@@ -202,7 +204,7 @@ public class DeprecatedAdvancingSourceListFactoryTest {
         germplasm.setMethod(new Method(14));
 
         germplasmList.add(germplasm);
-        Mockito.when(this.fieldbookMiddlewareService.getGermplasms(Matchers.isA(List.class))).thenReturn(germplasmList);
+        Mockito.when(this.fieldbookMiddlewareService.getGermplasms(ArgumentMatchers.anyList())).thenReturn(germplasmList);
 
         final Workbook workBook = new Workbook();
         final StudyDetails studyDetails = new StudyDetails();
@@ -255,7 +257,8 @@ public class DeprecatedAdvancingSourceListFactoryTest {
         advanceInfo.setSelectedReplications(Sets.newHashSet(REPLICATION_NUMBER));
         advanceInfo.setAdvanceType(AdvanceType.STUDY);
 
-        final AdvancingSourceList advancingSourceList = this.factory.createAdvancingSourceList(workBook, advanceInfo, study, breedingMethodMap, breedingMethodCodeMap);
+        final DeprecatedAdvancingSourceList
+            advancingSourceList = this.factory.createAdvancingSourceList(workBook, advanceInfo, study, breedingMethodMap, breedingMethodCodeMap);
 
         Assert.assertEquals("Expected number of advancing source rows were not generated.", 1, advancingSourceList.getRows().size());
         final DeprecatedAdvancingSource source = advancingSourceList.getRows().get(0);

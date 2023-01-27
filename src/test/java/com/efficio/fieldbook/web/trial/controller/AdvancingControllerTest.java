@@ -6,7 +6,6 @@ import com.efficio.fieldbook.web.common.bean.PaginationListSelection;
 import com.efficio.fieldbook.web.common.bean.TableHeader;
 import com.efficio.fieldbook.web.common.bean.UserSelection;
 import com.efficio.fieldbook.web.naming.impl.AdvancingSourceListFactory;
-import org.generationcp.middleware.ruleengine.naming.service.NamingConventionService;
 import com.efficio.fieldbook.web.trial.bean.AdvanceType;
 import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
 import com.efficio.fieldbook.web.trial.form.AdvancingStudyForm;
@@ -14,12 +13,6 @@ import com.efficio.fieldbook.web.util.FieldbookProperties;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.math.RandomUtils;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
-import org.generationcp.middleware.ruleengine.pojo.AdvanceGermplasmChangeDetail;
-import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
-import org.generationcp.middleware.ruleengine.RuleException;
-import org.generationcp.middleware.ruleengine.generator.SeedSourceGenerator;
 import org.generationcp.commons.spring.util.ContextUtil;
 import org.generationcp.middleware.domain.dms.Study;
 import org.generationcp.middleware.domain.etl.MeasurementData;
@@ -43,6 +36,13 @@ import org.generationcp.middleware.pojos.Germplasm;
 import org.generationcp.middleware.pojos.Method;
 import org.generationcp.middleware.pojos.MethodType;
 import org.generationcp.middleware.pojos.Name;
+import org.generationcp.middleware.ruleengine.RuleException;
+import org.generationcp.middleware.ruleengine.generator.SeedSourceGenerator;
+import org.generationcp.middleware.ruleengine.namingdeprecated.service.DeprecatedNamingConventionService;
+import org.generationcp.middleware.ruleengine.pojo.AdvanceGermplasmChangeDetail;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSourceList;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
 import org.generationcp.middleware.service.api.FieldbookService;
 import org.generationcp.middleware.service.api.dataset.DatasetService;
 import org.generationcp.middleware.service.api.study.StudyInstanceService;
@@ -122,7 +122,7 @@ public class AdvancingControllerTest {
 	private StudyDataManager studyDataManager;
 
 	@Mock
-	private NamingConventionService namingConventionService;
+	private DeprecatedNamingConventionService namingConventionService;
 
 	@Mock
 	private StudyInstanceService studyInstanceService;
@@ -222,7 +222,7 @@ public class AdvancingControllerTest {
 
 	}
 
-	private AdvancingSourceList createTestAdvancingSourceList() {
+	private DeprecatedAdvancingSourceList createTestAdvancingSourceList() {
 		final List<DeprecatedAdvancingSource> rows = new ArrayList<>();
 		final Method breedingMethod = new Method();
 		breedingMethod.setGeneq(TermId.NON_BULKING_BREEDING_METHOD_CLASS.getId());
@@ -235,7 +235,7 @@ public class AdvancingControllerTest {
 			rows.add(row);
 
 		}
-		final AdvancingSourceList list = new AdvancingSourceList();
+		final DeprecatedAdvancingSourceList list = new DeprecatedAdvancingSourceList();
 		list.setRows(rows);
 		return list;
 	}
@@ -346,7 +346,7 @@ public class AdvancingControllerTest {
 			germplasm.setEntryNumber(i);
 			importedGermplasms.add(germplasm);
 		}
-		final AdvancingSourceList list = this.getAdvancingSourceList(importedGermplasms);
+		final DeprecatedAdvancingSourceList list = this.getAdvancingSourceList(importedGermplasms);
 		final AdvancingStudyForm advancingStudyForm = new AdvancingStudyForm();
 		advancingStudyForm.setUniqueId(1L);
 		advancingStudyForm.setAdvancingSourceItems(list.getRows());
@@ -474,7 +474,7 @@ public class AdvancingControllerTest {
         final AdvancingStudyForm form = new AdvancingStudyForm();
         final Model model = new ExtendedModelMap();
 
-		final AdvancingSourceList list = this.getAdvancingSourceList(importedGermplasmList);
+		final DeprecatedAdvancingSourceList list = this.getAdvancingSourceList(importedGermplasmList);
 		form.setUniqueId(1L);
 		form.setAdvancingSourceItems(list.getRows());
 		Mockito.when(this.advancingController.getPaginationListSelection().getAdvanceDetails(ArgumentMatchers.anyString())).thenReturn(form);
@@ -693,7 +693,7 @@ public class AdvancingControllerTest {
 		Mockito.doReturn(studyInstances).when(this.studyInstanceService).getStudyInstances(Mockito.anyInt());
 
 
-		final AdvancingSourceList rows = new AdvancingSourceList();
+		final DeprecatedAdvancingSourceList rows = new DeprecatedAdvancingSourceList();
 		rows.setRows(new ArrayList<>());
 
 		// Set up Advancing sources
@@ -714,14 +714,12 @@ public class AdvancingControllerTest {
 		advancingSource.setGermplasm(ig);
 
 		// Names
-		final Name sourceGermplasmName = new Name(133);
+		final Name sourceGermplasmName = new Name();
+		sourceGermplasmName.setNid(133);
 		sourceGermplasmName.setGermplasm(new Germplasm(133));
 		sourceGermplasmName.setTypeId(6);
 		sourceGermplasmName.setNstat(1);
 		sourceGermplasmName.setNval("BARRA DE ORO DULCE");
-		sourceGermplasmName.setLocationId(9);
-		sourceGermplasmName.setNdate(19860501);
-		sourceGermplasmName.setReferenceId(1);
 		advancingSource.setStudyId(1);
 		advancingSource.getNames().add(sourceGermplasmName);
 
@@ -736,7 +734,6 @@ public class AdvancingControllerTest {
 		advancingSource.setBreedingMethod(breedingMethod);
 		advancingSource.setPlantsSelected(2);
 		advancingSource.setPlotNumber("2");
-		advancingSource.setBulk(false);
 		advancingSource.setStudyName("Test One");
 		advancingSource.setSeason("201412");
 		advancingSource.setCurrentMaxSequence(0);
@@ -808,9 +805,9 @@ public class AdvancingControllerTest {
 
 	}
 
-	private AdvancingSourceList getAdvancingSourceList(final List<ImportedGermplasm> germplasmList) {
+	private DeprecatedAdvancingSourceList getAdvancingSourceList(final List<ImportedGermplasm> germplasmList) {
 
-		final AdvancingSourceList rows = new AdvancingSourceList();
+		final DeprecatedAdvancingSourceList rows = new DeprecatedAdvancingSourceList();
 		rows.setRows(new ArrayList<>());
 		final int size = (germplasmList.size() / 2) % 1 == 0 ? germplasmList.size() / 2 : 1;
 
@@ -822,14 +819,12 @@ public class AdvancingControllerTest {
 			advancingSource.setGermplasm(germplasmList.get(i));
 
 			// Names
-			final Name sourceGermplasmName = new Name(133);
+			final Name sourceGermplasmName = new Name();
+			sourceGermplasmName.setNid(133);
 			sourceGermplasmName.setGermplasm(new Germplasm(133));
 			sourceGermplasmName.setTypeId(6);
 			sourceGermplasmName.setNstat(1);
 			sourceGermplasmName.setNval("BARRA DE ORO DULCE");
-			sourceGermplasmName.setLocationId(9);
-			sourceGermplasmName.setNdate(19860501);
-			sourceGermplasmName.setReferenceId(1);
 			advancingSource.setStudyId(1);
 			advancingSource.getNames().add(sourceGermplasmName);
 
@@ -844,7 +839,6 @@ public class AdvancingControllerTest {
 			advancingSource.setBreedingMethod(breedingMethod);
 			advancingSource.setPlantsSelected(2);
 			advancingSource.setPlotNumber("2");
-			advancingSource.setBulk(false);
 			advancingSource.setStudyName("Test One");
 			advancingSource.setSeason("201412");
 			advancingSource.setCurrentMaxSequence(0);

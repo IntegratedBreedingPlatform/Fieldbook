@@ -1,7 +1,6 @@
 
 package com.efficio.fieldbook.web.naming.expression.dataprocessor;
 
-import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 import com.google.common.collect.Lists;
 import org.generationcp.middleware.data.initializer.MeasurementDataTestDataInitializer;
 import org.generationcp.middleware.data.initializer.MeasurementVariableTestDataInitializer;
@@ -14,6 +13,7 @@ import org.generationcp.middleware.domain.etl.MeasurementVariable;
 import org.generationcp.middleware.domain.etl.Workbook;
 import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.domain.study.StudyTypeDto;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Deprecated
 @RunWith(MockitoJUnitRunner.class)
 public class SeasonExpressionDataProcessorTest {
 
@@ -236,8 +237,10 @@ public class SeasonExpressionDataProcessorTest {
 
 		final List<ValueReference> possibleValues = this.createPossibleValues();
 
-		Assert.assertEquals(SEASON_NAME_WET, this.seasonExpressionDataProcessor.getSeasonName(String.valueOf(SEASON_ID_WET), possibleValues));
-		Assert.assertEquals(SEASON_NAME_DRY, this.seasonExpressionDataProcessor.getSeasonName(String.valueOf(SEASON_ID_DRY), possibleValues));
+		Assert.assertEquals(SEASON_NAME_WET, this.seasonExpressionDataProcessor
+			.getSeasonName(String.valueOf(SEASON_ID_WET), possibleValues));
+		Assert.assertEquals(SEASON_NAME_DRY, this.seasonExpressionDataProcessor
+			.getSeasonName(String.valueOf(SEASON_ID_DRY), possibleValues));
 
 	}
 
@@ -246,8 +249,10 @@ public class SeasonExpressionDataProcessorTest {
 
 		final List<ValueReference> possibleValues = this.createPossibleValues();
 
-		Assert.assertEquals(SEASON_NAME_WET, this.seasonExpressionDataProcessor.getSeasonName(SEASON_DESCRIPTION_DRY, possibleValues));
-		Assert.assertEquals(SEASON_NAME_DRY, this.seasonExpressionDataProcessor.getSeasonName(SEASON_DESCRIPTION_WET, possibleValues));
+		Assert.assertEquals(SEASON_NAME_WET, this.seasonExpressionDataProcessor
+			.getSeasonName(SEASON_DESCRIPTION_DRY, possibleValues));
+		Assert.assertEquals(SEASON_NAME_DRY, this.seasonExpressionDataProcessor
+			.getSeasonName(SEASON_DESCRIPTION_WET, possibleValues));
 
 	}
 

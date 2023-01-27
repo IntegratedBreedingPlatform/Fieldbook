@@ -25,6 +25,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 @RunWith(MockitoJUnitRunner.class)
 public class SelectionTraitExpressionDataProcessorTest {
 

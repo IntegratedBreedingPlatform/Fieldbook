@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 
 import java.util.List;
 
+@Deprecated
 public class ChangeLocationExpressionDataProcessorTest {
 
     ChangeLocationExpressionDataProcessor changeLocationExpressionDataProcessor;

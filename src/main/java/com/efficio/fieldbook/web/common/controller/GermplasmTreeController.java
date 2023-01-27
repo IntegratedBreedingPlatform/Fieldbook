@@ -17,7 +17,7 @@ import com.efficio.fieldbook.web.common.bean.UserSelection;
 import com.efficio.fieldbook.web.common.form.SaveListForm;
 import com.efficio.fieldbook.web.common.service.CrossingService;
 import com.efficio.fieldbook.web.common.service.impl.CrossingServiceImpl;
-import org.generationcp.middleware.ruleengine.naming.service.NamingConventionService;
+import org.generationcp.middleware.ruleengine.namingdeprecated.service.DeprecatedNamingConventionService;
 import com.efficio.fieldbook.web.trial.form.AdvancingStudyForm;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Lists;
@@ -32,7 +32,7 @@ import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
 import org.generationcp.commons.parsing.pojo.ImportedCrossesList;
 import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
 import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSourceList;
 import org.generationcp.commons.pojo.treeview.TreeTableNode;
 import org.generationcp.middleware.ruleengine.RuleException;
 import org.generationcp.middleware.ruleengine.RulesNotConfiguredException;
@@ -132,7 +132,7 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 	private CrossingService crossingService;
 
 	@Resource
-	private NamingConventionService namingConventionService;
+	private DeprecatedNamingConventionService namingConventionService;
 
 	@Resource
 	private GermplasmStudySourceService germplasmStudySourceService;
@@ -415,7 +415,7 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 			}
 		}
 
-		final AdvancingSourceList advancingSourceList = new AdvancingSourceList();
+		final DeprecatedAdvancingSourceList advancingSourceList = new DeprecatedAdvancingSourceList();
 		advancingSourceList.setRows(advancingSources);
 
 		final List<ImportedCross> crosses = this.namingConventionService

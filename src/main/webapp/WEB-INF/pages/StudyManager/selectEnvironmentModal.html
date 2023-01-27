@@ -1,12 +1,12 @@
 <div class="modal-body" xmlns:th="http://www.thymeleaf.org">
 	<div class="row form-group">
 		<div class="col-xs-11 col-md-11">
-			<label ng-show="applicationData.advanceType != 'sample'" class="modal-title fbk-modal-title"
-				   id="heading-modal" th:text="#{study.studydetails.action.advance.study}">Advance study</label>
-			<label ng-show="applicationData.advanceType == 'sample'" class="modal-title fbk-modal-title"
-				   id="heading-modal" th:text="#{study.studydetails.action.advance.sample}">Advance sampled
-				plants</label>
+			<label ng-show="applicationData.advanceType == 'study' || applicationData.advanceType == 'trial'" class="modal-title fbk-modal-title"
+				   id="heading-modal">Advance study {{isBeta ? '(Beta)' : ''}}</label>
+			<label ng-show="applicationData.advanceType == 'samples' || applicationData.advanceType == 'deprecatedSample'" class="modal-title fbk-modal-title"
+				   id="heading-modal">Advance sampled plants from plots {{isBeta ? '(Beta)' : ''}}</label>
 		</div>
+
 		<div class="col-xs-1 col-md-1">
 			<button id="closeAdvanceTrialModal" type="button" class="close  pull-right glyphicon glyphicon-remove"
 					data-dismiss="modal" aria-hidden="true" ng-click="close()"/>

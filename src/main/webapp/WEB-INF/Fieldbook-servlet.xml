@@ -385,7 +385,7 @@
 	<bean id="springAppContextProvider" class="org.generationcp.commons.util.SpringAppContextProvider" />
 
 	<bean
-		class="org.generationcp.middleware.ruleengine.naming.expression.ComponentPostProcessor">
+		class="org.generationcp.middleware.ruleengine.namingdeprecated.expression.DeprecatedComponentPostProcessor">
 		<property name="ruleFactory" ref="ruleFactory" />
 		<property name="processCodeFactory" ref="processCodeFactory" />
 	</bean>
@@ -395,7 +395,7 @@
 		init-method="init" />
 
 	<bean id="processCodeFactory"
-		  class="org.generationcp.middleware.ruleengine.naming.impl.ProcessCodeFactory"
+		  class="org.generationcp.middleware.ruleengine.namingdeprecated.impl.DeprecatedProcessCodeFactory"
 		  init-method="init" />
 
 	<bean id="ruleConfigProvider"
@@ -422,15 +422,15 @@
         <constructor-arg name="factoryInstance" ref="dataProcessorFactory"/>
     </bean>
 
-	<bean id="germplasmNamingService" class="org.generationcp.middleware.ruleengine.naming.impl.GermplasmNamingServiceImpl" />
+	<bean id="germplasmNamingService" class="org.generationcp.middleware.ruleengine.namingdeprecated.impl.DeprecatedGermplasmNamingServiceImpl" />
 
 	<bean id="ruleService"
 		class="org.generationcp.middleware.ruleengine.impl.RulesServiceImpl" />
 	<!-- This component scan automatically registers all implementations of
 		the Rule interface into the Spring context. In conjunction with the RulesPostProcessor
 		above, this automatically populates the map in the RuleFactory -->
-	<context:component-scan base-package="org.generationcp.middleware.ruleengine.naming" />
-	<context:component-scan base-package="org.generationcp.middleware.ruleengine.naming.expression" />
+	<context:component-scan base-package="org.generationcp.middleware.ruleengine.namingdeprecated" />
+	<context:component-scan base-package="org.generationcp.middleware.ruleengine.namingdeprecated.expression" />
 	<context:component-scan base-package="org.generationcp.middleware.ruleengine.stockid" />
 	<context:component-scan base-package="org.generationcp.middleware.ruleengine.cross" />
     <context:component-scan base-package="com.efficio.fieldbook.web.naming.expression.dataprocessor"/>
@@ -492,7 +492,7 @@
 	<bean id="seedSourceGenerator" class="org.generationcp.middleware.ruleengine.generator.SeedSourceGenerator">
 	</bean>
 
-    <bean id="breedersCrossIDGenerator" class="org.generationcp.middleware.ruleengine.generator.BreedersCrossIDGenerator">
+    <bean id="breedersCrossIDGenerator" class="org.generationcp.middleware.ruleengine.generator.DeprecatedBreedersCrossIDGenerator">
 	</bean>
 
 	<bean id="pedigreeService" factory-bean="managerFactory"

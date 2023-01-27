@@ -1,10 +1,7 @@
 
 package com.efficio.fieldbook.web.naming.expression.dataprocessor;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
 import org.apache.commons.lang3.StringUtils;
 import org.generationcp.middleware.domain.dms.Study;
 import org.generationcp.middleware.domain.dms.ValueReference;
@@ -13,11 +10,14 @@ import org.generationcp.middleware.domain.etl.MeasurementRow;
 import org.generationcp.middleware.domain.etl.MeasurementVariable;
 import org.generationcp.middleware.domain.etl.Workbook;
 import org.generationcp.middleware.domain.oms.TermId;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 import org.springframework.stereotype.Component;
 
-import com.efficio.fieldbook.web.trial.bean.AdvancingStudy;
-import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+@Deprecated
 @Component
 public class SeasonExpressionDataProcessor implements ExpressionDataProcessor {
 
