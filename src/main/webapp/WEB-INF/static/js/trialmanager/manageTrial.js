@@ -34,8 +34,9 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 	manageTrialApp.config(function ($translateProvider) {
 		$translateProvider.useSanitizeValueStrategy('sanitize');
 		$translateProvider.translations('en', {
-			'study.studydetails.action.advance.sample': 'Advance sampled plants from plots',
-			'study.studydetails.action.advance.study': 'Advance study',
+			'study.studydetails.action.deprecated.advance.sample': 'Advance sampled plants from plots',
+			'study.studydetails.action.deprecated.advance.study': 'Advance study',
+			'study.studydetails.action.new.advance.study': 'New Advance Study',
 			'advancing.study.mandatory.fields': 'indicates a mandatory field',
 			'advancing.study.method': 'METHODS',
 			'advancing.study.breeding.method.the.same': 'Breeding Method is the same for each advance',
@@ -1093,8 +1094,8 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				derivedVariableModalService.openDatasetOptionModal();
 			}
 
-			$scope.startAdvance = function (advanceType) {
-				advanceStudyModalService.startAdvance(advanceType);
+			$scope.startAdvance = function (advanceType, isBeta) {
+				advanceStudyModalService.startAdvance(advanceType, isBeta);
 			}
 
 			$scope.analyzeWithBrapp = function (brappURL) {

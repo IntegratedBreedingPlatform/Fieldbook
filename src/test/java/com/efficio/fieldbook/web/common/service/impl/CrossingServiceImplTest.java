@@ -29,7 +29,7 @@ import org.generationcp.middleware.pojos.germplasm.GermplasmNameSetting;
 import org.generationcp.middleware.pojos.workbench.CropType;
 import org.generationcp.middleware.pojos.workbench.Project;
 import org.generationcp.middleware.ruleengine.generator.SeedSourceGenerator;
-import org.generationcp.middleware.ruleengine.naming.service.GermplasmNamingService;
+import org.generationcp.middleware.ruleengine.namingdeprecated.service.DeprecatedGermplasmNamingService;
 import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
 import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasmParent;
 import org.generationcp.middleware.ruleengine.settings.AdditionalDetailsSetting;
@@ -133,7 +133,7 @@ public class CrossingServiceImplTest {
 	private PedigreeDataManager pedigreeDataManager;
 
 	@Mock
-	private GermplasmNamingService germplasmNamingService;
+	private DeprecatedGermplasmNamingService germplasmNamingService;
 
 	@Mock
 	private StudyDataManager studyDataManager;

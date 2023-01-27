@@ -181,14 +181,24 @@
 
 							<li ng-show="showManageStudiesAction()" class="dropdown-submenu pull-left">
 								<a tabindex="-1" href="#">Advance study options</a>
-								<ul class="dropdown-menu" style="margin-left: -68px; width: 235px;">
+								<ul class="dropdown-menu" style="margin-left: -103px; width: 270px;">
+									<!-- Deprecated -->
 									<li>
-										<a ng-click="startAdvance('trial')" id="advance-trial-link"
-										   th:text="#{study.studydetails.action.advance.study}">Advance Study</a>
+										<a ng-click="startAdvance('trial', false)" id="deprecated-advance-trial-link"
+										   th:text="#{study.studydetails.action.deprecated.advance.study}">Advance Study</a>
 									</li>
 									<li>
-										<a ng-click="startAdvance('sample')" id="advance-sample-link"
-										   th:text="#{study.studydetails.action.advance.sample}">Advance sampled plants</a>
+										<a ng-click="startAdvance('study', true)" id="advance-trial-link"
+										   th:text="#{study.studydetails.action.advance.study}">Advance Study (Beta)</a>
+									</li>
+									<!-- Deprecated -->
+									<li>
+										<a ng-click="startAdvance('deprecatedSample', false)" id="deprecated-advance-sample-link"
+										   th:text="#{study.studydetails.action.deprecated.advance.sample}">Advance Sampled plants</a>
+									</li>
+									<li>
+										<a ng-click="startAdvance('samples', true)" id="advance-sample-link"
+										   th:text="#{study.studydetails.action.advance.sample}">Advance Sampled plants from plots (Beta)</a>
 									</li>
 								</ul>
                             </li>

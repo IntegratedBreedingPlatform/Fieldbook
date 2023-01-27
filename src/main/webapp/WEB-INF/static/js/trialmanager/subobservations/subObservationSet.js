@@ -244,7 +244,7 @@
 								return {
 									itemIds: $scope.selectedItems.length ? $scope.selectedItems : null,
 									searchRequest: $scope.selectedItems.length ? null : {
-										instanceId: $scope.nested.selectedEnvironment.instanceId,
+										instanceIds: getInstanceIds(),
 										draftMode: $scope.isPendingView,
 										filter: getFilter()
 									}
@@ -269,7 +269,7 @@
 					var searchComposite = {
 						itemIds: $scope.selectedItems.length ? $scope.selectedItems : null,
 						searchRequest: $scope.selectedItems.length ? null : {
-							instanceId: $scope.nested.selectedEnvironment.instanceId,
+							instanceIds: getInstanceIds(),
 							draftMode: $scope.isPendingView,
 							filter: getFilter()
 						}
@@ -313,7 +313,7 @@
 					var searchRequest = {
 						studyId: studyContext.studyId,
 						datasetId: $scope.subObservationSet.dataset.datasetId,
-						instanceId: $scope.nested.selectedEnvironment.instanceId,
+						instanceIds: getInstanceIds(),
 						draftMode: $scope.isPendingView,
 						filter: filter
 					};
@@ -743,7 +743,7 @@
 					filter.variableHasValue = true;
 				}
 				var param = JSON.stringify({
-					instanceId: $scope.nested.selectedEnvironment.instanceId,
+					instanceIds: getInstanceIds(),
 					draftMode: $scope.isPendingView,
 					filter: filter
 				});
@@ -850,7 +850,7 @@
 					newValue: newValue,
 					newCategoricalValueId: getCategoricalValueId($scope.nested.newValueBatchUpdate, $scope.nested.selectedVariableFilter),
 					observationUnitsSearchDTO: {
-						instanceId: $scope.nested.selectedEnvironment.instanceId,
+						instanceIds: getInstanceIds(),
 						draftMode: $scope.isPendingView,
 						filter: getFilter()
 					}
@@ -876,7 +876,7 @@
 			function acceptValueAsIs() {
 				// acceptDraftDataByVariable
 				var param = JSON.stringify({
-					instanceId: $scope.nested.selectedEnvironment.instanceId,
+					instanceIds: getInstanceIds(),
 					draftMode: $scope.isPendingView,
 					filter: getFilter()
 				});
@@ -893,7 +893,7 @@
 
 			function deleteObservationsValues() {
 				var param = JSON.stringify({
-					instanceId: $scope.nested.selectedEnvironment.instanceId,
+					instanceIds: getInstanceIds(),
 					draftMode: $scope.isPendingView,
 					filter: getFilter()
 				});
@@ -1002,7 +1002,7 @@
 								url: datasetService.getObservationTableUrl(subObservationSet.id) + getPageQueryParameters(d),
 								data: JSON.stringify({
 									draw: d.draw,
-									instanceId: $scope.nested.selectedEnvironment.instanceId,
+									instanceIds: getInstanceIds(),
 									draftMode: $scope.isPendingView,
 									filter: getFilter()
 								}),
@@ -1075,7 +1075,7 @@
 								// We send all the data (with/without filter) to OpenCPU server,
 								// No pagination is needed.
 								sortedRequest: null,
-								instanceId: $scope.nested.selectedEnvironment.instanceId,
+								instanceIds: getInstanceIds(),
 								draftMode: $scope.isPendingView,
 								filter: getFilter()
 							};
@@ -1986,6 +1986,10 @@
 			window.showFiles = function (observationUnitUUID, variableName) {
 				event.stopPropagation();
 				$scope.showFiles(observationUnitUUID, variableName);
+			}
+
+			function getInstanceIds() {
+				return $scope.nested.selectedEnvironment.instanceId ? [$scope.nested.selectedEnvironment.instanceId] : undefined;
 			}
 
 		}])

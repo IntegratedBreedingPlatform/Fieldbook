@@ -17,8 +17,8 @@ import org.generationcp.middleware.manager.api.StudyDataManager;
 import org.generationcp.middleware.pojos.Germplasm;
 import org.generationcp.middleware.pojos.Method;
 import org.generationcp.middleware.pojos.Name;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSourceList;
 import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
-import org.generationcp.middleware.ruleengine.pojo.AdvancingSourceList;
 import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
 import org.generationcp.middleware.service.api.FieldbookService;
 import org.generationcp.middleware.service.api.study.StudyInstanceService;
@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Deprecated
 @Service
 @Transactional
 public class AdvancingSourceListFactory {
@@ -57,7 +58,7 @@ public class AdvancingSourceListFactory {
 	@Resource
 	private StudyInstanceService studyInstanceService;
 
-	public AdvancingSourceList createAdvancingSourceList(final Workbook workbook, final AdvancingStudy advanceInfo, final Study study,
+	public DeprecatedAdvancingSourceList createAdvancingSourceList(final Workbook workbook, final AdvancingStudy advanceInfo, final Study study,
 			final Map<Integer, Method> breedingMethodMap, final Map<String, Method> breedingMethodCodeMap) throws FieldbookException {
 
 		Map<Integer, List<SampleDTO>> samplesMap = new HashMap<>();
@@ -69,7 +70,7 @@ public class AdvancingSourceListFactory {
 		final DeprecatedAdvancingSource environmentLevel = new DeprecatedAdvancingSource();
 		final ExpressionDataProcessor dataProcessor = this.dataProcessorFactory.retrieveExecutorProcessor();
 
-		final AdvancingSourceList advancingSourceList = new AdvancingSourceList();
+		final DeprecatedAdvancingSourceList advancingSourceList = new DeprecatedAdvancingSourceList();
 
 		final List<DeprecatedAdvancingSource> advancingPlotRows = new ArrayList<>();
 
@@ -227,7 +228,7 @@ public class AdvancingSourceListFactory {
 		return germplasm;
 	}
 
-	private void assignSourceGermplasms(final AdvancingSourceList list, final Map<Integer, Method> breedingMethodMap, final List<Integer> gids) throws FieldbookException {
+	private void assignSourceGermplasms(final DeprecatedAdvancingSourceList list, final Map<Integer, Method> breedingMethodMap, final List<Integer> gids) throws FieldbookException {
 
 		if (list != null && list.getRows() != null && !list.getRows().isEmpty()) {
 			final List<Germplasm> germplasmList = this.fieldbookMiddlewareService.getGermplasms(gids);

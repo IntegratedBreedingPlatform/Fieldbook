@@ -1,21 +1,20 @@
 
 package com.efficio.fieldbook.web.naming.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.junit.Assert;
-
-import org.generationcp.middleware.ruleengine.RuleException;
-import org.generationcp.middleware.ruleengine.RuleFactory;
-import org.generationcp.middleware.ruleengine.service.RulesService;
+import com.efficio.fieldbook.AbstractBaseIntegrationTest;
 import org.generationcp.middleware.exceptions.MiddlewareQueryException;
 import org.generationcp.middleware.manager.api.GermplasmDataManager;
 import org.generationcp.middleware.pojos.Method;
 import org.generationcp.middleware.pojos.Name;
+import org.generationcp.middleware.ruleengine.RuleException;
+import org.generationcp.middleware.ruleengine.RuleExecutionNamespace;
+import org.generationcp.middleware.ruleengine.RuleFactory;
+import org.generationcp.middleware.ruleengine.namingdeprecated.rules.DeprecatedEnforceUniqueNameRule;
+import org.generationcp.middleware.ruleengine.namingdeprecated.rules.DeprecatedNamingRuleExecutionContext;
+import org.generationcp.middleware.ruleengine.namingdeprecated.service.DeprecatedProcessCodeService;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
+import org.generationcp.middleware.ruleengine.service.RulesService;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -23,11 +22,10 @@ import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.springframework.context.MessageSource;
 
-import com.efficio.fieldbook.AbstractBaseIntegrationTest;
-import org.generationcp.middleware.ruleengine.naming.rules.EnforceUniqueNameRule;
-import org.generationcp.middleware.ruleengine.naming.rules.NamingRuleExecutionContext;
-import org.generationcp.middleware.ruleengine.naming.service.ProcessCodeService;
-import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Ignore(value ="BMS-1571. Ignoring temporarily. Please fix the failures and remove @Ignore.")
 public class RuleServiceImplTest extends AbstractBaseIntegrationTest {
@@ -36,7 +34,7 @@ public class RuleServiceImplTest extends AbstractBaseIntegrationTest {
 	RulesService rulesService;
 
 	@Resource
-	private ProcessCodeService processCodeService;
+	private DeprecatedProcessCodeService processCodeService;
 
 	@Resource
 	private RuleFactory ruleFactory;
@@ -67,8 +65,8 @@ public class RuleServiceImplTest extends AbstractBaseIntegrationTest {
 		this.testGermplasmName = "test-germplasm-name";
 	}
 
-	private Name generateNewName(Integer typeId, Integer nStat) {
-		Name name = new Name();
+	private Name generateNewName(final Integer typeId, final Integer nStat) {
+		final Name name = new Name();
 		name.setTypeId(typeId);
 		name.setNstat(nStat);
 		name.setNval(this.testGermplasmName);
@@ -78,7 +76,7 @@ public class RuleServiceImplTest extends AbstractBaseIntegrationTest {
 	@Test
 	public void testRulesEngineUniqueCheckPass() {
 
-		List<Name> names = new ArrayList<Name>();
+		final List<Name> names = new ArrayList<>();
 		names.add(this.generateNewName(this.breedingMethodSnameType, 1));
 		this.row.setNames(names);
 
@@ -86,11 +84,11 @@ public class RuleServiceImplTest extends AbstractBaseIntegrationTest {
 
 		try {
 			Mockito.when(this.germplasmDataManager.checkIfMatches(Matchers.anyString())).thenReturn(false);
-			List<String> sequenceList = Arrays.asList(this.ruleFactory.getRuleSequenceForNamespace("naming"));
+			List<String> sequenceList = Arrays.asList(this.ruleFactory.getRuleSequenceForNamespace(RuleExecutionNamespace.NAMING));
 			sequenceList = new ArrayList<>(sequenceList);
-			sequenceList.add(EnforceUniqueNameRule.KEY);
-			NamingRuleExecutionContext ruleExecutionContext =
-					new NamingRuleExecutionContext(sequenceList, this.processCodeService, this.row, this.germplasmDataManager,
+			sequenceList.add(DeprecatedEnforceUniqueNameRule.KEY);
+			DeprecatedNamingRuleExecutionContext ruleExecutionContext =
+					new DeprecatedNamingRuleExecutionContext(sequenceList, this.processCodeService, this.row, this.germplasmDataManager,
 							new ArrayList<String>());
 			ruleExecutionContext.setMessageSource(this.messageSource);
 			List<String> results = (List<String>) this.rulesService.runRules(ruleExecutionContext);
@@ -110,7 +108,7 @@ public class RuleServiceImplTest extends AbstractBaseIntegrationTest {
 	@Test
 	public void testRulesEngineUniqueCheckFail() {
 
-		List<Name> names = new ArrayList<Name>();
+		final List<Name> names = new ArrayList<>();
 		names.add(this.generateNewName(this.breedingMethodSnameType, 1));
 		this.row.setNames(names);
 
@@ -121,12 +119,12 @@ public class RuleServiceImplTest extends AbstractBaseIntegrationTest {
 			Mockito.when(this.germplasmDataManager.checkIfMatches(Matchers.anyString())).thenReturn(true).thenReturn(true)
 					.thenReturn(false);
 
-			List<String> sequenceList = Arrays.asList(this.ruleFactory.getRuleSequenceForNamespace("naming"));
+			List<String> sequenceList = Arrays.asList(this.ruleFactory.getRuleSequenceForNamespace(RuleExecutionNamespace.NAMING));
 			sequenceList = new ArrayList<>(sequenceList);
-			sequenceList.add(EnforceUniqueNameRule.KEY);
+			sequenceList.add(DeprecatedEnforceUniqueNameRule.KEY);
 
-			NamingRuleExecutionContext ruleExecutionContext =
-					new NamingRuleExecutionContext(sequenceList, this.processCodeService, this.row, this.germplasmDataManager,
+			DeprecatedNamingRuleExecutionContext ruleExecutionContext =
+					new DeprecatedNamingRuleExecutionContext(sequenceList, this.processCodeService, this.row, this.germplasmDataManager,
 							new ArrayList<String>());
 			ruleExecutionContext.setMessageSource(this.messageSource);
 

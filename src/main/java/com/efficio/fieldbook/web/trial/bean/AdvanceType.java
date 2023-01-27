@@ -1,14 +1,15 @@
 package com.efficio.fieldbook.web.trial.bean;
 
+@Deprecated
 public enum AdvanceType {
 	STUDY("study"), //
-	SAMPLE("sample"), //
+	SAMPLE("deprecatedSample"), //
 	NONE("") //
 	;
 
 	private final String lowerCaseName;
 
-	AdvanceType(String lowerCaseName) {
+	AdvanceType(final String lowerCaseName) {
 		this.lowerCaseName = lowerCaseName;
 	}
 
@@ -16,8 +17,8 @@ public enum AdvanceType {
 		return lowerCaseName;
 	}
 
-	public static AdvanceType fromLowerCaseName(String lowerCaseName) {
-		for (AdvanceType advanceType : AdvanceType.values()) {
+	public static AdvanceType fromLowerCaseName(final String lowerCaseName) {
+		for (final AdvanceType advanceType : AdvanceType.values()) {
 			if (advanceType.getLowerCaseName().equals(lowerCaseName)) {
 				return advanceType;
 			}
