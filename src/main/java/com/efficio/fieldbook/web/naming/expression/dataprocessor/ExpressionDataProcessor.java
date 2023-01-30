@@ -7,6 +7,7 @@ import org.generationcp.middleware.domain.dms.Study;
 import org.generationcp.middleware.domain.etl.MeasurementRow;
 import org.generationcp.middleware.domain.etl.Workbook;
 
+@Deprecated
 public interface ExpressionDataProcessor {
 
     /**

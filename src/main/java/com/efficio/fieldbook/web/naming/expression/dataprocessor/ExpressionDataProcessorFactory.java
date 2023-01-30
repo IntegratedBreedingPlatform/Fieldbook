@@ -11,6 +11,7 @@ import org.generationcp.middleware.domain.etl.Workbook;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class ExpressionDataProcessorFactory implements ComponentFactory<ExpressionDataProcessor> {
     
     private List<ExpressionDataProcessor> dataProcessorList;
