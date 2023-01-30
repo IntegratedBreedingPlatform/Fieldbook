@@ -459,8 +459,10 @@
 			$scope.init();
 		}]);
 
-	manageTrialApp.controller('AdvanceModalCtrl', ['$scope', '$q', 'studyContext', '$uibModalInstance', 'trialInstances', 'advanceType', 'noOfReplications', 'advanceStudyModalService',
-		function ($scope, $q, studyContext, $uibModalInstance, trialInstances, advanceType, noOfReplications, advanceStudyModalService) {
+	manageTrialApp.controller('AdvanceModalCtrl', ['$scope', '$q', 'studyContext', '$uibModalInstance', 'trialInstances', 'advanceType',
+		'noOfReplications', 'advanceStudyModalService','$window', '$rootScope', 'EVENTS',
+		function ($scope, $q, studyContext, $uibModalInstance, trialInstances, advanceType, noOfReplications, advanceStudyModalService,
+				  $window, $rootScope, EVENTS) {
 
 			$scope.url = `/ibpworkbench/controller/jhipster#/advance-${advanceType}?restartApplication` +
 				'&cropName=' + studyContext.cropName +
@@ -471,14 +473,55 @@
 
 			$scope.advanceType = advanceType;
 
-			window.closeModal = function(advanceType) {
-				$uibModalInstance.close(null);
-				advanceStudyModalService.startAdvance(advanceType, true);
-			};
+			$scope.advanceSuccess = false;
+
+			$window.addEventListener("message", onMessage);
 
 			$scope.cancel = function() {
 				$uibModalInstance.close(null);
+
+				if ($scope.advanceSuccess) {
+					redirectToCrossesAndSelectionsTab();
+				}
 			};
+
+			// Clean the listener previously added using addEventListener. This a workaround to avoid having a listener each time this controller is being created.
+			$scope.$on('$destroy', function() {
+				$window.removeEventListener("message" , onMessage);
+			});
+
+			function onMessage(event) {
+				if (event.data.name === EVENTS.SELECT_INSTANCES) {
+					$uibModalInstance.close(null);
+					advanceStudyModalService.startAdvance(event.data.advanceType, true);
+				}
+
+				if (event.data.name === EVENTS.GERMPLASM_LIST_CREATED) {
+					$uibModalInstance.close(null);
+					showSuccessfulMessage('', saveListSuccessfullyMessage);
+
+					redirectToCrossesAndSelectionsTab();
+				}
+
+				if (event.data.name === EVENTS.ADVANCE_SUCCESS) {
+					$scope.advanceSuccess = true;
+				}
+
+				if (event.data.name === EVENTS.TREE_STATE_PERSISTED) {
+					$uibModalInstance.close(null);
+
+					redirectToCrossesAndSelectionsTab();
+				}
+			}
+
+			function redirectToCrossesAndSelectionsTab() {
+				// Notify the application that germplasm has been saved. This will display the 'Crosses and Selections'
+				// tab if germplasm is already created within the study.
+				$rootScope.$broadcast('germplasmListSaved');
+
+				// Refresh and show the 'Crosses and Selections' tab after saving the germplasm list
+				$rootScope.navigateToTab('germplasmStudySource', {reload: true});
+			}
 
 		}]);
 
