@@ -799,15 +799,8 @@
 				table().ajax.reload();
 			};
 
-			$scope.resetFilterByColumn = function () {
-				$scope.columnFilter.columnData.query = '';
-				$scope.columnFilter.columnData.sortingAsc = null;
-				if ($scope.columnFilter.columnData.possibleValues) {
-					$scope.columnFilter.columnData.possibleValues.forEach(function (value) {
-						value.isSelectedInFilters = false;
-					});
-					$scope.columnFilter.columnData.isSelectAll = false;
-				}
+			$scope.resetFilterByColumn = function (index) {
+				resetFilterByColumnByIndex(index);
 				resetChecksStatus();
 				table().ajax.reload();
 			};
@@ -847,6 +840,17 @@
 				}
 			};
 
+			function resetFilterByColumnByIndex(index) {
+				var columnData = $scope.columnsObj.columns[index].columnData;
+				columnData.query = '';
+				columnData.sortingAsc = null;
+				if ($scope.columnFilter.columnData.possibleValues) {
+					columnData.possibleValues.forEach(function (value) {
+						value.isSelectedInFilters = false;
+					});
+					columnData.isSelectAll = false;
+				}
+			}
 
 			function table() {
 				return $scope.nested.dtInstance.DataTable;
@@ -961,7 +965,6 @@
 					byOverwritten: $scope.selectedStatusFilter === "5" || null,
 					variableId: variableId,
 					variableHasValue: null,
-					filterColumns: [],
 					filteredValues: $scope.columnsObj.columns.reduce(function (map, column) {
 						var columnData = column.columnData;
 						columnData.isFiltered = false;
@@ -1499,7 +1502,11 @@
 			}
 
 			function addColumnVisibilityCallback() {
-				table().on('column-visibility.dt', function (e, settings, column, state) {
+				table().on('column-visibility.dt', function (e, settings, columnIndex, isVisible) {
+					// If the column is not visible, we should reset the column filter
+					if (!isVisible) {
+						resetFilterByColumnByIndex(columnIndex);
+					}
 					// When this callback function is executed multiple times consecutively in a span of 1500 milliseconds
 					// Then make sure that the datatables is only reloaded once
 					reloadDataTableWithTimeout.setup(1500);
