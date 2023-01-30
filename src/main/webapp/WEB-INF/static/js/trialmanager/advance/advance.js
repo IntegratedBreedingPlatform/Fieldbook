@@ -460,9 +460,9 @@
 		}]);
 
 	manageTrialApp.controller('AdvanceModalCtrl', ['$scope', '$q', 'studyContext', '$uibModalInstance', 'trialInstances', 'advanceType',
-		'noOfReplications', 'advanceStudyModalService','$window', '$rootScope',
+		'noOfReplications', 'advanceStudyModalService','$window', '$rootScope', 'EVENTS',
 		function ($scope, $q, studyContext, $uibModalInstance, trialInstances, advanceType, noOfReplications, advanceStudyModalService,
-				  $window, $rootScope) {
+				  $window, $rootScope, EVENTS) {
 
 			$scope.url = `/ibpworkbench/controller/jhipster#/advance-${advanceType}?restartApplication` +
 				'&cropName=' + studyContext.cropName +
@@ -491,23 +491,23 @@
 			});
 
 			function onMessage(event) {
-				if (event.data.name === 'on-select-instances') {
+				if (event.data.name === EVENTS.SELECT_INSTANCES) {
 					$uibModalInstance.close(null);
 					advanceStudyModalService.startAdvance(event.data.advanceType, true);
 				}
 
-				if (event.data.name === 'on-germplasm-list-created') {
+				if (event.data.name === EVENTS.GERMPLASM_LIST_CREATED) {
 					$uibModalInstance.close(null);
 					showSuccessfulMessage('', saveListSuccessfullyMessage);
 
 					redirectToCrossesAndSelectionsTab();
 				}
 
-				if (event.data.name === 'on-advance-finished-successfully') {
+				if (event.data.name === EVENTS.ADVANCE_SUCCESS) {
 					$scope.advanceSuccess = true;
 				}
 
-				if (event.data.name === 'on-tree-state-persisted') {
+				if (event.data.name === EVENTS.TREE_STATE_PERSISTED) {
 					$uibModalInstance.close(null);
 
 					redirectToCrossesAndSelectionsTab();
