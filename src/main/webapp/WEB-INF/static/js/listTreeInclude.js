@@ -158,7 +158,7 @@ function displayGermplasmListTree(treeName, isLocalOnly, isFolderOnly,
 	'use strict';
 	var lazyLoadUrlGetChildren = '/bmsapi/crops/' + cropName + '/germplasm-lists/tree?onlyFolders=false'
 		+ '&programUUID=' + currentProgramId + '&parentFolderId=';
-	var initLoadUrl = '/bmsapi/crops/' + cropName + '/germplasm-lists/tree-state?programUUID=' + currentProgramId + "&userId=" + currentCropUserId;
+	var initLoadUrl = '/bmsapi/crops/' + cropName + '/germplasm-lists/tree-state?programUUID=' + currentProgramId;
 	var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
 
 	var dynaTreeOptions = {
