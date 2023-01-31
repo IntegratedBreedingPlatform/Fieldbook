@@ -20,8 +20,8 @@
 		LINE_GID = 8836,
 		TESTER_GID = 8839,
 		OBS_UNIT_ID = 8201,
-	    ENTRY_NO = 8230,
-	    ENTRY_TYPE = 8255;
+		ENTRY_NO = 8230,
+		ENTRY_TYPE = 8255;
 	var SAMPLES = -2;
 	var STOCK_ID = -1727;
 	var hiddenColumns = [OBS_UNIT_ID, TRIAL_INSTANCE];
@@ -65,7 +65,7 @@
 			$scope.enableActions = false;
 			$scope.isCategoricalDescriptionView = window.isCategoricalDescriptionView;
 			$scope.targetkey = 'newValueBatchUpdate';
-			$scope.valuecontainer = {newValueBatchUpdate : $scope.nested.newValueBatchUpdate};
+			$scope.valuecontainer = {newValueBatchUpdate: $scope.nested.newValueBatchUpdate};
 
 			var subObservationTab = $scope.subObservationTab;
 			var tableId = '#subobservation-table-' + subObservationTab.id + '-' + subObservationSet.id;
@@ -634,7 +634,7 @@
 			};
 
 			$scope.changeEnvironment = function () {
-				table().columns('.termId-'+TRIAL_INSTANCE).visible($scope.nested.selectedEnvironment === $scope.environments[0]);
+				table().columns('.termId-' + TRIAL_INSTANCE).visible($scope.nested.selectedEnvironment === $scope.environments[0]);
 				resetChecksStatus();
 				table().ajax.reload();
 			};
@@ -741,7 +741,7 @@
 				}
 
 				const filter = getFilter();
-				if($scope.nested.selectedBatchAction.id === 3) {
+				if ($scope.nested.selectedBatchAction.id === 3) {
 					filter.variableHasValue = true;
 				}
 				var param = JSON.stringify({
@@ -1143,8 +1143,8 @@
 				table().columns().every(function () {
 					if ($scope.isCheckBoxColumn(this.index())) {
 						$(this.header()).prepend($compile('<span>'
-								+ '<input type="checkbox" title="select current page" ng-checked="isPageSelected()"  ng-click="onSelectPage()">'
-								+ '</span>')($scope));
+							+ '<input type="checkbox" title="select current page" ng-checked="isPageSelected()"  ng-click="onSelectPage()">'
+							+ '</span>')($scope));
 						return;
 					}
 					if (this.index() === 1 && $scope.isFileStorageConfigured) {
@@ -1712,8 +1712,8 @@
 								$(td).append($compile(
 									'<div ng-click="showFiles(\'' + rowData.variables['OBS_UNIT_ID'].value + '\')" '
 									+ (rowData.fileCount
-									? ' title="# of files: ' + rowData.fileCount + '"'
-									: ' title="click to open the file manager" class="show-on-hover" ng-show="hasAnyAuthority(PERMISSIONS.MS_MANAGE_FILES_PERMISSION)"')
+										? ' title="# of files: ' + rowData.fileCount + '"'
+										: ' title="click to open the file manager" class="show-on-hover" ng-show="hasAnyAuthority(PERMISSIONS.MS_MANAGE_FILES_PERMISSION)"')
 									+ ' style="cursor: pointer">'
 									+ '<i class="glyphicon glyphicon-duplicate text-info ' + (rowData.fileCount ? '' : '') + '" '
 									+ 'style="font-size: 1.2em">&nbsp;</i>'
@@ -1805,7 +1805,7 @@
 							targets: columns.length - 1,
 							orderable: false,
 							render: function (data, type, full, meta) {
-								return (data.value === "0")  ? '-' : data.value;
+								return (data.value === "0") ? '-' : data.value;
 							}
 						});
 					} else if (!columnData.factor) { // variates
@@ -1848,7 +1848,7 @@
 									if (value === undefined) {
 										value = '';
 									}
-									value +=  '<i onclick="showFiles(\'' + full.variables['OBS_UNIT_ID'].value + '\''
+									value += '<i onclick="showFiles(\'' + full.variables['OBS_UNIT_ID'].value + '\''
 										+ ', \'' + columnData.name + '\')" '
 										+ ' class="glyphicon glyphicon-duplicate text-info" '
 										+ ' title="click to see associated files"'
@@ -2042,7 +2042,7 @@
 							+ '&observationUnitUUID=' + observationUnitUUID
 							+ '&variableName=' + (variableName || '');
 
-						window.closeModal = function() {
+						window.closeModal = function () {
 							$uibModalInstance.close();
 						}
 					},
@@ -2072,7 +2072,7 @@
 				},
 				controller: function ($scope, BREEDING_METHOD_SCALE) {
 					$scope.targetkey = 'observationValue';
-					$scope.valuecontainer = {observationValue : $scope.observation.value};
+					$scope.valuecontainer = {observationValue: $scope.observation.value};
 					$scope.isBreedingMethod = parseInt(BREEDING_METHOD_SCALE, 10) === parseInt($scope.columnData.scaleId, 10);
 					$scope.doBlur = function ($event) {
 						if ($event.keyCode === 13) {
@@ -2080,7 +2080,7 @@
 						}
 					}
 
-					$scope.valuecontainer.onOpenClose = function(isOpen) {
+					$scope.valuecontainer.onOpenClose = function (isOpen) {
 						$scope.observation.value = $scope.valuecontainer.observationValue;
 						$scope.observation.onOpenClose(isOpen);
 					}

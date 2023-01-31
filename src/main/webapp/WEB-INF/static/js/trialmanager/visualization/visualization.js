@@ -195,6 +195,7 @@
 					}
 					return undefined;
 				}
+
 				ngModelCtrl.$parsers.push(fromUser);
 			}
 		};
