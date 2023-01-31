@@ -18,7 +18,6 @@ import org.generationcp.middleware.enumeration.DatasetTypeEnum;
 import org.generationcp.middleware.exceptions.PhenotypeException;
 import org.generationcp.middleware.service.api.DataImportService;
 import org.generationcp.middleware.service.api.FieldbookService;
-import org.generationcp.middleware.service.api.user.UserService;
 import org.generationcp.middleware.util.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,9 +64,6 @@ public class ImportObservationsController extends AbstractBaseETLController {
 	@Autowired
 	private FieldbookService fieldbookService;
 
-	@Autowired
-	private UserService userService;
-
 	private boolean hasErrors;
 
 	@Override
@@ -97,7 +93,8 @@ public class ImportObservationsController extends AbstractBaseETLController {
 			programUUID = this.contextUtil.getCurrentProgramUUID();
 			final Workbook workbook = this.etlService.retrieveCurrentWorkbook(this.userSelection);
 			final boolean isMeansDataImport =
-				this.userSelection.getDatasetType() != null && this.userSelection.getDatasetType().intValue() == DatasetTypeEnum.MEANS_DATA.getId();
+				this.userSelection.getDatasetType() != null
+					&& this.userSelection.getDatasetType().intValue() == DatasetTypeEnum.MEANS_DATA.getId();
 
 			importData = this.etlService.createWorkbookFromUserSelection(this.userSelection, isMeansDataImport);
 
@@ -187,13 +184,14 @@ public class ImportObservationsController extends AbstractBaseETLController {
 		final String programUUID) {
 		final List<String> errors = new ArrayList<>();
 		try {
+			final Integer userId = this.contextUtil.getCurrentWorkbenchUserId();
 			final org.generationcp.middleware.domain.etl.Workbook referenceWorkbook = this.dataImportService
 				.parseWorkbookDescriptionSheet(
 					this.etlService.retrieveCurrentWorkbook(this.userSelection),
-					this.contextUtil.getCurrentWorkbenchUserId());
+					userId);
 			importData.setConstants(referenceWorkbook.getConstants());
 			importData.setConditions(referenceWorkbook.getConditions());
-			importData.setUserId(this.userService.getCurrentlyLoggedInUserId());
+			importData.setUserId(userId);
 			this.dataImportService.addExptDesignVariableIfNotExists(importData, importData.getFactors(), programUUID);
 			this.dataImportService.addLocationIDVariableIfNotExists(importData, importData.getFactors(), programUUID);
 			this.dataImportService.addEntryTypeVariableIfNotExists(importData, programUUID);
@@ -260,7 +258,7 @@ public class ImportObservationsController extends AbstractBaseETLController {
 
 			if (stdVar != null &&
 				(stdVar.getVariableTypes().contains(VariableType.TRAIT) ||
-				 stdVar.getVariableTypes().contains(VariableType.SELECTION_METHOD))) {
+					stdVar.getVariableTypes().contains(VariableType.SELECTION_METHOD))) {
 				stdVar.setPhenotypicType(PhenotypicType.VARIATE);
 				item.setVariable(stdVar);
 				newMappingResults.add(item);
