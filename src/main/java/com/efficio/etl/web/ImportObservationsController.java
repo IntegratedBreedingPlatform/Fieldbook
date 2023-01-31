@@ -18,6 +18,7 @@ import org.generationcp.middleware.enumeration.DatasetTypeEnum;
 import org.generationcp.middleware.exceptions.PhenotypeException;
 import org.generationcp.middleware.service.api.DataImportService;
 import org.generationcp.middleware.service.api.FieldbookService;
+import org.generationcp.middleware.service.api.user.UserService;
 import org.generationcp.middleware.util.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +64,9 @@ public class ImportObservationsController extends AbstractBaseETLController {
 
 	@Autowired
 	private FieldbookService fieldbookService;
+
+	@Autowired
+	private UserService userService;
 
 	private boolean hasErrors;
 
@@ -189,6 +193,7 @@ public class ImportObservationsController extends AbstractBaseETLController {
 					this.contextUtil.getCurrentWorkbenchUserId());
 			importData.setConstants(referenceWorkbook.getConstants());
 			importData.setConditions(referenceWorkbook.getConditions());
+			importData.setUserId(this.userService.getCurrentlyLoggedInUserId());
 			this.dataImportService.addExptDesignVariableIfNotExists(importData, importData.getFactors(), programUUID);
 			this.dataImportService.addLocationIDVariableIfNotExists(importData, importData.getFactors(), programUUID);
 			this.dataImportService.addEntryTypeVariableIfNotExists(importData, programUUID);
