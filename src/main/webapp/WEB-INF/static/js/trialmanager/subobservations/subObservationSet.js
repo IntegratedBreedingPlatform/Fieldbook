@@ -1664,8 +1664,8 @@
 						if (columnData.termId === TRIAL_INSTANCE) {
 							return $scope.nested.selectedEnvironment === $scope.environments[0]
 						}
-						// ENTRY_NO and ENTRY_TYPE should be visible in the table by default
-						if (columnData.termId === ENTRY_NO || columnData.termId === ENTRY_TYPE) {
+						// ENTRY_NO, ENTRY_TYPE and SUM_OF_SAMPLES should be visible in the table by default
+						if (columnData.termId === ENTRY_NO || columnData.termId === ENTRY_TYPE || columnData.termId === SAMPLES) {
 							return true;
 						}
 
