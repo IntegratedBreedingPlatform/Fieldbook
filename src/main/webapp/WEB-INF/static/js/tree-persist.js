@@ -37,7 +37,6 @@ var TreePersist = {
 		var programFolders = TreePersist.retrieveExpandedNodes(isTreeTable,
 			containerSection);
 		var data = {
-			userId: currentCropUserId,
 			programFolders: programFolders,
 			cropFolders: null
 		}
@@ -149,7 +148,7 @@ var TreePersist = {
 		var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
 
 		$.ajax({
-			url: '/bmsapi/crops/' + cropName + '/germplasm-lists/tree-state?programUUID=' + currentProgramId + '&userId=' + currentCropUserId,
+			url: '/bmsapi/crops/' + cropName + '/germplasm-lists/tree-state?programUUID=' + currentProgramId,
 			type : 'GET',
 			data : '',
 			cache : false,

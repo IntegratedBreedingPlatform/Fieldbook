@@ -791,6 +791,11 @@
 			}).constant('SEARCH_ORIGIN', {
 				MANAGE_STUDY_SOURCE: /*[[${T(org.generationcp.middleware.domain.inventory.common.SearchOriginCompositeDto.SearchOrigin).MANAGE_STUDY_SOURCE}]]*/ null,
 				MANAGE_STUDY_PLOT: /*[[${T(org.generationcp.middleware.domain.inventory.common.SearchOriginCompositeDto.SearchOrigin).MANAGE_STUDY_PLOT}]]*/ null
+			}).constant('EVENTS', {
+				SELECT_INSTANCES: 'on-select-instances',
+				GERMPLASM_LIST_CREATED: 'on-germplasm-list-created',
+				ADVANCE_SUCCESS: 'on-advance-finished-successfully',
+				TREE_STATE_PERSISTED: 'on-tree-state-persisted',
 			});
 
 			$(document).ready(function () {
