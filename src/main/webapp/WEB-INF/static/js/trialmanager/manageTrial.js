@@ -333,6 +333,9 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 
 			$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
 			$scope.PERMISSIONS = PERMISSIONS;
+
+			$scope.returnToManageStudiesURL = "/ibpworkbench/main/app/#/study-manager?cropName=" + studyContext.cropName + "&programUUID=" + studyContext.programId;
+
 			if ($scope.isOpenStudy()) {
 				$scope.trialTabs.push({
 					name: 'Germplasm & Checks',

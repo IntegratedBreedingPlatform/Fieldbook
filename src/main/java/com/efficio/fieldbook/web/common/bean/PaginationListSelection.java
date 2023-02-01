@@ -109,6 +109,7 @@ public class PaginationListSelection implements Serializable {
 	 * @param id the id
 	 * @param form the form
 	 */
+	@Deprecated
 	public void addReviewWorkbook(String id, Workbook workbook) {
 		this.reviewWorkbookList.put(id, workbook);
 	}
