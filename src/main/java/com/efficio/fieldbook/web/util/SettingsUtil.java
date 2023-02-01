@@ -855,6 +855,7 @@ public class SettingsUtil {
 		return mvar;
 	}
 
+	@Deprecated
 	public static StudyDetails convertWorkbookToStudyDetails(
 		final Workbook workbook, final org.generationcp.middleware.service.api.FieldbookService fieldbookMiddlewareService,
 		final FieldbookService fieldbookService, final UserSelection userSelection, final String programUUID,
@@ -894,6 +895,7 @@ public class SettingsUtil {
 		return studyDetails;
 	}
 
+	@Deprecated
 	static StudyDetails convertWorkbookStudyLevelVariablesToStudyDetails(
 		final Workbook workbook,
 		final org.generationcp.middleware.service.api.FieldbookService fieldbookMiddlewareService, final FieldbookService fieldbookService,
@@ -1017,6 +1019,7 @@ public class SettingsUtil {
 		return name;
 	}
 
+	@Deprecated
 	private static List<SettingDetail> convertWorkbookToSettingDetails(
 		final List<String> fields,
 		final List<MeasurementVariable> conditions,
@@ -1177,6 +1180,7 @@ public class SettingsUtil {
 		return variableLabels;
 	}
 
+	@Deprecated
 	private static String getSpecialFieldValue(
 		final String specialFieldLabel, final Integer datasetId,
 		final org.generationcp.middleware.service.api.FieldbookService fieldbookMiddlewareService, final Workbook workbook) {

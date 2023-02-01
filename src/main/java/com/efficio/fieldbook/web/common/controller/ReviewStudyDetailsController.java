@@ -100,6 +100,7 @@ public class ReviewStudyDetailsController extends AbstractBaseFieldbookControlle
 		return TRIAL_MANAGER_REVIEW_TRIAL_DETAILS;
 	}
 
+	@Deprecated
 	@RequestMapping(value = "/show/{id}", method = RequestMethod.GET)
 	public String show(@PathVariable final int id, @ModelAttribute("createTrialForm") final CreateTrialForm form,
 		final Model model) {
@@ -143,6 +144,7 @@ public class ReviewStudyDetailsController extends AbstractBaseFieldbookControlle
 		return this.showAjaxPage(model, this.getContentName());
 	}
 
+	@Deprecated
 	void addErrorMessageToResult(final StudyDetails details, final MiddlewareException e, final int id) {
 		final String param = AppConstants.STUDY.getString();
 		details.setId(id);
@@ -160,11 +162,13 @@ public class ReviewStudyDetailsController extends AbstractBaseFieldbookControlle
 		return this.fieldbookMiddlewareService.getDatasetReferences(nurseryId);
 	}
 
+	@Deprecated
 	private void rearrangeDetails(final StudyDetails details) {
 		details.setBasicStudyDetails(this.rearrangeSettingDetails(details.getBasicStudyDetails()));
 		details.setManagementDetails(this.rearrangeSettingDetails(details.getManagementDetails()));
 	}
 
+	@Deprecated
 	private List<SettingDetail> rearrangeSettingDetails(final List<SettingDetail> list) {
 		final List<SettingDetail> newList = new ArrayList<>();
 
@@ -288,6 +292,7 @@ public class ReviewStudyDetailsController extends AbstractBaseFieldbookControlle
 		this.studyEntryService = studyEntryService;
 	}
 
+	@Deprecated
 	private long countNumberOfChecks(final StudyDetails studyDetails, final Optional<Long> nonReplicatedEntriesCount) {
 	  final long checkEntriesCount = this.studyEntryService.countStudyGermplasmByEntryTypeIds(studyDetails.getId(), this.getAllCheckEntryTypeIds());
 
@@ -298,6 +303,7 @@ public class ReviewStudyDetailsController extends AbstractBaseFieldbookControlle
 	  return checkEntriesCount;
 	}
 
+	@Deprecated
 	private int getExperimentalDesignValue(final StudyDetails studyDetails) {
 	  if (studyDetails.getExperimentalDesignDetails() != null && studyDetails.getExperimentalDesignDetails().getExperimentalDesign() != null) {
 	    return studyDetails.getExperimentalDesignDetails().getExperimentalDesign().getValue() == null ? 0 :
@@ -306,6 +312,7 @@ public class ReviewStudyDetailsController extends AbstractBaseFieldbookControlle
 	  return 0;
 	}
 
+	@Deprecated
 	private Optional<Long> getNonReplicatedEntriesCount(final StudyDetails studyDetails) {
 		if (TermId.P_REP.getId() == this.getExperimentalDesignValue(studyDetails)) {
 			return Optional.of(this.studyEntryService.countStudyGermplasmByEntryTypeIds(studyDetails.getId(),
