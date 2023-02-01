@@ -844,7 +844,7 @@
 				var columnData = $scope.columnsObj.columns[index].columnData;
 				columnData.query = '';
 				columnData.sortingAsc = null;
-				if ($scope.columnFilter.columnData.possibleValues) {
+				if (columnData && columnData.possibleValues) {
 					columnData.possibleValues.forEach(function (value) {
 						value.isSelectedInFilters = false;
 					});
