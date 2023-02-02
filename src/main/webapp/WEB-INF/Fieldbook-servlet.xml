@@ -33,22 +33,6 @@
 	<mvc:resources mapping="/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/dynamic/**" location="/WEB-INF/dynamic/" />
 
-	<mvc:interceptors>
-		<bean
-			class="com.efficio.fieldbook.web.interceptor.FieldbookHandlerInterceptor" />
-
-		<bean id="webContentInterceptor"
-			class="org.springframework.web.servlet.mvc.WebContentInterceptor">
-			<property name="cacheSeconds" value="0" />
-			<property name="useExpiresHeader" value="true" />
-			<property name="useCacheControlHeader" value="true" />
-			<property name="useCacheControlNoStore" value="true" />
-		</bean>
-	</mvc:interceptors>
-
-
-
-
 	<!-- **************************************************************** -->
 	<!-- SPRING ANNOTATION PROCESSING -->
 	<!-- **************************************************************** -->
