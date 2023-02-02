@@ -11,11 +11,6 @@
 
 package com.efficio.fieldbook.web.study.service;
 
-import org.generationcp.middleware.exceptions.WorkbookParserException;
-
-import com.efficio.fieldbook.web.common.bean.ImportResult;
-
 public interface ImportStudyService {
 
-	ImportResult importWorkbook() throws WorkbookParserException;
 }
