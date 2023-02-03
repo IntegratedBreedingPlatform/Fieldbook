@@ -66,6 +66,7 @@
 
 		const listId = '[[*{listId}]]';
 		const selectAllId = '#sample-select-all-[[*{listId}]]';
+
 		$(selectAllId).click(function () {
 			const isSelectAllChecked = $(this).is(':checked');
 
@@ -75,6 +76,14 @@
 					$(this).trigger('click');
 				}
 			});
+		});
+
+		$('#sample-list-' + listId).on('draw.dt', function() {
+			const isSelectAllChecked = $(selectAllId).is(':checked');
+			if (isSelectAllChecked) {
+				// untick select all on page change
+				$(selectAllId).trigger('click');
+			}
 		});
 
 	});
