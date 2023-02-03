@@ -13,6 +13,7 @@
 			       class="table-curved table-condensed">
 				<thead>
 				<tr>
+					<th><input type="checkbox" th:id="'sample-select-all-'+ *{listId}" th:value="*{listId}"/></th>
 					<th nowrap="nowrap" th:each="tableHeader : ${tableHeaderList}"
 						th:text="${tableHeader.columnName}"
 					    th:attr="data-col-name=${tableHeader.dataCol}"
@@ -21,6 +22,9 @@
 				</thead>
 				<tbody>
 				<tr class="primaryRow" th:each="sample, row : *{sampleList}" th:attr="data-gid=${sample.gid}">
+					<td th:class="${row.even}? 'even' : 'odd'" >
+						<input type="checkbox" th:name="'sample-entry-' + *{listId}" th:value="*{sample.sampleId}" />
+					</td>
 					<td th:class="${row.even}? 'even' : 'odd'" th:text="${sample.entryNumber}"></td>
 					<td th:class="${row.even}? 'even' : 'odd'">
 						<a href="javascript: void(0)" class="gid-link" th:attr="data-gid=${sample.gid}" th:text="${sample.designation}"
@@ -59,6 +63,16 @@
 			const gid = $(this).attr('data-gid');
 			openGermplasmDetailsPopup(gid);
 		});
+
+		const selectAllId = '#sample-select-all-[[*{listId}]]';
+		$(selectAllId).click(function () {
+			const listId = $(this).val();
+
+			$('input:checkbox[name=sample-entry-' + listId + ']').each(function () {
+				$(this).trigger('click');
+			});
+		});
 	});
+
 	//]]>
 </script>

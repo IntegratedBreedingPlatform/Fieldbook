@@ -2,15 +2,18 @@ package com.efficio.fieldbook.web.common.controller;
 
 import com.efficio.fieldbook.web.common.bean.TableHeader;
 import org.apache.commons.lang3.StringUtils;
+import org.generationcp.commons.security.AuthorizationService;
 import org.generationcp.middleware.constant.ColumnLabels;
 import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.domain.sample.SampleDetailsDTO;
 import org.generationcp.middleware.exceptions.MiddlewareQueryException;
 import org.generationcp.middleware.manager.api.OntologyDataManager;
 import org.generationcp.middleware.pojos.SampleList;
+import org.generationcp.middleware.pojos.workbench.PermissionsEnum;
 import org.generationcp.middleware.service.api.SampleListService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -60,6 +64,9 @@ public class SampleListController {
 	@Resource
 	private SampleListService sampleListService;
 
+	@Autowired
+	protected AuthorizationService authorizationService;
+
 	@RequestMapping(value = "/sampleList/{listId}", method = RequestMethod.GET)
 	public String displaySampleList(@PathVariable final Integer listId, final HttpServletRequest req, final Model model) {
 		this.processSampleList(listId, req, model);
@@ -88,6 +95,9 @@ public class SampleListController {
 			model.addAttribute("listNotes", notes);
 			model.addAttribute("listType", type);
 
+			model.addAttribute("hasDeleteSamplesPermission",
+				this.authorizationService.isSuperAdminUser()
+					|| this.authorizationService.hasAnyAuthority(Arrays.asList(PermissionsEnum.DELETE_SAMPLES.name())));
 		} catch (final MiddlewareQueryException e) {
 			SampleListController.LOG.error(e.getMessage(), e);
 		}
