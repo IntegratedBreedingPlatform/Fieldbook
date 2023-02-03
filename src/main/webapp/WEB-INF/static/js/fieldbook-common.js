@@ -837,6 +837,49 @@ function subObservationUnitDatasetSelector() {
 
 /* END SUB OBSERVATION UNIT SPECIFIC FUNCTIONS */
 
+/* SAMPLE LIST TAB SPECIFIC FUNCTIONS */
+function openRemoveSampleEntryConfirmation(listId, listName) {
+	'use strict';
+
+	if($('#sample-list-' + listId).DataTable().$('input:checkbox[name=sample-entry-' + listId + ']:checked').length < 1) {
+		showErrorMessage('', 'Please select at least one entry.');
+		return;
+	}
+
+	$('#removeSampleListEntries').modal({backdrop: 'static', keyboard: true});
+	$('#listIdHidden').val(listId);
+	$('#listNameHidden').val(listName);
+}
+function removeSelectedSampleEntries () {
+	'use strict';
+	closeModal('removeSampleListEntries');
+
+	var baseurl = '/bmsapi/crops/' + cropName + '/sample-lists';
+	var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
+	var selectedEntries = []
+	var listId = $('#listIdHidden').val();
+	var listName = $('#listNameHidden').val();
+
+	$('#sample-list-' + listId).DataTable().$('input:checkbox[name=sample-entry-' + listId + ']:checked').each(function(){
+		selectedEntries.push($(this).val());
+	});
+
+	return $.ajax({
+		url: baseurl + '/' + listId + '/entries?programUUID='+ currentProgramId + "&selectedEntries="
+			+ selectedEntries.join(","),
+		contentType: 'application/json',
+		type: 'DELETE',
+		beforeSend: function (xhr) {
+			xhr.setRequestHeader('X-Auth-Token', xAuthToken);
+		},
+		success: function(resp) {
+			showSuccessfulMessage('', removeSampleListEntriesSuccessfullyMessage);
+			displaySampleList(listId, listName, false);
+		}
+	});
+}
+/* END SAMPLE LIST TAB SPECIFIC FUNCTIONS */
+
 function openSampleSummary(obsUnitId, plotNumber, programUUID) {
 	'use strict';
 	BMS.Fieldbook.SamplesSummaryDataTable('#samples-summary-table', obsUnitId, plotNumber, programUUID);

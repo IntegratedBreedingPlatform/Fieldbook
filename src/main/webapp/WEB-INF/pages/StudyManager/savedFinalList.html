@@ -59,7 +59,7 @@
 							   th:text="#{export.sample.list}">
 								Export sample list</a>
 							<a th:if="*{hasManageStudiesPermission}" href="javascript: void(0)"
-														 th:onclick="'javascript: DeleteSamples.removeSelectedEntries('+ *{listId} + ',\'' + *{listName} + '\');'"
+														 th:onclick="'openRemoveSampleEntryConfirmation('+ *{listId} + ',\'' + *{listName} + '\');'"
 														 th:text="#{remove.sample.list.entries}">
 							Remove Selected Entries</a>
 						</li>
@@ -71,7 +71,6 @@
 </div>
 
 <script type="text/javascript" th:src="@{/static/js/trialmanager/exportSampleList.js}"></script>
-<script type="text/javascript" th:src="@{/static/js/trialmanager/deleteSamples.js}"></script>
 
 <div class="row">&nbsp;</div>
 <div class="row col-xs-12 col-md-12" id="inventory-germplasm-list">
