@@ -95,9 +95,9 @@ public class SampleListController {
 			model.addAttribute("listNotes", notes);
 			model.addAttribute("listType", type);
 
-			model.addAttribute("hasDeleteSamplesPermission",
+			model.addAttribute("hasManageStudiesPermission",
 				this.authorizationService.isSuperAdminUser()
-					|| this.authorizationService.hasAnyAuthority(Arrays.asList(PermissionsEnum.DELETE_SAMPLES.name())));
+					|| this.authorizationService.hasAnyAuthority(PermissionsEnum.MANAGE_STUDIES_PERMISSIONS));
 		} catch (final MiddlewareQueryException e) {
 			SampleListController.LOG.error(e.getMessage(), e);
 		}

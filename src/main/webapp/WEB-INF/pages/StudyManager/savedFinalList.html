@@ -58,7 +58,7 @@
 							   th:onclick="'javascript: ExportSampleList.exportFile('+ *{listId} + ',\'' + *{listName} + '\');'"
 							   th:text="#{export.sample.list}">
 								Export sample list</a>
-							<a th:if="*{hasDeleteSamplesPermission}" href="javascript: void(0)"
+							<a th:if="*{hasManageStudiesPermission}" href="javascript: void(0)"
 														 th:onclick="'javascript: DeleteSamples.removeSelectedEntries('+ *{listId} + ',\'' + *{listName} + '\');'"
 														 th:text="#{remove.sample.list.entries}">
 							Remove Selected Entries</a>
