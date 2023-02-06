@@ -1,5 +1,5 @@
-<div className="col-xs-12 col-md-12 main-inventory" style="" id="sample-list-pagination">
-	<form role="form-horizontal" className="form-horizontal" action="#"
+<div class="col-xs-12 col-md-12 main-inventory" style="" id="sample-list-pagination">
+	<form role="form-horizontal" class="form-horizontal" action="#"
 		  encType="multipart/form-data">
 
 		<input type="hidden" id="listId" th:value="*{listId}"/>
@@ -10,7 +10,7 @@
 
 		<div th:if="*{sampleList != null and not #lists.isEmpty(sampleList)}">
 			<table th:id="'sample-list-' + *{listId}" th:if="*{not #lists.isEmpty(sampleList)}" width="100%"
-				   className="table-curved table-condensed">
+				   class="table-curved table-condensed">
 				<thead>
 				<tr>
 					<th><input type="checkbox" th:id="'sample-select-all-'+ *{listId}" th:value="*{listId}"/></th>
@@ -21,14 +21,14 @@
 				</tr>
 				</thead>
 				<tbody>
-				<tr className="primaryRow" th:each="sample, row : *{sampleList}" th:attr="data-gid=${sample.gid}">
+				<tr class="primaryRow" th:each="sample, row : *{sampleList}" th:attr="data-gid=${sample.gid}">
 					<td th:class="${row.even}? 'even' : 'odd'">
 						<input type="checkbox" th:onclick="'javascript: handleClick(this);'"
 							   th:name="'sample-entry-' + *{listId}" th:value="*{sample.sampleId}"/>
 					</td>
 					<td th:class="${row.even}? 'even' : 'odd'" th:text="${sample.entryNumber}"></td>
 					<td th:class="${row.even}? 'even' : 'odd'">
-						<a href="javascript: void(0)" className="gid-link" th:attr="data-gid=${sample.gid}"
+						<a href="javascript: void(0)" class="gid-link" th:attr="data-gid=${sample.gid}"
 						   th:text="${sample.designation}"
 						   th:attrappend="data-desig=${sample.designation}"></a>
 					</td>
