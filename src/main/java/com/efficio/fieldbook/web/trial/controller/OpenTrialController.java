@@ -29,6 +29,7 @@ import org.generationcp.middleware.manager.ontology.api.TermDataManager;
 import org.generationcp.middleware.pojos.CropParameter;
 import org.generationcp.middleware.pojos.UserDefinedField;
 import org.generationcp.middleware.pojos.dms.DmsProject;
+import org.generationcp.middleware.pojos.workbench.PermissionsEnum;
 import org.generationcp.middleware.pojos.workbench.settings.Dataset;
 import org.generationcp.middleware.service.api.SampleListService;
 import org.generationcp.middleware.service.api.dataset.DatasetService;
@@ -224,6 +225,7 @@ public class OpenTrialController extends BaseTrialController {
 		@RequestParam(value = "crosseslistid", required = false) final String crossesListId) {
 
 		model.addAttribute("createdCrossesListId", crossesListId);
+		model.addAttribute("hasManageStudiesPermission", this.authorizationService.hasAnyAuthority(PermissionsEnum.MANAGE_STUDIES_PERMISSIONS));
 
 		this.clearSessionData(session);
 		session.setAttribute("createdCrossesListId", crossesListId);

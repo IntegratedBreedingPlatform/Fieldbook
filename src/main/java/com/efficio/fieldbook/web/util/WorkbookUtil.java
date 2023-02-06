@@ -183,22 +183,6 @@ public class WorkbookUtil {
 		return newTraits;
 	}
 
-	public static void resetWorkbookObservations(final Workbook workbook) {
-		if (workbook.getOriginalObservations() == null || workbook.getOriginalObservations().isEmpty()) {
-			final List<MeasurementRow> origObservations = new ArrayList<>();
-			for (final MeasurementRow row : workbook.getObservations()) {
-				origObservations.add(row.copy());
-			}
-			workbook.setOriginalObservations(origObservations);
-		} else {
-			final List<MeasurementRow> observations = new ArrayList<>();
-			for (final MeasurementRow row : workbook.getOriginalObservations()) {
-				observations.add(row.copy());
-			}
-			workbook.setObservations(observations);
-		}
-	}
-
 	public static void revertImportedConditionAndConstantsData(final Workbook workbook) {
 		// we need to revert all data
 		if (workbook != null) {
@@ -222,31 +206,6 @@ public class WorkbookUtil {
 			}
 		}
 		return false;
-	}
-
-	public static void addMeasurementDataToRowsExp(
-		final List<MeasurementVariable> variableList, final List<MeasurementRow> observations,
-		final boolean isVariate, final OntologyService ontologyService, final FieldbookService fieldbookService,
-		final String programUUID) {
-		// add new variables in measurement rows
-		if (observations != null && !observations.isEmpty()) {
-			for (final MeasurementVariable variable : variableList) {
-				if ((variable.getOperation().equals(Operation.ADD) || variable.getOperation().equals(Operation.UPDATE))
-					&& !WorkbookUtil.inMeasurementDataList(observations.get(0).getDataList(), variable.getTermId())) {
-					final StandardVariable stdVariable = ontologyService.getStandardVariable(variable.getTermId(), programUUID);
-					for (final MeasurementRow row : observations) {
-						final MeasurementData measurementData = new MeasurementData(variable.getName(), "", true,
-							WorkbookUtil.getDataType(variable.getDataTypeId()), variable);
-
-						measurementData.setMeasurementDataId(null);
-						final int insertIndex = WorkbookUtil.getInsertIndex(row.getDataList(), isVariate);
-						row.getDataList().add(insertIndex, measurementData);
-					}
-
-					WorkbookUtil.setVariablePossibleValues(isVariate, ontologyService, fieldbookService, variable, stdVariable);
-				}
-			}
-		}
 	}
 
 	static void setVariablePossibleValues(
@@ -536,39 +495,6 @@ public class WorkbookUtil {
 			// make the PLOT_NO equal to ENTRY_NO
 			plotNoData.setValue(entryNoData.getValue());
 		}
-	}
-
-	public static Map<Integer, List<Integer>> getVariatesUsedInFormulas(final List<MeasurementVariable> variates) {
-		final Map<Integer, List<Integer>> map = new HashMap<>();
-
-		final Collection<MeasurementVariable> formulas = CollectionUtils.select(variates, new Predicate() {
-
-			@Override
-			public boolean evaluate(final Object o) {
-				final MeasurementVariable measurementVariable = (MeasurementVariable) o;
-				return measurementVariable.getFormula() != null;
-			}
-		});
-
-		for (final MeasurementVariable row : variates) {
-			final List<Integer> formulasFromCVTermId = WorkbookUtil.getFormulasFromCVTermId(row.getTermId(), formulas);
-			if (!formulasFromCVTermId.isEmpty()) {
-				map.put(row.getTermId(), formulasFromCVTermId);
-			}
-		}
-		return map;
-	}
-
-	private static List<Integer> getFormulasFromCVTermId(
-		final Integer inputCvTermId,
-		final Collection<MeasurementVariable> measurementVariables) {
-		final List<Integer> result = new ArrayList<>();
-		for (final MeasurementVariable measurementVariable : measurementVariables) {
-			if (measurementVariable.getFormula().isInputVariablePresent(inputCvTermId)) {
-				result.add(measurementVariable.getTermId());
-			}
-		}
-		return result;
 	}
 
 	public static Map<MeasurementVariable, List<MeasurementVariable>> getVariatesMapUsedInFormulas(

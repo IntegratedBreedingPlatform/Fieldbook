@@ -1,18 +1,7 @@
 
 package com.efficio.fieldbook.web.study.service.impl;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.hamcrest.Matchers.equalTo;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.junit.Assert;
-
+import com.efficio.fieldbook.web.common.bean.ChangeType;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -26,6 +15,7 @@ import org.generationcp.middleware.domain.etl.Workbook;
 import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.exceptions.WorkbookParserException;
 import org.generationcp.middleware.service.api.FieldbookService;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,7 +23,15 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import com.efficio.fieldbook.web.common.bean.ChangeType;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 
 @RunWith(value = MockitoJUnitRunner.class)
 public class ExcelImportStudyServiceImplTest {
@@ -438,25 +436,6 @@ public class ExcelImportStudyServiceImplTest {
 
 		return wData;
 	}
-
-    @Test
-    public void testCreateMeasurementRowsMap() {
-        final List<MeasurementRow> observations = this.workbook.getObservations();
-
-        final Map<String, MeasurementRow> measurementRowsMap = this.importStudy.createMeasurementRowsMap(observations);
-        Assert.assertEquals("The number of measurements in the measurementRowsMap should be equal to the number of the observationss",
-                observations.size(), measurementRowsMap.size());
-    }
-
-    @Test
-    public void testCopyConditionsAndConstantsWorkbook() {
-        this.workbook = WorkbookTestDataInitializer.getTestWorkbook();
-        this.importStudy.copyConditionsAndConstants(this.workbook);
-
-        Assert.assertNotNull("Conditions copy should not be emprt after copy operation", this.workbook.getImportConditionsCopy());
-        Assert.assertTrue("Unable to properly copy conditions portion of workbook", this.workbook
-			.getImportConditionsCopy().size() == this.workbook.getConditions().size());
-    }
 
     @Test
     public void testDetectAddedTraitsNoTraitsAdded() throws WorkbookParserException{

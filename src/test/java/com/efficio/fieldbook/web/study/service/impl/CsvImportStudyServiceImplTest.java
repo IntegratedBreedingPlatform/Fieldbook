@@ -1,13 +1,7 @@
 package com.efficio.fieldbook.web.study.service.impl;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.generationcp.middleware.data.initializer.MeasurementTestDataInitializer;
 import org.generationcp.middleware.data.initializer.WorkbookTestDataInitializer;
-import org.generationcp.middleware.domain.etl.MeasurementRow;
 import org.generationcp.middleware.domain.etl.MeasurementVariable;
 import org.generationcp.middleware.domain.etl.Workbook;
 import org.generationcp.middleware.domain.oms.TermId;
@@ -16,7 +10,11 @@ import org.generationcp.middleware.exceptions.WorkbookParserException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CsvImportStudyServiceImplTest {
 
@@ -36,21 +34,15 @@ public class CsvImportStudyServiceImplTest {
 
     private final String[] rowHeaders = {"ENTRY_TYPE", this.GID, "DESIGNATION", this.ENTRY_NO, "REP_NO",
 		this.PLOT_NO, this.OBS_UNIT_ID};
-    @Mock
-    private Map<Integer, List<String>> csvMap;
-
 
     private Workbook workbook;
 
-    private Map<String, MeasurementRow> rowsMap;
     private CsvImportStudyServiceImpl csvImport;
 
     @Before
 	public void setUp() {
 		this.workbook = WorkbookTestDataInitializer.getTestWorkbook(1, new StudyTypeDto("N"));
         this.csvImport = new CsvImportStudyServiceImpl(this.workbook, "", "");
-		this.rowsMap = this.csvImport.createMeasurementRowsMap(this.workbook.getObservations());
-
 	}
 
 	@Test
