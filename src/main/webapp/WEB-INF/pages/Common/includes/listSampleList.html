@@ -1,6 +1,6 @@
 <div class="col-xs-12 col-md-12 main-inventory" style="" id="sample-list-pagination">
 	<form role="form-horizontal" class="form-horizontal" action="#"
-	      enctype="multipart/form-data">
+		  encType="multipart/form-data">
 
 		<input type="hidden" id="listId" th:value="*{listId}"/>
 
@@ -10,24 +10,26 @@
 
 		<div th:if="*{sampleList != null and not #lists.isEmpty(sampleList)}">
 			<table th:id="'sample-list-' + *{listId}" th:if="*{not #lists.isEmpty(sampleList)}" width="100%"
-			       class="table-curved table-condensed">
+				   class="table-curved table-condensed">
 				<thead>
 				<tr>
 					<th><input type="checkbox" th:id="'sample-select-all-'+ *{listId}" th:value="*{listId}"/></th>
 					<th nowrap="nowrap" th:each="tableHeader : ${tableHeaderList}"
 						th:text="${tableHeader.columnName}"
-					    th:attr="data-col-name=${tableHeader.dataCol}"
+						th:attr="data-col-name=${tableHeader.dataCol}"
 						th:attrappend="data-col-visible=${tableHeader.visible}"></th>
 				</tr>
 				</thead>
 				<tbody>
 				<tr class="primaryRow" th:each="sample, row : *{sampleList}" th:attr="data-gid=${sample.gid}">
-					<td th:class="${row.even}? 'even' : 'odd'" >
-						<input type="checkbox" th:name="'sample-entry-' + *{listId}" th:value="*{sample.sampleId}" />
+					<td th:class="${row.even}? 'even' : 'odd'">
+						<input type="checkbox" th:onclick="'javascript: handleClick(this);'"
+							   th:name="'sample-entry-' + *{listId}" th:value="*{sample.sampleId}"/>
 					</td>
 					<td th:class="${row.even}? 'even' : 'odd'" th:text="${sample.entryNumber}"></td>
 					<td th:class="${row.even}? 'even' : 'odd'">
-						<a href="javascript: void(0)" class="gid-link" th:attr="data-gid=${sample.gid}" th:text="${sample.designation}"
+						<a href="javascript: void(0)" class="gid-link" th:attr="data-gid=${sample.gid}"
+						   th:text="${sample.designation}"
 						   th:attrappend="data-desig=${sample.designation}"></a>
 					</td>
 					<td th:class="${row.even}? 'even' : 'odd'" th:text="${sample.observationUnitNumber}"></td>
@@ -71,22 +73,44 @@
 			const isSelectAllChecked = $(this).is(':checked');
 
 			$('input:checkbox[name=sample-entry-' + listId + ']').each(function () {
-				var sampleEntryChecked = $(this).is(':checked');
-				if (isSelectAllChecked != sampleEntryChecked) {
-					$(this).trigger('click');
-				}
+				$(this).prop('checked', isSelectAllChecked);
 			});
+			updateSelectedSamples();
 		});
 
-		$('#sample-list-' + listId).on('draw.dt', function() {
-			const isSelectAllChecked = $(selectAllId).is(':checked');
-			if (isSelectAllChecked) {
-				// untick select all on page change
-				$(selectAllId).trigger('click');
+		$('#sample-list-' + listId).on('draw.dt', function () {
+			toggleSelectAll();
+		});
+	});
+
+	function toggleSelectAll() {
+		const listId = '[[*{listId}]]';
+		const selectAllId = '#sample-select-all-[[*{listId}]]';
+		let isSelectAllChecked = true;
+		$('input:checkbox[name=sample-entry-' + listId + ']').each(function () {
+			if (!$(this).is(':checked')) {
+				isSelectAllChecked = false;
+				return false;
 			}
 		});
+		$(selectAllId).prop('checked', isSelectAllChecked);
+	}
 
-	});
+	function handleClick(checkBox) {
+		const selectAllId = '#sample-select-all-[[*{listId}]]';
+		if (!checkBox.checked) {
+			$(selectAllId).prop('checked', false);
+		} else {
+			this.toggleSelectAll();
+		}
+		this.updateSelectedSamples();
+	}
+
+	function updateSelectedSamples() {
+		const listId = '[[*{listId}]]';
+		var selectedRows = $('#sample-list-' + listId).DataTable().$('input:checkbox[name=sample-entry-' + listId + ']:checked').length;
+		$('.numberOfSelected').html(selectedRows);
+	}
 
 	//]]>
 </script>
