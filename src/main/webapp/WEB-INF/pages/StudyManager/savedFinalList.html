@@ -41,8 +41,8 @@
 
 			&nbsp;&nbsp;&nbsp;
 			 
-			<span th:if="*{listType !='SAMPLE_LIST'}" th:text="#{list.number.of.selected}" class="control-label control-label-italic advanced-list-label">Selected:</span>
-			<span th:if="*{listType !='SAMPLE_LIST'}" class="control-label control-label-bold control-label-italic advance-list-size advanced-list-label numberOfAdvanceSelected">0</span>
+			<span th:text="#{list.number.of.selected}" class="control-label control-label-italic advanced-list-label">Selected:</span>
+			<span class="control-label control-label-bold control-label-italic advance-list-size advanced-list-label numberOfSelected">0</span>
 		</div>
 		<div class="pull-right" th:if="*{totalNumberOfGermplasms > 0 }">
 			<div class="col-md-12">
