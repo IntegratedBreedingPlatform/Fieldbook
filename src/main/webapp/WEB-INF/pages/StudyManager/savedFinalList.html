@@ -37,7 +37,7 @@
 			<span th:text="#{advancing.study.entries.total}"
 				class="control-label advanced-list-label">Total Entries:</span> 
 			<span class="control-label control-label-bold advance-list-size advanced-list-label"
-				id="numberOfEntries" th:text="*{totalNumberOfGermplasms}"></span>
+				th:id="*{'numberOfEntries' + listId}" th:text="*{totalNumberOfGermplasms}"></span>
 
 			&nbsp;&nbsp;&nbsp;
 			 

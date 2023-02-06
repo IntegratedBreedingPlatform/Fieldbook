@@ -874,7 +874,13 @@ function removeSelectedSampleEntries () {
 		},
 		success: function(resp) {
 			showSuccessfulMessage('', removeSampleListEntriesSuccessfullyMessage);
-			displaySampleList(listId, listName, false);
+			var numOfEntries = $("#numberOfEntries" + listId).text();
+
+			if (selectedEntries.length == parseInt(numOfEntries)) {
+				$("#sampleListId[tab-data='" + listId + "']").trigger('click');
+			} else {
+				displaySampleList(listId, listName, false);
+			}
 		}
 	});
 }
