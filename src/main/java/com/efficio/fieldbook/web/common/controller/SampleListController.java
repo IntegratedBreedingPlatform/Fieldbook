@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -81,14 +80,16 @@ public class SampleListController {
 			final String notes = sampleList.getNotes();
 			final String type = sampleList.getType().name();
 			final List<SampleDetailsDTO> sampleDetailsDTOs = this.sampleListService.getSampleDetailsDTOs(listId);
-			final String subObservationVariableName = this.sampleListService.getObservationVariableName(listId);
 			model.addAttribute(SampleListController.SAMPLE_LIST, sampleDetailsDTOs);
 			model.addAttribute(SampleListController.TOTAL_NUMBER_OF_GERMPLASMS, sampleDetailsDTOs.size());
 
-			final boolean isSubobservation = !StringUtils.equals(TermId.PLOT_NO.name(), subObservationVariableName);
-			model.addAttribute(SampleListController.TABLE_HEADER_LIST,
-				this.getSampleListTableHeaders(subObservationVariableName, isSubobservation));
-			model.addAttribute(SampleListController.IS_SUBOBSERVATION, isSubobservation);
+			if (!sampleDetailsDTOs.isEmpty()) {
+				final String subObservationVariableName = this.sampleListService.getObservationVariableName(listId);
+				final boolean isSubobservation = !StringUtils.equals(TermId.PLOT_NO.name(), subObservationVariableName);
+				model.addAttribute(SampleListController.TABLE_HEADER_LIST,
+					this.getSampleListTableHeaders(subObservationVariableName, isSubobservation));
+				model.addAttribute(SampleListController.IS_SUBOBSERVATION, isSubobservation);
+			}
 
 			model.addAttribute("listId", listId);
 			model.addAttribute("listName", name);
