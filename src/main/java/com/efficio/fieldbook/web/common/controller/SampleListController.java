@@ -2,15 +2,18 @@ package com.efficio.fieldbook.web.common.controller;
 
 import com.efficio.fieldbook.web.common.bean.TableHeader;
 import org.apache.commons.lang3.StringUtils;
+import org.generationcp.commons.security.AuthorizationService;
 import org.generationcp.middleware.constant.ColumnLabels;
 import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.domain.sample.SampleDetailsDTO;
 import org.generationcp.middleware.exceptions.MiddlewareQueryException;
 import org.generationcp.middleware.manager.api.OntologyDataManager;
 import org.generationcp.middleware.pojos.SampleList;
+import org.generationcp.middleware.pojos.workbench.PermissionsEnum;
 import org.generationcp.middleware.service.api.SampleListService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
@@ -60,6 +63,9 @@ public class SampleListController {
 	@Resource
 	private SampleListService sampleListService;
 
+	@Autowired
+	protected AuthorizationService authorizationService;
+
 	@RequestMapping(value = "/sampleList/{listId}", method = RequestMethod.GET)
 	public String displaySampleList(@PathVariable final Integer listId, final HttpServletRequest req, final Model model) {
 		this.processSampleList(listId, req, model);
@@ -74,20 +80,25 @@ public class SampleListController {
 			final String notes = sampleList.getNotes();
 			final String type = sampleList.getType().name();
 			final List<SampleDetailsDTO> sampleDetailsDTOs = this.sampleListService.getSampleDetailsDTOs(listId);
-			final String subObservationVariableName = this.sampleListService.getObservationVariableName(listId);
 			model.addAttribute(SampleListController.SAMPLE_LIST, sampleDetailsDTOs);
 			model.addAttribute(SampleListController.TOTAL_NUMBER_OF_GERMPLASMS, sampleDetailsDTOs.size());
 
-			final boolean isSubobservation = !StringUtils.equals(TermId.PLOT_NO.name(), subObservationVariableName);
-			model.addAttribute(SampleListController.TABLE_HEADER_LIST,
-				this.getSampleListTableHeaders(subObservationVariableName, isSubobservation));
-			model.addAttribute(SampleListController.IS_SUBOBSERVATION, isSubobservation);
+			if (!sampleDetailsDTOs.isEmpty()) {
+				final String subObservationVariableName = this.sampleListService.getObservationVariableName(listId);
+				final boolean isSubobservation = !StringUtils.equals(TermId.PLOT_NO.name(), subObservationVariableName);
+				model.addAttribute(SampleListController.TABLE_HEADER_LIST,
+					this.getSampleListTableHeaders(subObservationVariableName, isSubobservation));
+				model.addAttribute(SampleListController.IS_SUBOBSERVATION, isSubobservation);
+			}
 
 			model.addAttribute("listId", listId);
 			model.addAttribute("listName", name);
 			model.addAttribute("listNotes", notes);
 			model.addAttribute("listType", type);
 
+			model.addAttribute("hasManageStudiesPermission",
+				this.authorizationService.isSuperAdminUser()
+					|| this.authorizationService.hasAnyAuthority(PermissionsEnum.MANAGE_STUDIES_PERMISSIONS));
 		} catch (final MiddlewareQueryException e) {
 			SampleListController.LOG.error(e.getMessage(), e);
 		}

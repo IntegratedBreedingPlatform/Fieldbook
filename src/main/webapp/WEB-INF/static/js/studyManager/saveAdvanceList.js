@@ -169,7 +169,7 @@ var SaveAdvanceList = {};
 
                 // Display total number of selected entries
                 var selectedRows = $('[type="checkbox"]:checked', $('.advance-study-list-table .advance-germplasm-items').DataTable().rows().nodes()).length;
-                $('#' + getJquerySafeId(sectionContainerDiv) + ' .numberOfAdvanceSelected').html(selectedRows);
+                $('#' + getJquerySafeId(sectionContainerDiv) + ' .numberOfSelected').html(selectedRows);
             },10);
         });
 		
@@ -193,7 +193,7 @@ var SaveAdvanceList = {};
 
                 // Display total number of selected entries
                 var selectedRows = $('[type="checkbox"]:checked', $('.advance-study-list-table .advance-germplasm-items').DataTable().rows().nodes()).length;
-                $('#' + getJquerySafeId(sectionContainerDiv) + ' .numberOfAdvanceSelected').html(selectedRows);
+                $('#' + getJquerySafeId(sectionContainerDiv) + ' .numberOfSelected').html(selectedRows);
 				SaveAdvanceList.verifyCheckboxesForSelectAll();
 			},
 			onCtrl: function(row) {
@@ -216,7 +216,7 @@ var SaveAdvanceList = {};
 				}
                 // Display total number of selected entries
                 var selectedRows = $('[type="checkbox"]:checked', $('.advance-study-list-table .advance-germplasm-items').DataTable().rows().nodes()).length;
-                $('#' + getJquerySafeId(sectionContainerDiv) + ' .numberOfAdvanceSelected').html(selectedRows);
+                $('#' + getJquerySafeId(sectionContainerDiv) + ' .numberOfSelected').html(selectedRows);
 				SaveAdvanceList.verifyCheckboxesForSelectAll();
 			},
 			onShift: function() {
@@ -227,7 +227,7 @@ var SaveAdvanceList = {};
 				
                 // Display total number of selected entries
                 var selectedRows = $('[type="checkbox"]:checked', $('.advance-study-list-table .advance-germplasm-items').DataTable().rows().nodes()).length;
-                $('#' + getJquerySafeId(sectionContainerDiv) + ' .numberOfAdvanceSelected').html(selectedRows);
+                $('#' + getJquerySafeId(sectionContainerDiv) + ' .numberOfSelected').html(selectedRows);
 				SaveAdvanceList.verifyCheckboxesForSelectAll();
 			}
 		});
@@ -295,7 +295,7 @@ var SaveAdvanceList = {};
 		}
 		// Display total number of selected entries
 		var selectedRows = $('[type="checkbox"]:checked', $('.advance-study-list-table .advance-germplasm-items').DataTable().rows().nodes()).length;
-		$('#' + getJquerySafeId(sectionContainerDiv) + ' .numberOfAdvanceSelected').html(selectedRows);
+		$('#' + getJquerySafeId(sectionContainerDiv) + ' .numberOfSelected').html(selectedRows);
 		$('#' + getJquerySafeId(sectionContainerDiv) + ' .review-select-all').prop('checked', isChecked);
 	};
 

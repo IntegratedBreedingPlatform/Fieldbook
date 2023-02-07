@@ -871,6 +871,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				$scope.sampleTabsData.splice(index, 1);
 				$scope.tabSelected = 'trialSettings';
 				$scope.isSettingsTab = true;
+				$rootScope.navigateToTab('trialSettings', {reload: true});
 			};
 
 			$scope.initSampleTab = function (tab) {

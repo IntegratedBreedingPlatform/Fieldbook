@@ -1,6 +1,7 @@
 package com.efficio.fieldbook.web.common.controller;
 
 import com.efficio.fieldbook.web.common.bean.TableHeader;
+import org.generationcp.commons.security.AuthorizationService;
 import org.generationcp.middleware.domain.sample.SampleDetailsDTO;
 import org.generationcp.middleware.enumeration.SampleListType;
 import org.generationcp.middleware.manager.api.OntologyDataManager;
@@ -35,11 +36,14 @@ public class SampleListControllerTest {
 	@Mock
 	private SampleListService sampleListService;
 
+	@Mock
+	private AuthorizationService authorizationService;
+
 	@InjectMocks
 	private final SampleListController slc = Mockito.spy(new SampleListController());
 
 	@Test
-	public void testDisplaySampleList(){
+	public void testDisplaySampleList() {
 		final SampleList sampleList = Mockito.mock(SampleList.class);
 		Mockito.when(sampleList.getListName()).thenReturn(SampleListControllerTest.TEST_LIST_NAME);
 		Mockito.when(sampleList.getNotes()).thenReturn(SampleListControllerTest.TEST_LIST_NAME);
@@ -49,6 +53,7 @@ public class SampleListControllerTest {
 
 		final List<SampleDetailsDTO> sampleDetailsDTOs = buildSampleDetailsList(10);
 		Mockito.doReturn(sampleDetailsDTOs).when(this.sampleListService).getSampleDetailsDTOs(SampleListControllerTest.TEST_SAMPLE_LIST_ID);
+		Mockito.doReturn(true).when(this.authorizationService).isSuperAdminUser();
 
 		final Model model = Mockito.mock(Model.class);
 		this.slc.displaySampleList(SampleListControllerTest.TEST_SAMPLE_LIST_ID, Mockito.mock(HttpServletRequest.class), model);
@@ -59,6 +64,7 @@ public class SampleListControllerTest {
 		Mockito.verify(model).addAttribute("listName", sampleList.getListName());
 		Mockito.verify(model).addAttribute("listNotes", sampleList.getNotes());
 		Mockito.verify(model).addAttribute("listType", sampleList.getType().name());
+		Mockito.verify(model).addAttribute("hasManageStudiesPermission", true);
 	}
 
 	private List<SampleDetailsDTO> buildSampleDetailsList(final int numOfsamples) {
