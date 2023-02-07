@@ -11,27 +11,20 @@
 
 package com.efficio.fieldbook.web.util;
 
-import com.efficio.fieldbook.service.api.FieldbookService;
-import com.efficio.fieldbook.web.common.bean.PairedVariable;
 import com.efficio.fieldbook.web.common.bean.SettingDetail;
 import com.efficio.fieldbook.web.common.bean.SettingVariable;
-import com.efficio.fieldbook.web.common.bean.StudyDetails;
-import com.efficio.fieldbook.web.common.bean.TreatmentFactorDetail;
 import com.efficio.fieldbook.web.common.bean.UserSelection;
 import com.efficio.fieldbook.web.trial.bean.ExpDesignParameterUi;
 import com.efficio.fieldbook.web.trial.bean.TreatmentFactorData;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.ListUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.generationcp.commons.constant.AppConstants;
 import org.generationcp.commons.util.DateUtil;
 import org.generationcp.middleware.domain.dms.ExperimentDesignType;
 import org.generationcp.middleware.domain.dms.PhenotypicType;
 import org.generationcp.middleware.domain.dms.StandardVariable;
-import org.generationcp.middleware.domain.dms.ValueReference;
 import org.generationcp.middleware.domain.etl.MeasurementData;
 import org.generationcp.middleware.domain.etl.MeasurementRow;
 import org.generationcp.middleware.domain.etl.MeasurementVariable;
@@ -39,7 +32,6 @@ import org.generationcp.middleware.domain.etl.TreatmentVariable;
 import org.generationcp.middleware.domain.etl.Workbook;
 import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.domain.ontology.VariableType;
-import org.generationcp.middleware.exceptions.MiddlewareQueryException;
 import org.generationcp.middleware.manager.Operation;
 import org.generationcp.middleware.pojos.Method;
 import org.generationcp.middleware.pojos.workbench.settings.Condition;
@@ -55,12 +47,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.util.HtmlUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.stream.Collectors;
@@ -70,35 +60,14 @@ import java.util.stream.Collectors;
  */
 public class SettingsUtil {
 
-	static final List<String> HIDDEN_FIELDS = Arrays.asList(AppConstants.HIDDEN_FIELDS.getString().split(","));
-	static final List<String> STUDY_BASIC_REQUIRED_FIELDS =
-		Arrays.asList(AppConstants.STUDY_BASIC_REQUIRED_FIELDS.getString().split(","));
-
 	/**
 	 * The Constant LOG.
 	 */
 	private static final Logger LOG = LoggerFactory.getLogger(SettingsUtil.class);
 	public static final String DESCRIPTION = "Description";
-	private static final String START_DATE = "Creation date";
-	private static final String END_DATE = "Completion date";
-	private static final String STUDY_UPDATE = "Last updated";
-	private static final String OBJECTIVE = "Objective";
-	private static final String STUDY_NAME = "Study name";
-	private static final String CREATED_BY = "Created by";
-	private static final String STUDY_TYPE = "Study Type";
 
 	private SettingsUtil() {
 		// do nothing
-	}
-
-	public static String cleanSheetAndFileName(final String name) {
-		String finalName = name;
-		if (finalName == null) {
-			return null;
-		}
-		// http://www.rgagnon.com/javadetails/java-0662.html
-		finalName = finalName.replaceAll("[:\\\\/*?|<>]", "_");
-		return finalName;
 	}
 
 	/**
@@ -426,25 +395,6 @@ public class SettingsUtil {
 		return dataset;
 	}
 
-	/**
-	 * Checks if is setting variable deletable.
-	 *
-	 * @param standardVariableId the standard variable id
-	 * @param requiredFields     the required fields
-	 * @return true, if is setting variable deletable
-	 */
-	private static boolean isSettingVariableDeletable(final Integer standardVariableId, final String requiredFields) {
-		// need to add the checking here if the specific PSM-R is deletable, for
-		// the study level details
-		final StringTokenizer token = new StringTokenizer(requiredFields, ",");
-		while (token.hasMoreTokens()) {
-			if (standardVariableId.equals(Integer.parseInt(token.nextToken()))) {
-				return false;
-			}
-		}
-		return true;
-	}
-
 	public static Map<String, MeasurementVariable> buildMeasurementVariableMap(final List<MeasurementVariable> factors) {
 		final Map<String, MeasurementVariable> factorsMap = new HashMap<>();
 		for (final MeasurementVariable factor : factors) {
@@ -463,31 +413,6 @@ public class SettingsUtil {
 			}
 		}
 		return "";
-	}
-
-	public static List<Integer> parseFieldListAndConvertToListOfIDs(final String selectedFieldList) {
-		final List<Integer> selectedFieldIDs = new ArrayList<>();
-		final String[] split = selectedFieldList.split(",");
-		for (final String s : split) {
-			try {
-				if ("".equals(s)) {
-					continue;
-				}
-
-				final Integer termID = new Integer(s);
-				final String nameTermID = SettingsUtil.getNameCounterpart(termID, AppConstants.ID_NAME_COMBINATION.getString());
-
-				if ("".equals(nameTermID)) {
-					selectedFieldIDs.add(termID);
-				} else {
-					selectedFieldIDs.add(new Integer(nameTermID));
-				}
-			} catch (final NumberFormatException e) {
-				SettingsUtil.LOG.error(e.getMessage());
-			}
-		}
-
-		return selectedFieldIDs;
 	}
 
 	public static boolean inPropertyList(final int propertyId) {
@@ -556,137 +481,6 @@ public class SettingsUtil {
 			Collectors.toList())));
 
 		return workbook;
-	}
-
-	/**
-	 * Convert workbook to xml dataset.
-	 *
-	 * @param workbook the workbook
-	 * @return the dataset
-	 */
-	static ParentDataset convertWorkbookToXmlDataset(final Workbook workbook) {
-		final Dataset dataset = new Dataset();
-
-		final List<Condition> conditions = SettingsUtil.convertMeasurementVariablesToConditions(workbook.getStudyConditions());
-		final List<Factor> factors = SettingsUtil.convertMeasurementVariablesToFactors(workbook.getFactors());
-		final List<Variate> variates = SettingsUtil.convertMeasurementVariablesToVariates(workbook.getVariates());
-		final List<Constant> constants = SettingsUtil.convertMeasurementVariablesToConstants(workbook.getConstants());
-		final List<TreatmentFactor> treatmentFactors =
-			SettingsUtil.convertTreatmentVariablesToTreatmentFactors(workbook.getTreatmentFactors());
-
-		dataset.setConditions(conditions);
-		dataset.setFactors(factors);
-		dataset.setVariates(variates);
-		dataset.setConstants(constants);
-		dataset.setTrialLevelFactor(SettingsUtil.convertMeasurementVariablesToFactors(workbook.getTrialConditions()));
-		dataset.setTreatmentFactors(treatmentFactors);
-
-		return dataset;
-	}
-
-	/**
-	 * Convert measurement variables to conditions.
-	 *
-	 * @param mlist the mlist
-	 * @return the list
-	 */
-	private static List<Condition> convertMeasurementVariablesToConditions(final List<MeasurementVariable> mlist) {
-		final List<Condition> conditions = new ArrayList<>();
-
-		if (mlist != null && !mlist.isEmpty()) {
-			for (final MeasurementVariable mvar : mlist) {
-				final Condition condition = new Condition(mvar.getName(), mvar.getDescription(), mvar.getProperty(), mvar.getScale(),
-					mvar.getMethod(), PhenotypicType.getPhenotypicTypeForLabel(mvar.getLabel()).toString(), mvar.getDataType(),
-					mvar.getValue(), null, null, null);
-				condition.setId(mvar.getTermId());
-				conditions.add(condition);
-			}
-		}
-
-		return conditions;
-	}
-
-	private static List<Constant> convertMeasurementVariablesToConstants(final List<MeasurementVariable> mlist) {
-		final List<Constant> constants = new ArrayList<>();
-
-		if (mlist != null && !mlist.isEmpty()) {
-
-			for (final MeasurementVariable mvar : mlist) {
-				final Constant constant = new Constant(mvar.getName(), mvar.getDescription(), mvar.getProperty(), mvar.getScale(),
-					mvar.getMethod(), PhenotypicType.getPhenotypicTypeForLabel(mvar.getLabel()).toString(), mvar.getDataType(),
-					mvar.getValue(), null, null, null);
-				constant.setId(mvar.getTermId());
-				constants.add(constant);
-			}
-		}
-
-		return constants;
-	}
-
-	/**
-	 * Convert measurement variables to factors.
-	 *
-	 * @param mlist the mlist
-	 * @return the list
-	 */
-	private static List<Factor> convertMeasurementVariablesToFactors(final List<MeasurementVariable> mlist) {
-		final List<Factor> factors = new ArrayList<>();
-
-		if (mlist != null && !mlist.isEmpty()) {
-			for (final MeasurementVariable mvar : mlist) {
-				final Factor factor =
-					new Factor(mvar.getName(), mvar.getDescription(), mvar.getProperty(), mvar.getScale(), mvar.getMethod(),
-						PhenotypicType.getPhenotypicTypeForLabel(mvar.getLabel()).toString(), mvar.getDataType(), mvar.getTermId());
-				factor.setTreatmentLabel(mvar.getTreatmentLabel());
-				factor.setId(mvar.getTermId());
-				factors.add(factor);
-			}
-		}
-
-		return factors;
-	}
-
-	private static List<TreatmentFactor> convertTreatmentVariablesToTreatmentFactors(final List<TreatmentVariable> mlist) {
-		final List<TreatmentFactor> factors = new ArrayList<>();
-
-		if (mlist != null && !mlist.isEmpty()) {
-			Factor levelFactor;
-			Factor valueFactor;
-			for (final TreatmentVariable var : mlist) {
-				final MeasurementVariable mvar = var.getLevelVariable();
-				final MeasurementVariable vvar = var.getValueVariable();
-				levelFactor = new Factor(mvar.getName(), mvar.getDescription(), mvar.getProperty(), mvar.getScale(), mvar.getMethod(),
-					PhenotypicType.getPhenotypicTypeForLabel(mvar.getLabel()).toString(), mvar.getDataType(), mvar.getTermId());
-				valueFactor = new Factor(vvar.getName(), vvar.getDescription(), vvar.getProperty(), vvar.getScale(), vvar.getMethod(),
-					PhenotypicType.getPhenotypicTypeForLabel(vvar.getLabel()).toString(), vvar.getDataType(), vvar.getTermId());
-				factors.add(new TreatmentFactor(levelFactor, valueFactor));
-			}
-		}
-
-		return factors;
-	}
-
-	/**
-	 * Convert measurement variables to variates.
-	 *
-	 * @param mlist the mlist
-	 * @return the list
-	 */
-	private static List<Variate> convertMeasurementVariablesToVariates(final List<MeasurementVariable> mlist) {
-		final List<Variate> variates = new ArrayList<>();
-
-		if (mlist != null && !mlist.isEmpty()) {
-			for (final MeasurementVariable mvar : mlist) {
-				final Variate variate = new Variate(mvar.getName(), mvar.getDescription(), mvar.getProperty(), mvar.getScale(),
-					mvar.getMethod(), PhenotypicType.VARIATE.toString(), mvar.getDataType(), mvar.getDataTypeId(),
-					mvar.getPossibleValues(), mvar.getMinRange(), mvar.getMaxRange());
-				variate.setVariableType(mvar.getVariableType().getName());
-				variate.setId(mvar.getTermId());
-				variates.add(variate);
-			}
-		}
-
-		return variates;
 	}
 
 	/**
@@ -855,455 +649,6 @@ public class SettingsUtil {
 		return mvar;
 	}
 
-	@Deprecated
-	public static StudyDetails convertWorkbookToStudyDetails(
-		final Workbook workbook, final org.generationcp.middleware.service.api.FieldbookService fieldbookMiddlewareService,
-		final FieldbookService fieldbookService, final UserSelection userSelection, final String programUUID,
-		final Properties appConstantsProperties, final String createdBy) {
-
-		final StudyDetails studyDetails =
-			SettingsUtil.convertWorkbookStudyLevelVariablesToStudyDetails(workbook, fieldbookMiddlewareService, fieldbookService,
-				userSelection, programUUID, appConstantsProperties, createdBy);
-
-		if (workbook.getTrialDatasetId() != null) {
-			studyDetails.setNumberOfEnvironments(
-				Long.valueOf(fieldbookMiddlewareService.countObservations(workbook.getTrialDatasetId())).intValue());
-		} else {
-			studyDetails.setNumberOfEnvironments(0);
-		}
-
-		final List<SettingDetail> factors =
-			SettingsUtil.convertWorkbookFactorsToSettingDetails(workbook.getNonTrialFactors(), fieldbookMiddlewareService);
-		final List<SettingDetail> germplasmDescriptors = new ArrayList<>();
-		SettingsUtil.rearrangeSettings(factors, germplasmDescriptors, PhenotypicType.GERMPLASM);
-		studyDetails.setGermplasmDescriptors(germplasmDescriptors);
-		final List<SettingDetail> entryDetails =
-			SettingsUtil.convertWorkbookFactorsToSettingDetails(workbook.getEntryDetails(), fieldbookMiddlewareService);
-		studyDetails.setEntryDetails(entryDetails);
-		final List<TreatmentFactorDetail> treatmentFactorDetails =
-			SettingsUtil.convertWorkbookFactorsToTreatmentDetailFactors(workbook.getTreatmentFactors());
-		studyDetails.setTreatmentFactorDetails(treatmentFactorDetails);
-		studyDetails.setFactorDetails(factors);
-		final List<SettingDetail> traits = new ArrayList<>();
-		final List<SettingDetail> selectionVariateDetails = new ArrayList<>();
-		SettingsUtil.convertWorkbookVariatesToSettingDetails(workbook.getVariates(), fieldbookMiddlewareService, traits,
-			selectionVariateDetails);
-		studyDetails.setVariateDetails(traits);
-		studyDetails.setSelectionVariateDetails(selectionVariateDetails);
-		studyDetails.setExperimentalDesignDetails(workbook.getExperimentalDesignVariables());
-
-		return studyDetails;
-	}
-
-	@Deprecated
-	static StudyDetails convertWorkbookStudyLevelVariablesToStudyDetails(
-		final Workbook workbook,
-		final org.generationcp.middleware.service.api.FieldbookService fieldbookMiddlewareService, final FieldbookService fieldbookService,
-		final UserSelection userSelection, final String programUUID, final Properties appConstantsProperties, final String createdBy) {
-
-		final StudyDetails details = new StudyDetails();
-		final org.generationcp.middleware.domain.etl.StudyDetails sourceStudyDetails = workbook.getStudyDetails();
-		details.setId(sourceStudyDetails.getId());
-		details.setProgramUUID(sourceStudyDetails.getProgramUUID());
-		details.setIsLocked(sourceStudyDetails.getIsLocked());
-		if (sourceStudyDetails.getCreatedBy() != null) {
-			details.setOwnerId(Integer.valueOf(sourceStudyDetails.getCreatedBy()));
-		}
-
-		final List<MeasurementVariable> conditions = workbook.getConditions();
-		final List<MeasurementVariable> constants = workbook.getConstants();
-
-		List<SettingDetail> basicDetails = new ArrayList<>();
-		List<SettingDetail> managementDetails = new ArrayList<>();
-		List<SettingDetail> studyConditionDetails = new ArrayList<>();
-
-		final List<String> basicFields;
-		basicFields = Arrays.asList(AppConstants.STUDY_BASIC_REQUIRED_FIELDS.getString().split(","));
-
-		if (conditions != null) {
-			final String studyName = sourceStudyDetails.getStudyName();
-			if (studyName != null) {
-				details.setName(studyName);
-			}
-			basicDetails = SettingsUtil
-				.convertWorkbookToSettingDetails(basicFields, conditions, fieldbookMiddlewareService, fieldbookService, userSelection,
-					workbook, programUUID, appConstantsProperties, createdBy);
-			managementDetails = SettingsUtil
-				.convertWorkbookOtherStudyVariablesToSettingDetails(conditions, managementDetails.size(), userSelection,
-					fieldbookMiddlewareService, fieldbookService, programUUID);
-			studyConditionDetails = SettingsUtil
-				.convertWorkbookOtherStudyVariablesToSettingDetails(constants, 1, userSelection, fieldbookMiddlewareService,
-					fieldbookService, programUUID);
-		}
-
-		final List<SettingDetail> environmentManagementDetails = new ArrayList<>();
-		SettingsUtil.rearrangeSettings(managementDetails, environmentManagementDetails, PhenotypicType.TRIAL_ENVIRONMENT);
-		details.setEnvironmentManagementDetails(environmentManagementDetails);
-
-		details.setBasicStudyDetails(basicDetails);
-		details.setManagementDetails(managementDetails);
-		details.setStudyConditionDetails(studyConditionDetails);
-		return details;
-	}
-
-	private static List<SettingDetail> convertWorkbookOtherStudyVariablesToSettingDetails(
-		final List<MeasurementVariable> conditions,
-		final int orderIndex, final UserSelection userSelection,
-		final org.generationcp.middleware.service.api.FieldbookService fieldbookMiddlewareService,
-		final FieldbookService fieldbookService, final String programUUID) {
-		int index = orderIndex;
-
-		final List<SettingDetail> details = new ArrayList<>();
-
-		if (conditions == null) {
-			return details;
-		}
-
-		final Map<String, MeasurementVariable> variableMap = new HashMap<>();
-
-		for (final MeasurementVariable condition : conditions) {
-			variableMap.put(String.valueOf(condition.getTermId()), condition);
-		}
-
-		for (final MeasurementVariable condition : conditions) {
-			final String id = String.valueOf(condition.getTermId());
-			final String role = condition.getRole().name();
-			if (!SettingsUtil.isIdInFieldListForHiding(id)
-				// do not show breeding method id if code exists
-				&& !SettingsUtil.breedingCodeExists(condition.getTermId(), variableMap)) {
-				// do not name if code or id exists
-
-				final SettingVariable variable =
-					SettingsUtil.getSettingVariable(SettingsUtil.getDisplayName(conditions, condition.getTermId(), condition.getName()),
-						condition.getDescription(), condition.getProperty(), condition.getScale(), condition.getMethod(), role,
-						condition.getDataType(), condition.getDataTypeId(), condition.getMinRange(), condition.getMaxRange(),
-						userSelection, fieldbookMiddlewareService, programUUID);
-				variable.setCvTermId(condition.getTermId());
-				final String value = fieldbookService.getValue(variable.getCvTermId(), HtmlUtils.htmlUnescape(condition.getValue()),
-					condition.getDataTypeId() == TermId.CATEGORICAL_VARIABLE.getId());
-				final SettingDetail settingDetail = new SettingDetail(variable, null, HtmlUtils.htmlUnescape(value), false);
-				settingDetail.setPossibleValues(fieldbookService.getAllPossibleValues(condition.getTermId()));
-				index = SettingsUtil.addToList(details, settingDetail, index, null, null);
-			}
-		}
-
-		return details;
-	}
-
-	private static boolean isIdInFieldListForHiding(final String termId) {
-		final List<String> basicFields;
-		basicFields = SettingsUtil.STUDY_BASIC_REQUIRED_FIELDS;
-		return basicFields.contains(termId) || SettingsUtil.HIDDEN_FIELDS.contains(termId);
-	}
-
-	private static boolean breedingCodeExists(final Integer termId, final Map<String, MeasurementVariable> variableMap) {
-		return termId == TermId.BREEDING_METHOD_ID.getId() && variableMap.get(String.valueOf(TermId.BREEDING_METHOD_CODE.getId())) != null
-			|| termId == TermId.BREEDING_METHOD.getId() && (variableMap.get(String.valueOf(TermId.BREEDING_METHOD_CODE.getId())) != null
-			|| variableMap.get(String.valueOf(TermId.BREEDING_METHOD_ID.getId())) != null);
-	}
-
-	private static String getDisplayName(final List<MeasurementVariable> variables, final int termId, final String name) {
-		if (AppConstants.getString(termId + AppConstants.LABEL.getString()) != null) {
-			return AppConstants.getString(termId + AppConstants.LABEL.getString());
-		} else {
-			final Map<String, String> map = AppConstants.ID_NAME_COMBINATION.getMapOfValues();
-			final String pair = map.get(String.valueOf(termId));
-			if (pair != null) {
-				for (final MeasurementVariable variable : variables) {
-					if (pair.equals(String.valueOf(variable.getTermId()))) {
-						return variable.getName();
-					}
-				}
-			}
-		}
-		return name;
-	}
-
-	@Deprecated
-	private static List<SettingDetail> convertWorkbookToSettingDetails(
-		final List<String> fields,
-		final List<MeasurementVariable> conditions,
-		final org.generationcp.middleware.service.api.FieldbookService fieldbookMiddlewareService,
-		final FieldbookService fieldbookService, final UserSelection userSelection, final Workbook workbook, final String programUUID,
-		final Properties appConstantsProperties, final String createdBy) {
-
-		int index = fields != null ? fields.size() : 0;
-		final List<SettingDetail> details = new ArrayList<>();
-
-		final String studyName = workbook.getStudyDetails().getStudyName() != null ? workbook.getStudyDetails().getStudyName() : "";
-		final String description = workbook.getStudyDetails().getDescription() != null ? workbook.getStudyDetails().getDescription() : "";
-		final String startDate = workbook.getStudyDetails().getStartDate() != null ? workbook.getStudyDetails().getStartDate() : "";
-		final String endDate = workbook.getStudyDetails().getEndDate() != null ? workbook.getStudyDetails().getEndDate() : "";
-		final String studyUpdate = workbook.getStudyDetails().getStudyUpdate() != null ? workbook.getStudyDetails().getStudyUpdate() : "";
-		final String objective = workbook.getStudyDetails().getObjective() != null ? workbook.getStudyDetails().getObjective() : "";
-
-		final String studyType = workbook.getStudyDetails().getStudyType().getLabel();
-		Integer datasetId = workbook.getMeasurementDatesetId();
-		if (datasetId == null) {
-			datasetId = fieldbookMiddlewareService.getMeasurementDatasetId(workbook.getStudyDetails().getId());
-		}
-
-		final List<String> labelFieldsWithPairedVariable = new ArrayList<>(fields);
-		labelFieldsWithPairedVariable.add(AppConstants.SPFLD_PLOT_COUNT.getString());
-		final Map<String, String> variableAppConstantLabels =
-			SettingsUtil.getVariableAppConstantLabels(labelFieldsWithPairedVariable, appConstantsProperties);
-
-		for (final String strFieldId : fields) {
-			if (StringUtils.isEmpty(strFieldId) || conditions == null) {
-				continue;
-			}
-
-			boolean found = false;
-			String label = variableAppConstantLabels.get(strFieldId);
-
-			// label field is a UI construct for the Settings sections of the fieldbook UI (a label field and its value which can be a
-			// textfield, number or dropdown)
-			// usually a label field contains the ontology measurement variable name and its value of a study.
-			// special field is a label field that contains additional logic for determining its proper label and value
-			// see SettingsUtil.getSpecialFieldValue()
-
-			for (final MeasurementVariable condition : conditions) {
-				if (NumberUtils.isNumber(strFieldId)) {
-					if (condition.getTermId() == Integer.valueOf(strFieldId)) {
-						if (label == null || "".equals(label.trim())) {
-							label = condition.getName();
-						}
-						final SettingVariable variable = SettingsUtil.getSettingVariable(label, condition.getDescription(),
-							condition.getProperty(), condition.getScale(), condition.getMethod(), condition.getRole().name(),
-							condition.getDataType(), condition.getDataTypeId(), condition.getMinRange(), condition.getMaxRange(),
-							userSelection, fieldbookMiddlewareService, programUUID);
-						variable.setCvTermId(Integer.valueOf(strFieldId));
-						final String value = fieldbookService.getValue(variable.getCvTermId(), HtmlUtils.htmlUnescape(condition.getValue()),
-							condition.getDataTypeId() == TermId.CATEGORICAL_VARIABLE.getId());
-						final SettingDetail settingDetail = new SettingDetail(variable, null, HtmlUtils.htmlUnescape(value), false);
-						index = SettingsUtil.addToList(details, settingDetail, index, fields, strFieldId);
-						found = true;
-						break;
-					}
-				} else {
-					// special field logic
-					// FIXME BMS-4397
-					if (DESCRIPTION.equals(label)) {
-						final SettingVariable variableDescription =
-							new SettingVariable(DESCRIPTION, null, null, null, null, null, null, null, null, null);
-						final SettingDetail settingDetailDescription = new SettingDetail(variableDescription, null, description, false);
-						index = SettingsUtil.addToList(details, settingDetailDescription, index, fields, strFieldId);
-						found = true;
-						break;
-					} else if (STUDY_TYPE.equals(label)) {
-						final SettingVariable variableStudyType =
-							new SettingVariable(STUDY_TYPE, null, null, null, null, null, null, null, null, null);
-						final SettingDetail settingDetailDescription = new SettingDetail(variableStudyType, null, studyType, false);
-						index = SettingsUtil.addToList(details, settingDetailDescription, index, fields, strFieldId);
-						found = true;
-						break;
-					} else if (START_DATE.equals(label)) {
-						final SettingVariable variableDescription =
-							new SettingVariable(START_DATE, null, null, null, null, null, null, null, null, null);
-						final SettingDetail settingDetailDescription = new SettingDetail(variableDescription, null, startDate, false);
-						index = SettingsUtil.addToList(details, settingDetailDescription, index, fields, strFieldId);
-						found = true;
-						break;
-					} else if (END_DATE.equals(label)) {
-						final SettingVariable variableDescription =
-							new SettingVariable(END_DATE, null, null, null, null, null, null, null, null, null);
-						final SettingDetail settingDetailDescription = new SettingDetail(variableDescription, null, endDate, false);
-						index = SettingsUtil.addToList(details, settingDetailDescription, index, fields, strFieldId);
-						found = true;
-						break;
-					} else if (STUDY_UPDATE.equals(label)) {
-						final SettingVariable variableDescription =
-							new SettingVariable(STUDY_UPDATE, null, null, null, null, null, null, null, null, null);
-						final SettingDetail settingDetailDescription = new SettingDetail(variableDescription, null, studyUpdate, false);
-						index = SettingsUtil.addToList(details, settingDetailDescription, index, fields, strFieldId);
-						found = true;
-						break;
-					} else if (OBJECTIVE.equals(label)) {
-						final SettingVariable variableDescription =
-							new SettingVariable(OBJECTIVE, null, null, null, null, null, null, null, null, null);
-						final SettingDetail settingDetailDescription = new SettingDetail(variableDescription, null, objective, false);
-						index = SettingsUtil.addToList(details, settingDetailDescription, index, fields, strFieldId);
-						found = true;
-						break;
-					} else if (STUDY_NAME.equals(label)) {
-						final SettingVariable variableDescription =
-							new SettingVariable(STUDY_NAME, null, null, null, null, null, null, null, null, null);
-						final SettingDetail settingDetailDescription = new SettingDetail(variableDescription, null, studyName, false);
-						index = SettingsUtil.addToList(details, settingDetailDescription, index, fields, strFieldId);
-						found = true;
-						break;
-					} else if (CREATED_BY.equals(label)) {
-						final SettingVariable variableDescription =
-							new SettingVariable(CREATED_BY, null, null, null, null, null, null, null, null, null);
-						final SettingDetail settingDetailDescription = new SettingDetail(variableDescription, null, createdBy, false);
-						index = SettingsUtil.addToList(details, settingDetailDescription, index, fields, strFieldId);
-						found = true;
-						break;
-					} else {
-						final SettingVariable variable = new SettingVariable(label, null, null, null, null, null, null, null, null, null);
-						final String value = SettingsUtil.getSpecialFieldValue(strFieldId, datasetId, fieldbookMiddlewareService, workbook);
-						final SettingDetail settingDetail = new SettingDetail(variable, null, value, false);
-						if (strFieldId.equals(AppConstants.SPFLD_ENTRIES.getString())) {
-							final String plotValue = SettingsUtil
-								.getSpecialFieldValue(AppConstants.SPFLD_PLOT_COUNT.getString(), datasetId, fieldbookMiddlewareService,
-									workbook);
-							final PairedVariable pair =
-								new PairedVariable(variableAppConstantLabels.get(AppConstants.SPFLD_PLOT_COUNT.getString()), plotValue);
-							settingDetail.setPairedVariable(pair);
-						}
-						index = SettingsUtil.addToList(details, settingDetail, index, fields, strFieldId);
-						found = true;
-						break;
-					}
-				}
-			}
-
-			if (!found) {
-				// required field but has no value
-				final SettingVariable variable = new SettingVariable(label, null, null, null, null, null, null, null, null, null);
-				final SettingDetail settingDetail = new SettingDetail(variable, null, "", false);
-				index = SettingsUtil.addToList(details, settingDetail, index, fields, strFieldId);
-			}
-		}
-
-		return details;
-	}
-
-	static Map<String, String> getVariableAppConstantLabels(final List<String> labels, final Properties appConstantsProperties) {
-		final Map<String, String> variableLabels = new HashMap<>();
-
-		for (final String label : labels) {
-			final String value = appConstantsProperties.getProperty(label.toUpperCase() + "_LABEL");
-			variableLabels.put(label, value != null ? value : "");
-		}
-
-		return variableLabels;
-	}
-
-	@Deprecated
-	private static String getSpecialFieldValue(
-		final String specialFieldLabel, final Integer datasetId,
-		final org.generationcp.middleware.service.api.FieldbookService fieldbookMiddlewareService, final Workbook workbook) {
-
-		if (AppConstants.SPFLD_ENTRIES.getString().equals(specialFieldLabel)) {
-			final long count = fieldbookMiddlewareService.countStocks(datasetId);
-			return String.valueOf(count);
-		} else if (AppConstants.SPFLD_HAS_FIELDMAP.getString().equals(specialFieldLabel)) {
-			return fieldbookMiddlewareService.hasFieldLayout(datasetId) ? "Yes" : "No";
-		} else if (AppConstants.SPFLD_COUNT_VARIATES.getString().equals(specialFieldLabel)) {
-			final List<Integer> variateIds = new ArrayList<>();
-			if (workbook.getVariates() != null) {
-				for (final MeasurementVariable variate : workbook.getVariates()) {
-					variateIds.add(variate.getTermId());
-				}
-			}
-			long count = 0;
-			if (datasetId != null) {
-				count = fieldbookMiddlewareService.countVariatesWithData(datasetId, variateIds);
-			}
-			return count + " of " + variateIds.size();
-		} else if (AppConstants.SPFLD_PLOT_COUNT.getString().equals(specialFieldLabel)) {
-			return String.valueOf(fieldbookMiddlewareService.countObservations(datasetId));
-		}
-		return "";
-	}
-
-	private static List<SettingDetail> convertWorkbookFactorsToSettingDetails(
-		final List<MeasurementVariable> factors,
-		final org.generationcp.middleware.service.api.FieldbookService fieldbookMiddlewareService) {
-
-		final List<SettingDetail> plotsLevelList = new ArrayList<>();
-		if (factors == null) {
-			return plotsLevelList;
-		}
-
-		for (final MeasurementVariable factor : factors) {
-			final SettingVariable variable = new SettingVariable(factor.getName(), factor.getDescription(), factor.getProperty(),
-				factor.getScale(), factor.getMethod(), PhenotypicType.getPhenotypicTypeForLabel(factor.getLabel()).toString(),
-				factor.getDataType());
-			final Integer stdVar = fieldbookMiddlewareService.getStandardVariableIdByPropertyScaleMethodRole(
-
-				HtmlUtils.htmlUnescape(variable.getProperty()), HtmlUtils.htmlUnescape(variable.getScale()),
-				HtmlUtils.htmlUnescape(variable.getMethod()), PhenotypicType.valueOf(HtmlUtils.htmlUnescape(variable.getRole())));
-
-			if (!SettingsUtil.inHideVariableFields(stdVar, AppConstants.HIDE_PLOT_FIELDS.getString())
-				&& (factor.getTreatmentLabel() == null || "".equals(factor.getTreatmentLabel()))) {
-
-				variable.setCvTermId(stdVar);
-				variable.setRole(factor.getRole().name());
-				final SettingDetail settingDetail = new SettingDetail(variable, null, null,
-					SettingsUtil.isSettingVariableDeletable(stdVar, AppConstants.CREATE_PLOT_REQUIRED_FIELDS.getString()));
-				settingDetail.setRole(factor.getRole());
-				plotsLevelList.add(settingDetail);
-			}
-		}
-
-		return plotsLevelList;
-	}
-
-	public static void convertWorkbookVariatesToSettingDetails(
-		final List<MeasurementVariable> variates,
-		final org.generationcp.middleware.service.api.FieldbookService fieldbookMiddlewareService,
-		final List<SettingDetail> traits, final List<SettingDetail> selectedVariates) {
-
-		if (variates == null) {
-			return;
-		}
-
-		for (final MeasurementVariable variate : variates) {
-			final SettingVariable variable = new SettingVariable(variate.getName(), variate.getDescription(), variate.getProperty(),
-				variate.getScale(), variate.getMethod(), PhenotypicType.getPhenotypicTypeForLabel(variate.getLabel()).toString(),
-				variate.getDataType());
-			final Integer stdVar = fieldbookMiddlewareService.getStandardVariableIdByPropertyScaleMethodRole(
-				HtmlUtils.htmlUnescape(variable.getProperty()), HtmlUtils.htmlUnescape(variable.getScale()),
-				HtmlUtils.htmlUnescape(variable.getMethod()), PhenotypicType.VARIATE);
-			variable.setCvTermId(stdVar);
-			final SettingDetail settingDetail = new SettingDetail(variable, null, null, true);
-			if (variate.getVariableType() != null && VariableType.SELECTION_METHOD.getId().equals(variate.getVariableType().getId())) {
-				selectedVariates.add(settingDetail);
-			} else {
-				traits.add(settingDetail);
-			}
-		}
-
-	}
-
-	private static SettingVariable getSettingVariable(
-		final String name, final String description, final String property,
-		final String scale, final String method, final String role, final String dataType, final Integer dataTypeId,
-		final Double minRange, final Double maxRange, final UserSelection userSelection,
-		final org.generationcp.middleware.service.api.FieldbookService fieldbookMiddlewareService, final String programUUID) {
-
-		final SettingVariable variable =
-			new SettingVariable(name, description, property, scale, method, role, dataType, dataTypeId, minRange, maxRange);
-
-		final Integer stdVar = fieldbookMiddlewareService.getStandardVariableIdByPropertyScaleMethodRole(
-			HtmlUtils.htmlUnescape(variable.getProperty()), HtmlUtils.htmlUnescape(variable.getScale()),
-			HtmlUtils.htmlUnescape(variable.getMethod()), PhenotypicType.valueOf(HtmlUtils.htmlUnescape(variable.getRole())));
-		variable.setCvTermId(stdVar);
-		if (userSelection != null) {
-			final StandardVariable standardVariable =
-				SettingsUtil.getStandardVariable(variable.getCvTermId(), fieldbookMiddlewareService, programUUID);
-			variable.setPSMRFromStandardVariable(standardVariable, role);
-		}
-
-		return variable;
-	}
-
-	private static int addToList(
-		final List<SettingDetail> list, final SettingDetail settingDetail, final int orderIndex,
-		final List<String> fields, final String idString) {
-		int order = -1;
-		if (fields != null) {
-			order = fields.indexOf(idString);
-		}
-		int index = orderIndex;
-		settingDetail.setOrder(order > -1 ? order : index++);
-		list.add(settingDetail);
-
-		return index;
-	}
-
 	private static List<Integer> getBreedingMethodIndices(
 		final List<MeasurementRow> observations, final OntologyService ontologyService,
 		final boolean isResetAll, final String programUUID) {
@@ -1423,47 +768,6 @@ public class SettingsUtil {
 			}
 		}
 		return variateList;
-	}
-
-	private static void rearrangeSettings(
-		final List<SettingDetail> sourceList, final List<SettingDetail> trialList,
-		final PhenotypicType type) {
-		if (sourceList != null && !sourceList.isEmpty()) {
-			for (final SettingDetail source : sourceList) {
-				if (source.getVariable().getRole() != null
-					&& type == PhenotypicType.getPhenotypicTypeByName(source.getVariable().getRole())) {
-					trialList.add(source);
-				}
-			}
-			sourceList.removeAll(trialList);
-		}
-	}
-
-	private static List<TreatmentFactorDetail> convertWorkbookFactorsToTreatmentDetailFactors(final List<TreatmentVariable> factors) {
-		final List<TreatmentFactorDetail> details = new ArrayList<>();
-		if (factors != null && !factors.isEmpty()) {
-			MeasurementVariable levelFactor;
-			MeasurementVariable amountFactor;
-			final ObjectMapper objectMapper = new ObjectMapper();
-			for (final TreatmentVariable factor : factors) {
-				try {
-					levelFactor = factor.getLevelVariable();
-					amountFactor = factor.getValueVariable();
-					final int levels = factor.getValues() != null ? factor.getValues().size() : 0;
-
-					final TreatmentFactorDetail detail = new TreatmentFactorDetail(levelFactor.getTermId(), amountFactor.getTermId(),
-						String.valueOf(levels), amountFactor.getValue(), levelFactor.getName(), amountFactor.getName(),
-						amountFactor.getDataTypeId(), objectMapper.writeValueAsString(amountFactor.getPossibleValues()),
-						amountFactor.getMinRange(), amountFactor.getMaxRange());
-					detail.setLevelDescription(levelFactor.getDescription());
-					details.add(detail);
-
-				} catch (final Exception e) {
-					throw new MiddlewareQueryException(e.getMessage(), e);
-				}
-			}
-		}
-		return details;
 	}
 
 	/**
@@ -1776,78 +1080,6 @@ public class SettingsUtil {
 		return param;
 	}
 
-	/**
-	 * Gets the setting detail value.
-	 *
-	 * @param details the details
-	 * @param termId  the term id
-	 * @return the setting detail value
-	 */
-	public static String getSettingDetailValue(final List<SettingDetail> details, final int termId) {
-		String value = null;
-
-		for (final SettingDetail detail : details) {
-			if (detail.getVariable().getCvTermId().equals(termId)) {
-				value = detail.getValue();
-				break;
-			}
-		}
-
-		return value;
-	}
-
-	static int getCodeInPossibleValues(final List<ValueReference> valueRefs, final String settingDetailValue) {
-		for (final ValueReference valueRef : valueRefs) {
-			if (valueRef.getId().equals(Integer.parseInt(settingDetailValue))) {
-				return Integer.parseInt(valueRef.getName());
-			}
-		}
-		return 0;
-	}
-
-	static int getCodeValue(final String settingDetailValue, final List<SettingDetail> removedConditions, final int termId) {
-		if (removedConditions != null) {
-			for (final SettingDetail detail : removedConditions) {
-				if (detail.getVariable().getCvTermId().equals(termId)) {
-					return SettingsUtil.getCodeInPossibleValues(detail, settingDetailValue);
-				}
-			}
-		}
-		return 0;
-	}
-
-	private static int getCodeInPossibleValues(final SettingDetail detail, final String settingDetailValue) {
-		if (detail.getPossibleValues() != null && !detail.getPossibleValues().isEmpty()) {
-			for (final ValueReference valueRef : detail.getPossibleValues()) {
-				if (valueRef.getId().equals(Integer.parseInt(settingDetailValue))) {
-					return Integer.parseInt(valueRef.getName());
-				}
-			}
-		}
-		return 0;
-	}
-
-	static boolean checkVariablesHaveValues(final List<SettingDetail> checkVariables) {
-		if (checkVariables != null && !checkVariables.isEmpty()) {
-			for (final SettingDetail setting : checkVariables) {
-				if (setting.getValue() == null) {
-					return false;
-				}
-			}
-			return true;
-		}
-		return false;
-	}
-
-	static List<Integer> parseVariableIds(final String variableIds) {
-		final List<Integer> variableIdList = new ArrayList<>();
-		final StringTokenizer tokenizer = new StringTokenizer(variableIds, "|");
-		while (tokenizer.hasMoreTokens()) {
-			variableIdList.add(Integer.valueOf(tokenizer.nextToken()));
-		}
-		return variableIdList;
-	}
-
 	public static void addNewSettingDetails(final int mode, final List<SettingDetail> newDetails, final UserSelection userSelection) {
 		SettingsUtil.setSettingDetailRoleAndVariableType(mode, newDetails, null, null);
 
@@ -1973,14 +1205,6 @@ public class SettingsUtil {
 			}
 		}
 		return false;
-	}
-
-	@SuppressWarnings("unchecked")
-	public static List<ValueReference> intersection(final List<ValueReference> firstList, final List<ValueReference> secondList) {
-		if (firstList != null && secondList != null) {
-			return ListUtils.intersection(firstList, secondList);
-		}
-		return ListUtils.EMPTY_LIST;
 	}
 
 }

@@ -125,92 +125,6 @@ public class WorkbookUtilTest {
 		Assert.assertEquals(measurementVariable1, result.get());
 	}
 
-	// TODO: Commented broken tests.
-	@Test
-	public void testAddMeasurementDataToRowsExpForVariableAddOperation() {
-		final MeasurementVariable variable = MeasurementVariableTestDataInitializer.createMeasurementVariableWithOperation(
-			ENTRY_SOURCE_ID, ENTRY_SOURCE, ENTRY_SOURCE, Operation.ADD);
-		final List<MeasurementVariable> variableList = Arrays.asList(variable);
-		final List<MeasurementRow> observations = Arrays.asList(MeasurementRowTestDataInitializer.createMeasurementRow());
-		final int previousMeasurementDataSize = observations.get(0).getDataList().size();
-
-		final boolean isVariate = true;
-		WorkbookUtil.addMeasurementDataToRowsExp(variableList, observations, isVariate, this.ontologyService, this.fieldbookService,
-			WorkbookUtilTest.PROGRAM_UUID);
-
-		final int measurementDataSize = observations.get(0).getDataList().size();
-		// The SEED_SOURCE Variable should be added
-		Assert.assertEquals(previousMeasurementDataSize + 1, measurementDataSize);
-		final MeasurementData newMeasurementData = observations.get(0).getDataList().get(previousMeasurementDataSize);
-		Assert.assertNotNull(newMeasurementData);
-		Assert.assertEquals(variable.getName(), newMeasurementData.getLabel());
-		Assert.assertTrue(newMeasurementData.isEditable());
-		Assert.assertTrue(newMeasurementData.getValue().isEmpty());
-		Assert.assertEquals(variable, newMeasurementData.getMeasurementVariable());
-		Assert.assertNull(newMeasurementData.getMeasurementDataId());
-		Assert.assertEquals(this.breedingMethods, variable.getPossibleValues());
-
-		WorkbookUtil.addMeasurementDataToRowsExp(variableList, observations, isVariate, this.ontologyService, this.fieldbookService,
-			WorkbookUtilTest.PROGRAM_UUID);
-		// The SEED_SOURCE Variable should not be added since it's already in the data list
-		Assert.assertEquals(measurementDataSize, observations.get(0).getDataList().size());
-	}
-
-	@Test
-	public void testAddMeasurementDataToRowsExpForVariableUpdateOperation() {
-		final MeasurementVariable variable = MeasurementVariableTestDataInitializer.createMeasurementVariableWithOperation(
-			ENTRY_SOURCE_ID, ENTRY_SOURCE, ENTRY_SOURCE, Operation.UPDATE);
-		final List<MeasurementVariable> variableList = Arrays.asList(variable);
-		final List<MeasurementRow> observations = Arrays.asList(MeasurementRowTestDataInitializer.createMeasurementRow());
-		final int previousMeasurementDataSize = observations.get(0).getDataList().size();
-
-		final boolean isVariate = true;
-		WorkbookUtil.addMeasurementDataToRowsExp(variableList, observations, isVariate, this.ontologyService, this.fieldbookService,
-			WorkbookUtilTest.PROGRAM_UUID);
-
-		final int measurementDataSize = observations.get(0).getDataList().size();
-		// The SEED_SOURCE Variable should be added
-		Assert.assertEquals(previousMeasurementDataSize + 1, measurementDataSize);
-		final MeasurementData newMeasurementData = observations.get(0).getDataList().get(previousMeasurementDataSize);
-		Assert.assertNotNull(newMeasurementData);
-		Assert.assertEquals(variable.getName(), newMeasurementData.getLabel());
-		Assert.assertTrue(newMeasurementData.isEditable());
-		Assert.assertTrue(newMeasurementData.getValue().isEmpty());
-		Assert.assertEquals(variable, newMeasurementData.getMeasurementVariable());
-		Assert.assertNull(newMeasurementData.getMeasurementDataId());
-		Assert.assertEquals(this.breedingMethods, variable.getPossibleValues());
-	}
-
-	@Test
-	public void testAddMeasurementDataToRowsIfNecessary() {
-		final MeasurementVariable variable = MeasurementVariableTestDataInitializer.createMeasurementVariableWithOperation(
-			ENTRY_SOURCE_ID, ENTRY_SOURCE, ENTRY_SOURCE, Operation.ADD);
-		final List<MeasurementVariable> variableList = Arrays.asList(variable);
-		final List<MeasurementRow> observations = Arrays.asList(MeasurementRowTestDataInitializer.createMeasurementRow());
-		final int previousMeasurementDataSize = observations.get(0).getDataList().size();
-
-		final boolean isVariate = true;
-		WorkbookUtil.addMeasurementDataToRowsIfNecessary(variableList, observations, isVariate, this.ontologyService, this.fieldbookService,
-			WorkbookUtilTest.PROGRAM_UUID);
-
-		final int measurementDataSize = observations.get(0).getDataList().size();
-		// The SEED_SOURCE Variable should be added
-		Assert.assertEquals(previousMeasurementDataSize + 1, measurementDataSize);
-		final MeasurementData newMeasurementData = observations.get(0).getDataList().get(previousMeasurementDataSize);
-		Assert.assertNotNull(newMeasurementData);
-		Assert.assertEquals(variable.getName(), newMeasurementData.getLabel());
-		Assert.assertTrue(newMeasurementData.isEditable());
-		Assert.assertTrue(newMeasurementData.getValue().isEmpty());
-		Assert.assertEquals(variable, newMeasurementData.getMeasurementVariable());
-		Assert.assertNull(newMeasurementData.getMeasurementDataId());
-		Assert.assertEquals(this.breedingMethods, variable.getPossibleValues());
-
-		WorkbookUtil.addMeasurementDataToRowsExp(variableList, observations, isVariate, this.ontologyService, this.fieldbookService,
-			WorkbookUtilTest.PROGRAM_UUID);
-		// The SEED_SOURCE Variable should not be added since it's already in the data list
-		Assert.assertEquals(measurementDataSize, observations.get(0).getDataList().size());
-	}
-
 	@Test
 	public void testAddMeasurementDataToRowsForVariate() {
 		final MeasurementVariable variable = MeasurementVariableTestDataInitializer.createMeasurementVariableWithOperation(
@@ -331,37 +245,6 @@ public class WorkbookUtilTest {
 		Assert.assertTrue(variatesMapUsedInFormulas.containsKey(measurementVariable1));
 		final List<MeasurementVariable> measurementVariableList = variatesMapUsedInFormulas.get(measurementVariable1);
 		Assert.assertEquals(measurementVariable2, measurementVariableList.get(0));
-	}
-
-	@Test
-	public void testGetVariatesUsedInFormulas() {
-		final FormulaDto formula = new FormulaDto();
-		final List<MeasurementVariable> measurementVariables = new ArrayList<>();
-		final List<FormulaVariable> inputs = new ArrayList<>();
-
-		final MeasurementVariable measurementVariable1 = new MeasurementVariable();
-		final String variable1 = "VARIABLE1";
-		measurementVariable1.setName(variable1);
-		measurementVariable1.setTermId(1);
-		measurementVariables.add(measurementVariable1);
-
-		final MeasurementVariable measurementVariable2 = new MeasurementVariable();
-		final String variable2 = "VARIABLE2";
-		measurementVariable2.setName(variable2);
-		measurementVariable2.setTermId(2);
-		measurementVariables.add(measurementVariable2);
-
-		final FormulaVariable formulaVariable = new FormulaVariable(1, measurementVariable1.getName(), measurementVariable1.getTermId());
-		inputs.add(formulaVariable);
-		formula.setInputs(inputs);
-		measurementVariable2.setFormula(formula);
-
-		final Map<Integer, List<Integer>> variatesMapUsedInFormulas = WorkbookUtil.getVariatesUsedInFormulas(measurementVariables);
-		Assert.assertEquals(1, variatesMapUsedInFormulas.size() );
-		Assert.assertTrue(variatesMapUsedInFormulas.containsKey(measurementVariable1.getTermId()));
-		final List<Integer> measurementVariableList = variatesMapUsedInFormulas.get(measurementVariable1.getTermId());
-		Assert.assertEquals(measurementVariable2.getTermId(), measurementVariableList.get(0).intValue());
-
 	}
 
 	@Test

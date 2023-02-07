@@ -19,7 +19,6 @@ import com.efficio.fieldbook.web.trial.bean.PossibleValuesCache;
 import com.efficio.fieldbook.web.util.SettingsUtil;
 import com.efficio.fieldbook.web.util.WorkbookUtil;
 import liquibase.util.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.generationcp.commons.constant.AppConstants;
 import org.generationcp.commons.spring.util.ContextUtil;
 import org.generationcp.middleware.domain.dms.Enumeration;
@@ -30,7 +29,6 @@ import org.generationcp.middleware.domain.etl.MeasurementData;
 import org.generationcp.middleware.domain.etl.MeasurementRow;
 import org.generationcp.middleware.domain.etl.MeasurementVariable;
 import org.generationcp.middleware.domain.etl.Workbook;
-import org.generationcp.middleware.domain.oms.Term;
 import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.domain.oms.TermSummary;
 import org.generationcp.middleware.domain.ontology.DataType;
@@ -245,111 +243,12 @@ public class FieldbookServiceImpl implements FieldbookService {
 		return list;
 	}
 
-	@Override
-	public String getValue(final int id, final String valueOrId, final boolean isCategorical) {
-		final Variable variable = this.ontologyVariableDataManager.getVariable(this.contextUtil.getCurrentProgramUUID(),
-			id, true);
-		assert !Objects.equals(variable, null);
-
-		final List<ValueReference> possibleValues = this.possibleValuesCache.getPossibleValues(id);
-		if (!NumberUtils.isNumber(valueOrId) && TermId.BREEDING_METHOD_CODE.getId() != id
-			&& TermId.BREEDING_METHOD.getId() != id) {
-			return valueOrId;
-		}
-
-		// TODO : for investigation, check for best fix, since ValueReference
-		// object should NOT be compared to a String
-		if (possibleValues != null && !possibleValues.isEmpty()) {
-			for (final ValueReference possibleValue : possibleValues) {
-				if (possibleValue.equals(valueOrId)) {
-					return possibleValue.getName();
-				}
-			}
-		}
-
-		Double valueId = null;
-		if (NumberUtils.isNumber(valueOrId)) {
-			valueId = Double.valueOf(valueOrId);
-		}
-
-		if (TermId.BREEDING_METHOD_ID.getId() == id) {
-			return this.getBreedingMethodById(valueId != null ? valueId.intValue() : 0);
-		} else if (TermId.BREEDING_METHOD_CODE.getId() == id) {
-			return this.getBreedingMethodByCode(valueOrId);
-		} else if (TermId.BREEDING_METHOD.getId() == id) {
-			return this.getBreedingMethodByName(valueOrId);
-		} else if (DataType.LOCATION.equals(variable.getScale().getDataType())) {
-			return this.getLocationById(valueId.intValue());
-		} else if (DataType.PERSON.equals(variable.getScale().getDataType())) {
-			return this.userService.getPersonNameForPersonId(valueId.intValue());
-		} else if (isCategorical) {
-			final Term term = this.ontologyService.getTermById(valueId.intValue());
-			if (term != null) {
-				return term.getName();
-			}
-		} else {
-			return valueOrId;
-		}
-		return null;
-	}
-
-	private String getBreedingMethodById(final int id) {
-		final Method method = this.fieldbookMiddlewareService.getBreedingMethodById(id);
-		if (method != null) {
-			return method.getMname() + " - " + method.getMcode();
-		}
-		return null;
-	}
-
 	protected String getBreedingMethodByCode(final String code) {
 		final Method method = this.fieldbookMiddlewareService.getMethodByCode(code);
 		if (method != null) {
 			return method.getMname() + " - " + method.getMcode();
 		}
 		return "";
-	}
-
-	private String getBreedingMethodByName(final String name) {
-		final Method method = this.fieldbookMiddlewareService.getMethodByName(name);
-		if (method != null) {
-			return method.getMname() + " - " + method.getMcode();
-		}
-		return "";
-	}
-
-	private String getLocationById(final int id) {
-		final Location location = this.fieldbookMiddlewareService.getLocationById(id);
-		if (location != null) {
-			return location.getLname();
-		}
-		return null;
-	}
-
-	@Override
-	public void setAllPossibleValuesInWorkbook(final Workbook workbook) {
-		final List<MeasurementVariable> allVariables = workbook.getAllVariables();
-		for (final MeasurementVariable variable : allVariables) {
-			if (variable.getPossibleValues() == null || variable.getPossibleValues().isEmpty()) {
-
-				if (DataType.BREEDING_METHOD.getId().equals(variable.getDataTypeId())) {
-					final List<ValueReference> list = new ArrayList<>();
-					final List<Method> methodList = this.fieldbookMiddlewareService.getAllBreedingMethods(true);
-					// since we only need the name for the display
-					// special handling for breeding methods
-					if (methodList != null && !methodList.isEmpty()) {
-						for (final Method method : methodList) {
-							if (method != null) {
-								list.add(new ValueReference(
-									method.getMid(),
-									method.getMname() + " - " + method.getMcode(),
-									method.getMname() + " - " + method.getMcode()));
-							}
-						}
-					}
-					variable.setPossibleValues(list);
-				}
-			}
-		}
 	}
 
 	@Override

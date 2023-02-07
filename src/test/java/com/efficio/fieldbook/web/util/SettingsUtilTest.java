@@ -1,10 +1,8 @@
 
 package com.efficio.fieldbook.web.util;
 
-import com.efficio.fieldbook.service.api.FieldbookService;
 import com.efficio.fieldbook.web.common.bean.SettingDetail;
 import com.efficio.fieldbook.web.common.bean.SettingVariable;
-import com.efficio.fieldbook.web.common.bean.StudyDetails;
 import com.efficio.fieldbook.web.common.bean.UserSelection;
 import com.efficio.fieldbook.web.data.initializer.SettingDetailTestDataInitializer;
 import com.efficio.fieldbook.web.trial.TestDataHelper;
@@ -12,12 +10,10 @@ import com.efficio.fieldbook.web.trial.bean.ExpDesignParameterUi;
 import com.efficio.fieldbook.web.trial.bean.TreatmentFactorData;
 import org.generationcp.commons.constant.AppConstants;
 import org.generationcp.middleware.data.initializer.StandardVariableTestDataInitializer;
-import org.generationcp.middleware.data.initializer.WorkbookTestDataInitializer;
 import org.generationcp.middleware.domain.dms.PhenotypicType;
 import org.generationcp.middleware.domain.dms.StandardVariable;
 import org.generationcp.middleware.domain.dms.ValueReference;
 import org.generationcp.middleware.domain.etl.MeasurementVariable;
-import org.generationcp.middleware.domain.etl.Workbook;
 import org.generationcp.middleware.domain.oms.Term;
 import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.domain.ontology.DataType;
@@ -32,7 +28,6 @@ import org.generationcp.middleware.pojos.workbench.settings.Variate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -44,7 +39,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
 public class SettingsUtilTest {
@@ -55,13 +49,7 @@ public class SettingsUtilTest {
 	public static final int NFERT_KG_ID = 1002;
 	@Mock
 	private org.generationcp.middleware.service.api.FieldbookService fieldbookMiddlewareService;
-	
-	@Mock
-	private FieldbookService fieldbookService;
 
-	@Mock
-	private Properties properties;
-	
 	@Mock
 	private UserSelection userSelection;
 
@@ -81,58 +69,6 @@ public class SettingsUtilTest {
 	}
 
 	@Test
-	public void testConvertXmlDatasetToWorkbookAndBack() {
-		final Dataset dataset = new Dataset();
-
-		dataset.setConditions(new ArrayList<Condition>());
-		dataset.setFactors(new ArrayList<Factor>());
-		dataset.setVariates(new ArrayList<Variate>());
-
-		dataset.getConditions().add(new Condition("CONDITION1", "CONDITION1", "PERSON", "DBCV", "ASSIGNED",
-				PhenotypicType.STUDY.toString(), "C", "Meeh", null, null, null));
-		dataset.getFactors().add(new Factor("FACTOR1", "FACTOR1", "GERMPLASM ENTRY", "NUMBER", "ENUMERATED",
-				PhenotypicType.ENTRY_DETAIL.toString(), "N", 0));
-		final Variate variate = new Variate("VARIATE1", "VARIATE1", "YIELD (GRAIN)", "Kg/ha", "Paddy Rice",
-				PhenotypicType.VARIATE.toString(), "N", TermId.NUMERIC_VARIABLE.getId(),
-				new ArrayList<ValueReference>(), 0.0, 0.0);
-		variate.setVariableType(VariableType.TRAIT.getName());
-		dataset.getVariates().add(variate);
-
-		final Workbook workbook = SettingsUtil.convertXmlDatasetToWorkbook(dataset, SettingsUtilTest.PROGRAM_UUID);
-
-		final Dataset newDataset = (Dataset) SettingsUtil.convertWorkbookToXmlDataset(workbook);
-		Assert.assertEquals(dataset.getConditions().get(0).getName(), newDataset.getConditions().get(0).getName());
-		Assert.assertEquals(dataset.getConditions().get(0).getDescription(),
-				newDataset.getConditions().get(0).getDescription());
-		Assert.assertEquals(dataset.getConditions().get(0).getProperty(),
-				newDataset.getConditions().get(0).getProperty());
-		Assert.assertEquals(dataset.getConditions().get(0).getScale(), newDataset.getConditions().get(0).getScale());
-		Assert.assertEquals(dataset.getConditions().get(0).getMethod(), newDataset.getConditions().get(0).getMethod());
-		Assert.assertEquals(dataset.getConditions().get(0).getRole(), newDataset.getConditions().get(0).getRole());
-		Assert.assertEquals(dataset.getConditions().get(0).getDatatype(),
-				newDataset.getConditions().get(0).getDatatype());
-
-		Assert.assertEquals(dataset.getFactors().get(0).getName(), newDataset.getFactors().get(0).getName());
-		Assert.assertEquals(dataset.getFactors().get(0).getDescription(),
-				newDataset.getFactors().get(0).getDescription());
-		Assert.assertEquals(dataset.getFactors().get(0).getProperty(), newDataset.getFactors().get(0).getProperty());
-		Assert.assertEquals(dataset.getFactors().get(0).getScale(), newDataset.getFactors().get(0).getScale());
-		Assert.assertEquals(dataset.getFactors().get(0).getMethod(), newDataset.getFactors().get(0).getMethod());
-		Assert.assertEquals(dataset.getFactors().get(0).getRole(), newDataset.getFactors().get(0).getRole());
-		Assert.assertEquals(dataset.getFactors().get(0).getDatatype(), newDataset.getFactors().get(0).getDatatype());
-
-		Assert.assertEquals(dataset.getVariates().get(0).getName(), newDataset.getVariates().get(0).getName());
-		Assert.assertEquals(dataset.getVariates().get(0).getDescription(),
-				newDataset.getVariates().get(0).getDescription());
-		Assert.assertEquals(dataset.getVariates().get(0).getProperty(), newDataset.getVariates().get(0).getProperty());
-		Assert.assertEquals(dataset.getVariates().get(0).getScale(), newDataset.getVariates().get(0).getScale());
-		Assert.assertEquals(dataset.getVariates().get(0).getMethod(), newDataset.getVariates().get(0).getMethod());
-		Assert.assertEquals(dataset.getVariates().get(0).getRole(), newDataset.getVariates().get(0).getRole());
-		Assert.assertEquals(dataset.getVariates().get(0).getDatatype(), newDataset.getVariates().get(0).getDatatype());
-
-	}
-
-	@Test
 	public void testIfCheckVariablesAreInFixedNurseryList() {
 		final String variableIds = AppConstants.FIXED_STUDY_VARIABLES.getString()
 				+ AppConstants.CHECK_VARIABLES.getString()
@@ -140,92 +76,6 @@ public class SettingsUtilTest {
 		Assert.assertTrue(SettingsUtil.inVariableIds(TermId.CHECK_START.getId(), variableIds));
 		Assert.assertTrue(SettingsUtil.inVariableIds(TermId.CHECK_INTERVAL.getId(), variableIds));
 		Assert.assertTrue(SettingsUtil.inVariableIds(TermId.CHECK_PLAN.getId(), variableIds));
-	}
-
-	@Test
-	public void testGetCodeValueValid() {
-		final List<SettingDetail> removedConditions = this.createCheckVariables(true);
-		final int code = SettingsUtil.getCodeValue("8414", removedConditions, TermId.CHECK_PLAN.getId());
-		Assert.assertEquals("Expected 1 but got " + code + " instead.", 1, code);
-	}
-
-	@Test
-	public void testGetCodeValueWhenConditionsIsNull() {
-		final List<SettingDetail> removedConditions = null;
-		final int code = SettingsUtil.getCodeValue("8414", removedConditions, TermId.CHECK_PLAN.getId());
-		Assert.assertEquals("Expected 0 but got " + code + " instead.", 0, code);
-	}
-
-	@Test
-	public void testGetCodeValueWhenPossibleValuesIsNull() {
-		final List<SettingDetail> removedConditions = this.createCheckVariables(true);
-		final int code = SettingsUtil.getCodeValue("8411", removedConditions, TermId.CHECK_START.getId());
-		Assert.assertEquals("Expected 0 but got " + code + " instead.", 0, code);
-	}
-
-	@Test
-	public void testGetCodeValueWhenPossibleValuesIsNotNullButEmpty() {
-		final List<SettingDetail> removedConditions = this.createCheckVariables(true);
-		final int code = SettingsUtil.getCodeValue("8412", removedConditions, TermId.CHECK_INTERVAL.getId());
-		Assert.assertEquals("Expected 0 but got " + code + " instead.", 0, code);
-	}
-
-	@Test
-	public void testGetVariableAppConstantLabels() throws Exception {
-		final List<String> labels = new ArrayList<>(Arrays.asList(new String[] { "abc", "def" }));
-
-		final Properties appConfigProp = Mockito.mock(Properties.class);
-		Mockito.when(appConfigProp.getProperty(ArgumentMatchers.any(String.class))).thenReturn("any value");
-		final ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
-
-		SettingsUtil.getVariableAppConstantLabels(labels, appConfigProp);
-
-		Mockito.verify(appConfigProp, Mockito.times(labels.size())).getProperty(argument.capture());
-		Assert.assertTrue(argument.getValue().contains("LABEL"));
-	}
-
-	@Test
-	public void testGetCodeValueInvalid() {
-		final List<SettingDetail> removedConditions = this.createCheckVariables(true);
-		final int code = SettingsUtil.getCodeValue("8413", removedConditions, TermId.CHECK_PLAN.getId());
-		Assert.assertNotSame("Expected 1 but got " + code + " instead.", 1, code);
-	}
-
-	@Test
-	public void testIfCheckVariablesHaveValues() {
-		final List<SettingDetail> checkVariables = this.createCheckVariables(true);
-		final boolean checksHaveValues = SettingsUtil.checkVariablesHaveValues(checkVariables);
-		Assert.assertTrue(checksHaveValues);
-	}
-
-	@Test
-	public void testIfCheckVariablesHaveNoValues() {
-		final List<SettingDetail> checkVariables = this.createCheckVariables(false);
-		final boolean checksHaveValues = SettingsUtil.checkVariablesHaveValues(checkVariables);
-		Assert.assertFalse(checksHaveValues);
-	}
-
-	@Test
-	public void testIfCheckVariablesIsNull() {
-		final List<SettingDetail> checkVariables = null;
-		final boolean checksHaveValues = SettingsUtil.checkVariablesHaveValues(checkVariables);
-		Assert.assertFalse(checksHaveValues);
-	}
-
-	@Test
-	public void testIfCheckVariablesIsEmpty() {
-		final List<SettingDetail> checkVariables = new ArrayList<SettingDetail>();
-		final boolean checksHaveValues = SettingsUtil.checkVariablesHaveValues(checkVariables);
-		Assert.assertFalse(checksHaveValues);
-	}
-
-	@Test
-	public void testParseVariableIds() {
-		final List<Integer> variableIds = this.settingsUtilParseVariableIds("1|2|3");
-		Assert.assertEquals("Should have 3 variable ids", 3, variableIds.size());
-		Assert.assertEquals("1st Id should be 1", new Integer(1), variableIds.get(0));
-		Assert.assertEquals("2nd Id should be 2", new Integer(2), variableIds.get(1));
-		Assert.assertEquals("3rd Id should be 3", new Integer(3), variableIds.get(2));
 	}
 
 	@Test
@@ -568,53 +418,6 @@ public class SettingsUtilTest {
 				SettingsUtil.getExperimentalDesignValue(expDesignParameterUi, TermId.REPLICATIONS_MAP));
 	}
 
-	private List<Integer> settingsUtilParseVariableIds(final String variableIds) {
-		return SettingsUtil.parseVariableIds(variableIds);
-	}
-
-	private List<SettingDetail> createCheckVariables(final boolean hasValue) {
-		final List<SettingDetail> checkVariables = new ArrayList<SettingDetail>();
-
-		checkVariables.add(this.createSettingDetail(TermId.CHECK_START.getId(), hasValue ? "1" : null));
-		checkVariables.add(this.createSettingDetail(TermId.CHECK_INTERVAL.getId(), hasValue ? "4" : null));
-		checkVariables.add(this.createSettingDetail(TermId.CHECK_PLAN.getId(), hasValue ? "8414" : null));
-
-		return checkVariables;
-	}
-
-	private SettingDetail createSettingDetail(final int cvTermId, final String value) {
-		final SettingVariable variable = new SettingVariable();
-		variable.setCvTermId(cvTermId);
-		final SettingDetail settingDetail = new SettingDetail(variable, null, value, false);
-
-		if (cvTermId == TermId.CHECK_PLAN.getId()) {
-			final List<ValueReference> possibleValues = new ArrayList<>();
-			possibleValues.add(new ValueReference(8414, "1", "Insert each check in turn"));
-			possibleValues.add(new ValueReference(8415, "2", "Insert all checks at each position"));
-			settingDetail.setPossibleValues(possibleValues);
-		} else if (cvTermId == TermId.CHECK_INTERVAL.getId()) {
-			settingDetail.setPossibleValues(new ArrayList<ValueReference>());
-		}
-		return settingDetail;
-	}
-
-	@Test
-	public void testcleanSheetAndFileNameWithInvalid() {
-		final String cleanedName = SettingsUtil.cleanSheetAndFileName("Test[:\\\\/*?|<>]");
-		Assert.assertEquals("String should be cleaned", "Test[_________]", cleanedName);
-	}
-
-	@Test
-	public void testGetCodeInPossibleValues() {
-		final List<ValueReference> valueRefs = new ArrayList<ValueReference>();
-		valueRefs.add(new ValueReference(8414, "1"));
-		valueRefs.add(new ValueReference(8415, "2"));
-		Assert.assertEquals("Should return 1 since the matching name for 8414 is 1", 1,
-				SettingsUtil.getCodeInPossibleValues(valueRefs, "8414"));
-		Assert.assertEquals("Should return 2 since the matching name for 8415 is 2", 2,
-				SettingsUtil.getCodeInPossibleValues(valueRefs, "8415"));
-	}
-
 	@Test
 	public void testSetSettingDetailRoleForDefaultVartypes() {
 		// Create a standardVaraible as pre-req
@@ -917,21 +720,6 @@ public class SettingsUtilTest {
 						TermId.CATEGORICAL_VARIABLE.getId(), condition.getDataTypeId().intValue());
 			}
 		}
-	}
-	
-	@Test
-	public void testConvertWorkbookStudyLevelVariablesToStudyDetails() {
-		final Workbook workbook = WorkbookTestDataInitializer.getTestWorkbook();
-		workbook.getStudyDetails().setIsLocked(true);
-		final String createdBy = "123";
-		
-		final StudyDetails studyDetails = SettingsUtil.convertWorkbookStudyLevelVariablesToStudyDetails(workbook, this.fieldbookMiddlewareService, this.fieldbookService, this.userSelection, PROGRAM_UUID, this.properties, createdBy);
-		final org.generationcp.middleware.domain.etl.StudyDetails sourceStudyDetails = workbook.getStudyDetails();
-		Assert.assertEquals(sourceStudyDetails.getId(), studyDetails.getId());
-		Assert.assertEquals(sourceStudyDetails.getProgramUUID(), studyDetails.getProgramUUID());
-		Assert.assertTrue(studyDetails.getIsLocked());
-		Assert.assertEquals(sourceStudyDetails.getCreatedBy(), studyDetails.getOwnerId().toString());
-		Assert.assertEquals(sourceStudyDetails.getStudyName(), studyDetails.getName());
 	}
 
 	private void mockGetStandardVariable(final List<SettingDetail> conditionSettingDetails) {
