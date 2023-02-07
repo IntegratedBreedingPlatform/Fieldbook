@@ -744,7 +744,7 @@ function deleteStudyInEdit() {
 		showSuccessfulMessage('', deleteStudySuccessful);
 		setTimeout(function () {
 			//go back to review study page
-			location.href = $('#delete-success-return-url').attr('href');
+			location.href = $('#delete-success-return-url').val();
 		}, 500);
 	});
 }

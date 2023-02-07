@@ -209,7 +209,7 @@
 								<a th:href="@{/TrialManager}" th:text="#{study.studydetails.action.close.study}">Close Study</a>
 							</li>
 							<li ng-show="hasManageStudiesPermission">
-								<a id="delete-success-return-url" style="display:none;" th:href="@{/TrialManager}"></a>
+								<input type="hidden" id="delete-success-return-url" ng-value="returnToManageStudiesURL"/>
 								<a href="javascript: openDeleteConfirmation();" th:text="#{browse.study.delete.study.name}">Delete Study</a>
 							</li>
 							<li>
