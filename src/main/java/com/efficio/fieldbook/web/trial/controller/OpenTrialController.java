@@ -2,6 +2,7 @@ package com.efficio.fieldbook.web.trial.controller;
 
 import com.efficio.fieldbook.service.api.ErrorHandlerService;
 import com.efficio.fieldbook.web.common.bean.SettingDetail;
+import com.efficio.fieldbook.web.common.controller.CrossingSettingsController;
 import com.efficio.fieldbook.web.trial.bean.TrialData;
 import com.efficio.fieldbook.web.trial.form.CreateTrialForm;
 import com.efficio.fieldbook.web.trial.form.ImportGermplasmListForm;
@@ -13,6 +14,7 @@ import org.generationcp.commons.constant.AppConstants;
 import org.generationcp.commons.context.ContextInfo;
 import org.generationcp.middleware.api.cropparameter.CropParameterEnum;
 import org.generationcp.middleware.api.cropparameter.CropParameterService;
+import org.generationcp.middleware.api.study.StudyDetailsDTO;
 import org.generationcp.middleware.domain.dms.DatasetDTO;
 import org.generationcp.middleware.domain.dms.PhenotypicType;
 import org.generationcp.middleware.domain.etl.MeasurementData;
@@ -40,6 +42,7 @@ import org.generationcp.middleware.service.api.study.StudyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -361,6 +364,18 @@ public class OpenTrialController extends BaseTrialController {
 	@RequestMapping(method = RequestMethod.POST)
 	@Transactional
 	public Map<String, Object> submit(@RequestParam("replace") final int replace, @RequestBody final TrialData data) {
+
+		final Integer studyId = this.userSelection.getWorkbook().getStudyDetails().getId();
+		final StudyDetailsDTO studyDetails = this.studyService
+			.getStudyDetails(this.contextUtil.getCurrentProgramUUID(), studyId);
+		if (!studyDetails.getName().equals(data.getBasicDetails().getStudyName())) {
+			try{
+				this.studyDataManager.renameStudy(data.getBasicDetails().getStudyName(), studyId, this.contextUtil.getCurrentProgramUUID());
+			} catch (Exception e) {
+				throw new RuntimeException("{ \"data\": { \"errors\": [{ \"message\": \"" +  e.getMessage() + "\" }] } }");
+			}
+		}
+
 		this.processEnvironmentData(data.getInstanceInfo());
 		// transfer over data from user input into the list of setting details
 		// stored in the session
