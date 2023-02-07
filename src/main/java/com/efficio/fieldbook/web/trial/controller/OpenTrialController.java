@@ -2,7 +2,7 @@ package com.efficio.fieldbook.web.trial.controller;
 
 import com.efficio.fieldbook.service.api.ErrorHandlerService;
 import com.efficio.fieldbook.web.common.bean.SettingDetail;
-import com.efficio.fieldbook.web.common.controller.CrossingSettingsController;
+import com.efficio.fieldbook.web.exception.FieldbookRequestValidationException;
 import com.efficio.fieldbook.web.trial.bean.TrialData;
 import com.efficio.fieldbook.web.trial.form.CreateTrialForm;
 import com.efficio.fieldbook.web.trial.form.ImportGermplasmListForm;
@@ -42,7 +42,6 @@ import org.generationcp.middleware.service.api.study.StudyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -372,7 +371,7 @@ public class OpenTrialController extends BaseTrialController {
 			try{
 				this.studyDataManager.renameStudy(data.getBasicDetails().getStudyName(), studyId, this.contextUtil.getCurrentProgramUUID());
 			} catch (Exception e) {
-				throw new RuntimeException("{ \"data\": { \"errors\": [{ \"message\": \"" +  e.getMessage() + "\" }] } }");
+				throw new FieldbookRequestValidationException("study.name.not-unique", new Object[] {});
 			}
 		}
 
