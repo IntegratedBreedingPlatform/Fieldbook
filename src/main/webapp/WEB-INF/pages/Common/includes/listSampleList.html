@@ -13,7 +13,7 @@
 				   class="table-curved table-condensed">
 				<thead>
 				<tr>
-					<th><input type="checkbox" th:id="'sample-select-all-'+ *{listId}" th:value="*{listId}"/></th>
+					<th><input type="checkbox" th:id="'sample-select-all-'+ *{listId}" th:value="*{listId}" th:onclick="'javascript: onClickSelectAll(this, ' + *{listId} + ');'"/></th>
 					<th nowrap="nowrap" th:each="tableHeader : ${tableHeaderList}"
 						th:text="${tableHeader.columnName}"
 						th:attr="data-col-name=${tableHeader.dataCol}"
@@ -23,7 +23,7 @@
 				<tbody>
 				<tr class="primaryRow" th:each="sample, row : *{sampleList}" th:attr="data-gid=${sample.gid}">
 					<td th:class="${row.even}? 'even' : 'odd'">
-						<input type="checkbox" th:onclick="'javascript: handleClick(this);'"
+						<input type="checkbox" th:onclick="'javascript: handleClick(this, ' + *{listId} + ');'"
 							   th:name="'sample-entry-' + *{listId}" th:value="*{sample.sampleId}"/>
 					</td>
 					<td th:class="${row.even}? 'even' : 'odd'" th:text="${sample.entryNumber}"></td>
@@ -67,25 +67,13 @@
 		});
 
 		const listId = '[[*{listId}]]';
-		const selectAllId = '#sample-select-all-[[*{listId}]]';
-
-		$(selectAllId).click(function () {
-			const isSelectAllChecked = $(this).is(':checked');
-
-			$('input:checkbox[name=sample-entry-' + listId + ']').each(function () {
-				$(this).prop('checked', isSelectAllChecked);
-			});
-			updateSelectedSamples();
-		});
-
 		$('#sample-list-' + listId).on('draw.dt', function () {
-			toggleSelectAll();
+            toggleSelectAll(listId);
 		});
 	});
 
-	function toggleSelectAll() {
-		const listId = '[[*{listId}]]';
-		const selectAllId = '#sample-select-all-[[*{listId}]]';
+	function toggleSelectAll(listId) {
+		const selectAllId = '#sample-select-all-' + listId;
 		let isSelectAllChecked = true;
 		$('input:checkbox[name=sample-entry-' + listId + ']').each(function () {
 			if (!$(this).is(':checked')) {
@@ -96,20 +84,27 @@
 		$(selectAllId).prop('checked', isSelectAllChecked);
 	}
 
-	function handleClick(checkBox) {
-		const selectAllId = '#sample-select-all-[[*{listId}]]';
+	function onClickSelectAll(selectAll, listId) {
+		const isSelectAllChecked = selectAll.checked;
+		$('input:checkbox[name=sample-entry-' + listId + ']').each(function () {
+			$(this).prop('checked', isSelectAllChecked);
+		});
+		updateSelectedSamples(listId);
+	}
+
+	function handleClick(checkBox, listId) {
+		const selectAllId = '#sample-select-all-' + listId;
 		if (!checkBox.checked) {
 			$(selectAllId).prop('checked', false);
 		} else {
-			this.toggleSelectAll();
+			this.toggleSelectAll(listId);
 		}
-		this.updateSelectedSamples();
+		this.updateSelectedSamples(listId);
 	}
 
-	function updateSelectedSamples() {
-		const listId = '[[*{listId}]]';
+	function updateSelectedSamples(listId) {
 		var selectedRows = $('#sample-list-' + listId).DataTable().$('input:checkbox[name=sample-entry-' + listId + ']:checked').length;
-		$('.numberOfSelected').html(selectedRows);
+		$('#numberOfSelected-' + listId).html(selectedRows);
 	}
 
 	//]]>
