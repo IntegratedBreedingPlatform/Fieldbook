@@ -445,8 +445,6 @@
 									} else {
 										showErrorMessage('', $.fieldbookMessages.errorSaveStudy);
 									}
-								}).catch((error) => {
-									console.log(error);
 								});
 							}
 
