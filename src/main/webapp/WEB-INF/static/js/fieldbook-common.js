@@ -763,7 +763,7 @@ function subObservationUnitDatasetSelector() {
 /* END SUB OBSERVATION UNIT SPECIFIC FUNCTIONS */
 
 /* SAMPLE LIST TAB SPECIFIC FUNCTIONS */
-function openRemoveSampleEntryConfirmation(listId, listName) {
+function openDeleteSampleEntryConfirmation(listId, listName) {
 	'use strict';
 
 	if($('#sample-list-' + listId).DataTable().$('input:checkbox[name=sample-entry-' + listId + ']:checked').length < 1) {
@@ -771,13 +771,13 @@ function openRemoveSampleEntryConfirmation(listId, listName) {
 		return;
 	}
 
-	$('#removeSampleListEntries').modal({backdrop: 'static', keyboard: true});
+	$('#deleteSampleListEntries').modal({backdrop: 'static', keyboard: true});
 	$('#listIdHidden').val(listId);
 	$('#listNameHidden').val(listName);
 }
-function removeSelectedSampleEntries () {
+function deleteSelectedSampleEntries () {
 	'use strict';
-	closeModal('removeSampleListEntries');
+	closeModal('deleteSampleListEntries');
 
 	var baseurl = '/bmsapi/crops/' + cropName + '/sample-lists';
 	var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
@@ -798,7 +798,7 @@ function removeSelectedSampleEntries () {
 			xhr.setRequestHeader('X-Auth-Token', xAuthToken);
 		},
 		success: function(resp) {
-			showSuccessfulMessage('', removeSampleListEntriesSuccessfullyMessage);
+			showSuccessfulMessage('', deleteSampleListEntriesSuccessfullyMessage);
 			var numOfEntries = $("#numberOfEntries" + listId).text();
 
 			if (selectedEntries.length == parseInt(numOfEntries)) {
