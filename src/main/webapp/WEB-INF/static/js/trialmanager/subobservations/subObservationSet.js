@@ -26,10 +26,11 @@
 
 	subObservationModule.controller('SubObservationSetCtrl', ['$scope', '$rootScope', 'TrialManagerDataService', '$stateParams',
 		'DTOptionsBuilder', 'DTColumnBuilder', '$http', '$q', '$compile', 'studyInstanceService', 'datasetService',
-		'derivedVariableService', 'fileService', '$timeout', '$uibModal', 'visualizationModalService', 'studyContext', 'germplasmDetailsModalService', 'SEARCH_ORIGIN', 'HasAnyAuthorityService', 'PERMISSIONS',
+		'derivedVariableService', 'fileService', '$timeout', '$uibModal', 'visualizationModalService', 'studyContext', 'germplasmDetailsModalService',
+		'observationDetailsModalService', 'SEARCH_ORIGIN', 'HasAnyAuthorityService', 'PERMISSIONS',
 		function ($scope, $rootScope, TrialManagerDataService, $stateParams, DTOptionsBuilder, DTColumnBuilder, $http, $q, $compile,
 				  studyInstanceService, datasetService, derivedVariableService, fileService, $timeout, $uibModal, visualizationModalService,
-				  studyContext, germplasmDetailsModalService, SEARCH_ORIGIN, HasAnyAuthorityService, PERMISSIONS
+				  studyContext, germplasmDetailsModalService, observationDetailsModalService, SEARCH_ORIGIN, HasAnyAuthorityService, PERMISSIONS
 		) {
 
 			// used also in tests - to call $rootScope.$apply()
@@ -1742,6 +1743,16 @@
 								return (data.value === "0")  ? '-' : data.value;
 							}
 						});
+					} else if (columnData.termId === OBS_UNIT_ID) {
+						columnsDef.push({
+							targets: columns.length - 1,
+							orderable: false,
+							render: function (data, type, full, meta) {
+								return '<a class="gid-link" href="javascript: void(0)" ' +
+									'onclick="openObservationDetailsPopup(\'' +
+									data.value + '\')">' + EscapeHTML.escape(data.value) + '</a>';
+							}
+						});
 					} else if (!columnData.factor) { // variates
 						columnsDef.push({
 							targets: columns.length - 1,
@@ -1821,6 +1832,10 @@
 
 			$scope.openGermplasmDetailsModal = function (gid) {
 				germplasmDetailsModalService.openGermplasmDetailsModal(gid, null);
+			}
+
+			$scope.openObservationDetailsModal = function (obsUnitId) {
+				observationDetailsModalService.openObservationDetailsModal(obsUnitId, null);
 			}
 
 			function renderCategoricalValue(value, columnData) {
