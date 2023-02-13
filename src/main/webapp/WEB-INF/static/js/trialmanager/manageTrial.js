@@ -1155,6 +1155,8 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				});
 			}
 
+			$scope.studyName = $scope.data.studyName;
+
 		}]);
 
 	manageTrialApp.factory('studyService', ['$http', '$q', 'studyContext', 'serviceUtilities',
