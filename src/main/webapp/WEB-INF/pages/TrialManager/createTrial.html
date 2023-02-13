@@ -206,7 +206,7 @@
 								<a ng-click="openLotCreationModal()">Create lots</a>
 							</li>
 							<li>
-								<a th:href="@{/TrialManager}" th:text="#{study.studydetails.action.close.study}">Close Study</a>
+								<a href="{{returnToManageStudiesURL}}" th:text="#{study.studydetails.action.close.study}">Close Study</a>
 							</li>
 							<li ng-show="hasManageStudiesPermission">
 								<input type="hidden" id="delete-success-return-url" ng-value="returnToManageStudiesURL"/>
@@ -485,7 +485,7 @@
 	</div>
 
 	<div class="row">
-		<div th:include="/StudyManager/includes/removeSampleListEntriesConfirmation"></div>
+		<div th:include="/StudyManager/includes/deleteSampleListEntriesConfirmation"></div>
 	</div>
 
 	<div class="row">
