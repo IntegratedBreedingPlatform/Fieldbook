@@ -41,29 +41,12 @@ public interface FieldbookService {
 	List<ValueReference> getAllPossibleValues(Variable variable);
 
 	/**
-	 * Gets the value.
-	 *
-	 * @param id the id
-	 * @param valueOrId the value or id
-	 * @param isCategorical the is categorical
-	 * @return the value
-	 */
-	String getValue(int id, String valueOrId, boolean isCategorical);
-
-	/**
 	 * Gets the all breeding methods.
 	 *
 	 * @param isFilterOutGenerative the is filter out generative
 	 * @return the all breeding methods
 	 */
 	List<ValueReference> getAllBreedingMethods(boolean isFilterOutGenerative);
-
-	/**
-	 * Sets the all possible values in workbook.
-	 *
-	 * @param workbook the new all possible values in workbook
-	 */
-	void setAllPossibleValuesInWorkbook(Workbook workbook);
 
 	/**
 	 * Gets the check list.

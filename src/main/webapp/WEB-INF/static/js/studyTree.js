@@ -1,5 +1,5 @@
 /*globals Spinner,console,displayStudyListTree, filterByStudyType, changeBrowseStudyButtonBehavior, showErrorMessage*/
-/*globals addDetailsTab, moveStudy*/
+/*globals moveStudy*/
 /*exported displayStudyListTree, filterByStudyType, hideRenameFolderSection, hideAddFolderSection */
 
 
@@ -71,8 +71,6 @@ function chooseStudyNode(fromEnterKey, doOpenStudy) {
 			if (choosingType === 1) {
 				if (doOpenStudy && node.data.programUUID != null) {
 					openTreeStudy(node.data.key);
-				} else {
-					addDetailsTab(node.data.key, node.data.title);
 				}
 			}
 			else {
@@ -147,7 +145,6 @@ function doStudyLazyLoad(node, preSelectId) {
 				}
 
 				if (node.data.isFolder === false) {
-					addDetailsTab(node.data.key, node.data.title);
 					changeBrowseStudyButtonBehavior(false);
 				} else {
 					node.visit(function(child){
@@ -356,43 +353,6 @@ function openTreeStudy(id) {
 	'use strict';
 	location.href = '/Fieldbook/TrialManager/openTrial/' + id;
 
-}
-
-function addDetailsTab(studyId, title) {
-	// if the study is already existing, we show that tab
-	'use strict';
-	if ($('li#li-study' + studyId).length !== 0) {
-		$('li#li-study' + studyId + ' a').tab('show');
-	} else {
-		$.ajax({
-			url: '/Fieldbook/StudyManager/reviewStudyDetails/show/' + studyId,
-			type: 'GET',
-			cache: false,
-			success: function (data) {
-				var close = '<i class="glyphicon glyphicon-remove fbk-close-tab" id="' + studyId + '"></i>';
-				$('#study-tab-headers').append(
-					'<li id="li-study' + studyId + '"><a href="#study' + studyId + '" role="tab" data-toggle="tab"><span class="review-study-name">'
-					+ title + '</span>' + close + '</a></li>');
-				$('#study-tabs').append(
-					'<div class="info tab-pane" id="study' + studyId + '">' + data + '</div>');
-				if ($('#review-study-error-' + studyId).val() !== '') {
-					createErrorNotification(errorMsgHeader, $('#review-study-error-' + studyId).val());
-					$('#study-tab-headers li#li-study' + studyId).remove();
-					$('#study-tabs div#study' + studyId).remove();
-				} else {
-					initializeStudyTabs();
-					$('li#li-study' + studyId + ' a').tab('show');
-					$('.info#study' + studyId + ' select').each(function () {
-						$(this).select2({minimumResultsForSearch: 20});
-					});
-					truncateStudyVariableNames('#study' + studyId + ' .review-study-name', 20);
-					reviewLandingSetup();
-				}
-			}
-		});
-	}
-	determineIfShowCloseAllStudyTabs();
-	// if not we get the info
 }
 
 function filterByStudyType(){

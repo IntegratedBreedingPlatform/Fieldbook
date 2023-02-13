@@ -155,21 +155,6 @@ function validateStartEndDateBasic(startDate, endDate) {
 
 }
 
-function showMultiTabPage(paginationUrl, pageNum, sectionDiv, sectionContainerId, paginationListIdentifier) {
-	'use strict';
-	$.ajax({
-		url: paginationUrl + pageNum + '?listIdentifier=' + paginationListIdentifier,
-		type: 'GET',
-		data: '',
-		cache: false,
-		success: function (html) {
-			var paginationDiv = '#' + sectionContainerId + ' #' + sectionDiv;
-			$(paginationDiv + ':eq(0)').html('');
-			$(paginationDiv + ':eq(0)').html(html);
-		}
-	});
-}
-
 function triggerFieldMapTableSelection(tableName) {
 
 	var id;
@@ -458,48 +443,6 @@ function showMessage(message) {
 	createErrorNotification(errorMsgHeader, message);
 }
 
-function createLabelPrinting(tableName) {
-
-	var count = 0,
-		idVal = null,
-		index,
-		tempVal,
-		labelPrintingHref,
-		id,
-		type;
-
-	if ($('.import-study-data').data('data-import') === '1') {
-		showErrorMessage('', needSaveImportDataError);
-		return;
-	}
-
-	if ($('#createTrialMainForm #studyId').length === 1) {
-		idVal = ($('#createTrialMainForm #studyId').val());
-		count++;
-	} else {
-		idVal = getCurrentStudyIdInTab();
-		count++;
-	}
-
-	if (count !== 1) {
-		showMessage(createLabelErrorMsg);
-		return;
-	}
-
-	if (idVal !== null) {
-		window.location.href = '/ibpworkbench/controller/jhipster#label-printing' +
-			'?cropName=' + $('#cropName').val() +
-			'&programUUID=' + $('#currentProgramId').val() +
-			'&datasetId=' + $('#plotDataset').val() +
-			'&studyId=' + $('#studyId').val() +
-			'&printingLabelType=ObservationDataset';
-
-	} else {
-		type = 'Trial';
-		showMessage(createLabelErrorMsg);
-	}
-}
-
 function showFieldMap(tableName) {
 	'use strict';
 	var count = 0,
@@ -752,24 +695,6 @@ function styleDynamicTree(treeName) {
 	}
 }
 
-function openStudy(tableName) {
-	'use strict';
-	var count = 0,
-		idVal = getCurrentStudyIdInTab();
-	count++;
-
-	if (count !== 1) {
-		showMessage(openStudyError);
-		return;
-	}
-
-	var openStudyHref = $('#open-study-url').attr('href');
-
-	if (idVal != null) {
-		location.href = openStudyHref + '/' + idVal;
-	}
-}
-
 function openDeleteConfirmation() {
 	'use strict';
 	var deleteConfirmationText;
@@ -819,7 +744,7 @@ function deleteStudyInEdit() {
 		showSuccessfulMessage('', deleteStudySuccessful);
 		setTimeout(function () {
 			//go back to review study page
-			location.href = $('#delete-success-return-url').attr('href');
+			location.href = $('#delete-success-return-url').val();
 		}, 500);
 	});
 }
@@ -836,6 +761,55 @@ function subObservationUnitDatasetSelector() {
 }
 
 /* END SUB OBSERVATION UNIT SPECIFIC FUNCTIONS */
+
+/* SAMPLE LIST TAB SPECIFIC FUNCTIONS */
+function openDeleteSampleEntryConfirmation(listId, listName) {
+	'use strict';
+
+	if($('#sample-list-' + listId).DataTable().$('input:checkbox[name=sample-entry-' + listId + ']:checked').length < 1) {
+		showErrorMessage('', 'Please select at least one entry.');
+		return;
+	}
+
+	$('#deleteSampleListEntries').modal({backdrop: 'static', keyboard: true});
+	$('#listIdHidden').val(listId);
+	$('#listNameHidden').val(listName);
+}
+function deleteSelectedSampleEntries () {
+	'use strict';
+	closeModal('deleteSampleListEntries');
+
+	var baseurl = '/bmsapi/crops/' + cropName + '/sample-lists';
+	var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
+	var selectedEntries = []
+	var listId = $('#listIdHidden').val();
+	var listName = $('#listNameHidden').val();
+
+	$('#sample-list-' + listId).DataTable().$('input:checkbox[name=sample-entry-' + listId + ']:checked').each(function(){
+		selectedEntries.push($(this).val());
+	});
+
+	return $.ajax({
+		url: baseurl + '/' + listId + '/entries?programUUID='+ currentProgramId + "&selectedEntries="
+			+ selectedEntries.join(","),
+		contentType: 'application/json',
+		type: 'DELETE',
+		beforeSend: function (xhr) {
+			xhr.setRequestHeader('X-Auth-Token', xAuthToken);
+		},
+		success: function(resp) {
+			showSuccessfulMessage('', deleteSampleListEntriesSuccessfullyMessage);
+			var numOfEntries = $("#numberOfEntries" + listId).text();
+
+			if (selectedEntries.length == parseInt(numOfEntries)) {
+				$("#sampleListId[tab-data='" + listId + "']").trigger('click');
+			} else {
+				displaySampleList(listId, listName, false);
+			}
+		}
+	});
+}
+/* END SAMPLE LIST TAB SPECIFIC FUNCTIONS */
 
 function openSampleSummary(obsUnitId, plotNumber, programUUID) {
 	'use strict';
@@ -873,52 +847,6 @@ function getExportCheckedAdvancedList() {
 		}
 	});
 	return advancedLists;
-}
-
-function getExportCheckedInstances() {
-	'use strict';
-	var checkedInstances = [];
-	$('.trial-instance-export').each(function () {
-		if ($(this).is(':checked')) {
-			checkedInstances.push($(this).data('geolocation-id'));
-		}
-	});
-	return checkedInstances;
-}
-
-function doFinalExport(exportParameters) {
-	var xAuthToken = JSON.parse(localStorage['bms.xAuthToken']).token;
-	var xhr = new XMLHttpRequest();
-	var node = $('#studyTree').dynatree('getTree').getActiveNode();
-	xhr.open('GET', '/bmsapi/crops/' + exportParameters.cropName + '/programs/' + node.data.programUUID + '/studies/' + exportParameters.studyId + '/datasets/' + exportParameters.plotData + '/' + exportParameters.fileFormat + '?instanceIds=' + exportParameters.instanceIds + '&collectionOrderId=' + exportParameters.collectionOrderId + '&singleFile=' + exportParameters.singleFile, true);
-	xhr.responseType = 'blob';
-	xhr.setRequestHeader('Content-Type', 'application/json');
-	xhr.setRequestHeader('X-Auth-Token', xAuthToken);
-	xhr.onload = function (e) {
-		if (this.status == 200) {
-			const contentDisposition = this.getResponseHeader('content-disposition') || '';
-			const matches = /filename=([^;]+)/ig.exec(contentDisposition);
-			const fileName = (matches[1] || 'untitled').trim();
-			const blob = this.response;
-			const url = window.URL.createObjectURL(blob);
-
-			// For IE 10 or later
-			if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-				window.navigator.msSaveOrOpenBlob(url, fileName);
-			} else { // For Chrome/Safari/Firefox and other browsers with HTML5 support
-				var link = document.createElement('a');
-				link.href = url;
-				link.download = fileName;
-				document.body.appendChild(link);
-				link.click();
-				document.body.removeChild(link);
-			}
-			$('#exportStudyModal').modal('hide');
-		} else {
-			showErrorMessage('', 'Something went wrong exporting the file.');
-		}
-	};
-	xhr.send();
 }
 
 function hasRequiredColumnsHiddenInMeasurementDataTable(visibleColumns) {
@@ -1355,40 +1283,6 @@ function showListTreeToolTip(node, nodeSpan) {
 	});
 }
 
-function truncateStudyVariableNames(domSelector, charLimit) {
-	'use strict';
-	$(domSelector).each(function () {
-		var htmlString = $(this).html();
-		if ($(this).data('truncate-limit') !== undefined) {
-			charLimit = parseInt($(this).data('truncate-limit'), 10);
-		}
-
-		if (htmlString.length > charLimit) {
-			if (!$(this).hasClass('variable-tooltip')) {
-				$(this).addClass('variable-tooltip');
-				$(this).attr('title', htmlString);
-
-				if ($(this).data('truncate-placement') !== undefined) {
-					$(this).data('placement', $(this).data('truncate-placement'));
-				}
-
-				htmlString = htmlString.substring(0, charLimit) + '...';
-
-			}
-			$(this).html(htmlString);
-		}
-
-	});
-	$('.variable-tooltip').each(function () {
-		$(this).data('toggle', 'tooltip');
-		if ($(this).data('placement') === undefined) {
-			$(this).data('placement', 'right');
-		}
-		$(this).data('container', 'body');
-		$(this).tooltip();
-	});
-}
-
 function isValidInput(input) {
 	'use strict';
 	var invalidInput = /[<>&=%;?]/.test(input);
@@ -1543,64 +1437,6 @@ function isOpenStudy() {
 	return (trialStatus && trialStatus === 'OPEN');
 }
 
-function initializeStudyTabs() {
-	'use strict';
-	$('.nav-tabs').tabdrop({position: 'left'});
-	$('.nav-tabs').tabdrop('layout');
-	$('#study-tab-headers .fbk-close-tab').on('click', function () {
-		var studyId = $(this).attr('id');
-		$('li#li-study' + studyId).remove();
-		$('.info#study' + studyId).remove();
-		if ($('#study-tab-headers li').length > 1) {
-			var studyIdString = $('#study-tab-headers li:eq(0)').attr('id');
-			$('li#' + studyIdString + ' a').tab('show');
-		}
-		determineIfShowCloseAllStudyTabs();
-		$('.nav-tabs').tabdrop('layout');
-	});
-	determineIfShowCloseAllStudyTabs();
-}
-
-function determineIfShowCloseAllStudyTabs() {
-	'use strict';
-	if ($('#study-tab-headers li').length > 1) {
-		$('.review-study-details').removeClass('fbk-hide');
-	} else {
-		$('.review-study-details').addClass('fbk-hide');
-	}
-}
-
-function closeAllStudyTabs() {
-	'use strict';
-	$('#study-tab-headers').html('');
-	$('#study-tabs').html('');
-	determineIfShowCloseAllStudyTabs();
-}
-
-function loadDatasetDropdown(optionTag) {
-	'use strict';
-	if ($('#study' + getCurrentStudyIdInTab() + ' #dataset-selection option').length > 1) {
-		return;
-	}
-	$.ajax({
-		url: '/Fieldbook/StudyManager/reviewStudyDetails/datasets/'
-			+ getCurrentStudyIdInTab(),
-		type: 'GET',
-		cache: false,
-		success: function (data) {
-			var i = 0;
-			for (i = 0; i < data.length; i++) {
-				optionTag.append(new Option(data[i].name, data[i].id));
-			}
-			$('#study' + getCurrentStudyIdInTab() + ' #dataset-selection').val('');
-		},
-		error: function (jqXHR, textStatus, errorThrown) {
-			console.log('The following error occured: ' + textStatus,
-				errorThrown);
-		}
-	});
-}
-
 function getCurrentStudyIdInTab() {
 	'use strict';
 	if ($('#study-tab-headers .tabdrop').hasClass('active')) {
@@ -1609,58 +1445,6 @@ function getCurrentStudyIdInTab() {
 	} else {
 		return $('#study-tab-headers li.active .fbk-close-tab').attr('id');
 	}
-}
-
-function loadDatasetMeasurementRowsViewOnly(datasetId, datasetName) {
-	'use strict';
-	var currentStudyId = getCurrentStudyIdInTab();
-	if (datasetId == 'Please Choose' || $('#' + getJquerySafeId('dset-tab-') + datasetId).length !== 0) {
-		return;
-	}
-	$.ajax({
-		url: '/Fieldbook/StudyManager/reviewStudyDetails/measurements/viewStudyAjax/' + datasetId + '/' + currentStudyId,
-		type: 'GET',
-		cache: false,
-		success: function (html) {
-			var close = '<i class="glyphicon glyphicon-remove fbk-close-dataset-tab" id="' + datasetId + '"></i>';
-			$('#study' + currentStudyId + ' #measurement-tab-headers').append(
-				'<li class="active" id="dataset-li' + datasetId + '"><a><span class="review-dataset-name">'
-				+ datasetName + '</span>' + close + '</a> ' + '</li>');
-			$('#study' + currentStudyId + ' #measurement-tabs').append(
-				'<div class="review-info" id="dset-tab-' + datasetId + '">' + html + '</div>');
-			$('#study' + currentStudyId + ' .measurement-section').show();
-			truncateStudyVariableNames('#dataset-li' + datasetId + ' .review-dataset-name', 40);
-			initializeReviewDatasetTabs(datasetId);
-		}
-	});
-}
-
-function initializeReviewDatasetTabs(datasetId) {
-	'use strict';
-	$('#dataset-li' + datasetId).on('click', function () {
-		$('#study' + getCurrentStudyIdInTab() + ' #dataset-selection option:selected').prop('selected', false);
-		$('#study' + getCurrentStudyIdInTab() + ' #dataset-selection option').each(function (index) {
-			if ($(this).val() === datasetId) {
-				$(this).prop('selected', true);
-			}
-		});
-		$('#study' + getCurrentStudyIdInTab() + ' #dataset-selection').change();
-	});
-
-	$('#dataset-li' + datasetId + ' .fbk-close-dataset-tab').on('click', function () {
-		var datasetId = $(this).attr('id'),
-			showFirst = false;
-		if ($(this).parent().parent().hasClass('active')) {
-			showFirst = true;
-		}
-		$('li#dataset-li' + datasetId).remove();
-		$('#measurement-tabs #dset-tab-' + datasetId).remove();
-		if (showFirst && $('#measurement-tab-headers li').length > 0) {
-			var datasetIdString = $('#measurement-tab-headers li:eq(0) .fbk-close-dataset-tab').attr('id');
-			$('li#dataset-li' + datasetIdString).addClass('active');
-			$('#measurement-tabs #dset-tab-' + datasetIdString).show();
-		}
-	});
 }
 
 // Function to enable/disable & show/hide controls as per Clear list button's visibility

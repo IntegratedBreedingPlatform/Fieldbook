@@ -840,7 +840,8 @@ BMS.Fieldbook.FinalSampleListDataTable = (function($) {
 				{
 					extend: 'colvis',
 					className: 'fbk-buttons-no-border fbk-colvis-button',
-					text:'<i class="glyphicon glyphicon-th dropdown-toggle fbk-show-hide-grid-column"></i>'
+					text:'<i class="glyphicon glyphicon-th dropdown-toggle fbk-show-hide-grid-column"></i>',
+					columns: ':gt(0)'
 				}
 			]
 		});
