@@ -27,10 +27,10 @@
 	subObservationModule.controller('SubObservationSetCtrl', ['$scope', '$rootScope', 'TrialManagerDataService', '$stateParams',
 		'DTOptionsBuilder', 'DTColumnBuilder', '$http', '$q', '$compile', 'studyInstanceService', 'datasetService',
 		'derivedVariableService', 'fileService', '$timeout', '$uibModal', 'visualizationModalService', 'studyContext', 'germplasmDetailsModalService',
-		'observationDetailsModalService', 'SEARCH_ORIGIN', 'HasAnyAuthorityService', 'PERMISSIONS',
+		'SEARCH_ORIGIN', 'HasAnyAuthorityService', 'PERMISSIONS',
 		function ($scope, $rootScope, TrialManagerDataService, $stateParams, DTOptionsBuilder, DTColumnBuilder, $http, $q, $compile,
 				  studyInstanceService, datasetService, derivedVariableService, fileService, $timeout, $uibModal, visualizationModalService,
-				  studyContext, germplasmDetailsModalService, observationDetailsModalService, SEARCH_ORIGIN, HasAnyAuthorityService, PERMISSIONS
+				  studyContext, germplasmDetailsModalService, SEARCH_ORIGIN, HasAnyAuthorityService, PERMISSIONS
 		) {
 
 			// used also in tests - to call $rootScope.$apply()
@@ -1832,10 +1832,6 @@
 
 			$scope.openGermplasmDetailsModal = function (gid) {
 				germplasmDetailsModalService.openGermplasmDetailsModal(gid, null);
-			}
-
-			$scope.openObservationDetailsModal = function (obsUnitId) {
-				observationDetailsModalService.openObservationDetailsModal(obsUnitId, subObservationSet.id, null);
 			}
 
 			function renderCategoricalValue(value, columnData) {
