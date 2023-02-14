@@ -21,7 +21,7 @@
 					</span>
 
 						<span class="fbk-study-heading" ng-show="isOpenStudy()">
-						<span class="heading" truncate-and-tooltip="data.studyName"></span>
+						<span class="heading" truncate-and-tooltip="studyName"></span>
 					</span>
 
 						<div class="fbk-study-heading-btns">
@@ -206,10 +206,10 @@
 								<a ng-click="openLotCreationModal()">Create lots</a>
 							</li>
 							<li>
-								<a th:href="@{/TrialManager}" th:text="#{study.studydetails.action.close.study}">Close Study</a>
+								<a href="{{returnToManageStudiesURL}}" th:text="#{study.studydetails.action.close.study}">Close Study</a>
 							</li>
 							<li ng-show="hasManageStudiesPermission">
-								<a id="delete-success-return-url" style="display:none;" th:href="@{/TrialManager}"></a>
+								<input type="hidden" id="delete-success-return-url" ng-value="returnToManageStudiesURL"/>
 								<a href="javascript: openDeleteConfirmation();" th:text="#{browse.study.delete.study.name}">Delete Study</a>
 							</li>
 							<li>
@@ -242,13 +242,9 @@
 									<div class="row form-group">
 										<label class="control-label col-sm-4"><b>Study name</b>: <span class="required">*</span></label>
 
-										<div class="col-sm-8" ng-hide="isOpenStudy()">
+										<div class="col-sm-8">
 											<input class="form-control character-input" maxlength="225" type="text"
 												   ng-model="data.studyName"/>
-										</div>
-
-										<div class="col-sm-8 nursery-name-display" ng-show="isOpenStudy()">
-											<span truncate-and-tooltip="data.studyName"></span>
 										</div>
 									</div>
 
@@ -489,7 +485,7 @@
 	</div>
 
 	<div class="row">
-		<div th:include="/StudyManager/includes/removeSampleListEntriesConfirmation"></div>
+		<div th:include="/StudyManager/includes/deleteSampleListEntriesConfirmation"></div>
 	</div>
 
 	<div class="row">

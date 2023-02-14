@@ -38,9 +38,9 @@
 							   th:text="#{export.sample.list}">
 								Export sample list</a>
 							<a th:if="*{hasManageStudiesPermission}" href="javascript: void(0)"
-														 th:onclick="'openRemoveSampleEntryConfirmation('+ *{listId} + ',\'' + *{listName} + '\');'"
-														 th:text="#{remove.sample.list.entries}">
-							Remove Selected Entries</a>
+														 th:onclick="'openDeleteSampleEntryConfirmation('+ *{listId} + ',\'' + *{listName} + '\');'"
+														 th:text="#{delete.sample.list.entries}">
+							Delete selected samples</a>
 						</li>
 					</ul>
 				</div>
