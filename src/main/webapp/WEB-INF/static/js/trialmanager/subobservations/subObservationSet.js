@@ -1750,7 +1750,7 @@
 							render: function (data, type, full, meta) {
 								return '<a class="gid-link" href="javascript: void(0)" ' +
 									'onclick="openObservationDetailsPopup(\'' +
-									data.value + '\')">' + EscapeHTML.escape(data.value) + '</a>';
+									data.value + '\',' + $scope.subObservationSet.id +')">' + EscapeHTML.escape(data.value) + '</a>';
 							}
 						});
 					} else if (!columnData.factor) { // variates
@@ -1835,7 +1835,7 @@
 			}
 
 			$scope.openObservationDetailsModal = function (obsUnitId) {
-				observationDetailsModalService.openObservationDetailsModal(obsUnitId, null);
+				observationDetailsModalService.openObservationDetailsModal(obsUnitId, subObservationSet.id, null);
 			}
 
 			function renderCategoricalValue(value, columnData) {
