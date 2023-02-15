@@ -22,6 +22,7 @@ import org.generationcp.commons.constant.AppConstants;
 import org.generationcp.commons.security.AuthorizationService;
 import org.generationcp.commons.spring.util.ContextUtil;
 import org.generationcp.middleware.api.file.FileMetadataService;
+import org.generationcp.middleware.api.study.StudyDetailsDTO;
 import org.generationcp.middleware.data.initializer.MeasurementDataTestDataInitializer;
 import org.generationcp.middleware.data.initializer.MeasurementVariableTestDataInitializer;
 import org.generationcp.middleware.data.initializer.StandardVariableTestDataInitializer;
@@ -190,6 +191,10 @@ public class OpenTrialControllerTest {
 		Mockito.when(this.variableDataManager.getVariable(ArgumentMatchers.any(String.class), ArgumentMatchers.any(Integer.class), ArgumentMatchers.anyBoolean()))
 			.thenReturn(this.testVariable);
 		Mockito.when(this.studyDataManager.getStudyTypeByName(Mockito.anyString())).thenReturn(StudyTypeDto.getTrialDto());
+
+		final StudyDetailsDTO studyDetailsDTO = Mockito.mock(StudyDetailsDTO.class);
+		Mockito.when(studyDetailsDTO.getName()).thenReturn(TEST_STUDY_NAME);
+		Mockito.when(this.studyService.getStudyDetails(OpenTrialControllerTest.PROGRAM_UUID, STUDY_ID)).thenReturn(studyDetailsDTO);
 
 		Mockito.when(this.authorizationService.isSuperAdminUser()).thenReturn(Boolean.TRUE);
 	}
