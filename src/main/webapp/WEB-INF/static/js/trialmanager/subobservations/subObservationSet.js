@@ -949,7 +949,8 @@
 						// else return the default visibility of the column
 						var isVisible = $scope.nested.dtInstance ? table().columns().visible()[index] : column.visible;
 						if (isVisible) {
-							visibleColumns.push(column.name);
+							// Add the actual name of the column, not the alias.
+							visibleColumns.push(column.columnData.name);
 						}
 					}
 				});
