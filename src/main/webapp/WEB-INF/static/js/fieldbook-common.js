@@ -1244,6 +1244,11 @@ function openGermplasmDetailsPopup(gid, callback) {
 	germplasmDetailsModalService.openGermplasmDetailsModal(gid, callback);
 }
 
+function openObservationDetailsPopup(obsUnitId, datasetId, callback) {
+	const observationDetailsModalService = angular.element('#mainApp').injector().get('observationDetailsModalService');
+	observationDetailsModalService.openObservationDetailsModal(obsUnitId, datasetId, callback);
+}
+
 function showListTreeToolTip(node, nodeSpan) {
 	'use strict';
 	$.ajax({
