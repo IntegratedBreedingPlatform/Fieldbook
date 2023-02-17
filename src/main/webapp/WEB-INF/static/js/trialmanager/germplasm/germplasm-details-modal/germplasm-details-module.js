@@ -9,7 +9,7 @@
                 templateUrl: '/Fieldbook/static/js/trialmanager/germplasm/germplasm-details-modal/germplasm-details-modal.html',
                 controller: function ($scope, $uibModalInstance, germplasmDetailsService, studyContext) {
 
-                    const germplasmDetailsURL = '/ibpworkbench/main/app/#/germplasm-details/' + gid + '?cropName=' + studyContext.cropName + '&programUUID=' + studyContext.programId
+                    const germplasmDetailsURL = '/ibpworkbench/controller/jhipster#/germplasm-details/' + gid + '?cropName=' + studyContext.cropName + '&programUUID=' + studyContext.programId
                         + '&modal=true';
                     $scope.url = germplasmDetailsURL;
                     $scope.gid = gid;
