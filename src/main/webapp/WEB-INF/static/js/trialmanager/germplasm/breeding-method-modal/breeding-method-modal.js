@@ -10,7 +10,7 @@
 				templateUrl: '/Fieldbook/static/js/trialmanager/germplasm/breeding-method-modal/breeding-method-modal.html',
 				controller: function ($scope, $uibModalInstance, breedingMethodModalService, studyContext) {
 
-					const url = '/ibpworkbench/main/app/#/breeding-method-page/' + breedingMethodAbbr + '?cropName=' + studyContext.cropName
+					const url = '/ibpworkbench/controller/jhipster#/breeding-method-page/' + breedingMethodAbbr + '?cropName=' + studyContext.cropName
 						+ '&programUUID=' + studyContext.programId
 						+ '&modal=true';
 					$scope.url = url;
