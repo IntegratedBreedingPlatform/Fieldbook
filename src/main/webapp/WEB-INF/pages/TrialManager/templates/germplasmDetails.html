@@ -48,8 +48,8 @@
 						<span th:text="#{study.studydetails.actions}">Actions</span>
 					</button>
 					<ul class="dropdown-menu fbk-right-button-drop-down" role="menu">
-						<li>
-							<a href="javascript: void(0)" ng-show="hasGermplasmListSelected() &amp;&amp; hasAnyAuthority(PERMISSIONS.REPLACE_GERMPLASM_PERMISSIONS)" ng-click="validateGermplasmForReplacement()" th:text="#{replace.germplasm}">Replace Germplasm</a>
+						<li ng-show="hasGermplasmListSelected() &amp;&amp; hasAnyAuthority(PERMISSIONS.REPLACE_GERMPLASM_PERMISSIONS)">
+							<a href="javascript: void(0)"  ng-click="validateGermplasmForReplacement()" th:text="#{replace.germplasm}">Replace Germplasm</a>
 						</li>
 						<li ng-show="hasAnyAuthority(PERMISSIONS.ADD_NEW_ENTRIES_PERMISSIONS)">
 							<a href="javascript: void(0)" ng-click="showAddEntriesModal()" th:text="#{add.new.entries}" >Add New Entries</a>
