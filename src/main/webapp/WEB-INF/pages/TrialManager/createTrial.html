@@ -208,7 +208,7 @@
 							<li>
 								<a href="{{returnToManageStudiesURL}}" th:text="#{study.studydetails.action.close.study}">Close Study</a>
 							</li>
-							<li ng-show="hasManageStudiesPermission">
+							<li ng-show="hasAnyAuthority(PERMISSIONS.DELETE_STUDY_PERMISSIONS)">
 								<input type="hidden" id="delete-success-return-url" ng-value="returnToManageStudiesURL"/>
 								<a href="javascript: openDeleteConfirmation();" th:text="#{browse.study.delete.study.name}">Delete Study</a>
 							</li>
