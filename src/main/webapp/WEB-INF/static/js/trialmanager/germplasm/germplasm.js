@@ -30,13 +30,14 @@
 
 				var GID = 8240,
 					GROUPGID = 8330;
+
+				$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
 				$scope.hasManageStudiesPermission = HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.MANAGE_STUDIES_PERMISSIONS);
 
 				$scope.entryDetails = TrialManagerDataService.settings.entryDetails;
 				$scope.isLockedStudy = TrialManagerDataService.isLockedStudy;
 				$scope.trialMeasurement = {hasMeasurement: studyStateService.hasGeneratedDesign()};
 				$scope.addVariable = TrialManagerDataService.applicationData.germplasmListSelected && $scope.hasManageStudiesPermission;
-				$scope.showAddColumns = TrialManagerDataService.applicationData.germplasmListSelected;
 				$scope.selectedItems = [];
 				$scope.numberOfEntries = 0;
 
@@ -1546,6 +1547,10 @@
 
 				function concatAllColumns() {
 					return [].concat($scope.germplasmDescriptorColumns, $scope.passportColumns, $scope.attributesColumns, $scope.namesColumns);
+				}
+
+				$scope.showAddColumns = function () {
+					return TrialManagerDataService.applicationData.germplasmListSelected;
 				}
 
 			}]);

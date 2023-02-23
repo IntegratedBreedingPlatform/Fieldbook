@@ -28,8 +28,8 @@
 			<img th:src="@{/static/img/review-list-details.png}" />
 			<label class="control-label"><strong id="germplasmLabel" class="sub-content-heading">Study List</strong></label>
 
-			<div class="pull-right" ng-show="showAddColumns">
-				<div class="btn-group" style="padding-right: 12px">
+			<div class="pull-right" ng-show="showAddColumns() &amp;&amp; hasAnyAuthority(PERMISSIONS.MODIFY_COLUMNS_PERMISSIONS)">
+			<div class="btn-group" style="padding-right: 12px">
 					<button type="button" class="btn btn-info" ng-click="entryColumnsButtonClicked()"
 							popover-trigger="'outsideClick'"
 							popover-placement="bottom-right"
