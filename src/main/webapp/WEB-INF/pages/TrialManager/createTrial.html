@@ -205,7 +205,7 @@
 							<li ng-show="showCreateLotsAction()">
 								<a ng-click="openLotCreationModal()">Create lots</a>
 							</li>
-							<li>
+							<li ng-show="hasAnyAuthority(PERMISSIONS.CLOSE_STUDY_PERMISSIONS)">
 								<a href="{{returnToManageStudiesURL}}" th:text="#{study.studydetails.action.close.study}">Close Study</a>
 							</li>
 							<li ng-show="hasAnyAuthority(PERMISSIONS.DELETE_STUDY_PERMISSIONS)">
