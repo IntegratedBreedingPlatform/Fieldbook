@@ -176,6 +176,7 @@
 					onUpdate: '&',
 					callback: '&',
 					hideVariable: '=',
+					addVariable: '=',
 					useExactProperties: '@',
 					collapsible: '=',
 					toggleSection: '=',
@@ -186,7 +187,6 @@
 				transclude: true,
 				templateUrl: '/Fieldbook/static/angular-templates/sectionContainer.html',
 				link: function(scope, elem, attrs) {
-					scope.addVariable = $parse(attrs.addVariable)();
 
 					attrs.$observe('helpTooltip', function(value) {
 						if (value) {
