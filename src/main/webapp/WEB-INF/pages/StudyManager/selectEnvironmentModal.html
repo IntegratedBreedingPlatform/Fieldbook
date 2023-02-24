@@ -28,9 +28,13 @@
 	</div>
 </div> <!-- Modal Body -->
 <div class="modal-footer">
-	<button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true"
+	<button ng-show="!showBackButton()" type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true"
 			th:text="#{common.form.cancel.text}" ng-click="close()">
 		Cancel
+	</button>
+	<button ng-show="showBackButton()" type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true"
+			th:text="#{common.form.back.text}" ng-click="back()">
+		Back
 	</button>
 	<button type="button" class="btn btn-primary" ng-disabled="isEmptySelection"
 			aria-hidden="true" ng-click="selectInstanceContinue()" th:text="#{common.form.continue.text}">
