@@ -30,7 +30,7 @@
 			<img th:src="@{/static/img/review-list-details.png}" />
 			<label class="control-label"><strong id="germplasmLabel" class="sub-content-heading">Study List</strong></label>
 
-			<div class="pull-right" ng-show="showAddColumns() &amp;&amp; hasAnyAuthority(PERMISSIONS.MODIFY_COLUMNS_PERMISSIONS)">
+			<div class="pull-right" ng-show="hasGermplasmListSelected() &amp;&amp; hasAnyAuthority(PERMISSIONS.MODIFY_COLUMNS_PERMISSIONS)">
 			<div class="btn-group" style="padding-right: 12px">
 					<button type="button" class="btn btn-info" ng-click="entryColumnsButtonClicked()"
 							popover-trigger="'outsideClick'"
@@ -44,7 +44,7 @@
 				</div>
 			</div>
 
-			<div class="pull-right" ng-show="hasManageStudiesPermission">
+			<div class="pull-right" ng-show="hasAnyAuthority(PERMISSIONS.GERMPLASM_AND_CHECKS_ACTION_PERMISSIONS)">
 				 <div class="btn-group" style="padding-right: 12px">
 					<button type="button" class="btn btn-info dropdown-toggle fbk-action-btn" data-toggle="dropdown" ng-click="entryColumnsPopover.close()">
 						<span th:text="#{study.studydetails.actions}">Actions</span>
@@ -56,10 +56,10 @@
 						<li ng-show="hasAnyAuthority(PERMISSIONS.ADD_NEW_ENTRIES_PERMISSIONS)">
 							<a href="javascript: void(0)" ng-click="showAddEntriesModal()" th:text="#{add.new.entries}" >Add New Entries</a>
 						</li>
-						<li ng-show="addVariable">
+						<li ng-show="hasGermplasmListSelected() &amp;&amp; hasAnyAuthority(PERMISSIONS.IMPORT_ENTRY_DETAILS_PERMISSIONS)">
 							<a href="javascript: void(0)" ng-click="openImportEntryDetailsModal()" th:text="#{import.entry.details}" >Import Entry Details</a>
 						</li>
-						<li ng-show="!hasGeneratedDesign()">
+						<li ng-show="!hasGeneratedDesign() &amp;&amp; hasAnyAuthority(PERMISSIONS.ADD_ENTRY_DETAILS_VALUES_PERMISSIONS)">
 							<a href="javascript: void(0)" ng-click="setEntryTypeByBatch()" th:text="#{set.entry.type}" >Set Entry Type</a>
 						</li>
 					</ul>

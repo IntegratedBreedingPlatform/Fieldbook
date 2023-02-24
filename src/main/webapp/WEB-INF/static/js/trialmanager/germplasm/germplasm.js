@@ -32,12 +32,9 @@
 					GROUPGID = 8330;
 
 				$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
-				$scope.hasManageStudiesPermission = HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.MANAGE_STUDIES_PERMISSIONS);
-
 				$scope.entryDetails = TrialManagerDataService.settings.entryDetails;
 				$scope.isLockedStudy = TrialManagerDataService.isLockedStudy;
 				$scope.trialMeasurement = {hasMeasurement: studyStateService.hasGeneratedDesign()};
-				$scope.addVariable = TrialManagerDataService.applicationData.germplasmListSelected && $scope.hasManageStudiesPermission;
 				$scope.selectedItems = [];
 				$scope.numberOfEntries = 0;
 
@@ -1143,15 +1140,15 @@
 				};
 
 				$scope.showUpdateImportList = function () {
-					return $scope.hasManageStudiesPermission && $scope.showUpdateImportListButton;
+					return $scope.showUpdateImportListButton && $scope.hasAnyAuthority(PERMISSIONS.ADD_NEW_ENTRIES_PERMISSIONS);
 				};
 
 				$scope.showClearListButton = function () {
-					return $scope.hasManageStudiesPermission && $scope.showClearList;
+					return $scope.showClearList && $scope.hasAnyAuthority(PERMISSIONS.ADD_NEW_ENTRIES_PERMISSIONS);
 				}
 
 				$scope.showImportList = function () {
-					return $scope.hasManageStudiesPermission && $scope.showImportListBrowser;
+					return $scope.showImportListBrowser && $scope.hasAnyAuthority(PERMISSIONS.ADD_NEW_ENTRIES_PERMISSIONS);
 				};
 
 				$scope.showStudyTable = function () {
