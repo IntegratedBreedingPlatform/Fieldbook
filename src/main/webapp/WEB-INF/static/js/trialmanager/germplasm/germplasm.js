@@ -1549,7 +1549,7 @@
 					return [].concat($scope.germplasmDescriptorColumns, $scope.passportColumns, $scope.attributesColumns, $scope.namesColumns);
 				}
 
-				$scope.showAddColumns = function () {
+				$scope.hasGermplasmListSelected = function () {
 					return TrialManagerDataService.applicationData.germplasmListSelected;
 				}
 
