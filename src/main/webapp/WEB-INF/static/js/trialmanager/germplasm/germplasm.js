@@ -1316,7 +1316,7 @@
 					datasetService.getDatasets([DATASET_TYPES.PLOT_OBSERVATIONS]).then(function (data) {
 						angular.forEach(data, function (dataset) {
 							var variableName = variable.alias ? variable.alias : variable.name;
-							datasetService.addVariables(dataset.datasetId, {
+							datasetService.addEntryDetails(dataset.datasetId, {
 								variableTypeId: variableType,
 								variableId: variable.cvTermId,
 								studyAlias: variableName

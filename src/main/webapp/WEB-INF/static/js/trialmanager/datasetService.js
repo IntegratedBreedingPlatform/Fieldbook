@@ -121,6 +121,11 @@
 				return request.then(successHandler, failureHandler);
 			};
 
+			datasetService.addEntryDetails = function (datasetId, newVariable) {
+				var request = $http.put(BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/entry-details', newVariable);
+				return request.then(successHandler, failureHandler);
+			};
+
 			datasetService.getVariables = function (datasetId, variableTypeId) {
 				var request = $http.get(BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/variables/' + variableTypeId);
 				return request.then(successHandler, failureHandler);
