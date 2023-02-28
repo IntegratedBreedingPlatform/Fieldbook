@@ -387,7 +387,7 @@
 
 	<ul class="nav nav-tabs row fb-tabs-headers" id="manage-trial-tab-headers">
 		<li ng-repeat="tab in trialTabs" ng-class="{active: tabSelected===tab.state}"
-			ng-show="!tab.hidden">
+			ng-show="hasAnyAuthority(tab.permission) &amp;&amp; !tab.hidden">
 			<a ui-sref="{{tab.state}}" ng-click="performFunctionOnTabChange(tab.state)">{{tab.name}}</a>
 		</li>
 		<li ng-repeat="tab in subObservationTabs" ng-class="{active: tabSelected===tab.state}">

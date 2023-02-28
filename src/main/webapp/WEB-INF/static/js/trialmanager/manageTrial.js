@@ -296,32 +296,31 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				}
 			}
 
-			$scope.trialTabs = [
-				{
-					name: 'Settings',
-					state: 'trialSettings'
-				}
-			];
+			$scope.trialTabs = [];
 			$scope.subObservationTabs = [];
 			$scope.tabSelected = 'trialSettings';
 			$scope.isSettingsTab = true;
 			$location.path('/trialSettings');
 			$scope.sampleTabsData = [];
 			$scope.sampleTabs = [];
+
 			$scope.crossesAndSelectionsTab = {
 				name: 'Crosses and Selections',
 				state: 'germplasmStudySource',
-				hidden: true
+				hidden: true,
+				permission: PERMISSIONS.MANAGE_STUDIES_PERMISSIONS
 			}
 			$scope.inventoryTab = {
 				name: 'Inventory',
 				state: 'inventory',
-				hidden: true
+				hidden: true,
+				permission: PERMISSIONS.MANAGE_STUDIES_PERMISSIONS
 			};
 			$scope.analysisResultsTab = {
 				name: 'SSA Results',
 				state: 'analysisResults',
-				hidden: true
+				hidden: true,
+				permission: PERMISSIONS.MANAGE_STUDIES_PERMISSIONS
 			};
 			$scope.isOpenStudy = TrialManagerDataService.isOpenStudy;
 			$scope.isLockedStudy = TrialManagerDataService.isLockedStudy;
@@ -336,23 +335,35 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 
 			$scope.returnToManageStudiesURL = "/ibpworkbench/controller/jhipster#/study-manager?cropName=" + studyContext.cropName + "&programUUID=" + studyContext.programId;
 
+			$scope.trialTabs.push(
+				{
+					name: 'Settings',
+					state: 'trialSettings',
+					permission: PERMISSIONS.MANAGE_STUDIES_PERMISSIONS
+				}
+			);
+
 			if ($scope.isOpenStudy()) {
 				$scope.trialTabs.push({
 					name: 'Germplasm & Checks',
-					state: 'germplasm'
+					state: 'germplasm',
+					permission: PERMISSIONS.VIEW_GERMPLASM_AND_CHECKS_PERMISSIONS
 
 				});
 				$scope.trialTabs.push({
 					name: 'Treatment Factors',
-					state: 'treatment'
+					state: 'treatment',
+					permission: PERMISSIONS.MANAGE_STUDIES_PERMISSIONS
 				});
 				$scope.trialTabs.push({
 					name: 'Environments',
-					state: 'environment'
+					state: 'environment',
+					permission: PERMISSIONS.MANAGE_STUDIES_PERMISSIONS
 				});
 				$scope.trialTabs.push({
 					name: 'Experimental Design',
-					state: 'experimentalDesign'
+					state: 'experimentalDesign',
+					permission: PERMISSIONS.MANAGE_STUDIES_PERMISSIONS
 				});
 
 				$scope.trialTabs.push($scope.inventoryTab);
@@ -372,10 +383,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 						}
 					});
 				}
-				;
-
 			}
-			;
 
 			inventoryChangedDeRegister();
 			inventoryChangedDeRegister = $rootScope.$on("inventoryChanged", function () {
