@@ -8,21 +8,30 @@
 
 			var advanceStudyModalService = {};
 
-			advanceStudyModalService.startAdvance = function (advanceType, isBeta) {
+			advanceStudyModalService.openSelectDatasetModal  = function () {
+				$uibModal.open({
+					template: '<dataset-option-modal modal-title="modalTitle" message="message"' +
+						'selected="selected" on-continue="selectInstances()" supported-dataset-types="supportedDatasetTypes"></dataset-option-modal>',
+					controller: 'AdvanceSelectDatasetCtrl',
+					size: 'md'
+				});
+			};
+
+			advanceStudyModalService.selectEnvironment = function (advanceType, isBeta, selectedDatasetId) {
 				if (advanceType === 'deprecatedSample' || advanceType === 'samples') {
 					studyService.studyHasSamples().then(function (response) {
 						if (response && response.data) {
-							advanceStudyModalService.openSelectEnvironmentModal(advanceType, isBeta);
+							advanceStudyModalService.openSelectEnvironmentModal(advanceType, isBeta, selectedDatasetId);
 						} else {
 							showErrorMessage('page-advance-modal-message', advanceSamplesError);
 						}
 					});
 				} else {
-					advanceStudyModalService.openSelectEnvironmentModal(advanceType, isBeta);
+					advanceStudyModalService.openSelectEnvironmentModal(advanceType, isBeta, selectedDatasetId);
 				}
 			};
 
-			advanceStudyModalService.openSelectEnvironmentModal = function (advanceType, isBeta) {
+			advanceStudyModalService.openSelectEnvironmentModal = function (advanceType, isBeta, selectedDatasetId) {
 				$uibModal.open({
 					templateUrl: '/Fieldbook/StudyManager/advance/study/selectEnvironmentModal',
 					controller: "selectEnvironmentModalCtrl",
@@ -31,8 +40,11 @@
 						advanceType: function () {
 							return advanceType;
 						},
-						isBeta: function() {
+						isBeta: function () {
 							return isBeta;
+						},
+						selectedDatasetId: function () {
+							return selectedDatasetId;
 						}
 					}
 				});
@@ -65,7 +77,7 @@
 				});
 			};
 
-			advanceStudyModalService.openAdvanceModal = function (selectedTrialInstances, advanceType, noOfReplications) {
+			advanceStudyModalService.openAdvanceModal = function (selectedTrialInstances, advanceType, noOfReplications, selectedDatasetId) {
 				$uibModal.open({
 					templateUrl: '/Fieldbook/static/js/trialmanager/advance/advanceIframeContainer.html',
 					controller: "AdvanceModalCtrl",
@@ -79,6 +91,9 @@
 						},
 						noOfReplications: function () {
 							return noOfReplications;
+						},
+						selectedDatasetId: function () {
+							return selectedDatasetId;
 						}
 					}
 				}).result.finally(function () {
@@ -348,9 +363,9 @@
 	]);
 
 	manageTrialApp.controller('selectEnvironmentModalCtrl', ['$scope', '$uibModalInstance', 'TrialManagerDataService', 'studyInstanceService',
-		'$timeout', 'studyContext', 'datasetService', 'advanceStudyModalService', 'advanceType', 'isBeta', 'DESIGN_TYPE',
+		'$timeout', 'studyContext', 'datasetService', 'advanceStudyModalService', 'advanceType', 'isBeta', 'selectedDatasetId', 'DESIGN_TYPE',
 		function ($scope, $uibModalInstance, TrialManagerDataService, studyInstanceService, $timeout, studyContext, datasetService,
-				  advanceStudyModalService, advanceType, isBeta, DESIGN_TYPE) {
+				  advanceStudyModalService, advanceType, isBeta, selectedDatasetId, DESIGN_TYPE) {
 
 			$scope.settings = TrialManagerDataService.settings.environments;
 			if (Object.keys($scope.settings).length === 0) {
@@ -435,7 +450,7 @@
 					});
 
 					if ($scope.applicationData.advanceType === 'study' || $scope.applicationData.advanceType === 'samples') {
-						advanceStudyModalService.openAdvanceModal(selectedTrialInstances, $scope.applicationData.advanceType, $scope.noOfReplications);
+						advanceStudyModalService.openAdvanceModal(selectedTrialInstances, $scope.applicationData.advanceType, $scope.noOfReplications, selectedDatasetId);
 						$uibModalInstance.close();
 					} else {
 						advanceStudyModalService.openDeprecatedAdvanceStudyModal(selectedTrialInstances, $scope.noOfReplications, selectedLocationDetails,
@@ -450,26 +465,36 @@
 				$uibModalInstance.close();
 			}
 
+			$scope.back = function() {
+				advanceStudyModalService.openSelectDatasetModal(selectedDatasetId);
+				$scope.close();
+			}
+
 			$scope.init = function () {
 				datasetService.getDatasetInstances(studyContext.measurementDatasetId).then(function (datasetInstances) {
 					$scope.instances = datasetInstances;
 				});
 			};
 
+			$scope.showBackButton = function () {
+				return advanceType === 'study' && isBeta;
+			}
+
 			$scope.init();
 		}]);
 
 	manageTrialApp.controller('AdvanceModalCtrl', ['$scope', '$q', 'studyContext', '$uibModalInstance', 'trialInstances', 'advanceType',
-		'noOfReplications', 'advanceStudyModalService','$window', '$rootScope', 'EVENTS',
-		function ($scope, $q, studyContext, $uibModalInstance, trialInstances, advanceType, noOfReplications, advanceStudyModalService,
-				  $window, $rootScope, EVENTS) {
+		'noOfReplications', 'selectedDatasetId', 'advanceStudyModalService','$window', '$rootScope', 'EVENTS',
+		function ($scope, $q, studyContext, $uibModalInstance, trialInstances, advanceType, noOfReplications, selectedDatasetId,
+				  advanceStudyModalService, $window, $rootScope, EVENTS) {
 
 			$scope.url = `/ibpworkbench/controller/jhipster#/advance-${advanceType}?restartApplication` +
 				'&cropName=' + studyContext.cropName +
 				'&programUUID=' + studyContext.programId +
 				'&studyId=' + studyContext.studyId +
 				'&noOfReplications=' + noOfReplications +
-				'&trialInstances=' + trialInstances;
+				'&trialInstances=' + trialInstances +
+				'&selectedDatasetId=' + selectedDatasetId;
 
 			$scope.advanceType = advanceType;
 
@@ -493,7 +518,7 @@
 			function onMessage(event) {
 				if (event.data.name === EVENTS.SELECT_INSTANCES) {
 					$uibModalInstance.close(null);
-					advanceStudyModalService.startAdvance(event.data.advanceType, true);
+					advanceStudyModalService.selectEnvironment(event.data.advanceType, true, event.data.selectedDatasetId);
 				}
 
 				if (event.data.name === EVENTS.GERMPLASM_LIST_CREATED) {
@@ -522,6 +547,22 @@
 				// Refresh and show the 'Crosses and Selections' tab after saving the germplasm list
 				$rootScope.navigateToTab('germplasmStudySource', {reload: true});
 			}
+
+		}]);
+
+	manageTrialApp.controller('AdvanceSelectDatasetCtrl', ['$scope', '$uibModal', '$uibModalInstance', 'studyContext', 'advanceStudyModalService',
+		'DATASET_TYPES',
+		function ($scope, $uibModal, $uibModalInstance, studyContext, advanceStudyModalService, DATASET_TYPES) {
+
+			$scope.modalTitle = 'Advance Study (Beta)';
+			$scope.message = 'Please choose the dataset you want to take as a source for the advancement process:';
+			$scope.measurementDatasetId = studyContext.measurementDatasetId;
+			$scope.selected = {datasetId: $scope.measurementDatasetId};
+			$scope.supportedDatasetTypes = [DATASET_TYPES.PLOT_OBSERVATIONS, DATASET_TYPES.PLANT_SUBOBSERVATIONS];
+
+			$scope.selectInstances = function () {
+				advanceStudyModalService.selectEnvironment('study', true, this.selected.datasetId);
+			};
 
 		}]);
 

@@ -12,7 +12,8 @@
 				modalTitle: '=',
 				message: '=',
 				selected: '=',
-				onContinue: '&'
+				onContinue: '&',
+				supportedDatasetTypes: '='
 			},
 
 			templateUrl: '/Fieldbook/static/angular-templates/datasetOptionModal.html',
@@ -34,7 +35,8 @@
 				$scope.getDatasetType = datasetService.getDatasetType;
 
 				ctrl.init = function () {
-					datasetService.getDatasets(DATASET_TYPES_OBSERVATION_IDS).then(function (datasets) {
+					var datasetTypes = $scope.supportedDatasetTypes ? $scope.supportedDatasetTypes : DATASET_TYPES_OBSERVATION_IDS;
+					datasetService.getDatasets(datasetTypes).then(function (datasets) {
 						$scope.datasets = datasets;
 					});
 				}
