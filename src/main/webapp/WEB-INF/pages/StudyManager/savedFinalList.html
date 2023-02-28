@@ -41,6 +41,10 @@
 														 th:onclick="'openDeleteSampleEntryConfirmation('+ *{listId} + ',\'' + *{listName} + '\');'"
 														 th:text="#{delete.sample.list.entries}">
 							Delete selected samples</a>
+							<a th:if="*{hasManageStudiesPermission}" href="javascript: void(0)"
+							   th:onclick="'javascript: importGenotypes('+ *{listId} + ');'"
+							   th:text="#{sample.list.import.genotypes}">
+								Import file</a>
 						</li>
 					</ul>
 				</div>

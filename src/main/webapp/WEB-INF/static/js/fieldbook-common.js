@@ -775,6 +775,13 @@ function openDeleteSampleEntryConfirmation(listId, listName) {
 	$('#listIdHidden').val(listId);
 	$('#listNameHidden').val(listName);
 }
+
+function importGenotypes(listId) {
+	'use strict';
+	const genotypeModalService = angular.element('#mainApp').injector().get('genotypeModalService');
+	genotypeModalService.openImportGenotypesModal(listId);
+}
+
 function deleteSelectedSampleEntries () {
 	'use strict';
 	closeModal('deleteSampleListEntries');
