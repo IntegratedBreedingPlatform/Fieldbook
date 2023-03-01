@@ -59,7 +59,7 @@
 						<li ng-show="hasGermplasmListSelected() &amp;&amp; hasAnyAuthority(PERMISSIONS.IMPORT_ENTRY_DETAILS_PERMISSIONS)">
 							<a href="javascript: void(0)" ng-click="openImportEntryDetailsModal()" th:text="#{import.entry.details}" >Import Entry Details</a>
 						</li>
-						<li ng-show="!hasGeneratedDesign() &amp;&amp; hasAnyAuthority(PERMISSIONS.ADD_ENTRY_DETAILS_VALUES_PERMISSIONS)">
+						<li ng-show="!hasGeneratedDesign() &amp;&amp; hasAnyAuthority(PERMISSIONS.MODIFY_ENTRY_DETAILS_VALUES_PERMISSIONS)">
 							<a href="javascript: void(0)" ng-click="setEntryTypeByBatch()" th:text="#{set.entry.type}" >Set Entry Type</a>
 						</li>
 					</ul>

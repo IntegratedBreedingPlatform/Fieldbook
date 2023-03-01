@@ -692,7 +692,7 @@
 						columnData.index = index;
 
 						function isObservationEditable() {
-							return columnData.termId !== 8230 && $scope.hasAnyAuthority(PERMISSIONS.ADD_ENTRY_DETAILS_VALUES_PERMISSIONS) &&
+							return columnData.termId !== 8230 && $scope.hasAnyAuthority(PERMISSIONS.MODIFY_ENTRY_DETAILS_VALUES_PERMISSIONS) &&
 								(!columnData.systemVariable || (columnData.systemVariable && !studyStateService.hasGeneratedDesign()));
 						}
 
