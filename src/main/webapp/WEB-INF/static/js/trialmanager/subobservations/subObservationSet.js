@@ -19,7 +19,9 @@
 		GROUPGID = 8330,
 		LINE_GID = 8836,
 		TESTER_GID = 8839,
-		OBS_UNIT_ID = 8201;
+		OBS_UNIT_ID = 8201,
+		ENTRY_NO = 8230,
+		ENTRY_TYPE = 8255;
 	var SAMPLES = -2;
 	var STOCK_ID = -1727;
 	var hiddenColumns = [OBS_UNIT_ID, TRIAL_INSTANCE];
@@ -64,7 +66,7 @@
 			$scope.enableActions = false;
 			$scope.isCategoricalDescriptionView = window.isCategoricalDescriptionView;
 			$scope.targetkey = 'newValueBatchUpdate';
-			$scope.valuecontainer = {newValueBatchUpdate : $scope.nested.newValueBatchUpdate};
+			$scope.valuecontainer = {newValueBatchUpdate: $scope.nested.newValueBatchUpdate};
 
 			var subObservationTab = $scope.subObservationTab;
 			var tableId = '#subobservation-table-' + subObservationTab.id + '-' + subObservationSet.id;
@@ -633,7 +635,7 @@
 			};
 
 			$scope.changeEnvironment = function () {
-				table().columns('.termId-'+TRIAL_INSTANCE).visible($scope.nested.selectedEnvironment === $scope.environments[0]);
+				table().columns('.termId-' + TRIAL_INSTANCE).visible($scope.nested.selectedEnvironment === $scope.environments[0]);
 				resetChecksStatus();
 				table().ajax.reload();
 			};
@@ -740,7 +742,7 @@
 				}
 
 				const filter = getFilter();
-				if($scope.nested.selectedBatchAction.id === 3) {
+				if ($scope.nested.selectedBatchAction.id === 3) {
 					filter.variableHasValue = true;
 				}
 				var param = JSON.stringify({
@@ -798,15 +800,8 @@
 				table().ajax.reload();
 			};
 
-			$scope.resetFilterByColumn = function () {
-				$scope.columnFilter.columnData.query = '';
-				$scope.columnFilter.columnData.sortingAsc = null;
-				if ($scope.columnFilter.columnData.possibleValues) {
-					$scope.columnFilter.columnData.possibleValues.forEach(function (value) {
-						value.isSelectedInFilters = false;
-					});
-					$scope.columnFilter.columnData.isSelectAll = false;
-				}
+			$scope.resetFilterByColumn = function (index) {
+				resetFilterByColumnByIndex(index);
 				resetChecksStatus();
 				table().ajax.reload();
 			};
@@ -826,6 +821,37 @@
 				}
 			};
 
+			const reloadDataTableWithTimeout = {
+				reload() {
+					table().ajax.reload(null, false);
+				},
+
+				setup(timeout) {
+					if (typeof this.timeoutID === 'number') {
+						this.cancel();
+					}
+
+					this.timeoutID = setTimeout((msg) => {
+						this.reload();
+					}, timeout);
+				},
+
+				cancel() {
+					clearTimeout(this.timeoutID);
+				}
+			};
+
+			function resetFilterByColumnByIndex(index) {
+				var columnData = $scope.columnsObj.columns[index].columnData;
+				columnData.query = '';
+				columnData.sortingAsc = null;
+				if (columnData && columnData.possibleValues) {
+					columnData.possibleValues.forEach(function (value) {
+						value.isSelectedInFilters = false;
+					});
+					columnData.isSelectAll = false;
+				}
+			}
 
 			function table() {
 				return $scope.nested.dtInstance.DataTable;
@@ -916,6 +942,22 @@
 				});
 			}
 
+			function getVisibleColumns() {
+				var visibleColumns = [];
+				$scope.columnsObj.columns.forEach(function (column, index) {
+					if (column && column.name) {
+						// If datatable is already initialized and loaded, get the visibility value from the datatable (ColVis),
+						// else return the default visibility of the column
+						var isVisible = $scope.nested.dtInstance ? table().columns().visible()[index] : column.visible;
+						if (isVisible) {
+							// Add the actual name of the column, not the alias.
+							visibleColumns.push(column.columnData.name);
+						}
+					}
+				});
+				return visibleColumns;
+			}
+
 			function getFilter() {
 				var variableId = $scope.nested.selectedVariableFilter && $scope.nested.selectedVariableFilter.termId;
 				return {
@@ -925,7 +967,6 @@
 					byOverwritten: $scope.selectedStatusFilter === "5" || null,
 					variableId: variableId,
 					variableHasValue: null,
-					filterColumns: [],
 					filteredValues: $scope.columnsObj.columns.reduce(function (map, column) {
 						var columnData = column.columnData;
 						columnData.isFiltered = false;
@@ -1005,7 +1046,8 @@
 									draw: d.draw,
 									instanceIds: getInstanceIds(),
 									draftMode: $scope.isPendingView,
-									filter: getFilter()
+									filter: getFilter(),
+									visibleColumns: getVisibleColumns()
 								}),
 								success: function (res, status, xhr) {
 									let json = {recordsTotal: 0, recordsFiltered: 0}
@@ -1103,8 +1145,8 @@
 				table().columns().every(function () {
 					if ($scope.isCheckBoxColumn(this.index())) {
 						$(this.header()).prepend($compile('<span>'
-								+ '<input type="checkbox" title="select current page" ng-checked="isPageSelected()"  ng-click="onSelectPage()">'
-								+ '</span>')($scope));
+							+ '<input type="checkbox" title="select current page" ng-checked="isPageSelected()"  ng-click="onSelectPage()">'
+							+ '</span>')($scope));
 						return;
 					}
 					if (this.index() === 1 && $scope.isFileStorageConfigured) {
@@ -1128,6 +1170,7 @@
 				});
 				adjustColumns();
 				tableRenderedResolve();
+				addColumnVisibilityCallback();
 			}
 
 			function headerCallback(thead, data, start, end, display) {
@@ -1460,6 +1503,18 @@
 				}
 			}
 
+			function addColumnVisibilityCallback() {
+				table().on('column-visibility.dt', function (e, settings, columnIndex, isVisible) {
+					// If the column is not visible, we should reset the column filter
+					if (!isVisible) {
+						resetFilterByColumnByIndex(columnIndex);
+					}
+					// When this callback function is executed multiple times consecutively in a span of 1500 milliseconds
+					// Then make sure that the datatables is only reloaded once
+					reloadDataTableWithTimeout.setup(1500);
+				});
+			}
+
 			function getCategoricalValueId(cellDataValue, columnData) {
 				if (columnData.possibleValues
 					&& cellDataValue !== 'missing') {
@@ -1599,11 +1654,23 @@
 					}
 					columnData.index = index;
 
+					// If the variable of a column is an Entry Detail, Germplasm Name or Germplasm Attributes/Passport, the column should be hidden
+					// by default
+					if (columnData.variableType === null || columnData.variableType === 'ENTRY_DETAIL' || columnData.variableType === 'GERMPLASM_ATTRIBUTE'
+						|| columnData.variableType === 'GERMPLASM_PASSPORT') {
+						hiddenColumns.push(columnData.termId);
+					}
+
 					function isColumnVisible() {
 
 						if (columnData.termId === TRIAL_INSTANCE) {
 							return $scope.nested.selectedEnvironment === $scope.environments[0]
 						}
+						// ENTRY_NO, ENTRY_TYPE and SUM_OF_SAMPLES should be visible in the table by default
+						if (columnData.termId === ENTRY_NO || columnData.termId === ENTRY_TYPE || columnData.termId === SAMPLES) {
+							return true;
+						}
+
 						return hiddenColumns.indexOf(columnData.termId) < 0;
 					}
 
@@ -1647,8 +1714,8 @@
 								$(td).append($compile(
 									'<div ng-click="showFiles(\'' + rowData.variables['OBS_UNIT_ID'].value + '\')" '
 									+ (rowData.fileCount
-									? ' title="# of files: ' + rowData.fileCount + '"'
-									: ' title="click to open the file manager" class="show-on-hover" ng-show="hasAnyAuthority(PERMISSIONS.MS_MANAGE_FILES_PERMISSION)"')
+										? ' title="# of files: ' + rowData.fileCount + '"'
+										: ' title="click to open the file manager" class="show-on-hover" ng-show="hasAnyAuthority(PERMISSIONS.MS_MANAGE_FILES_PERMISSION)"')
 									+ ' style="cursor: pointer">'
 									+ '<i class="glyphicon glyphicon-duplicate text-info ' + (rowData.fileCount ? '' : '') + '" '
 									+ 'style="font-size: 1.2em">&nbsp;</i>'
@@ -1740,7 +1807,7 @@
 							targets: columns.length - 1,
 							orderable: false,
 							render: function (data, type, full, meta) {
-								return (data.value === "0")  ? '-' : data.value;
+								return (data.value === "0") ? '-' : data.value;
 							}
 						});
 					} else if (columnData.termId === OBS_UNIT_ID) {
@@ -1793,7 +1860,7 @@
 									if (value === undefined) {
 										value = '';
 									}
-									value +=  '<i onclick="showFiles(\'' + full.variables['OBS_UNIT_ID'].value + '\''
+									value += '<i onclick="showFiles(\'' + full.variables['OBS_UNIT_ID'].value + '\''
 										+ ', \'' + columnData.name + '\')" '
 										+ ' class="glyphicon glyphicon-duplicate text-info" '
 										+ ' title="click to see associated files"'
@@ -1987,7 +2054,7 @@
 							+ '&observationUnitUUID=' + observationUnitUUID
 							+ '&variableName=' + (variableName || '');
 
-						window.closeModal = function() {
+						window.closeModal = function () {
 							$uibModalInstance.close();
 						}
 					},
@@ -2017,7 +2084,7 @@
 				},
 				controller: function ($scope, BREEDING_METHOD_SCALE) {
 					$scope.targetkey = 'observationValue';
-					$scope.valuecontainer = {observationValue : $scope.observation.value};
+					$scope.valuecontainer = {observationValue: $scope.observation.value};
 					$scope.isBreedingMethod = parseInt(BREEDING_METHOD_SCALE, 10) === parseInt($scope.columnData.scaleId, 10);
 					$scope.doBlur = function ($event) {
 						if ($event.keyCode === 13) {
@@ -2025,7 +2092,7 @@
 						}
 					}
 
-					$scope.valuecontainer.onOpenClose = function(isOpen) {
+					$scope.valuecontainer.onOpenClose = function (isOpen) {
 						$scope.observation.value = $scope.valuecontainer.observationValue;
 						$scope.observation.onOpenClose(isOpen);
 					}
