@@ -3,11 +3,13 @@ package com.efficio.fieldbook.web.common.controller;
 import com.efficio.fieldbook.web.common.bean.TableHeader;
 import org.apache.commons.lang3.StringUtils;
 import org.generationcp.commons.security.AuthorizationService;
+import org.generationcp.middleware.api.cropparameter.CropParameterService;
 import org.generationcp.middleware.constant.ColumnLabels;
 import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.domain.sample.SampleDetailsDTO;
 import org.generationcp.middleware.exceptions.MiddlewareQueryException;
 import org.generationcp.middleware.manager.api.OntologyDataManager;
+import org.generationcp.middleware.pojos.CropParameter;
 import org.generationcp.middleware.pojos.SampleList;
 import org.generationcp.middleware.pojos.workbench.PermissionsEnum;
 import org.generationcp.middleware.service.api.SampleListService;
@@ -26,8 +28,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 @Transactional
 @Controller
@@ -66,6 +70,9 @@ public class SampleListController {
 	@Autowired
 	protected AuthorizationService authorizationService;
 
+	@Resource
+	private CropParameterService cropParameterService;
+
 	@RequestMapping(value = "/sampleList/{listId}", method = RequestMethod.GET)
 	public String displaySampleList(@PathVariable final Integer listId, final HttpServletRequest req, final Model model) {
 		this.processSampleList(listId, req, model);
@@ -95,10 +102,10 @@ public class SampleListController {
 			model.addAttribute("listName", name);
 			model.addAttribute("listNotes", notes);
 			model.addAttribute("listType", type);
-
-			model.addAttribute("hasManageStudiesPermission",
-				this.authorizationService.isSuperAdminUser()
-					|| this.authorizationService.hasAnyAuthority(PermissionsEnum.MANAGE_STUDIES_PERMISSIONS));
+			final boolean hasManageStudiesPermission = this.authorizationService.isSuperAdminUser()
+					|| this.authorizationService.hasAnyAuthority(PermissionsEnum.MANAGE_STUDIES_PERMISSIONS);
+			model.addAttribute("hasManageStudiesPermission", hasManageStudiesPermission);
+			model.addAttribute("showImportGenotypes", hasManageStudiesPermission && this.showImportGenotypes(listId));
 		} catch (final MiddlewareQueryException e) {
 			SampleListController.LOG.error(e.getMessage(), e);
 		}
@@ -140,6 +147,21 @@ public class SampleListController {
 	private void getCommonHeaders(final Locale locale, final List<TableHeader> tableHeaderList) {
 		tableHeaderList.add(new TableHeader(ColumnLabels.DESIGNATION.getTermNameFromOntology(this.ontologyDataManager),
 			this.messageSource.getMessage(SampleListController.DESIGNATION, null, locale)));
+	}
+
+	private boolean showImportGenotypes(final Integer listId) {
+		final List<CropParameter> gigwaParameters = this.cropParameterService.getCropParametersByGroupName("gigwa");
+		final Map<String, String> cropGenotypingParameter = new HashMap<>();
+		for(CropParameter cropParams: gigwaParameters) {
+			cropGenotypingParameter.put(cropParams.getKey(), cropParams.isEncrypted()? cropParams.getEncryptedValue(): cropParams.getValue());
+		}
+		return StringUtils.isNotEmpty(cropGenotypingParameter.get("gigwa_endpoint"))
+				&& StringUtils.isNotEmpty(cropGenotypingParameter.get("gigwa_token_endpoint"))
+				&& StringUtils.isNotEmpty(cropGenotypingParameter.get("gigwa_username"))
+				&& StringUtils.isNotEmpty(cropGenotypingParameter.get("gigwa_password"))
+				&& StringUtils.isNotEmpty(cropGenotypingParameter.get("gigwa_program_id"))
+				&& StringUtils.isNotEmpty(cropGenotypingParameter.get("gigwa_base_url"))
+				&& !this.sampleListService.hasImportedGenotypes(listId);
 	}
 
 }
