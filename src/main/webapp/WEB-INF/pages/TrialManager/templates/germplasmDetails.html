@@ -44,7 +44,7 @@
 				</div>
 			</div>
 
-			<div class="pull-right" ng-show="hasAnyAuthority(PERMISSIONS.GERMPLASM_AND_CHECKS_ACTION_PERMISSIONS)">
+			<div class="pull-right" ng-show="hasAnyActionAvailable()">
 				 <div class="btn-group" style="padding-right: 12px">
 					<button type="button" class="btn btn-info dropdown-toggle fbk-action-btn" data-toggle="dropdown" ng-click="entryColumnsPopover.close()">
 						<span th:text="#{study.studydetails.actions}">Actions</span>
