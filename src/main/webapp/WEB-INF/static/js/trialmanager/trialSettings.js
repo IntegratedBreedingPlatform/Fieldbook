@@ -37,7 +37,7 @@
 		};
 
 		$scope.hasManageStudiesPermission = function () {
-			return HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.MANAGE_STUDIES_PERMISSIONS);
+			return HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.FULL_MANAGE_STUDIES_PERMISSIONS);
 		};
 
 		$scope.onLabelChange = function() {

@@ -2,13 +2,13 @@
     <div class="row" >
         <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12">
             <!-- title -->
-            <section-container collapsible="true" th:attr="heading=#{study.managesettings.treatment.factors.title}">
-
+            <section-container th:attr="heading=#{study.managesettings.treatment.factors.title}" collapsible="true">
                 <section-container icon="bms-treatment-factors" name="content"
-                                   th:attr="heading=#{study.managesettings.treatment.factors}" help-tool-type="MANAGE_STUDIES_TREATMENT_FACTORS"
-                                   add-variable="true" model-data="settings.details" variable-type="1809" callback="onAddVariable(result)"
-                                   hide-variable="hasManageStudiesPermission &amp;&amp; !trialMeasurement.hasMeasurement">
-
+							th:attr="heading=#{study.managesettings.treatment.factors}" help-tool-type="MANAGE_STUDIES_TREATMENT_FACTORS"
+							add-variable="hasAnyAuthority(PERMISSIONS.ADD_TREATMENT_FACTORS_VARIABLES_PERMISSIONS)"
+							hide-variable="!study.hasGeneratedDesign &amp;&amp; hasAnyAuthority(PERMISSIONS.ADD_TREATMENT_FACTORS_VARIABLES_PERMISSIONS)"
+							model-data="settings.details"
+							variable-type="1809" callback="onAddVariable(result)">
                     <div name="content">
                         <table class='factor-opts-tbl table table-curved table-condensed'>
                             <thead>
@@ -23,18 +23,18 @@
 
                             <tbody>
                             <tr ng-repeat="(key,value) in data.currentData track by key">
-                                <td ng-class="{even : $even, odd : $odd}"><span class='glyphicon glyphicon-minus-sign delete-factor' style="cursor: pointer" ng-click="trialMeasurement.hasMeasurement || performDelete(key)" ng-hide="trialMeasurement.hasMeasurement"></span>
+                                <td ng-class="{even : $even, odd : $odd}"><span class='glyphicon glyphicon-minus-sign delete-factor' style="cursor: pointer" ng-click="study.hasGeneratedDesign || performDelete(key)" ng-hide="!hasAnyAuthority(PERMISSIONS.ADD_TREATMENT_FACTORS_VARIABLES_PERMISSIONS) || study.hasGeneratedDesign"></span>
                                 </td>
                                 <td ng-class="{even : $even, odd : $odd}"><a show-details-modal="key"
                                                                              variable-type="{{VARIABLE_TYPES.TREATMENT_FACTOR}}">{{settings.details.val(key).variable.name}}</a>
                                 </td>
                                 <td ng-class="{even : $even, odd : $odd}">
-                                    <input type="hidden" ui-select2="generateDropdownOption(key)" class="form-control" ng-model="data.currentData[key].variableId" ng-disabled="trialMeasurement.hasMeasurement"/>
+                                    <input type="hidden" ui-select2="generateDropdownOption(key)" class="form-control" ng-model="data.currentData[key].variableId" ng-disabled="!hasAnyAuthority(PERMISSIONS.ADD_TREATMENT_FACTORS_VARIABLES_PERMISSIONS) || study.hasGeneratedDesign"/>
                                 </td>
 
                                 <td ng-class="{even : $even, odd : $odd}">
                                     <input valid-number="" maxlength="2" type='text' class='form-control' ng-model='data.currentData[key].levels'
-                                           ng-change='onLevelChange(key,data.currentData[key].levels)' ng-disabled="trialMeasurement.hasMeasurement || !data.currentData[key].variableId"/>
+                                           ng-change='onLevelChange(key,data.currentData[key].levels)' ng-disabled="!hasAnyAuthority(PERMISSIONS.ADD_TREATMENT_FACTORS_VARIABLES_PERMISSIONS) || study.hasGeneratedDesign || !data.currentData[key].variableId"/>
                                 </td>
                             </tr>
 
@@ -103,8 +103,10 @@
                                     </td>
                                     <td ng-class-odd="'odd'" ng-class-even="'even'">{{retrievePairDetail(key).variable.scale}}</td>
                                     <td ng-class-odd="'odd'" ng-class-even="'even'">
-                                        <show-setting-form-element settings="settings.treatmentLevelPairs[key]" targetkey="{{$index}}" settingkey="{{retrievePairDetail(key).variable.cvTermId}}" changefunction="onLabelChange()"
-                                                                   valuecontainer="data.currentData[key].labels" use-exact-properties="true" block-input="trialMeasurement.hasMeasurement"></show-setting-form-element>
+                                        <show-setting-form-element settings="settings.treatmentLevelPairs[key]" targetkey="{{$index}}" settingkey="{{retrievePairDetail(key).variable.cvTermId}}"
+                                                                   changefunction="onLabelChange()" valuecontainer="data.currentData[key].labels" use-exact-properties="true"
+                                                                   block-input="!hasAnyAuthority(PERMISSIONS.ADD_TREATMENT_FACTORS_VARIABLES_PERMISSIONS) || study.hasGeneratedDesign">
+                                        </show-setting-form-element>
                                     </td>
                                 </tr>
 

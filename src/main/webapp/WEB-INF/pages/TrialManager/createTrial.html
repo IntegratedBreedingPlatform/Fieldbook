@@ -68,7 +68,7 @@
 										<a href="javascript: void(0)" onclick="exportDesignTemplate()" class="export-design-template-link"
 										   th:text="#{study.studydetails.action.export.design.template}">Export Design Template</a>
 									</li>
-									<li ng-show="hasManageStudiesPermission &amp;&amp; hasGermplasmListSelected()">
+									<li ng-show="hasAnyAuthority(PERMISSIONS.GENERATE_EXPERIMENTAL_DESIGN_PERMISSIONS) &amp;&amp; hasGermplasmListSelected()">
 										<a href="javascript: ImportDesign.showPopup(ImportDesign.hasGermplasmListSelected());"
 										   id="import-design-url-link"
 										   th:text="#{study.studydetails.action.import.design}">Import Design</a>

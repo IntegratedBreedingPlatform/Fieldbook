@@ -12,7 +12,7 @@
 			var tableId = '#environment-table';
 
 			$scope.TRIAL_INSTANCE_NO_INDEX = 8170;
-			$scope.hasManageStudiesPermission = HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.MANAGE_STUDIES_PERMISSIONS);
+			$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
 			$scope.instanceInfo = studyInstanceService.instanceInfo;
 			$scope.nested = {};
 			$scope.nested.dataTable = {};
@@ -401,6 +401,12 @@
 						$scope.instanceInfo.numberOfInstances++;
 					});
 					$scope.isDisableAddInstance = false;
+				}, function (response) {
+					if (response.errors) {
+						showErrorMessage('', response.errors[0].message);
+					} else {
+						showErrorMessage('', ajaxGenericErrorMsg);
+					}
 				});
 
 			};

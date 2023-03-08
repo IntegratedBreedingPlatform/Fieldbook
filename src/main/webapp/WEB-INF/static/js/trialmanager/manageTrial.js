@@ -308,19 +308,19 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				name: 'Crosses and Selections',
 				state: 'germplasmStudySource',
 				hidden: true,
-				permission: PERMISSIONS.MANAGE_STUDIES_PERMISSIONS
+				permission: PERMISSIONS.FULL_MANAGE_STUDIES_PERMISSIONS
 			}
 			$scope.inventoryTab = {
 				name: 'Inventory',
 				state: 'inventory',
 				hidden: true,
-				permission: PERMISSIONS.MANAGE_STUDIES_PERMISSIONS
+				permission: PERMISSIONS.FULL_MANAGE_STUDIES_PERMISSIONS
 			};
 			$scope.analysisResultsTab = {
 				name: 'SSA Results',
 				state: 'analysisResults',
 				hidden: true,
-				permission: PERMISSIONS.MANAGE_STUDIES_PERMISSIONS
+				permission: PERMISSIONS.FULL_MANAGE_STUDIES_PERMISSIONS
 			};
 			$scope.isOpenStudy = TrialManagerDataService.isOpenStudy;
 			$scope.isLockedStudy = TrialManagerDataService.isLockedStudy;
@@ -339,7 +339,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				{
 					name: 'Settings',
 					state: 'trialSettings',
-					permission: PERMISSIONS.MANAGE_STUDIES_PERMISSIONS
+					permission: PERMISSIONS.FULL_MANAGE_STUDIES_PERMISSIONS
 				}
 			);
 
@@ -353,17 +353,17 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				$scope.trialTabs.push({
 					name: 'Treatment Factors',
 					state: 'treatment',
-					permission: PERMISSIONS.MANAGE_STUDIES_PERMISSIONS
+					permission: PERMISSIONS.VIEW_TREATMENT_FACTORS_PERMISSIONS
 				});
 				$scope.trialTabs.push({
 					name: 'Environments',
 					state: 'environment',
-					permission: PERMISSIONS.MANAGE_STUDIES_PERMISSIONS
+					permission: PERMISSIONS.VIEW_ENVIRONMENT_PERMISSIONS
 				});
 				$scope.trialTabs.push({
 					name: 'Experimental Design',
 					state: 'experimentalDesign',
-					permission: PERMISSIONS.MANAGE_STUDIES_PERMISSIONS
+					permission: PERMISSIONS.VIEW_EXPERIMENTAL_DESIGN_PERMISSIONS
 				});
 
 				$scope.trialTabs.push($scope.inventoryTab);
@@ -643,7 +643,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			};
 
 			$scope.reloadPermissions = function () {
-				$scope.hasManageStudiesPermission = $scope.hasAnyAuthority($scope.PERMISSIONS.MANAGE_STUDIES_PERMISSIONS);
+				$scope.hasManageStudiesPermission = $scope.hasAnyAuthority(PERMISSIONS.FULL_MANAGE_STUDIES_PERMISSIONS);
 			}
 
 			$scope.reloadActionMenuConditions = function () {
@@ -897,16 +897,16 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			};
 
 			$scope.isSaveDisabled = function () {
-				return !$scope.hasAnyAuthority($scope.PERMISSIONS.MANAGE_STUDIES_PERMISSIONS)
+				return !$scope.hasAnyAuthority(PERMISSIONS.FULL_MANAGE_STUDIES_PERMISSIONS)
 				|| (!$scope.isSaveEnabled() && !studyStateService.hasUnsavedData());
 			};
 
 			$scope.hasUnsavedData = function () {
-				return $scope.hasAnyAuthority($scope.PERMISSIONS.MANAGE_STUDIES_PERMISSIONS) && studyStateService.hasUnsavedData();
+				return $scope.hasAnyAuthority(PERMISSIONS.FULL_MANAGE_STUDIES_PERMISSIONS) && studyStateService.hasUnsavedData();
 			}
 
 			$scope.isSaveEnabled = function () {
-				return $scope.hasAnyAuthority($scope.PERMISSIONS.MANAGE_STUDIES_PERMISSIONS)
+				return $scope.hasAnyAuthority(PERMISSIONS.FULL_MANAGE_STUDIES_PERMISSIONS)
 					&& $scope.tabSelected && ([
 						"trialSettings",
 						"treatment"
@@ -1162,9 +1162,6 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 					$rootScope.$broadcast('createLotsFromSubObsRegister');
 				});
 			}
-
-			$scope.studyName = $scope.data.studyName;
-
 		}]);
 
 	manageTrialApp.factory('studyService', ['$http', '$q', 'studyContext', 'serviceUtilities',

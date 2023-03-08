@@ -14,7 +14,8 @@
 
 					var ENTRY_TYPE_COLUMN_DATA_KEY = '8255-key';
 					var MESSAGE_DIV_ID = 'page-message';
-					$scope.hasManageStudiesPermission = HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.MANAGE_STUDIES_PERMISSIONS);
+
+					$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
 
 					$scope.$on('$viewContentLoaded', function(){
 						// This is to automatically refresh the design details for augmented design
@@ -113,7 +114,10 @@
 					};
 
 					$scope.isDeleteDesignDisable = function (){
-						return !studyStateService.hasGeneratedDesign() || studyStateService.hasListOrSubObs() || studyStateService.hasMeansDataset();
+						return !$scope.hasAnyAuthority(PERMISSIONS.DELETE_EXPERIMENTAL_DESIGN_PERMISSIONS) || //
+							!studyStateService.hasGeneratedDesign() || //
+							studyStateService.hasListOrSubObs() || //
+							studyStateService.hasMeansDataset(); //
 					};
 
 					$scope.deleteDesign = function () {
@@ -181,7 +185,7 @@
 					};
 
 					$scope.disableDesignTypeSelect = function () {
-						return !$scope.hasManageStudiesPermission || (!!$scope.measurementDetails && $scope.measurementDetails.hasMeasurement);
+						return !$scope.hasAnyAuthority(PERMISSIONS.GENERATE_EXPERIMENTAL_DESIGN_PERMISSIONS) || (!!$scope.measurementDetails && $scope.measurementDetails.hasMeasurement);
 					};
 
 					$scope.onSwitchDesignTypes = function(newId) {
