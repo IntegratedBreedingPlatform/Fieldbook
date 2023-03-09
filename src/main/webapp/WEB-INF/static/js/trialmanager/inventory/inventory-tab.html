@@ -47,11 +47,13 @@
 		</div>
 	</div>
 	<div class="col-xs-12 col-md-12">
-		<table datatable="" class="table table-curved table-condensed table-no-wrap table-sorted"
+		<table datatable=""
 			   dt-instance="nested.dtInstance"
 			   dt-options="dtOptions"
 			   dt-columns="dtColumns"
-			   dt-column-defs="dtColumnDefs">
+			   dt-column-defs="dtColumnDefs"
+			   width="100%"
+			   class="table table-curved table-condensed table-no-wrap table-sorted">
 			<thead>
 			<tr>
 				<th><input type="checkbox" title="select current page" ng-checked="isPageSelected()" ng-click="onSelectPage()"/></th>
