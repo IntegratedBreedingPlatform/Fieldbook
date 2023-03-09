@@ -339,7 +339,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				{
 					name: 'Settings',
 					state: 'trialSettings',
-					permission: PERMISSIONS.FULL_MANAGE_STUDIES_PERMISSIONS
+					permission: PERMISSIONS.VIEW_STUDY_SETTINGS_PERMISSIONS
 				}
 			);
 
