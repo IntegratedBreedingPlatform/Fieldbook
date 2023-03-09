@@ -734,6 +734,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 					$scope.sampleTabs.push({
 						name: listName,
 						state: 'sample-list' + tabId + '-li',
+						permission: PERMISSIONS.VIEW_SAMPLE_LIST_PERMISSIONS,
 						id: tabId,
 						displayName: 'Sample List: [' + listName + ']'
 					});
