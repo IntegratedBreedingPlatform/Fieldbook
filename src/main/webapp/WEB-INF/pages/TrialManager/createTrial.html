@@ -420,17 +420,9 @@
 			<div class="col-xs-12" ui-view="inventory" ng-show="tabSelected==='inventory'"></div>
 			<div class="col-xs-12" ui-view="subObservationTab" ng-show="tabSelected.indexOf('/subObservationTabs/') === 0"></div>
 			<div class="col-xs-12" ui-view="analysisResults" ng-show="tabSelected==='analysisResults'"></div>
-			<div class="col-xs-12" ng-repeat="advancetab in advanceTabsData track by $index" id="{{advancetab.id}}"
-				 ng-show="tabSelected===advancetab.name">
-				<div ng-bind-html="advancetab.data"></div>
-			</div>
 			<div class="col-xs-12" ng-repeat="sampleListTab in sampleTabsData track by $index" id="{{sampleListTab.id}}"
 				 ng-show="tabSelected===sampleListTab.name">
 				<div ng-bind-html="sampleListTab.data"></div>
-			</div>
-			<div class="col-xs-12" ng-repeat="crossListTab in crossesTabsData track by $index" id="{{crossListTab.id}}"
-				 ng-show="tabSelected===crossListTab.name">
-				<div ng-bind-html="crossListTab.data"></div>
 			</div>
 		</div>
 	</div>
