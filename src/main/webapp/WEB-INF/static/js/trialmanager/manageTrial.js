@@ -314,7 +314,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				name: 'Inventory',
 				state: 'inventory',
 				hidden: true,
-				permission: PERMISSIONS.FULL_MANAGE_STUDIES_PERMISSIONS
+				permission: PERMISSIONS.VIEW_INVENTORY_PERMISSIONS
 			};
 			$scope.analysisResultsTab = {
 				name: 'SSA Results',
