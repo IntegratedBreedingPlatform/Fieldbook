@@ -911,7 +911,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 					&& $scope.tabSelected && ([
 						"trialSettings",
 						"treatment"
-					].indexOf($scope.tabSelected) >= 0);
+					].indexOf($scope.tabSelected) >= 0) || !studyContext.studyId;
 			};
 
 			$scope.showManageStudiesAction = function () {
