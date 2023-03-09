@@ -395,7 +395,8 @@
 			   ng-class="{'pendingData': tab.hasPendingData}"
 			   ng-click="performFunctionOnTabChange(tab.state)">{{tab.datasetType.tabNamePrefix}}{{tab.name}}</a>
 		</li>
-		<li ng-class="{active: tabSelected===crossesAndSelectionsTab.state}" ng-show="!crossesAndSelectionsTab.hidden">
+		<li ng-class="{active: tabSelected===crossesAndSelectionsTab.state}"
+			ng-show="hasAnyAuthority(crossesAndSelectionsTab.permission) &amp;&amp; !crossesAndSelectionsTab.hidden">
 			<a ui-sref="{{crossesAndSelectionsTab.state}}"
 			   ng-class="{active: tabSelected===crossesAndSelectionsTab.state}"
 			   ng-click="performFunctionOnTabChange(crossesAndSelectionsTab.state)">{{crossesAndSelectionsTab.name}}</a>

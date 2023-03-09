@@ -308,7 +308,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				name: 'Crosses and Selections',
 				state: 'germplasmStudySource',
 				hidden: true,
-				permission: PERMISSIONS.FULL_MANAGE_STUDIES_PERMISSIONS
+				permission: PERMISSIONS.VIEW_CROSSES_AND_SELECTIONS_PERMISSIONS
 			}
 			$scope.inventoryTab = {
 				name: 'Inventory',
@@ -370,11 +370,11 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 
 				loadCrossesAndSelectionsTab();
 				loadInventoryTab();
+				loadAnalysisResultsTab();
 
 				studyStateService.updateHasListsOrSubObs(HAS_LISTS_OR_SUB_OBS);
 				studyStateService.updateGeneratedDesign(HAS_GENERATED_DESIGN);
 				studyStateService.updateHasMeansDataset(HAS_MEANS_DATASET);
-				loadAnalysisResultsTab();
 
 				if (HAS_GENERATED_DESIGN) {
 					studyEntryService.getStudyEntriesMetadata().then(function (metadata) {
