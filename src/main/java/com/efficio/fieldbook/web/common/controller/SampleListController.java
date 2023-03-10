@@ -4,6 +4,7 @@ import com.efficio.fieldbook.web.common.bean.TableHeader;
 import org.apache.commons.lang3.StringUtils;
 import org.generationcp.commons.security.AuthorizationService;
 import org.generationcp.middleware.api.cropparameter.CropParameterService;
+import org.generationcp.middleware.api.genotype.SampleGenotypeService;
 import org.generationcp.middleware.constant.ColumnLabels;
 import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.domain.sample.SampleDetailsDTO;
@@ -72,6 +73,9 @@ public class SampleListController {
 
 	@Resource
 	private CropParameterService cropParameterService;
+
+	@Resource
+	private SampleGenotypeService sampleGenotypeService;
 
 	@RequestMapping(value = "/sampleList/{listId}", method = RequestMethod.GET)
 	public String displaySampleList(@PathVariable final Integer listId, final HttpServletRequest req, final Model model) {
@@ -162,7 +166,7 @@ public class SampleListController {
 			&& StringUtils.isNotEmpty(cropGenotypingParameter.get("gigwa_password"))
 			&& StringUtils.isNotEmpty(cropGenotypingParameter.get("gigwa_program_id"))
 			&& StringUtils.isNotEmpty(cropGenotypingParameter.get("gigwa_base_url"))
-			&& this.sampleListService.countSampleGenotypesBySampleList(listId) == 0l;
+			&& this.sampleGenotypeService.countSampleGenotypesBySampleList(listId) == 0l;
 	}
 
 }
