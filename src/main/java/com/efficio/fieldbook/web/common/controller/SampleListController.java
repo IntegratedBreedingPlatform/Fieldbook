@@ -103,7 +103,7 @@ public class SampleListController {
 			model.addAttribute("listNotes", notes);
 			model.addAttribute("listType", type);
 			final boolean hasManageStudiesPermission = this.authorizationService.isSuperAdminUser()
-					|| this.authorizationService.hasAnyAuthority(PermissionsEnum.MANAGE_STUDIES_PERMISSIONS);
+				|| this.authorizationService.hasAnyAuthority(PermissionsEnum.MANAGE_STUDIES_PERMISSIONS);
 			model.addAttribute("hasManageStudiesPermission", hasManageStudiesPermission);
 			model.addAttribute("showImportGenotypes", hasManageStudiesPermission && this.showImportGenotypes(listId));
 		} catch (final MiddlewareQueryException e) {
@@ -152,16 +152,17 @@ public class SampleListController {
 	private boolean showImportGenotypes(final Integer listId) {
 		final List<CropParameter> gigwaParameters = this.cropParameterService.getCropParametersByGroupName("gigwa");
 		final Map<String, String> cropGenotypingParameter = new HashMap<>();
-		for(CropParameter cropParams: gigwaParameters) {
-			cropGenotypingParameter.put(cropParams.getKey(), cropParams.isEncrypted()? cropParams.getEncryptedValue(): cropParams.getValue());
+		for (final CropParameter cropParams : gigwaParameters) {
+			cropGenotypingParameter.put(cropParams.getKey(),
+				cropParams.isEncrypted() ? cropParams.getEncryptedValue() : cropParams.getValue());
 		}
 		return StringUtils.isNotEmpty(cropGenotypingParameter.get("gigwa_endpoint"))
-				&& StringUtils.isNotEmpty(cropGenotypingParameter.get("gigwa_token_endpoint"))
-				&& StringUtils.isNotEmpty(cropGenotypingParameter.get("gigwa_username"))
-				&& StringUtils.isNotEmpty(cropGenotypingParameter.get("gigwa_password"))
-				&& StringUtils.isNotEmpty(cropGenotypingParameter.get("gigwa_program_id"))
-				&& StringUtils.isNotEmpty(cropGenotypingParameter.get("gigwa_base_url"))
-				&& !this.sampleListService.hasImportedGenotypes(listId);
+			&& StringUtils.isNotEmpty(cropGenotypingParameter.get("gigwa_token_endpoint"))
+			&& StringUtils.isNotEmpty(cropGenotypingParameter.get("gigwa_username"))
+			&& StringUtils.isNotEmpty(cropGenotypingParameter.get("gigwa_password"))
+			&& StringUtils.isNotEmpty(cropGenotypingParameter.get("gigwa_program_id"))
+			&& StringUtils.isNotEmpty(cropGenotypingParameter.get("gigwa_base_url"))
+			&& this.sampleListService.countSampleGenotypesBySampleList(listId) == 0l;
 	}
 
 }
