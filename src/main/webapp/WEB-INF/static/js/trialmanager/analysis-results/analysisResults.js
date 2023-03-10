@@ -6,8 +6,10 @@
 
 	module.controller('AnalysisResultsCtrl',
 		['$scope',
-			'DTOptionsBuilder', '$q', '$compile', 'datasetService', '$timeout', 'studyContext', 'germplasmDetailsModalService',
-			function ($scope, DTOptionsBuilder, $q, $compile, datasetService, $timeout, studyContext, germplasmDetailsModalService) {
+			'DTOptionsBuilder', '$q', '$compile', 'datasetService', '$timeout', 'studyContext', 'germplasmDetailsModalService', 'HasAnyAuthorityService', 'PERMISSIONS',
+			function ($scope, DTOptionsBuilder, $q, $compile, datasetService, $timeout, studyContext, germplasmDetailsModalService, HasAnyAuthorityService, PERMISSIONS) {
+
+				$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
 
 				// used also in tests - to call $rootScope.$apply()
 				var tableLoadedResolve;

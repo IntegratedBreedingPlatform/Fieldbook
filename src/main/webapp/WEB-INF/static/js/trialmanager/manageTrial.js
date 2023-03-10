@@ -320,7 +320,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				name: 'SSA Results',
 				state: 'analysisResults',
 				hidden: true,
-				permission: PERMISSIONS.FULL_MANAGE_STUDIES_PERMISSIONS
+				permission: PERMISSIONS.VIEW_SINGLE_SITE_ANALYSIS_RESULTS_PERMISSIONS
 			};
 			$scope.isOpenStudy = TrialManagerDataService.isOpenStudy;
 			$scope.isLockedStudy = TrialManagerDataService.isLockedStudy;
