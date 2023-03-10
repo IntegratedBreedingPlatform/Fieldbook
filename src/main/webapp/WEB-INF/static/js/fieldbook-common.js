@@ -778,7 +778,7 @@ function openDeleteSampleEntryConfirmation(listId, listName) {
 
 function importGenotypes(listId) {
 	'use strict';
-	const genotypeModalService = angular.element('#mainApp').injector().get('genotypeModalService');
+	const genotypeModalService = angular.element('#mainApp').injector().get('sampleGenotypeModalService');
 	genotypeModalService.openImportGenotypesModal(listId);
 }
 

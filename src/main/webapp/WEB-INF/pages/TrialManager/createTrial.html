@@ -400,6 +400,11 @@
 			   ng-class="{active: tabSelected===crossesAndSelectionsTab.state}"
 			   ng-click="performFunctionOnTabChange(crossesAndSelectionsTab.state)">{{crossesAndSelectionsTab.name}}</a>
 		</li>
+		<li ng-class="{active: tabSelected===sampleGenotypesTab.state}" ng-show="!sampleGenotypesTab.hidden">
+			<a ui-sref="{{sampleGenotypesTab.state}}"
+			   ng-class="{active: tabSelected===sampleGenotypesTab.state}"
+			   ng-click="performFunctionOnTabChange(sampleGenotypesTab.state)">{{sampleGenotypesTab.name}}</a>
+		</li>
 		<li ng-repeat="tab in sampleTabs | orderObjectBy : 'id'  track by $index" ng-class="{active: tabSelected===tab.state}"
 			ng-click="listTabChange(tab.state)">
 			<a tab-data='{{tab.id}}' ng-click="initSampleTab(tab)">{{tab.displayName}}
@@ -416,6 +421,7 @@
 			<div class="col-xs-12" ui-view="germplasm" ng-show="tabSelected==='germplasm'"></div>
 			<div class="col-xs-12" ui-view="environment" ng-show="tabSelected==='environment'"></div>
 			<div class="col-xs-12" ui-view="germplasmStudySource" ng-show="tabSelected==='germplasmStudySource'"></div>
+			<div class="col-xs-12" ui-view="genotype" ng-show="tabSelected==='sampleGenotypes'"></div>
 			<div class="col-xs-12" ui-view="inventory" ng-show="tabSelected==='inventory'"></div>
 			<div class="col-xs-12" ui-view="subObservationTab" ng-show="tabSelected.indexOf('/subObservationTabs/') === 0"></div>
 			<div class="col-xs-12" ui-view="analysisResults" ng-show="tabSelected==='analysisResults'"></div>
@@ -832,7 +838,7 @@
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/germplasm/change-entry-type-modal.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/germplasm/add-new-entries-modal.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/germplasm/import-entry-details-modal.js}"></script>
-	<script type="text/javascript" th:src="@{/static/js/trialmanager/genotype/genotype-modal.js}"></script>
+	<script type="text/javascript" th:src="@{/static/js/trialmanager/sample-genotype/sample-genotype-modal.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/germplasm/germplasm-details-modal/germplasm-details-module.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/germplasm/breeding-method-modal/breeding-method-modal.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/germplasm-selector/germplasm-selector-modal.js}"></script>
@@ -850,6 +856,8 @@
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/analysis-results/analysisResults.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/germplasm-study-source/germplasmStudySource.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/germplasm-study-source/germplasmStudySourceService.js}"></script>
+	<script type="text/javascript" th:src="@{/static/js/trialmanager/sample-genotype/sampleGenotypeTab.js}"></script>
+	<script type="text/javascript" th:src="@{/static/js/trialmanager/sample-genotype/sampleGenotypeService.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/subobservations/subObservationTab.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/subobservations/subObservationSet.js}"></script>
 	<script type="text/javascript" th:src="@{/static/js/trialmanager/inventory/inventory-tab.js}"></script>

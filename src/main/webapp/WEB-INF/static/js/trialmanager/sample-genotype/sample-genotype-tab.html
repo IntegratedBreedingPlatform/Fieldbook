@@ -1,0 +1,57 @@
+<div class="row">
+    <div class="col-xs-12 col-md-12">
+        <label class="control-label section-toggle toggle-icon">
+            <span class="bms-exp-design fbk-trial-summary-icons"></span>
+            <img style="margin-left: -10px; display:none;" class="section-expanded" src="/Fieldbook/static/img/expanded-arrow.png">
+            <strong class="sub-content-heading ng-binding">Sample Genotypes</strong>
+        </label>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <table id="sampleGenotypesTable"
+               datatable=""
+               dt-instance="nested.dtInstance"
+               dt-options="dtOptions"
+               dt-columns="dtColumns"
+               dt-column-defs="dtColumnDefs"
+               width="100%"
+               class="table table-curved table-condensed table-no-wrap table-sorted">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th class="germplasm-link-column">GID
+                    <study-column-filter-icon study-column-filter-popover-template="studyColumnFilterText.html"
+                                              filter="columns.gid.filter"
+                                              column-name="gid"
+                                              filter-helper="filterHelper"/>
+                </th>
+                <th class="germplasm-link-column">DESIGNATION
+                    <study-column-filter-icon study-column-filter-popover-template="studyColumnFilterText.html"
+                                              filter="columns.designation.filter"
+                                              column-name="designation"
+                                              filter-helper="filterHelper"/>
+                </th>
+                <th>PLOT_NO
+                    <study-column-filter-icon study-column-filter-popover-template="studyColumnFilterList.html"
+                                              filter="columns.plotNumber.filter"
+                                              column-name="plotNumber"
+                                              filter-helper="filterHelper"/>
+                </th>
+                <th>SAMPLE_NO
+                    <study-column-filter-icon study-column-filter-popover-template="studyColumnFilterList.html"
+                                              filter="columns.sampleNumber.filter"
+                                              column-name="sampleNumber"
+                                              filter-helper="filterHelper"/>
+                </th>
+                <th>SAMPLE_NAME
+                    <study-column-filter-icon study-column-filter-popover-template="studyColumnFilterList.html"
+                                              filter="columns.sampleName.filter"
+                                              column-name="sampleName"
+                                              filter-helper="filterHelper"/>
+                </th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>

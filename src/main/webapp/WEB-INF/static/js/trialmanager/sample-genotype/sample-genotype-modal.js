@@ -3,7 +3,7 @@
 
     const module = angular.module('manageTrialApp');
 
-    module.controller('GenotypeImportController', ['$scope', '$rootScope', 'studyContext', '$uibModalInstance', 'studyStateService', 'listId',
+    module.controller('SampleGenotypeImportController', ['$scope', '$rootScope', 'studyContext', '$uibModalInstance', 'studyStateService', 'listId',
         function ($scope, $rootScope, studyContext, $uibModalInstance, studyStateService, listId) {
 
             $scope.url = '/ibpworkbench/controller/jhipster#/genotype-import/' + listId + '?restartApplication' +
@@ -28,15 +28,15 @@
 
         }]);
 
-    module.factory('genotypeModalService', ['$uibModal',
+    module.factory('sampleGenotypeModalService', ['$uibModal',
         function ($uibModal) {
 
             var genotypeModalService = {};
 
             genotypeModalService.openImportGenotypesModal = function (listId) {
                 $uibModal.open({
-                    templateUrl: '/Fieldbook/static/angular-templates/genotype/genotype-modal.html',
-                    controller: "GenotypeImportController",
+                    templateUrl: '/Fieldbook/static/angular-templates/sample-genotype/sample-genotype-modal.html',
+                    controller: "SampleGenotypeImportController",
                     size: 'lg',
                     resolve: {
                         listId: function () {
