@@ -95,10 +95,10 @@ public class SampleListController {
 			model.addAttribute("listName", name);
 			model.addAttribute("listNotes", notes);
 			model.addAttribute("listType", type);
-
-			model.addAttribute("hasManageStudiesPermission",
-				this.authorizationService.isSuperAdminUser()
-					|| this.authorizationService.hasAnyAuthority(PermissionsEnum.MANAGE_STUDIES_PERMISSIONS));
+			model.addAttribute("hasExportSampleListPermission",
+				this.authorizationService.hasAnyAuthority(PermissionsEnum.EXPORT_FILE_SAMPLE_LIST_PERMISSIONS));
+			model.addAttribute("hasDeleteSamplePermission",
+				this.authorizationService.hasAnyAuthority(PermissionsEnum.DELETE_SAMPLES_PERMISSIONS));
 		} catch (final MiddlewareQueryException e) {
 			SampleListController.LOG.error(e.getMessage(), e);
 		}
