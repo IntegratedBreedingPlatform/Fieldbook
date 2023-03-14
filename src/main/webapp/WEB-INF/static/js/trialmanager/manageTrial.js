@@ -840,6 +840,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 						datasetType: datasetType,
 						hasPendingData: datasetTab.hasPendingData,
 						state: '/subObservationTabs/' + datasetTab.datasetId, // arbitrary prefix to filter tab content
+						permission: PERMISSIONS.VIEW_OBSERVATIONS_PERMISSIONS,
 						subObservationSets: datasetByTabs[datasetTab.datasetId].map(function (dataset) {
 							return {
 								id: dataset.datasetId,
