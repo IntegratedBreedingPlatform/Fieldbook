@@ -298,9 +298,9 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 
 			$scope.trialTabs = [];
 			$scope.subObservationTabs = [];
-			$scope.tabSelected = 'trialSettings';
-			$scope.isSettingsTab = true;
-			$location.path('/trialSettings');
+			$scope.tabSelected = ''; //'trialSettings';
+			$scope.isSettingsTab = false;
+			// $location.path('/trialSettings');
 			$scope.sampleTabsData = [];
 			$scope.sampleTabs = [];
 			$scope.isOpenStudy = TrialManagerDataService.isOpenStudy;
@@ -632,7 +632,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 
 			$scope.showCreateLotsAction = function () {
 				return $scope.hasDesignGenerated &&
-					HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.MS_CREATE_LOTS_PERMISSIONS);
+					HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.CREATE_LOTS_PERMISSIONS);
 			}
 
 			$scope.displayGermplasmOrMeasurmentOnlyActions = function () {
