@@ -303,6 +303,18 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			$location.path('/trialSettings');
 			$scope.sampleTabsData = [];
 			$scope.sampleTabs = [];
+			$scope.isOpenStudy = TrialManagerDataService.isOpenStudy;
+			$scope.isLockedStudy = TrialManagerDataService.isLockedStudy;
+			$scope.studyTypes = [];
+			$scope.studyTypeSelected = undefined;
+			$scope.isChoosePreviousStudy = false;
+			$scope.STABRAPP_URL = STABRAPP_URL;
+			$scope.FEEDBACK_ENABLED = FEEDBACK_ENABLED;
+
+			$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
+			$scope.PERMISSIONS = PERMISSIONS;
+
+			$scope.returnToManageStudiesURL = "/ibpworkbench/controller/jhipster#/study-manager?cropName=" + studyContext.cropName + "&programUUID=" + studyContext.programId;
 
 			$scope.crossesAndSelectionsTab = {
 				name: 'Crosses and Selections',
@@ -322,18 +334,6 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				hidden: true,
 				permission: PERMISSIONS.VIEW_SINGLE_SITE_ANALYSIS_RESULTS_PERMISSIONS
 			};
-			$scope.isOpenStudy = TrialManagerDataService.isOpenStudy;
-			$scope.isLockedStudy = TrialManagerDataService.isLockedStudy;
-			$scope.studyTypes = [];
-			$scope.studyTypeSelected = undefined;
-			$scope.isChoosePreviousStudy = false;
-			$scope.STABRAPP_URL = STABRAPP_URL;
-			$scope.FEEDBACK_ENABLED = FEEDBACK_ENABLED;
-
-			$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
-			$scope.PERMISSIONS = PERMISSIONS;
-
-			$scope.returnToManageStudiesURL = "/ibpworkbench/controller/jhipster#/study-manager?cropName=" + studyContext.cropName + "&programUUID=" + studyContext.programId;
 
 			$scope.trialTabs.push(
 				{
@@ -367,6 +367,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				});
 
 				$scope.trialTabs.push($scope.inventoryTab);
+				$scope.trialTabs.push($scope.analysisResultsTab);
 
 				loadCrossesAndSelectionsTab();
 				loadInventoryTab();
