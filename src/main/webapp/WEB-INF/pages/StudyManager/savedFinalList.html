@@ -23,9 +23,9 @@
 			<span th:text="#{list.number.of.selected}" class="control-label control-label-italic advanced-list-label">Selected:</span>
 			<span class="control-label control-label-bold control-label-italic advance-list-size advanced-list-label numberOfSelected" th:id="'numberOfSelected-' + *{listId}">0</span>
 		</div>
-		<div class="pull-right" th:if="*{totalNumberOfGermplasms > 0 }">
-			<div class="col-md-12">
-				<div class="btn-group">
+		<div class="pull-right" th:if="*{totalNumberOfGermplasms > 0}">
+			<div class="col-md-12" th:if="*{hasDeleteSamplePermission or hasExportSampleListPermission}">
+			<div class="btn-group">
 					<button type="button" th:id="*{'listActionButton' + listId}"
 						class="btn btn-info dropdown-toggle fbk-action-btn"
 						data-toggle="dropdown">
@@ -33,11 +33,11 @@
 					</button>
 					<ul class="dropdown-menu fbk-right-button-drop-down" role="menu">
 						<li class="withMeasurementsOnly" th:id="*{'generateStockListMenuItem' + listId}">
-							<a href="javascript: void(0)"
+							<a th:if="*{hasExportSampleListPermission}" href="javascript: void(0)"
 							   th:onclick="'javascript: ExportSampleList.exportFile('+ *{listId} + ',\'' + *{listName} + '\');'"
 							   th:text="#{export.sample.list}">
 								Export sample list</a>
-							<a th:if="*{hasManageStudiesPermission}" href="javascript: void(0)"
+							<a th:if="*{hasDeleteSamplePermission}" href="javascript: void(0)"
 														 th:onclick="'openDeleteSampleEntryConfirmation('+ *{listId} + ',\'' + *{listName} + '\');'"
 														 th:text="#{delete.sample.list.entries}">
 							Delete selected samples</a>
