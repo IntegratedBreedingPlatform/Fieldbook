@@ -259,6 +259,8 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 	};
 	let germplasmListSavedRegister = () => {
 	};
+	let genotypesImportSavedRegister = () => {
+	};
 
 	// THE parent controller for the manageTrial (create/edit) page
 	manageTrialApp.controller('manageTrialCtrl', ['$scope', '$rootScope', 'studyStateService', 'TrialManagerDataService', '$http',
@@ -401,6 +403,11 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			germplasmListSavedRegister();
 			germplasmListSavedRegister = $rootScope.$on("germplasmListSaved", function () {
 				loadCrossesAndSelectionsTab();
+			});
+
+			genotypesImportSavedRegister();
+			genotypesImportSavedRegister = $rootScope.$on("genotypesImportSaved", function () {
+				loadSampleGenotypesTab();
 			});
 
 			function loadCrossesAndSelectionsTab() {
