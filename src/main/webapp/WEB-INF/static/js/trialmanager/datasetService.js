@@ -150,12 +150,13 @@
 
 			};
 
-			datasetService.exportDataset = function (datasetId, instanceIds, collectionOrderId, singleFile, fileFormat) {
+			datasetService.exportDataset = function (datasetId, instanceIds, collectionOrderId, singleFile, fileFormat, includeSampleGenotpeValues) {
 				var request = $http.get(BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/' + fileFormat, {
 					params: {
 						instanceIds: instanceIds.join(","),
 						collectionOrderId: collectionOrderId,
-						singleFile: singleFile
+						singleFile: singleFile,
+						includeSampleGenotpeValues: includeSampleGenotpeValues
 					},
 					responseType: 'blob'
 				});

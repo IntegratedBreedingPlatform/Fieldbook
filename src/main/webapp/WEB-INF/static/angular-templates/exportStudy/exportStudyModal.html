@@ -64,8 +64,9 @@
 		</div>
 		<div class="col-xs-12 col-md-12">&nbsp;</div>
 		<div class="col-xs-12 col-md-12">
-			<label class="control-label label-bold">Choose the study environment you would like to export: <span class="required">*</span></label>
-			<label style="padding-left: 10px;" ng-show="ctrl.selectedExportFormatId==='csv'"><input type="checkbox" ng-model="ctrl.singleFile"><span>All instances in one file</span></label>
+			<label class="control-label label-bold">Choose the study environment you would like to export: <span class="required">*</span></label><br>
+			<label style="padding-left: 10px;" ng-show="ctrl.selectedExportFormatId==='csv' || ctrl.selectedExportFormatId==='xls'"><input type="checkbox" ng-model="ctrl.includeSampleGenotpeValues"><span> Include Sample Genotype values</span></label><br>
+			<label style="padding-left: 10px;" ng-show="ctrl.selectedExportFormatId==='csv'"><input type="checkbox" ng-model="ctrl.singleFile"><span> All instances in one file</span></label>
 		</div>
 		<div class="col-xs-12 col-md-12">&nbsp;</div>
 		<div class="col-xs-12 col-md-12">
