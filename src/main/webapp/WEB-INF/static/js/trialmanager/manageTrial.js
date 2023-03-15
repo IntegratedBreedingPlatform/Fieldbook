@@ -630,6 +630,10 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				return $scope.hasDesignGenerated && HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.CREATE_PLANTING_LABELS_PERMISSIONS);
 			}
 
+			$scope.showExportDesignTemplateAction = function () {
+				return HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.EXPORT_DESIGN_TEMPLATE_PERMISSIONS);
+			}
+
 			$scope.showDesignAndPlanningOptions = function () {
 				return $scope.showPreparePlantingInventoryAction() || $scope.hasManageStudiesPermission;
 			}

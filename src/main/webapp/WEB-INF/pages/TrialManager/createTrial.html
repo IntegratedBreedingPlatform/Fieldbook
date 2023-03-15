@@ -64,7 +64,7 @@
 							<li class="dropdown-submenu pull-left" ng-show="showDesignAndPlanningOptions()">
 								<a tabindex="-1" href="#">Design and planning options</a>
 								<ul class="dropdown-menu" style="margin-left: 8px; width: 192px">
-									<li ng-show="hasManageStudiesPermission">
+									<li ng-show="showExportDesignTemplateAction()">
 										<a href="javascript: void(0)" onclick="exportDesignTemplate()" class="export-design-template-link"
 										   th:text="#{study.studydetails.action.export.design.template}">Export Design Template</a>
 									</li>
