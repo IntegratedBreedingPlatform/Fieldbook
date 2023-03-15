@@ -157,7 +157,7 @@
 										<a ng-click="showExportStudyModal()" id="export-study-link"
 										   th:text="#{study.studydetails.action.export.study}">Export Study Book</a>
 									</li>
-									<li ng-show="showManageStudiesAction()">
+									<li ng-show="showImportObservationsAction()">
 										<a href="" style="display: none" id="open-study-url"></a>
 										<a ng-click="showImportStudyModal()" id="open-study-url-link"
 										   th:text="#{study.studydetails.action.import.study}">Import Observations</a>
@@ -174,29 +174,29 @@
 								   th:text="#{study.option.execute.calculated.variable}">Execute calculated variable</a>
 							</li>
 
-							<li ng-show="showManageStudiesAction()" class="dropdown-submenu pull-left">
+							<li ng-show="showCreateGenotypingSamplesAction()" class="dropdown-submenu pull-left" >
 								<a ng-click="showCreateSampleListModal()" id="sample-trial-link"
 								   th:text="#{study.studydetails.action.create.sample}">Create genotyping samples</a>
 							</li>
 
-							<li ng-show="showManageStudiesAction()" class="dropdown-submenu pull-left">
+							<li ng-show="showAdvancesAction()" class="dropdown-submenu pull-left">
 								<a tabindex="-1" href="#">Advance study options</a>
 								<ul class="dropdown-menu" style="margin-left: -103px; width: 270px;">
 									<!-- Deprecated -->
-									<li>
+									<li ng-show="showAdvanceStudyAction()">
 										<a ng-click="selectEnvironment('trial', false)" id="deprecated-advance-trial-link"
 										   th:text="#{study.studydetails.action.deprecated.advance.study}">Advance Study</a>
 									</li>
-									<li>
+									<li ng-show="showAdvanceStudyAction()">
 										<a ng-click="selectDataset('study', true)" id="advance-trial-link"
 										   th:text="#{study.studydetails.action.advance.study}">Advance Study (Beta)</a>
 									</li>
 									<!-- Deprecated -->
-									<li>
+									<li ng-show="showAdvanceStudyForPlantsAction()">
 										<a ng-click="selectEnvironment('deprecatedSample', false)" id="deprecated-advance-sample-link"
 										   th:text="#{study.studydetails.action.deprecated.advance.sample}">Advance Sampled plants</a>
 									</li>
-									<li>
+									<li ng-show="showAdvanceStudyForPlantsAction()">
 										<a ng-click="selectEnvironment('samples', true)" id="advance-sample-link"
 										   th:text="#{study.studydetails.action.advance.sample}">Advance Sampled plants from plots (Beta)</a>
 									</li>
@@ -218,10 +218,10 @@
 							<li>
 								<a href="" th:text="#{study.studydetails.action.unlock.study}" ng-show="isLockedStudy() &amp;&amp; userHasLockPermission() &amp;&amp; hasAnyAuthority(PERMISSIONS.LOCK_STUDY_PERMISSIONS)" ng-click="changeLockedStatus(0)">Unlock Study</a>
 							</li>
-							<li ng-show="hasManageStudiesPermission &amp;&amp; staBrappURL">
+							<li ng-show="showAnalyzeWithStarBrappAction()">
 								<a href="" th:utext="#{study.studydetails.action.stabrapp}" ng-click="analyzeWithBrapp(staBrappURL)"></a>
 							</li>
-							<li ng-show="hasManageStudiesPermission &amp;&amp; dsBrappURL">
+							<li ng-show="showAnalyzeWithDecisionSupportAction()">
 								<a href="" th:utext="#{study.studydetails.action.dsbrapp}" ng-click="analyzeWithBrapp(dsBrappURL)"></a>
 							</li>
 						</ul>

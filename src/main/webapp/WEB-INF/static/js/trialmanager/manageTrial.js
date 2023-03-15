@@ -935,6 +935,34 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				return $scope.hasManageStudiesPermission && $scope.hasDesignGenerated;
 			}
 
+			$scope.showImportObservationsAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.MANAGE_PENDING_OBSERVATION_VALUES_PERMISSIONS) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showCreateGenotypingSamplesAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.CREATE_GENOTYPING_SAMPLES_PERMISSIONS) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showAdvancesAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.ADVANCES_PERMISSIONS) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showAdvanceStudyAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.ADVANCE_STUDY_PERMISSIONS) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showAdvanceStudyForPlantsAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.ADVANCE_STUDY_FOR_PLANTS_PERMISSIONS) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showAnalyzeWithStarBrappAction = function () {
+				return $scope.staBrappURL && $scope.hasAnyAuthority(PERMISSIONS.ANALYZE_WITH_STA_BRAPP_PERMISSIONS);
+			}
+
+			$scope.showAnalyzeWithDecisionSupportAction = function () {
+				return $scope.dsBrappURL && $scope.hasAnyAuthority(PERMISSIONS.ANALYZE_WITH_DECISION_SUPPORT_PERMISSIONS);
+			}
+
 			$('body').on('DO_AUTO_SAVE', function () {
 				TrialManagerDataService.saveCurrentData();
 			});
