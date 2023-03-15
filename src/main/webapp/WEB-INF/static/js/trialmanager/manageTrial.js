@@ -655,7 +655,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			};
 
 			$scope.displayExecuteCalculatedVariableOnlyActions = function () {
-				return $scope.hasManageStudiesPermission && derivedVariableService.isStudyHasCalculatedVariables && studyStateService.hasGeneratedDesign();
+				return HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.EXECUTE_CALCULATED_VARIABLES_PERMISSIONS) && derivedVariableService.isStudyHasCalculatedVariables && studyStateService.hasGeneratedDesign();
 			};
 
 			$scope.reloadPermissions = function () {
