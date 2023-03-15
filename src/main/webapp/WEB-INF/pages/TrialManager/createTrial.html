@@ -73,7 +73,7 @@
 										   id="import-design-url-link"
 										   th:text="#{study.studydetails.action.import.design}">Import Design</a>
 									</li>
-									<li ng-show="hasManageStudiesPermission &amp;&amp; hasDesignGenerated">
+									<li ng-show="showPrintingLabelsAction()">
 										<a href="" style="display: none" id="label-printing-url"
 										   th:href="@{/LabelPrinting/specifyLabelDetails/trial}"></a>
 										<a ng-click="printLabels()" id="label-printing-url-link"
