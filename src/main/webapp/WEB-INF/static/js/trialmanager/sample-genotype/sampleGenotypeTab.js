@@ -6,6 +6,10 @@
     var TRIAL_INSTANCE = 8170,
         GID = 8240,
         OBS_UNIT_ID = 8201;
+    var SAMPLE_NAME = -12,
+        SAMPLE_UUID = -13,
+        SAMPLING_DATE = -14,
+        TAKEN_BY = -15;
     var hiddenColumns = [OBS_UNIT_ID, TRIAL_INSTANCE];
 
     sampleGenotypeModule.controller('SampleGenotypeCtrl',
@@ -183,7 +187,6 @@
                 }
 
                 function getFilter() {
-                    var variableId = $scope.nested.selectedVariableFilter && $scope.nested.selectedVariableFilter.termId;
                     return {
                         filteredValues: $scope.columnsObj.columns.reduce(function (map, column) {
                             var columnData = column.columnData;
@@ -290,10 +293,10 @@
                     var pageQuery = '?size=' + data.length
                         + '&page=' + ((data.length === 0) ? 0 : data.start / data.length);
                     var columnData = $scope.columnsData[order.column];
-                    /*if (columnData) {
-                        var sort = columnData.termId;
+                    if (columnData) {
+                        var sort = columnData.name;
                         pageQuery += '&sort=' + sort + ',' + order.dir;
-                    }*/
+                    }
                     return pageQuery;
                 }
 
@@ -377,56 +380,6 @@
                 $scope.allTableItems = function () {
                     return table().context[0].json && table().context[0].json['recordsFiltered'];
                 };
-
-                $scope.isPageSelected = function () {
-                    var currentItems = getCurrentItems();
-                    return $scope.selectedItems.length > 0 && !currentItems.some((item) => $scope.selectedItems.indexOf(item) === -1);
-                };
-
-                $scope.isSelected = function (itemId) {
-                    return itemId && $scope.selectedItems.length > 0 && $scope.selectedItems.find((item) => item === itemId);
-                };
-
-                $scope.toggleSelect = function (observationUnitId) {
-                    var idx = $scope.selectedItems.indexOf(observationUnitId);
-                    if (idx > -1) {
-                        $scope.selectedItems.splice(idx, 1)
-                    } else {
-                        $scope.selectedItems.push(observationUnitId);
-                    }
-                };
-
-                $scope.onSelectAllPages = function () {
-                    $scope.isAllPagesSelected = !$scope.isAllPagesSelected;
-                    table().columns('.termId--3').visible(!$scope.isAllPagesSelected);
-                    $scope.selectedItems = [];
-                    table().ajax.reload();
-                };
-
-                $scope.onSelectPage = function () {
-                    var currentItems = getCurrentItems();
-                    if ($scope.isPageSelected()) {
-                        $scope.selectedItems = $scope.selectedItems.filter((item) =>
-                            currentItems.indexOf(item) === -1);
-                    } else {
-                        $scope.selectedItems = currentItems.filter((item) =>
-                            $scope.selectedItems.indexOf(item) === -1
-                        ).concat($scope.selectedItems);
-                    }
-                };
-
-                $scope.validateSelection = function () {
-                    if (!$scope.isAllPagesSelected && !$scope.selectedItems.length) {
-                        return showErrorMessage('', $.fieldbookMessages.errorPlantingSelectionInvalid);
-                    }
-                    return true;
-                };
-
-                function getCurrentItems() {
-                    return table().data().toArray().map((data) => {
-                        return data.observationUnitId
-                    });
-                }
 
                 function addColumnVisibilityCallback() {
                     table().on('column-visibility.dt', function (e, settings, columnIndex, isVisible) {
@@ -559,7 +512,44 @@
                                         data.value + '\',' + data.datasetId +')">' + EscapeHTML.escape(data.value) + '</a>';
                                 }
                             });
-                        } else {
+                        } else if (columnData.termId === SAMPLE_NAME) {
+                            columnsDef.push({
+                                targets: columns.length - 1,
+                                orderable: false,
+                                render: function (data, type, full, meta) {
+                                    var escapedValue = EscapeHTML.escape(full.sampleName);
+                                    return '<span class="text-ellipsis" title="' + escapedValue + '">' + escapedValue + '</span>';
+                                }
+                            });
+                        } else if (columnData.termId === SAMPLE_UUID) {
+                            columnsDef.push({
+                                targets: columns.length - 1,
+                                orderable: false,
+                                render: function (data, type, full, meta) {
+                                    var escapedValue = EscapeHTML.escape(full.sampleUUID);
+                                    return '<span class="text-ellipsis" title="' + escapedValue + '">' + escapedValue + '</span>';
+                                }
+                            });
+                        } else if (columnData.termId === SAMPLING_DATE) {
+                            columnsDef.push({
+                                targets: columns.length - 1,
+                                orderable: false,
+                                render: function (data, type, full, meta) {
+                                    var escapedValue = EscapeHTML.escape(full.samplingDate);
+                                    return '<span class="text-ellipsis" title="' + escapedValue + '">' + escapedValue + '</span>';
+                                }
+                            });
+                        } else if (columnData.termId === TAKEN_BY) {
+                            columnsDef.push({
+                                targets: columns.length - 1,
+                                orderable: false,
+                                render: function (data, type, full, meta) {
+                                    var escapedValue = EscapeHTML.escape(full.takenBy);
+                                    return '<span class="text-ellipsis" title="' + escapedValue + '">' + escapedValue + '</span>';
+                                }
+                            });
+                        }
+                        else {
                             columnsDef.push({
                                 targets: columns.length - 1,
                                 orderable: false,
