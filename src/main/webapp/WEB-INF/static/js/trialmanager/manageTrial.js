@@ -298,9 +298,8 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 
 			$scope.trialTabs = [];
 			$scope.subObservationTabs = [];
-			$scope.tabSelected = ''; //'trialSettings';
+			$scope.tabSelected = '';
 			$scope.isSettingsTab = false;
-			// $location.path('/trialSettings');
 			$scope.sampleTabsData = [];
 			$scope.sampleTabs = [];
 			$scope.isOpenStudy = TrialManagerDataService.isOpenStudy;
@@ -400,6 +399,11 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				germplasmStudySourceService.searchGermplasmStudySources({}, 0, 1).then((germplasmStudySourceTable) => {
 					if (germplasmStudySourceTable.length) {
 						$scope.crossesAndSelectionsTab.hidden = false;
+						if ($scope.tabSelected === '' && $scope.hasAnyAuthority($scope.crossesAndSelectionsTab.permission)) {
+							$scope.tabSelected = $scope.crossesAndSelectionsTab.state;
+							$rootScope.navigateToTab($scope.tabSelected, {reload: true});
+
+						}
 					}
 				});
 			}
@@ -411,15 +415,25 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 						// If the Inventory tab becomes hidden, if no transactions left, navigate to Observations tab to show its content
 						if ($scope.inventoryTab.hidden && $scope.tabSelected === 'inventory') {
 							$scope.navigateToSubObsTab(studyContext.measurementDatasetId);
+						} else if ($scope.tabSelected === '' &&
+							!$scope.inventoryTab.hidden &&
+							$scope.hasAnyAuthority($scope.inventoryTab.permission)) {
+							$scope.tabSelected = $scope.inventoryTab.state;
+							$rootScope.navigateToTab($scope.tabSelected, {reload: true});
 						}
 					});
 				});
 			}
 
 			function loadAnalysisResultsTab() {
-				if(HAS_MEANS_DATASET) {
+				if (HAS_MEANS_DATASET) {
 					$scope.analysisResultsTab.hidden = false;
-					$scope.trialTabs.push($scope.analysisResultsTab);
+					if ($scope.tabSelected === '' &&
+						!$scope.analysisResultsTab.hidden &&
+						$scope.hasAnyAuthority($scope.analysisResultsTab.permission)) {
+						$scope.tabSelected = $scope.analysisResultsTab.state;
+						$rootScope.navigateToTab($scope.tabSelected, {reload: true});
+					}
 				}
 			}
 
@@ -855,7 +869,6 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 						datasetType: datasetType,
 						hasPendingData: datasetTab.hasPendingData,
 						state: '/subObservationTabs/' + datasetTab.datasetId, // arbitrary prefix to filter tab content
-						permission: PERMISSIONS.VIEW_OBSERVATIONS_PERMISSIONS,
 						subObservationSets: datasetByTabs[datasetTab.datasetId].map(function (dataset) {
 							return {
 								id: dataset.datasetId,
@@ -867,6 +880,14 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 						})
 					});
 				});
+				const trialTabSelected =  $scope.trialTabs.find((tab) => !tab.hidden && $scope.hasAnyAuthority(tab.permission));
+				if (!!trialTabSelected) {
+					$scope.tabSelected = trialTabSelected.state
+					$scope.isSettingsTab = $scope.tabSelected === 'trialSettings';
+					$rootScope.navigateToTab($scope.tabSelected, {reload: true});
+				} else if (!!$scope.subObservationTabs.length && $scope.subObservationTabs.some((tab) => $scope.hasAnyAuthority(PERMISSIONS.VIEW_OBSERVATIONS_PERMISSIONS))) {
+					$scope.navigateToSubObsTab(studyContext.measurementDatasetId);
+				}
 			}, function (response) {
 				if (response.errors[0] && response.errors[0].message) {
 					showErrorMessage('', response.errors[0].message);
