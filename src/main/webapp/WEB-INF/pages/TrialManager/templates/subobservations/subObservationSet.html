@@ -6,27 +6,37 @@
 					<div class="col-xs-6 col-md-6">
 						<section-container name="content" th:attr="heading=#{study.managesettings.baseline.traits},
 							   help-tooltip=#{study.managesettings.trait.notes},icon-img=@{/static/img/baseline-traits.png}"
-										   icon-size="22" add-variable="true" model-data="traitVariables"
+										   icon-size="22"
+										   add-variable="hasAnyAuthority(PERMISSIONS.ADD_OBSERVATION_TRAIT_VARIABLES_PERMISSIONS)"
+										   hide-variable="hasAnyAuthority(PERMISSIONS.ADD_OBSERVATION_TRAIT_VARIABLES_PERMISSIONS)"
+										   model-data="traitVariables"
 										   selected-variables="selectedVariables"
 										   variable-type="1808"
 										   callback="onAddVariable(result,1808)" on-hide-callback="onHideCallback"
-										   select-variable-callback="selectVariableCallback" hide-variable="hasManageStudiesPermission">
+										   select-variable-callback="selectVariableCallback">
 
-							<dataset-settings hide-delete="!hasManageStudiesPermission" name="content" settings="traitVariables" variable-type="1808"
-											  predelete-function="onRemoveVariable"></dataset-settings>
+							<dataset-settings
+								hide-delete="!hasAnyAuthority(PERMISSIONS.ADD_OBSERVATION_TRAIT_VARIABLES_PERMISSIONS)"
+								name="content" settings="traitVariables" variable-type="1808"
+								predelete-function="onRemoveVariable"></dataset-settings>
 						</section-container>
 					</div>
 					<div class="col-xs-6 col-md-6">
 						<section-container name="content" th:attr="heading=#{study.studydetails.variates},
 							   help-tooltip=#{study.managesettings.selection.tooltip},icon-img=@{/static/img/variates.png}"
-										   icon-size="22" add-variable="true" model-data="selectionVariables"
+										   icon-size="22"
+										   add-variable="hasAnyAuthority(PERMISSIONS.ADD_OBSERVATION_SELECTION_VARIABLES_PERMISSIONS)"
+										   hide-variable="hasAnyAuthority(PERMISSIONS.ADD_OBSERVATION_SELECTION_VARIABLES_PERMISSIONS)"
+										   model-data="selectionVariables"
 										   selected-variables="selectedVariables"
 										   variable-type="1807"
 										   callback="onAddVariable(result,1807)" on-hide-callback="onHideCallback"
-										   select-variable-callback="selectVariableCallback" hide-variable="hasManageStudiesPermission">
+										   select-variable-callback="selectVariableCallback">
 
-							<dataset-settings hide-delete="!hasManageStudiesPermission" name="content" settings="selectionVariables" variable-type="1807"
-											  predelete-function="onRemoveVariable"></dataset-settings>
+							<dataset-settings
+								hide-delete="!hasAnyAuthority(PERMISSIONS.ADD_OBSERVATION_SELECTION_VARIABLES_PERMISSIONS)"
+								name="content" settings="selectionVariables" variable-type="1807"
+								predelete-function="onRemoveVariable"></dataset-settings>
 						</section-container>
 					</div>
 				</div>
@@ -91,7 +101,7 @@
 				</div>
 			</div>
 			<div class="row add_top_padding" ng-if="isPendingView">
-				<div class="col-xs-12" ng-show="hasManageStudiesPermission">
+				<div class="col-xs-12" ng-show="hasAnyAuthority(PERMISSIONS.MANAGE_ACCEPT_PENDING_OBSERVATION_VALUES_PERMISSIONS)">
 					<div class="btn-group" role="group" style="float: right; margin-left: 5px">
 						<button type="button" class="btn btn-default" ng-click="rejectDraftData()">Discard</button>
 					</div>
@@ -139,7 +149,7 @@
 				<div class="row"><br></br>
 				</div>
 			</div>
-			<div class="col-xs-12" style="padding-left: 0px;" ng-show="hasManageStudiesPermission">
+			<div class="col-xs-12" style="padding-left: 0px;" ng-show="showBatchActions()">
 				<label class="control-label section-toggle toggle-icon" ng-click="collapseBatchAction()" data-test="toggleBatchActionButton">
 					<img class="icn section-expanded" ng-show="toggleSectionBatchAction" src="/Fieldbook/static/img/expanded-arrow.png"/>
 					<img style="margin-left: 7px" class="icn section-collapsed" ng-show="!toggleSectionBatchAction" src="/Fieldbook/static/img/collapsed-arrow.png"/>
@@ -164,7 +174,7 @@
 							</div>
 						</div>
 						<div class="form-group" ng-if="hasVariableFilter &amp;&amp; hasDataFiltered() &amp;&amp; nested.selectedVariableFilter.termId !== null">
-							<label style="padding-right: 10px;">Select batch action:</label>
+						<label style="padding-right: 10px;">Select batch action:</label>
 							<ui-select ng-model="nested.selectedBatchAction" class="input-sm form-control inline-select" search-enabled="false" theme="select2" data-test="selectAction">
 								<ui-select-match>{{$select.selected.name}}</ui-select-match>
 								<ui-select-choices repeat="selectBatchAction as selectBatchAction in selectBatchActions">
@@ -206,7 +216,7 @@
 							</div>
 						</div>
 						<div class="form-group" style="padding-left: 10px;" ng-if="hasVariableFilter &amp;&amp; hasDataFiltered() &amp;&amp; nested.selectedBatchAction.id !== null">
-							<button type="button" class="btn  btn-info" ng-disabled="disableApply()" ng-click="applyBatchAction()" data-test="applyBatchActionButton">Apply</button>
+						<button type="button" class="btn  btn-info" ng-disabled="disableApply()" ng-click="applyBatchAction()" data-test="applyBatchActionButton">Apply</button>
 						</div>
 					</div>
 					<div class="col-xs-12 form-inline" ng-show="!hasVariableFilter">

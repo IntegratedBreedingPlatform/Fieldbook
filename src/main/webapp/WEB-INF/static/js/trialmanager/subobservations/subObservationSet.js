@@ -35,6 +35,7 @@
 				  studyContext, germplasmDetailsModalService, SEARCH_ORIGIN, HasAnyAuthorityService, PERMISSIONS
 		) {
 
+			$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
 			// used also in tests - to call $rootScope.$apply()
 			var tableLoadedResolve;
 			$scope.tableLoadedPromise = new Promise(function (resolve) {
@@ -108,87 +109,6 @@
 			};
 			$scope.selectedStatusFilter = "1";
 
-			// Define which elements trigger this menu: only non-empty, non-disabled categorical or numeric traits
-			var contextMenuSelector =
-				"#subObservationTableContainer td.variates.datatype-1130:not(:empty):not([disabled])," +
-				"#subObservationTableContainer td.variates.datatype-1110:not(:empty):not([disabled])";
-			$.contextMenu('destroy', contextMenuSelector);
-
-			$.contextMenu({
-				selector: contextMenuSelector,
-				// define the elements of the menu
-				callback: function (key, opt) {
-					var cell = opt.$trigger.get(0);
-					var dtCell = table().cell(cell);
-					var cellData = dtCell.data();
-					var dtRow = table().row(cell.parentNode);
-					var rowData = dtRow.data();
-
-					var newValue, newDraftValue, newDraftCategoricalValueId;
-
-					switch (key) {
-						case 'accept':
-							newDraftValue = newDraftCategoricalValueId = null;
-							newValue = cellData.draftValue;
-							break;
-						case 'missing':
-							newValue = 'missing';
-							if ($scope.isPendingView) {
-								newDraftValue = newDraftCategoricalValueId = null;
-							} else {
-								newDraftValue = cellData.draftValue;
-								newDraftCategoricalValueId = cellData.draftCategoricalValueId;
-							}
-							break;
-					}
-
-					var index = table().colReorder.transpose(table().column(cell).index(), 'toOriginal');
-					var columnData = $scope.columnsObj.columns[index].columnData;
-					datasetService.updateObservation(subObservationSet.id, rowData.observationUnitId, cellData.observationId, {
-							categoricalValueId: getCategoricalValueId(newValue, columnData),
-							value: newValue,
-							draftValue: newDraftValue,
-							draftCategoricalValueId: newDraftCategoricalValueId
-						}
-					).then(function () {
-						if (table().data().length == 1 && $scope.isPendingView) {
-							datasetService.getDataset(subObservationSet.id).then(function (dataset) {
-								if (!dataset.hasPendingData) {
-									reloadDataset();
-								} else {
-									table().ajax.reload(null, false)
-								}
-							}, function (response) {
-								if (response.errors && response.errors.length) {
-									showErrorMessage('', response.errors[0].message);
-								} else {
-									showErrorMessage('', ajaxGenericErrorMsg);
-								}
-							});
-						} else {
-							table().ajax.reload(null, false)
-						}
-					}, function (response) {
-						if (response.errors && response.errors.length) {
-							showErrorMessage('', response.errors[0].message);
-						} else {
-							showErrorMessage('', ajaxGenericErrorMsg);
-						}
-					});
-
-				},
-				items: {
-					accept: {
-						name: "Accept value as-is", visible: function () {
-							return $scope.isPendingView;
-						}
-					},
-					missing: {
-						name: "Set value to missing"
-					}
-				}
-			});
-
 			fileService.getFileStorageStatus().then((map) => {
 				$scope.isFileStorageConfigured = map.status
 				return datasetService.getDataset(subObservationSet.id);
@@ -213,8 +133,8 @@
 				// we set pending view unless we are specifically told not to
 				$scope.isPendingView = dataset.hasPendingData && $stateParams.isPendingView !== false;
 				doPendingViewActions();
-
 				loadTable();
+				loadContextmenu();
 			}); // getDataset
 
 			subObsTabSelectedDeRegister();
@@ -542,6 +462,7 @@
 				doPendingViewActions();
 				resetChecksStatus();
 				loadTable();
+				loadContextmenu();
 			};
 
 			$scope.collapseBatchAction = function () {
@@ -667,27 +588,38 @@
 				}
 			};
 
+			$scope.showBatchActions = function() {
+				return $scope.isPendingView && ($scope.hasAnyAuthority(PERMISSIONS.MANAGE_PENDING_OBSERVATION_VALUES_PERMISSIONS) || $scope.hasAnyAuthority(PERMISSIONS.MANAGE_ACCEPT_PENDING_OBSERVATION_VALUES_PERMISSIONS)) ||
+					!$scope.isPendingView && $scope.hasAnyAuthority(PERMISSIONS.MANAGE_CONFIRMED_OBSERVATION_VALUES_PERMISSIONS)
+			}
+
 			function loadBatchActionCombo() {
 				$scope.toggleSectionBatchAction = false;
-				$scope.selectBatchActions = [{
-					name: 'Select action',
-					id: null
-				}, {
-					name: 'Apply new value to observations',
-					id: 1
-				}];
-				$scope.nested.selectedVariableFilter = $scope.selectVariableFilter[0];
-				$scope.nested.selectedBatchAction = $scope.selectBatchActions[0];
-				if ($scope.isPendingView) {
+				$scope.selectBatchActions = [];
+				$scope.nested.selectedBatchAction = null;
+
+				if ($scope.isPendingView && $scope.hasAnyAuthority(PERMISSIONS.MANAGE_PENDING_OBSERVATION_VALUES_PERMISSIONS) ||
+					!$scope.isPendingView && $scope.hasAnyAuthority(PERMISSIONS.MANAGE_CONFIRMED_OBSERVATION_VALUES_PERMISSIONS)) {
+					$scope.selectBatchActions = [{
+						name: 'Select action',
+						id: null
+					}, {
+						name: 'Apply new value to observations',
+						id: 1
+					}, {
+						name: 'Delete observations values',
+						id: 3
+					}];
+				}
+
+				$scope.nested.selectedVariableFilter = !!$scope.selectVariableFilter && $scope.selectVariableFilter[0];
+				$scope.nested.selectedBatchAction = !!$scope.selectBatchActions && $scope.selectBatchActions[0];
+				if ($scope.isPendingView && $scope.hasAnyAuthority(PERMISSIONS.MANAGE_ACCEPT_PENDING_OBSERVATION_VALUES_PERMISSIONS)) {
 					$scope.selectBatchActions.push({
 						name: 'Accept observations as-is',
 						id: 2
 					});
 				}
-				$scope.selectBatchActions.push({
-					name: 'Delete observations values',
-					id: 3
-				});
 			};
 
 			$scope.changeSelectedVariableFilter = function () {
@@ -725,7 +657,7 @@
 			}
 
 			$scope.disableApply = function () {
-				return $scope.nested.selectedBatchAction.id === 1 && ($scope.nested.newValueBatchUpdate === null || $scope.nested.newValueBatchUpdate === '')
+				return !!$scope.nested.selectedBatchAction && $scope.nested.selectedBatchAction.id === 1 && ($scope.nested.newValueBatchUpdate === null || $scope.nested.newValueBatchUpdate === '')
 			};
 
 			$scope.batchUpdateMethodChanged = function (item, model) {
@@ -1183,7 +1115,13 @@
 			}
 
 			function drawCallback() {
-				addCellClickHandler();
+				if ($scope.isPendingView && $scope.hasAnyAuthority(PERMISSIONS.MANAGE_PENDING_OBSERVATION_VALUES_PERMISSIONS) ||
+					!$scope.isPendingView && $scope.hasAnyAuthority(PERMISSIONS.MANAGE_CONFIRMED_OBSERVATION_VALUES_PERMISSIONS)) {
+					addCellClickHandler();
+				}else{
+					var $table = angular.element(tableId);
+					$table.off('click');
+				}
 				adjustColumns();
 			}
 
@@ -1554,6 +1492,96 @@
 				$rootScope.navigateToSubObsTab(subObservationSet.id, {reload: true});
 			}
 
+			function loadContextmenu() {
+				// Define which elements trigger this menu: only non-empty, non-disabled categorical or numeric traits
+				var contextMenuSelector =
+					"#subObservationTableContainer td.variates.datatype-1130:not(:empty):not([disabled])," +
+					"#subObservationTableContainer td.variates.datatype-1110:not(:empty):not([disabled])";
+				$.contextMenu('destroy', contextMenuSelector);
+
+				if ($scope.isPendingView && $scope.hasAnyAuthority(PERMISSIONS.MANAGE_ACCEPT_PENDING_OBSERVATION_VALUES_PERMISSIONS) ||
+					!$scope.isPendingView && $scope.hasAnyAuthority(PERMISSIONS.MANAGE_CONFIRMED_OBSERVATION_VALUES_PERMISSIONS)) {
+					$.contextMenu({
+						selector: contextMenuSelector,
+						// define the elements of the menu
+						callback: function (key, opt) {
+							var cell = opt.$trigger.get(0);
+							var dtCell = table().cell(cell);
+							var cellData = dtCell.data();
+							var dtRow = table().row(cell.parentNode);
+							var rowData = dtRow.data();
+
+							var newValue, newDraftValue, newDraftCategoricalValueId;
+
+							switch (key) {
+								case 'accept':
+									newDraftValue = newDraftCategoricalValueId = null;
+									newValue = cellData.draftValue;
+									break;
+								case 'missing':
+									newValue = 'missing';
+									if ($scope.isPendingView) {
+										newDraftValue = newDraftCategoricalValueId = null;
+									} else {
+										newDraftValue = cellData.draftValue;
+										newDraftCategoricalValueId = cellData.draftCategoricalValueId;
+									}
+									break;
+							}
+
+							var index = table().colReorder.transpose(table().column(cell).index(), 'toOriginal');
+							var columnData = $scope.columnsObj.columns[index].columnData;
+							datasetService.updateObservation(subObservationSet.id, rowData.observationUnitId, cellData.observationId, {
+									categoricalValueId: getCategoricalValueId(newValue, columnData),
+									value: newValue,
+									draftValue: newDraftValue,
+									draftCategoricalValueId: newDraftCategoricalValueId
+									//,draftMode: $scope.isPendingView
+								}
+							).then(function () {
+								if (table().data().length == 1 && $scope.isPendingView) {
+									datasetService.getDataset(subObservationSet.id).then(function (dataset) {
+										if (!dataset.hasPendingData) {
+											reloadDataset();
+										} else {
+											table().ajax.reload(null, false)
+										}
+									}, function (response) {
+										if (response.errors && response.errors.length) {
+											showErrorMessage('', response.errors[0].message);
+										} else {
+											showErrorMessage('', ajaxGenericErrorMsg);
+										}
+									});
+								} else {
+									table().ajax.reload(null, false)
+								}
+							}, function (response) {
+								if (response.errors && response.errors.length) {
+									showErrorMessage('', response.errors[0].message);
+								} else {
+									showErrorMessage('', ajaxGenericErrorMsg);
+								}
+							});
+
+						},
+						items: {
+							accept: {
+								name: "Accept value as-is", visible: function () {
+									return $scope.isPendingView && $scope.hasAnyAuthority(PERMISSIONS.MANAGE_ACCEPT_PENDING_OBSERVATION_VALUES_PERMISSIONS);
+								}
+							},
+							missing: {
+								name: "Set value to missing", visible: function () {
+									return ($scope.isPendingView && $scope.hasAnyAuthority(PERMISSIONS.MANAGE_ACCEPT_PENDING_OBSERVATION_VALUES_PERMISSIONS) ||
+										(!$scope.isPendingView && $scope.hasAnyAuthority(PERMISSIONS.MANAGE_CONFIRMED_OBSERVATION_VALUES_PERMISSIONS)));
+								}
+							}
+						}
+					});
+				}
+			}
+
 			function loadTable() {
 				/**
 				 * We need to reinitilize all this because
@@ -1715,7 +1743,7 @@
 									'<div ng-click="showFiles(\'' + rowData.variables['OBS_UNIT_ID'].value + '\')" '
 									+ (rowData.fileCount
 										? ' title="# of files: ' + rowData.fileCount + '"'
-										: ' title="click to open the file manager" class="show-on-hover" ng-show="hasAnyAuthority(PERMISSIONS.MS_MANAGE_FILES_PERMISSION)"')
+										: ' title="click to open the file manager" class="show-on-hover" ng-show="hasAnyAuthority(PERMISSIONS.MANAGE_FILES_OBSERVATIONS_PERMISSION)"')
 									+ ' style="cursor: pointer">'
 									+ '<i class="glyphicon glyphicon-duplicate text-info ' + (rowData.fileCount ? '' : '') + '" '
 									+ 'style="font-size: 1.2em">&nbsp;</i>'
