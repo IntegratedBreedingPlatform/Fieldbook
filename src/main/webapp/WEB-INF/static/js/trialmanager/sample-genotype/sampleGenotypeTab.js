@@ -130,6 +130,10 @@
 					loadTable();
 				}
 
+				$scope.showColumnSorting = function (termId) {
+					return termId !== TAKEN_BY;
+				}
+
 				const reloadDataTableWithTimeout = {
 					reload() {
 						table().ajax.reload(null, false);
@@ -206,11 +210,7 @@
 									map[columnData.termId] = [columnData.query];
 								}
 							} else if (columnData.query) {
-								if (columnData.dataType === 'Date') {
-									map[columnData.termId] = [($.datepicker.formatDate("yymmdd", columnData.query))];
-								} else {
-									map[columnData.termId] = [(columnData.query)];
-								}
+								map[columnData.termId] = [(columnData.query)];
 							}
 
 							if (map[columnData.termId]) {
@@ -224,7 +224,11 @@
 								return map;
 							}
 							if (columnData.query) {
-								map[columnData.termId] = columnData.query;
+								if (columnData.dataType === 'Date') {
+									map[columnData.termId] = ($.datepicker.formatDate("yy-mm-dd", columnData.query));
+								} else {
+									map[columnData.termId] = columnData.query;
+								}
 								columnData.isFiltered = true;
 							}
 							return map;
@@ -243,8 +247,7 @@
 						return false;
 					}
 
-					if (columnData.dataType === 'Categorical' || columnData.dataType === 'Numeric'
-						|| columnData.dataType === 'Date') {
+					if (columnData.dataType === 'Categorical' || columnData.dataType === 'Numeric') {
 						return false;
 					}
 

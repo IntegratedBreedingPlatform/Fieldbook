@@ -32,7 +32,7 @@
 </div>
 <script type="text/ng-template" id="columnFilterPopoverTemplate.html">
     <div class="column-filter">
-        <div class="btn-group btn-group-justified " role="group" >
+        <div class="btn-group btn-group-justified " role="group" ng-if="showColumnSorting(columnFilter.columnData.termId)">
             <div class="btn-group" role="group">
                 <button ng-click="sortColumn(true)" class="btn btn-sm"
                         ng-class="columnFilter.columnData.sortingAsc === true ? ' btn-info' : 'btn-primary btn-inverse'" >
