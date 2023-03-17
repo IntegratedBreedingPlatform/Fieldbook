@@ -935,9 +935,36 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				return $scope.hasManageStudiesPermission && $scope.hasDesignGenerated;
 			}
 
+			$scope.showCreateSubObservationUnitsAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.CREATE_SUB_OBSERVATION_UNITS_PERMISSIONS) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showChangePlotEntryAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.CHANGE_PLOT_ENTRY_PERMISSIONS) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showSubObservationUnitOptionsAction = function () {
+				return $scope.showCreateSubObservationUnitsAction() || $scope.showChangePlotEntryAction();
+			}
+
+			$scope.showExportStudyBookAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.EXPORT_STUDY_BOOK_PERMISSIONS) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showExportStudyEntriesAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.EXPORT_STUDY_ENTRIES_PERMISSIONS) && $scope.hasGermplasmListSelected();
+			}
+
 			$scope.showImportObservationsAction = function () {
 				return $scope.hasAnyAuthority(PERMISSIONS.MANAGE_PENDING_OBSERVATION_VALUES_PERMISSIONS) && $scope.hasDesignGenerated;
 			}
+
+			$scope.showDataCollectionAction = function () {
+				return $scope.showExportStudyBookAction() || //
+					$scope.showImportObservationsAction() || //
+					$scope.showExportStudyEntriesAction(); //
+			}
+
 
 			$scope.showCreateGenotypingSamplesAction = function () {
 				return $scope.hasAnyAuthority(PERMISSIONS.CREATE_GENOTYPING_SAMPLES_PERMISSIONS) && $scope.hasDesignGenerated;

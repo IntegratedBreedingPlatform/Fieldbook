@@ -107,21 +107,19 @@
 									</li>
 								</ul>
 							</li>
-							<li ng-show="showManageStudiesAction()" class="dropdown-submenu pull-left">
+							<li ng-show="showSubObservationUnitOptionsAction()" class="dropdown-submenu pull-left">
 								<a tabindex="-1" href="#" th:text="#{study.studydetails.action.observationunits}">Observation unit options</a>
 								<ul class="dropdown-menu" style="margin-left: -25px;">
-									<li>
+									<li ng-show="showCreateSubObservationUnitsAction()">
 										<a href="javascript: subObservationUnitDatasetSelector();" id="create-sub-Observation-link"
 										   th:text="#{study.studydetails.action.observationunits.create}">Create sub-observation units</a>
 									</li>
-									<li>
+									<li ng-show="showChangePlotEntryAction()">
 										<a ng-click="ChangePlotEntry();" id="change-plot-entry-link"
 										   th:text="#{study.studydetails.action.observationunits.change.plot.entry}">Change plot entry</a>
 									</li>
-
 								</ul>
                             </li>
-
 							<li ng-show="hasDesignGenerated" class="dropdown-submenu pull-left">
 								<a tabindex="-1" href="#">Field map options</a>
 								<ul class="dropdown-menu" style="margin-left: -20px;">
@@ -150,10 +148,10 @@
 								</ul>
 							</li>
 
-							<li ng-show="displayGermplasmOrMeasurmentOnlyActions()" class="dropdown-submenu pull-left">
+							<li ng-show="showDataCollectionAction()" class="dropdown-submenu pull-left">
 								<a tabindex="-1" href="#">Data collection options</a>
 								<ul class="dropdown-menu" style="margin-left: -25px; width: 193px">
-									<li ng-show="hasDesignGenerated">
+									<li ng-show="showExportStudyBookAction()">
 										<a ng-click="showExportStudyModal()" id="export-study-link"
 										   th:text="#{study.studydetails.action.export.study}">Export Study Book</a>
 									</li>
@@ -162,7 +160,7 @@
 										<a ng-click="showImportStudyModal()" id="open-study-url-link"
 										   th:text="#{study.studydetails.action.import.study}">Import Observations</a>
 									</li>
-									<li ng-show="hasManageStudiesPermission &amp;&amp; hasGermplasmListSelected()">
+									<li ng-show="showExportStudyEntriesAction()">
 										<a ng-click="exportStudyEntriesPrintingLabels()" id="export-germplasm-link"
 										   th:text="#{study.studydetails.action.export.study.entries}">Export study entries</a>
 									</li>
