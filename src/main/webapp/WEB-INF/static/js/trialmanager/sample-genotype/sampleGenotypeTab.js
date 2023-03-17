@@ -32,8 +32,8 @@
 				$scope.columnsData = [];
 				$scope.nested = {};
 				$scope.nested.dtInstance = null;
-				$scope.nested.sampleLists = [{listId: 2, listName: 'Sample1'}];
-				$scope.nested.selectedSampleListId = 2;
+				$scope.nested.sampleLists = [];
+				$scope.nested.selectedSampleListId = null;
 				$scope.isCategoricalDescriptionView = window.isCategoricalDescriptionView;
 
 				var dtColumnsPromise = $q.defer();
@@ -82,16 +82,6 @@
 
 				$scope.onHideCallback = function () {
 					adjustColumns();
-				};
-
-				$scope.subDivide = function () {
-					// TODO
-					// var id = $scope.subObservationTab.subObservationSets.length + 1;
-					// var name = 'Sub-observation set ' + $scope.subObservationTab.id + ' - subObservationSet ' + id;
-					// $scope.subObservationTab.subObservationSets.push({
-					// 	id: id,
-					// 	name: name
-					// });
 				};
 
 				$scope.openColumnFilter = function (index) {
@@ -515,17 +505,7 @@
 								render: function (data, type, full, meta) {
 									return '<a class="gid-link" href="javascript: void(0)" ' +
 										'onclick="openGermplasmDetailsPopup(\'' +
-										full.gid + '\')">' + EscapeHTML.escape(data.value) + '</a>';
-								}
-							});
-						} else if (columnData.termId === OBS_UNIT_ID) {
-							columnsDef.push({
-								targets: columns.length - 1,
-								orderable: false,
-								render: function (data, type, full, meta) {
-									return '<a class="gid-link" href="javascript: void(0)" ' +
-										'onclick="openObservationDetailsPopup(\'' +
-										data.value + '\',' + data.datasetId + ')">' + EscapeHTML.escape(data.value) + '</a>';
+										full.genotypeDataMap['GID'].value + '\')">' + EscapeHTML.escape(data.value) + '</a>';
 								}
 							});
 						} else if (columnData.termId === SAMPLE_NAME) {
