@@ -23,10 +23,10 @@
                     .then(successHandler, failureHandler);
             };
 
-            sampleGenotypeService.getColumns = function () {
-                var request = $http.get(BASE_URL + '/studies/' + studyContext.studyId + SAMPLE_GENOTYPES_URL + '/columns');
-                return request.then(successHandler, failureHandler);
-            };
+			sampleGenotypeService.getColumns = function (sampleListIds) {
+				var request = $http.get(BASE_URL + '/studies/' + studyContext.studyId + SAMPLE_GENOTYPES_URL + '/columns?sampleListIds=' + sampleListIds.join(','));
+				return request.then(successHandler, failureHandler);
+			};
 
             return sampleGenotypeService;
 

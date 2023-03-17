@@ -7,6 +7,16 @@
         </label>
     </div>
 </div>
+<div class="row form-group">
+	<div class="col-md-1">Select Sample List:</div>
+	<div class="col-md-2">
+		<select id="sampleList" class="input-sm form-control"
+                ng-model="nested.selectedSampleListId"
+                ng-options="sampleList.listId as sampleList.listName for sampleList in nested.sampleLists"
+                ng-change="changeSelectedSampleList()">
+		</select>
+	</div>
+</div>
 <div class="row">
     <div id="sampleGenotypesTableContainer" class="col-xs-12">
         <table id="sample-genotypes-table"

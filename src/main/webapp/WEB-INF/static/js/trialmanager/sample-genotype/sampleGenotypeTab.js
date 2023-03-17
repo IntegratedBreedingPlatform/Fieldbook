@@ -13,8 +13,8 @@
     var hiddenColumns = [OBS_UNIT_ID, TRIAL_INSTANCE];
 
     sampleGenotypeModule.controller('SampleGenotypeCtrl',
-        ['$rootScope', '$scope', '$q', '$compile', '$uibModal', '$timeout', 'studyContext', 'DTOptionsBuilder', 'sampleGenotypeService',
-            function ($rootScope, $scope, $q, $compile, $uibModal, $timeout, studyContext, DTOptionsBuilder, sampleGenotypeService) {
+        ['$rootScope', '$scope', '$q', '$compile', '$uibModal', '$timeout', 'studyContext', 'DTOptionsBuilder', 'sampleGenotypeService', 'sampleListService',
+            function ($rootScope, $scope, $q, $compile, $uibModal, $timeout, studyContext, DTOptionsBuilder, sampleGenotypeService, sampleListService) {
 
 
                 // used also in tests - to call $rootScope.$apply()
@@ -32,6 +32,8 @@
                 $scope.columnsData = [];
                 $scope.nested = {};
                 $scope.nested.dtInstance = null;
+                $scope.nested.sampleLists = [{listId: 2, listName: 'Sample1'}];
+                $scope.nested.selectedSampleListId = 2;
                 $scope.isCategoricalDescriptionView = window.isCategoricalDescriptionView;
 
                 var dtColumnsPromise = $q.defer();
@@ -72,7 +74,7 @@
                 };
                 $scope.selectedStatusFilter = "1";
 
-                loadTable();
+				loadSampleLists();
 
                 $scope.selectVariableCallback = function (responseData) {
                     // just override default callback (see VariableSelection.prototype._selectVariable)
@@ -134,6 +136,10 @@
                     }
                 };
 
+				$scope.changeSelectedSampleList = function () {
+					loadTable();
+				}
+
                 const reloadDataTableWithTimeout = {
                     reload() {
                         table().ajax.reload(null, false);
@@ -188,6 +194,7 @@
 
                 function getFilter() {
                     return {
+                        sampleListIds: [$scope.nested.selectedSampleListId],
                         filteredValues: $scope.columnsObj.columns.reduce(function (map, column) {
                             var columnData = column.columnData;
                             columnData.isFiltered = false;
@@ -393,6 +400,14 @@
                     });
                 }
 
+                function loadSampleLists() {
+                    sampleListService.getSampleListsInStudy(true).then(function (sampleLists) {
+                       $scope.nested.sampleLists = sampleLists;
+					   $scope.nested.selectedSampleListId = sampleLists[0].listId;
+					   loadTable();
+					});
+                }
+
                 function loadTable() {
                     /**
                      * We need to reinitilize all this because
@@ -424,7 +439,7 @@
                 }
 
                 function loadColumns() {
-                    return sampleGenotypeService.getColumns().then(function (columnsData) {
+                    return sampleGenotypeService.getColumns([$scope.nested.selectedSampleListId]).then(function (columnsData) {
                         $scope.columnsData = columnsData.slice();
                         var columnsObj = $scope.columnsObj = mapColumns(columnsData);
                         return columnsObj;
@@ -506,7 +521,6 @@
                                 targets: columns.length - 1,
                                 orderable: false,
                                 render: function (data, type, full, meta) {
-                                    console.log(full);
                                     return '<a class="gid-link" href="javascript: void(0)" ' +
                                         'onclick="openObservationDetailsPopup(\'' +
                                         data.value + '\',' + data.datasetId +')">' + EscapeHTML.escape(data.value) + '</a>';
