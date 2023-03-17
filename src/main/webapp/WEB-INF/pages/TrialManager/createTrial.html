@@ -388,7 +388,8 @@
 			ng-show="hasAnyAuthority(tab.permission) &amp;&amp; !tab.hidden">
 			<a ui-sref="{{tab.state}}" ng-click="performFunctionOnTabChange(tab.state)">{{tab.name}}</a>
 		</li>
-		<li ng-repeat="tab in subObservationTabs" ng-class="{active: tabSelected===tab.state}">
+		<li ng-repeat="tab in subObservationTabs" ng-class="{active: tabSelected===tab.state}"
+			ng-show="hasAnyAuthority(PERMISSIONS.VIEW_OBSERVATIONS_PERMISSIONS)" >
 			<a ui-sref="subObservationTabs({ subObservationTabId: tab.id, subObservationTab: tab, isPendingView: null })"
 			   ng-class="{'pendingData': tab.hasPendingData}"
 			   ng-click="performFunctionOnTabChange(tab.state)">{{tab.datasetType.tabNamePrefix}}{{tab.name}}</a>
