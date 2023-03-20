@@ -19,6 +19,7 @@
 			};
 
 			window.handleImportGenotypesSuccess = function () {
+				$('#importGenotypesAction' + listId).hide();
 
 				// TODO: i18n
 				showSuccessfulMessage('', 'Genotype data for samples is successfully saved.');
