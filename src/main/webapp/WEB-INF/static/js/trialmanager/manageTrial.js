@@ -764,7 +764,6 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 					$scope.sampleTabs.push({
 						name: listName,
 						state: 'sample-list' + tabId + '-li',
-						permission: PERMISSIONS.VIEW_SAMPLE_LIST_PERMISSIONS,
 						id: tabId,
 						displayName: 'Sample List: [' + listName + ']'
 					});
@@ -887,6 +886,13 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 					$rootScope.navigateToTab($scope.tabSelected, {reload: true});
 				} else if (!!$scope.subObservationTabs.length && $scope.subObservationTabs.some((tab) => $scope.hasAnyAuthority(PERMISSIONS.VIEW_OBSERVATIONS_PERMISSIONS))) {
 					$scope.navigateToSubObsTab(studyContext.measurementDatasetId);
+				} else if (!!$scope.sampleTabsData.length && $scope.hasAnyAuthority(PERMISSIONS.VIEW_SAMPLE_LIST_PERMISSIONS)) {
+					$scope.tabSelected = $scope.sampleTabs[0].state;
+					$scope.isSettingsTab = false;
+					$scope.listTabChange($scope.sampleTabs[0].state);
+					$timeout(function () {
+						$('#sample-list-' + $scope.sampleTabs[0].id).dataTable().fnAdjustColumnSizing();
+					}, 1);
 				}
 			}, function (response) {
 				if (response.errors[0] && response.errors[0].message) {
