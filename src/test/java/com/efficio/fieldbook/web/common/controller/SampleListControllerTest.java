@@ -55,7 +55,7 @@ public class SampleListControllerTest {
 
 		Mockito.doReturn(sampleList).when(this.sampleListService).getSampleList(SampleListControllerTest.TEST_SAMPLE_LIST_ID);
 
-		final List<SampleDetailsDTO> sampleDetailsDTOs = buildSampleDetailsList(10);
+		final List<SampleDetailsDTO> sampleDetailsDTOs = this.buildSampleDetailsList(10);
 		Mockito.doReturn(sampleDetailsDTOs).when(this.sampleListService).getSampleDetailsDTOs(SampleListControllerTest.TEST_SAMPLE_LIST_ID);
 		Mockito.doReturn(true).when(this.authorizationService).isSuperAdminUser();
 
