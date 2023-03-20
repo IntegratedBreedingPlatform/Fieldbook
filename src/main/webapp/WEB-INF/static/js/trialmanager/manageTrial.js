@@ -884,7 +884,8 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 					$scope.tabSelected = trialTabSelected.state
 					$scope.isSettingsTab = $scope.tabSelected === 'trialSettings';
 					$rootScope.navigateToTab($scope.tabSelected, {reload: true});
-				} else if (!!$scope.subObservationTabs.length && $scope.subObservationTabs.some((tab) => $scope.hasAnyAuthority(PERMISSIONS.VIEW_OBSERVATIONS_PERMISSIONS))) {
+				} else if (!!$scope.subObservationTabs.length && $scope.hasAnyAuthority(PERMISSIONS.VIEW_OBSERVATIONS_PERMISSIONS)) {
+					$scope.isSettingsTab = false;
 					$scope.navigateToSubObsTab(studyContext.measurementDatasetId);
 				} else if (!!$scope.sampleTabsData.length && $scope.hasAnyAuthority(PERMISSIONS.VIEW_SAMPLE_LIST_PERMISSIONS)) {
 					$scope.tabSelected = $scope.sampleTabs[0].state;
