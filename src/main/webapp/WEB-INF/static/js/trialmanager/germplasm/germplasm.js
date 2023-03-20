@@ -1278,7 +1278,7 @@
 						var deferred = $q.defer();
 						datasetService.getDatasets([4]).then(function (data) {
 							angular.forEach(data, function (dataset) {
-								datasetService.removeVariables(dataset.datasetId, variableIds).then(function () {
+								datasetService.removeVariables(dataset.datasetId, variableType, variableIds).then(function () {
 									deferred.resolve(true);
 									showSuccessfulMessage('', $.germplasmMessages.removeVariableSuccess);
 									$rootScope.navigateToTab('germplasm', {reload: true});

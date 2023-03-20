@@ -193,7 +193,7 @@
 								$scope.doDeleteSelectedSettings();
 							} else {
 								var checkedVariableTermIds = $scope.retrieveCheckedVariableTermIds($scope.settings);
-								$scope.predeleteFunction()(checkedVariableTermIds, $scope.settings);
+								$scope.predeleteFunction()($attrs.variableType, checkedVariableTermIds);
 							}
 						};
 

@@ -34,7 +34,7 @@
 			});
 
 			$scope.onRemoveVariable = function (variableType, variableIds) {
-				return $scope.checkVariableIsUsedInCalculatedVariable(variableIds);
+				return $scope.checkVariableIsUsedInCalculatedVariable(variableType, variableIds);
 			};
 
 			$scope.onAddVariable = function (result, variableTypeId) {
@@ -53,7 +53,7 @@
 				});
 			};
 
-			$scope.checkVariableIsUsedInCalculatedVariable = function (deleteVariables) {
+			$scope.checkVariableIsUsedInCalculatedVariable = function (variableType ,deleteVariables) {
 				var deferred = $q.defer();
 				if(deleteVariables && deleteVariables.length !== 0) {
 					var variableIsUsedInOtherCalculatedVariable;
@@ -75,20 +75,20 @@
 							var modalInstance = $scope.openConfirmModal(removeVariableDependencyConfirmationText, environmentConfirmLabel);
 							modalInstance.result.then((isOK) => {
 								if (isOK) {
-									$scope.detachOrDeleteFilesIfAny(deleteVariables).then(deferred.resolve);
+									$scope.detachOrDeleteFilesIfAny(variableType, deleteVariables).then(deferred.resolve);
 								} else {
 									deferred.resolve();
 								}
 							});
 						} else {
-							$scope.detachOrDeleteFilesIfAny(deleteVariables).then(deferred.resolve);
+							$scope.detachOrDeleteFilesIfAny(variableType, deleteVariables).then(deferred.resolve);
 						}
 					});
 				}
 				return deferred.promise;
 			};
 
-			$scope.detachOrDeleteFilesIfAny = async function (variableIds) {
+			$scope.detachOrDeleteFilesIfAny = async function (variableType, variableIds) {
 				var deferred = $q.defer();
 				if ($scope.isFileStorageConfigured) {
 					const fileCountResp = await fileService.getFileCount(variableIds, studyContext.trialDatasetId, null);
@@ -107,7 +107,7 @@
 							await fileService.removeFiles(variableIds, studyContext.trialDatasetId)
 								.then(async function () {
 									await $scope.updateFilesData();
-									datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
+									datasetService.removeVariables(studyContext.trialDatasetId, variableType, variableIds).then(() => {
 										$scope.nested.dataTable.rerender();
 									});
 								});
@@ -115,18 +115,18 @@
 							await fileService.detachFiles(variableIds, studyContext.trialDatasetId)
 								.then(async function () {
 									await $scope.updateFilesData();
-									datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
+									datasetService.removeVariables(studyContext.trialDatasetId, variableType, variableIds).then(() => {
 										$scope.nested.dataTable.rerender();
 									});
 								});
 						}
 					} else {
-						datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
+						datasetService.removeVariables(studyContext.trialDatasetId, variableType, variableIds).then(() => {
 							$scope.nested.dataTable.rerender();
 						});
 					}
 				} else {
-					datasetService.removeVariables(studyContext.trialDatasetId, variableIds).then(() => {
+					datasetService.removeVariables(studyContext.trialDatasetId, variableType, variableIds).then(() => {
 						$scope.nested.dataTable.rerender();
 					});
 				}

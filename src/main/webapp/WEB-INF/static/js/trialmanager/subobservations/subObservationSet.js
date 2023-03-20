@@ -348,7 +348,7 @@
 				});
 			};
 
-			$scope.onRemoveVariable = async function (variableIds, settings) {
+			$scope.onRemoveVariable = async function (variableType, variableIds) {
 				try {
 					const isVariableUsedInOtherCalculatedVariable = await $scope.checkVariableIsUsedInCalculatedVariable(variableIds)
 					let doContinue = await $scope.checkVariableHasMeasurementData(isVariableUsedInOtherCalculatedVariable, variableIds);
@@ -374,7 +374,7 @@
 						}
 					}
 
-					await datasetService.removeVariables($scope.subObservationSet.dataset.datasetId, variableIds)
+					await datasetService.removeVariables($scope.subObservationSet.dataset.datasetId, variableType, variableIds)
 					reloadDataset();
 					derivedVariableService.displayExecuteCalculateVariableMenu();
 				} catch (response) {
