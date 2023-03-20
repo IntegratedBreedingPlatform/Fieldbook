@@ -344,7 +344,7 @@
 								' ng-if="isVariableBatchActionSelected(' + this.index() + ')"> </span>')($scope))
 							.append($compile('<span class="glyphicon glyphicon-filter" ' +
 								' style="cursor:pointer; padding-left: 5px;"' +
-								' popover-placement="bottom"' +
+								' popover-placement="auto bottom"' +
 								' ng-class="getFilteringByClass(' + this.index() + ')"' +
 								' popover-append-to-body="true"' +
 								' popover-trigger="\'outsideClick\'"' +
