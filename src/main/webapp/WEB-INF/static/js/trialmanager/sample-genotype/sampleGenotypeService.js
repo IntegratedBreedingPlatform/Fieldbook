@@ -19,7 +19,7 @@
 
             sampleGenotypeService.searchSampleGenotypes = function (genotypeSearchRequest, page, pageSize) {
                 genotypeSearchRequest.studyId = studyContext.studyId;
-                return $http.post(sampleGenotypeService.getSampleGenotypesTableUrl() + ((page && pageSize) ? '?page=' + page + '&size=' + pageSize : ''), genotypeSearchRequest)
+                return $http.post(sampleGenotypeService.getSampleGenotypesTableUrl() + ((page !== undefined && pageSize !== undefined) ? '?page=' + page + '&size=' + pageSize : ''), genotypeSearchRequest)
                     .then(successHandler, failureHandler);
             };
 
