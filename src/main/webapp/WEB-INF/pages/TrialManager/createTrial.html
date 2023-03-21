@@ -52,7 +52,7 @@
 					<span class='bms-locked' style='position: relative; top:7px; right: 5px; color: #666666;font-size: 23px; font-weight: bold;' ng-show="isLockedStudy() &amp;&amp; userHasLockPermission() &amp;&amp; hasAnyAuthority(PERMISSIONS.LOCK_STUDY_PERMISSIONS)" ng-click="changeLockedStatus(0)"/>
 					<span class='bms-lock-open' style='position: relative; top:7px; right: 5px; color: #666666;font-size: 23px; font-weight: bold;' ng-show="!isLockedStudy() &amp;&amp; userHasLockPermission() &amp;&amp; hasAnyAuthority(PERMISSIONS.LOCK_STUDY_PERMISSIONS)" ng-click="changeLockedStatus(1)"/>
 					<div class="btn-group" style="padding-right: 36px">
-						<button type="button" class="btn btn-info dropdown-toggle fbk-action-btn" data-toggle="dropdown" ng:click="reloadActionMenuConditions()">
+						<button type="button" ng-show="showStudyAction()" class="btn btn-info dropdown-toggle fbk-action-btn" data-toggle="dropdown" ng:click="reloadActionMenuConditions()">
 							<span th:text="#{study.studydetails.actions}">Actions</span>
 						</button>
 						<ul class="dropdown-menu fbk-right-button-drop-down" role="menu">
@@ -87,21 +87,21 @@
 							</li>
 
 							<!--Crossing options-->
-							<li ng-show="showManageStudiesAction()" class="dropdown-submenu pull-left">
+							<li ng-show="showCrossingOptionsAction()" class="dropdown-submenu pull-left">
 								<a tabindex="-1" href="#">Crossing options</a>
 								<ul class="dropdown-menu" style="margin-left: -48px;">
 									<!--Export crossing template-->
-									<li id="download-crosses-template">
+									<li id="download-crosses-template" ng-show="showExportCrossingTemplateAction()">
 										<a href="javascript: void(0)" onclick="ImportCrosses.downloadCrosses()"
 										   class="export-crosses-action" th:text="#{study.studydetails.action.export.crosses}">Export crossing template</a>
 									</li>
 									<!--Import crosses style="display:none;"-->
-									<li id="import-crosses">
+									<li id="import-crosses" ng-show="showImportCrossesAction()">
 										<a href="javascript: void(0)" onclick="ImportCrosses.showPopup()" class="import-crosses"
 										   th:text="#{study.studydetails.action.import.crosses}">Import crosses</a>
 									</li>
 									<!--Design new crosses-->
-									<li id="create-new-crosses">
+									<li id="create-new-crosses" ng-show="showDesignNewCrossesAction()">
 										<a th:href="@{~/ibpworkbench/bm/createcrosses(studyid=*{studyId},germplasmlistid=*{germplasmListId},loggedInUserId=${contextInfo.loggedInUserId},selectedProjectId=${contextInfo.selectedProjectId},studyType=*{studyTypeName})}"
 										   class="create-new-crosses" th:text="#{study.studydetails.action.create.new.crosses}">Design new crosses</a>
 									</li>
@@ -120,28 +120,28 @@
 									</li>
 								</ul>
                             </li>
-							<li ng-show="hasDesignGenerated" class="dropdown-submenu pull-left">
+							<li ng-show="showFieldMapOptionsAction()" class="dropdown-submenu pull-left">
 								<a tabindex="-1" href="#">Field map options</a>
 								<ul class="dropdown-menu" style="margin-left: -20px;">
-									<li ng-show="hasManageStudiesPermission">
+									<li ng-show="showMakeFieldMapAction()">
 										<a href="" style="display: none" id="fieldmap-url"
 										   th:href="@{/Fieldmap/enterFieldDetails/nursery}"></a>
 										<a href="javascript: createFieldMap(false);" id="fieldmap-url-link"
 										   th:text="#{study.studydetails.action.createFieldmap}">Make Field Map</a>
 									</li>
-									<li>
+									<li ng-show="showViewFieldMapAction()">
 										<a href="javascript: showFieldMap('trial-table');" id="view-fieldmap-url-link"
 										   th:text="#{study.edit.study.view.field.map}">View Field Map</a>
 									</li>
-									<li ng-show="hasManageStudiesPermission">
+									<li ng-show="showDeleteFieldMapAction()">
 										<a href="javascript: createFieldMap(true);" id="delete-fieldmap-url-link"
 										   th:text="#{study.edit.study.delete.field.map}">Delete Field Map</a>
 									</li>
-									<li ng-show="hasManageStudiesPermission">
+									<li ng-show="showCreateGeoreferenceAction()">
 										<a ng-click="showGeoJSONModal()"
 										   th:text="#{study.studydetails.action.geojson.create}">Create georeference</a>
 									</li>
-									<li ng-show="hasManageStudiesPermission">
+									<li ng-show="showEditGeoreferenceAction()">
 										<a ng-click="showGeoJSONModal(true)"
 										   th:text="#{study.studydetails.action.geojson.edit}">Edit georeference</a>
 									</li>

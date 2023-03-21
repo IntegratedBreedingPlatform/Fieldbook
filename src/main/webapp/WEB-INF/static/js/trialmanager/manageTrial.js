@@ -312,6 +312,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 
 			$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
 			$scope.PERMISSIONS = PERMISSIONS;
+			$scope.hasDesignGenerated = studyStateService.hasGeneratedDesign();
 
 			$scope.returnToManageStudiesURL = "/ibpworkbench/controller/jhipster#/study-manager?cropName=" + studyContext.cropName + "&programUUID=" + studyContext.programId;
 
@@ -1026,6 +1027,70 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 
 			$scope.showAnalyzeWithDecisionSupportAction = function () {
 				return $scope.dsBrappURL && $scope.hasAnyAuthority(PERMISSIONS.ANALYZE_WITH_DECISION_SUPPORT_PERMISSIONS);
+			}
+
+			$scope.showFieldMapOptionsAction = function () {
+				return $scope.showMakeFieldMapAction() || //
+					$scope.showViewFieldMapAction() || //
+					$scope.showDeleteFieldMapAction() || //
+					$scope.showCreateGeoreferenceAction() || //
+					$scope.showEditGeoreferenceAction();
+			}
+
+			$scope.showMakeFieldMapAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.MAKE_FIELD_MAP_PERMSISSION) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showViewFieldMapAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.VIEW_FIELD_MAP_PERMSISSION) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showDeleteFieldMapAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.DELETE_FIELD_MAP_PERMSISSION) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showCreateGeoreferenceAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.CREATE_GEOREFERENCE_PERMSISSION) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showEditGeoreferenceAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.EDIT_GEOREFERENCE_PERMSISSION) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showCrossingOptionsAction = function () {
+				return $scope.showExportCrossingTemplateAction() ||
+					$scope.showImportCrossesAction() ||
+					$scope.showDesignNewCrossesAction();
+			}
+
+			$scope.showExportCrossingTemplateAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.EXPORT_CROSSING_TEMPLATE_PERMISSIONS) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showImportCrossesAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.IMPORT_CROSSES_PERMISSIONS) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showDesignNewCrossesAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.DESIGN_NEW_CROSSES_PERMISSIONS) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showStudyAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.CLOSE_STUDY_PERMISSIONS) ||
+					$scope.hasAnyAuthority(PERMISSIONS.DELETE_STUDY_PERMISSIONS) ||
+					$scope.showDesignAndPlanningOptions() ||
+					$scope.showCrossingOptionsAction() ||
+					$scope.showSubObservationUnitOptionsAction() ||
+					$scope.showFieldMapOptionsAction() ||
+					$scope.showDataCollectionAction() ||
+					$scope.displayExecuteCalculatedVariableOnlyActions() ||
+					$scope.showCreateGenotypingSamplesAction() ||
+					$scope.showAdvancesAction() ||
+					$scope.showCreateLotsAction() ||
+					$scope.showLockStudyAction() ||
+					$scope.showLockUnStudyAction() ||
+					$scope.showAnalyzeWithStarBrappAction() ||
+					$scope.showAnalyzeWithDecisionSupportAction();
 			}
 
 			$('body').on('DO_AUTO_SAVE', function () {
