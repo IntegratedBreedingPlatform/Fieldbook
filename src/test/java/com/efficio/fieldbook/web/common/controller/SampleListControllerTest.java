@@ -6,6 +6,7 @@ import org.generationcp.middleware.domain.sample.SampleDetailsDTO;
 import org.generationcp.middleware.enumeration.SampleListType;
 import org.generationcp.middleware.manager.api.OntologyDataManager;
 import org.generationcp.middleware.pojos.SampleList;
+import org.generationcp.middleware.pojos.workbench.PermissionsEnum;
 import org.generationcp.middleware.service.api.SampleListService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,6 +55,8 @@ public class SampleListControllerTest {
 		final List<SampleDetailsDTO> sampleDetailsDTOs = buildSampleDetailsList(10);
 		Mockito.doReturn(sampleDetailsDTOs).when(this.sampleListService).getSampleDetailsDTOs(SampleListControllerTest.TEST_SAMPLE_LIST_ID);
 		Mockito.doReturn(true).when(this.authorizationService).isSuperAdminUser();
+		Mockito.doReturn(true).when(this.authorizationService).hasAnyAuthority(PermissionsEnum.EXPORT_FILE_SAMPLE_LIST_PERMISSIONS);
+		Mockito.doReturn(true).when(this.authorizationService).hasAnyAuthority(PermissionsEnum.DELETE_SAMPLES_PERMISSIONS);
 
 		final Model model = Mockito.mock(Model.class);
 		this.slc.displaySampleList(SampleListControllerTest.TEST_SAMPLE_LIST_ID, Mockito.mock(HttpServletRequest.class), model);
@@ -64,7 +67,9 @@ public class SampleListControllerTest {
 		Mockito.verify(model).addAttribute("listName", sampleList.getListName());
 		Mockito.verify(model).addAttribute("listNotes", sampleList.getNotes());
 		Mockito.verify(model).addAttribute("listType", sampleList.getType().name());
-		Mockito.verify(model).addAttribute("hasManageStudiesPermission", true);
+		Mockito.verify(model).addAttribute("hasExportSampleListPermission", true);
+		Mockito.verify(model).addAttribute("hasDeleteSamplePermission", true);
+
 	}
 
 	private List<SampleDetailsDTO> buildSampleDetailsList(final int numOfsamples) {
