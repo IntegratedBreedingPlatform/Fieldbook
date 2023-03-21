@@ -387,7 +387,9 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 
 			inventoryChangedDeRegister();
 			inventoryChangedDeRegister = $rootScope.$on("inventoryChanged", function () {
-				loadInventoryTab();
+				if ($scope.hasAnyAuthority(PERMISSIONS.VIEW_INVENTORY_PERMISSIONS)) {
+					loadInventoryTab();
+				}
 			});
 
 			germplasmListSavedRegister();
