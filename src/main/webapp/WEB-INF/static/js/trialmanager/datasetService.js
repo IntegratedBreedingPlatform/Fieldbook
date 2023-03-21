@@ -118,13 +118,13 @@
 
 			datasetService.addVariables = function (datasetId, newVariable) {
 				let url = '';
-				if (newVariable.variableTypeId === VARIABLE_TYPES.TRAIT.toString()) {
+				if (newVariable.variableTypeId === VARIABLE_TYPES.TRAIT) {
 					url = BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/traits';
-				} else if (newVariable.variableTypeId === VARIABLE_TYPES.SELECTION_METHOD.toString()) {
+				} else if (newVariable.variableTypeId === VARIABLE_TYPES.SELECTION_METHOD) {
 					url = BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/selections';
-				} else if (newVariable.variableTypeId === VARIABLE_TYPES.ENVIRONMENT_DETAIL.toString()) {
+				} else if (newVariable.variableTypeId === VARIABLE_TYPES.ENVIRONMENT_DETAIL) {
 					url = BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/environment-details';
-				} else if (newVariable.variableTypeId === VARIABLE_TYPES.STUDY_CONDITION.toString()) {
+				} else if (newVariable.variableTypeId === VARIABLE_TYPES.STUDY_CONDITION) {
 					url = BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/enviromental-conditions';
 				}
 				var request = $http.put(url, newVariable);
