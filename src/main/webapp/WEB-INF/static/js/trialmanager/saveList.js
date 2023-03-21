@@ -4,7 +4,10 @@
 	var manageTrialApp = angular.module('manageTrialApp');
 
 	manageTrialApp.controller('SaveListCtrl',
-		['$rootScope', '$state', '$stateParams', '$scope', function ($rootScope, $state, $stateParams, $scope) {
+		['$rootScope', '$state', '$stateParams', '$scope', 'HasAnyAuthorityService', 'PERMISSIONS', function ($rootScope, $state, $stateParams, $scope, HasAnyAuthorityService, PERMISSIONS) {
+
+			$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
+			$scope.PERMISSIONS = PERMISSIONS;
 
 			$scope.saveGermplasmList = function () {
 				var chosenNodeFolder = $('#' + getDisplayedTreeName()).dynatree('getTree').getActiveNode();
@@ -70,15 +73,15 @@
 							showSuccessfulMessage('', saveListSuccessfullyMessage);
 
 
+							if ($scope.hasAnyAuthority(PERMISSIONS.VIEW_CROSSES_AND_SELECTIONS_PERMISSIONS)) {
 
+								// Notify the application that germplasm has been saved. This will display the 'Crosses and Selections'
+								// tab if germplasm is already created within the study.
+								$rootScope.$broadcast('germplasmListSaved');
 
-							// Notify the application that germplasm has been saved. This will display the 'Crosses and Selections'
-							// tab if germplasm is already created within the study.
-							$rootScope.$broadcast('germplasmListSaved');
-
-							// Refresh and show the 'Crosses and Selections' tab after saving the germplasm list
-							$rootScope.navigateToTab('germplasmStudySource', {reload: true});
-
+								// Refresh and show the 'Crosses and Selections' tab after saving the germplasm list
+								$rootScope.navigateToTab('germplasmStudySource', {reload: true});
+							}
 
 						} else {
 							showErrorMessage('page-save-list-message-modal', data.message);
