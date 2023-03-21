@@ -484,9 +484,12 @@
 		}]);
 
 	manageTrialApp.controller('AdvanceModalCtrl', ['$scope', '$q', 'studyContext', '$uibModalInstance', 'trialInstances', 'advanceType',
-		'noOfReplications', 'selectedDatasetId', 'advanceStudyModalService','$window', '$rootScope', 'EVENTS',
+		'noOfReplications', 'selectedDatasetId', 'advanceStudyModalService','$window', '$rootScope', 'EVENTS', 'HasAnyAuthorityService', 'PERMISSIONS',
 		function ($scope, $q, studyContext, $uibModalInstance, trialInstances, advanceType, noOfReplications, selectedDatasetId,
-				  advanceStudyModalService, $window, $rootScope, EVENTS) {
+				  advanceStudyModalService, $window, $rootScope, EVENTS, HasAnyAuthorityService, PERMISSIONS) {
+
+			$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
+			$scope.PERMISSIONS = PERMISSIONS;
 
 			$scope.url = `/ibpworkbench/controller/jhipster#/advance-${advanceType}?restartApplication` +
 				'&cropName=' + studyContext.cropName +
@@ -534,8 +537,9 @@
 
 				if (event.data.name === EVENTS.TREE_STATE_PERSISTED) {
 					$uibModalInstance.close(null);
-
-					redirectToCrossesAndSelectionsTab();
+					if ($scope.hasAnyAuthority(PERMISSIONS.VIEW_CROSSES_AND_SELECTIONS_PERMISSIONS)) {
+						redirectToCrossesAndSelectionsTab();
+					}
 				}
 			}
 
