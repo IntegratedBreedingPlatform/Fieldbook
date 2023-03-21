@@ -652,6 +652,14 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				return HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.EXPORT_DESIGN_TEMPLATE_PERMISSIONS);
 			}
 
+			$scope.showLockStudyAction = function () {
+				return !$scope.isLockedStudy() && $scope.userHasLockPermission() && $scope.hasAnyAuthority(PERMISSIONS.LOCK_STUDY_PERMISSIONS);
+			}
+
+			$scope.showLockUnStudyAction = function () {
+				return $scope.isLockedStudy() && $scope.userHasLockPermission() && $scope.hasAnyAuthority(PERMISSIONS.LOCK_STUDY_PERMISSIONS);
+			}
+
 			$scope.showDesignAndPlanningOptions = function () {
 				return $scope.showExportDesignTemplateAction() || //
 					$scope.showImportOwnDesignAction() || //

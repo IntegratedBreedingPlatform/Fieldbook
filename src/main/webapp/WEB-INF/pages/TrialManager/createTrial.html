@@ -211,10 +211,10 @@
 								<a href="javascript: openDeleteConfirmation();" th:text="#{browse.study.delete.study.name}">Delete Study</a>
 							</li>
 							<li>
-								<a href="" th:text="#{study.studydetails.action.lock.study}" ng-show="!isLockedStudy() &amp;&amp; userHasLockPermission() &amp;&amp; hasAnyAuthority(PERMISSIONS.LOCK_STUDY_PERMISSIONS)" ng-click="changeLockedStatus(1)">Lock Study</a>
+								<a href="" th:text="#{study.studydetails.action.lock.study}" ng-show="showLockStudyAction()" ng-click="changeLockedStatus(1)">Lock Study</a>
 							</li>
 							<li>
-								<a href="" th:text="#{study.studydetails.action.unlock.study}" ng-show="isLockedStudy() &amp;&amp; userHasLockPermission() &amp;&amp; hasAnyAuthority(PERMISSIONS.LOCK_STUDY_PERMISSIONS)" ng-click="changeLockedStatus(0)">Unlock Study</a>
+								<a href="" th:text="#{study.studydetails.action.unlock.study}" ng-show="showLockUnStudyAction()" ng-click="changeLockedStatus(0)">Unlock Study</a>
 							</li>
 							<li ng-show="showAnalyzeWithStarBrappAction()">
 								<a href="" th:utext="#{study.studydetails.action.stabrapp}" ng-click="analyzeWithBrapp(staBrappURL)"></a>
