@@ -675,22 +675,10 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 					HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.CREATE_LOTS_PERMISSIONS);
 			}
 
-			$scope.displayGermplasmOrMeasurmentOnlyActions = function () {
-				return studyStateService.hasGeneratedDesign() || ($scope.hasManageStudiesPermission && $scope.hasGermplasmListSelected());
-			};
-
 			$scope.displayExecuteCalculatedVariableOnlyActions = function () {
 				return HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.EXECUTE_CALCULATED_VARIABLES_PERMISSIONS) && derivedVariableService.isStudyHasCalculatedVariables && studyStateService.hasGeneratedDesign();
 			};
 
-			$scope.reloadPermissions = function () {
-				$scope.hasManageStudiesPermission = $scope.hasAnyAuthority(PERMISSIONS.FULL_MANAGE_STUDIES_PERMISSIONS);
-			}
-
-			$scope.reloadActionMenuConditions = function () {
-				$scope.reloadPermissions();
-				$scope.hasDesignGenerated = studyStateService.hasGeneratedDesign();
-			};
 
 			// Programatically navigate to specified tab state
 			$rootScope.navigateToTab = function (targetState, options) {
@@ -969,10 +957,6 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 						"treatment"
 					].indexOf($scope.tabSelected) >= 0) || !studyContext.studyId;
 			};
-
-			$scope.showManageStudiesAction = function () {
-				return $scope.hasManageStudiesPermission && $scope.hasDesignGenerated;
-			}
 
 			$scope.showCreateSubObservationUnitsAction = function () {
 				return $scope.hasAnyAuthority(PERMISSIONS.CREATE_SUB_OBSERVATION_UNITS_PERMISSIONS) && $scope.hasDesignGenerated;

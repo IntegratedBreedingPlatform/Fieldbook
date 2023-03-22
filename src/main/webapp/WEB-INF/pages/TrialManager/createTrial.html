@@ -294,7 +294,7 @@
 												<label class="control-label" id="folderNameLabel" ng-bind="data.folderNameLabel"></label>
 											</div>
 
-											<a ng-show="hasManageStudiesPermission" class="pull-right" href="javascript: void(0)" id="chooseLocation"
+											<a ng-show="hasAnyAuthority(PERMISSIONS.FULL_MANAGE_STUDIES_PERMISSIONS)" class="pull-right" href="javascript: void(0)" id="chooseLocation"
 											   ng-click="changeFolderLocation()">Change Folder</a>
 										</div>
 									</div>
