@@ -54,7 +54,6 @@ public class SampleListControllerTest {
 
 		final List<SampleDetailsDTO> sampleDetailsDTOs = buildSampleDetailsList(10);
 		Mockito.doReturn(sampleDetailsDTOs).when(this.sampleListService).getSampleDetailsDTOs(SampleListControllerTest.TEST_SAMPLE_LIST_ID);
-		Mockito.doReturn(true).when(this.authorizationService).isSuperAdminUser();
 		Mockito.doReturn(true).when(this.authorizationService).hasAnyAuthority(PermissionsEnum.EXPORT_FILE_SAMPLE_LIST_PERMISSIONS);
 		Mockito.doReturn(true).when(this.authorizationService).hasAnyAuthority(PermissionsEnum.DELETE_SAMPLES_PERMISSIONS);
 
