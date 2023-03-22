@@ -312,7 +312,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 
 			$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
 			$scope.PERMISSIONS = PERMISSIONS;
-			$scope.hasDesignGenerated = studyStateService.hasGeneratedDesign();
+			$scope.hasDesignGenerated = HAS_GENERATED_DESIGN;
 
 			$scope.returnToManageStudiesURL = "/ibpworkbench/controller/jhipster#/study-manager?cropName=" + studyContext.cropName + "&programUUID=" + studyContext.programId;
 
@@ -676,7 +676,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			}
 
 			$scope.displayExecuteCalculatedVariableOnlyActions = function () {
-				return HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.EXECUTE_CALCULATED_VARIABLES_PERMISSIONS) && derivedVariableService.isStudyHasCalculatedVariables && studyStateService.hasGeneratedDesign();
+				return HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.EXECUTE_CALCULATED_VARIABLES_PERMISSIONS) && derivedVariableService.isStudyHasCalculatedVariables && $scope.hasDesignGenerated;
 			};
 
 
