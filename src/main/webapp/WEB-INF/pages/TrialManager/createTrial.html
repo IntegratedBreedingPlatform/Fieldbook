@@ -47,12 +47,12 @@
 			</div>
 
 			<div class="col-md-12 nopadding-right">
-				<section-container heading="BASIC DETAILS" collapsible="isOpenStudy()" toggle-section="true" ng-click="reloadPermissions()">
+				<section-container heading="BASIC DETAILS" collapsible="isOpenStudy()" toggle-section="true">
 				<span name="action-buttons" ng-show="isOpenStudy() &amp;&amp; !hasUnsavedData()">
 					<span class='bms-locked' style='position: relative; top:7px; right: 5px; color: #666666;font-size: 23px; font-weight: bold;' ng-show="isLockedStudy() &amp;&amp; userHasLockPermission() &amp;&amp; hasAnyAuthority(PERMISSIONS.LOCK_STUDY_PERMISSIONS)" ng-click="changeLockedStatus(0)"/>
 					<span class='bms-lock-open' style='position: relative; top:7px; right: 5px; color: #666666;font-size: 23px; font-weight: bold;' ng-show="!isLockedStudy() &amp;&amp; userHasLockPermission() &amp;&amp; hasAnyAuthority(PERMISSIONS.LOCK_STUDY_PERMISSIONS)" ng-click="changeLockedStatus(1)"/>
 					<div class="btn-group" style="padding-right: 36px">
-						<button type="button" ng-show="showStudyAction()" class="btn btn-info dropdown-toggle fbk-action-btn" data-toggle="dropdown" ng:click="reloadActionMenuConditions()">
+						<button type="button" ng-show="showStudyAction()" class="btn btn-info dropdown-toggle fbk-action-btn" data-toggle="dropdown">
 							<span th:text="#{study.studydetails.actions}">Actions</span>
 						</button>
 						<ul class="dropdown-menu fbk-right-button-drop-down" role="menu">
