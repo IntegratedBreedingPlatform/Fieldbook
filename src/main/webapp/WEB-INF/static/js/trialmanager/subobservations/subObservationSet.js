@@ -54,7 +54,6 @@
 			$scope.selectVariableFilter = [];
 			$scope.traitVariables = new angular.OrderedHash();
 			$scope.selectionVariables = new angular.OrderedHash();
-			$scope.hasManageStudiesPermission = HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.FULL_MANAGE_STUDIES_PERMISSIONS);
 			var subObservationSet = $scope.subObservationSet = $stateParams.subObservationSet;
 			$scope.columnsObj = subObservationSet.columnsObj;
 			$scope.rows = subObservationSet.rows;
