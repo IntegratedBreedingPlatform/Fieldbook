@@ -18,6 +18,7 @@ describe('Dataset Service', function () {
 			$provide.value("serviceUtilities", {});
 			$provide.value("DATASET_TYPES_OBSERVATION_IDS", [4, 5, 6, 7, 8]);
 			$provide.value("DATASET_TYPES", {});
+			$provide.value("VARIABLE_TYPES", {});
 		});
 	});
 
