@@ -13,6 +13,10 @@
 
             var sampleGenotypeService = {};
 
+            sampleGenotypeService.getSampleGenotypesTableUrl = function () {
+                return BASE_URL;
+            };
+
             sampleGenotypeService.searchSampleGenotypes = function (genotypeSearchRequest, page, pageSize) {
                 genotypeSearchRequest.studyId = studyContext.studyId;
                 return $http.post(BASE_URL + ((page !== undefined && pageSize !== undefined) ? '?page=' + page + '&size=' + pageSize : ''), genotypeSearchRequest)

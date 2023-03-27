@@ -7,7 +7,7 @@
         function ($http, $q, studyContext, serviceUtilities) {
 
             var BASE_URL = '/bmsapi/crops/' + studyContext.cropName + '/programs/' + studyContext.programId +
-                '/studies' + studyContext.studyId;
+                '/studies/' + studyContext.studyId;
 
             var successHandler = serviceUtilities.restSuccessHandler,
                 failureHandler = serviceUtilities.restFailureHandler;
