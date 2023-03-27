@@ -263,7 +263,6 @@
 									type: 'POST',
 									url: sampleGenotypeService.getSampleGenotypesTableUrl() + getPageQueryParameters(d),
 									data: JSON.stringify({
-										draw: d.draw,
 										filter: getFilter(),
 										studyId: studyContext.studyId,
 										visibleColumns: getVisibleColumns()
