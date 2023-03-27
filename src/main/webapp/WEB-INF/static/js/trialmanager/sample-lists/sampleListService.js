@@ -6,7 +6,8 @@
     module.factory('sampleListService', ['$http', '$q', 'studyContext', 'serviceUtilities',
         function ($http, $q, studyContext, serviceUtilities) {
 
-            var BASE_URL = '/bmsapi/crops/' + studyContext.cropName + '/programs/' + studyContext.programId;
+            var BASE_URL = '/bmsapi/crops/' + studyContext.cropName + '/programs/' + studyContext.programId +
+                '/studies' + studyContext.studyId;
 
             var successHandler = serviceUtilities.restSuccessHandler,
                 failureHandler = serviceUtilities.restFailureHandler;
@@ -14,7 +15,7 @@
             var sampleListService = {};
 
             sampleListService.getSampleListsInStudy = function (withGenotypesOnly) {
-                var request = $http.get(BASE_URL + '/sample-lists/' + studyContext.studyId + '?withGenotypesOnly=' + withGenotypesOnly);
+                var request = $http.get(BASE_URL + '/sample-lists?withGenotypesOnly=' + withGenotypesOnly);
                 return request.then(successHandler, failureHandler);
             };
 

@@ -69,7 +69,7 @@
 			ctrl.selectedExportFormatId = 'xls';
 			ctrl.selectedCollectionOrderId = '1';
 			ctrl.singleFile = true;
-			ctrl.includeSampleGenotpeValues = false;
+			ctrl.includeSampleGenotypeValues = false;
 
 			$scope.exportFormats = [
 				{key: 'csv', name: 'CSV'},
@@ -148,7 +148,7 @@
 			};
 
 			ctrl.export = function (instanceIds) {
-				datasetService.exportDataset(datasetId, instanceIds, ctrl.selectedCollectionOrderId, ctrl.singleFile, ctrl.selectedExportFormatId, ctrl.includeSampleGenotpeValues).then(function (response) {
+				datasetService.exportDataset(datasetId, instanceIds, ctrl.selectedCollectionOrderId, ctrl.singleFile, ctrl.selectedExportFormatId, ctrl.includeSampleGenotypeValues).then(function (response) {
 					var fileName = fileDownloadHelper.getFileNameFromResponseContentDisposition(response);
 					fileDownloadHelper.save(response.data, fileName);
 					$uibModalInstance.close();
