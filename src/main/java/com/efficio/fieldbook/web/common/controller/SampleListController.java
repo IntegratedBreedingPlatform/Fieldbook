@@ -3,6 +3,7 @@ package com.efficio.fieldbook.web.common.controller;
 import com.efficio.fieldbook.web.common.bean.TableHeader;
 import org.apache.commons.lang3.StringUtils;
 import org.generationcp.commons.security.AuthorizationService;
+import org.generationcp.middleware.api.genotype.SampleGenotypeService;
 import org.generationcp.middleware.constant.ColumnLabels;
 import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.domain.sample.SampleDetailsDTO;
@@ -66,6 +67,9 @@ public class SampleListController {
 	@Autowired
 	protected AuthorizationService authorizationService;
 
+	@Resource
+	private SampleGenotypeService sampleGenotypeService;
+
 	@RequestMapping(value = "/sampleList/{listId}", method = RequestMethod.GET)
 	public String displaySampleList(@PathVariable final Integer listId, final HttpServletRequest req, final Model model) {
 		this.processSampleList(listId, req, model);
@@ -99,6 +103,7 @@ public class SampleListController {
 				this.authorizationService.hasAnyAuthority(PermissionsEnum.EXPORT_FILE_SAMPLE_LIST_PERMISSIONS));
 			model.addAttribute("hasDeleteSamplePermission",
 				this.authorizationService.hasAnyAuthority(PermissionsEnum.DELETE_SAMPLES_PERMISSIONS));
+			model.addAttribute("showImportGenotypes", this.sampleGenotypeService.countSampleGenotypesBySampleList(listId) == 0l);
 		} catch (final MiddlewareQueryException e) {
 			SampleListController.LOG.error(e.getMessage(), e);
 		}

@@ -9,7 +9,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 	var manageTrialApp = angular.module('manageTrialApp', ['designImportApp', 'leafnode-utils', 'fieldbook-utils', 'subObservation',
 		'ui.router', 'ui.bootstrap', 'ngLodash', 'ngResource', 'ngStorage', 'datatables', 'datatables.buttons', 'datatables.colreorder',
 		'ngSanitize', 'ui.select', 'ngMessages', 'blockUI', 'datasets-api', 'auth', 'bmsAuth', 'studyState',
-		'export-study', 'import-study', 'create-sample', 'derived-variable', 'importObservationsApp', 'germplasm-study-source',
+		'export-study', 'import-study', 'create-sample', 'derived-variable', 'importObservationsApp', 'germplasm-study-source', 'sample-genotype-tab',
 		'germplasmDetailsModule', 'pascalprecht.translate']);
 
 	manageTrialApp.config(['$httpProvider', function ($httpProvider) {
@@ -134,6 +134,16 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				}
 			})
 
+			.state('sampleGenotypes', {
+				url: '/sampleGenotypes',
+				views: {
+					genotype: {
+						controller: 'SampleGenotypeCtrl',
+						templateUrl: '/Fieldbook/static/js/trialmanager/sample-genotype/sample-genotype-tab.html'
+					}
+				}
+			})
+
 			.state('analysisResults', {
 				url: '/analysisResults',
 				views: {
@@ -249,16 +259,18 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 	};
 	let germplasmListSavedRegister = () => {
 	};
+	let genotypesImportSavedRegister = () => {
+	};
 
 	// THE parent controller for the manageTrial (create/edit) page
 	manageTrialApp.controller('manageTrialCtrl', ['$scope', '$rootScope', 'studyStateService', 'TrialManagerDataService', '$http',
 		'$timeout', '_', '$localStorage', '$state', '$window', '$location', 'HasAnyAuthorityService', 'derivedVariableService', 'exportStudyModalService',
 		'importStudyModalService', 'createSampleModalService', 'derivedVariableModalService', '$uibModal', '$q', 'datasetService', 'InventoryService',
-		'studyContext', 'PERMISSIONS', 'LABEL_PRINTING_TYPE', 'HAS_LISTS_OR_SUB_OBS', 'HAS_GENERATED_DESIGN', 'germplasmStudySourceService', 'studyEntryService', 'HAS_MEANS_DATASET',
-		'advanceStudyModalService', 'STABRAPP_URL', 'DS_BRAPP_URL', 'FEEDBACK_ENABLED',
+		'studyContext', 'PERMISSIONS', 'LABEL_PRINTING_TYPE', 'HAS_LISTS_OR_SUB_OBS', 'HAS_GENERATED_DESIGN', 'germplasmStudySourceService', 'sampleGenotypeService',
+		'studyEntryService', 'HAS_MEANS_DATASET', 'advanceStudyModalService', 'STABRAPP_URL', 'DS_BRAPP_URL', 'FEEDBACK_ENABLED',
 		function ($scope, $rootScope, studyStateService, TrialManagerDataService, $http, $timeout, _, $localStorage, $state, $window, $location, HasAnyAuthorityService,
 				  derivedVariableService, exportStudyModalService, importStudyModalService, createSampleModalService, derivedVariableModalService, $uibModal, $q, datasetService, InventoryService,
-				  studyContext, PERMISSIONS, LABEL_PRINTING_TYPE, HAS_LISTS_OR_SUB_OBS, HAS_GENERATED_DESIGN, germplasmStudySourceService, studyEntryService, HAS_MEANS_DATASET, advanceStudyModalService,
+				  studyContext, PERMISSIONS, LABEL_PRINTING_TYPE, HAS_LISTS_OR_SUB_OBS, HAS_GENERATED_DESIGN, germplasmStudySourceService, sampleGenotypeService, studyEntryService, HAS_MEANS_DATASET, advanceStudyModalService,
 				  STABRAPP_URL, DS_BRAPP_URL, FEEDBACK_ENABLED) {
 
 			$scope.dsBrappURL = DS_BRAPP_URL;
@@ -322,6 +334,11 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				hidden: true,
 				permission: PERMISSIONS.VIEW_CROSSES_AND_SELECTIONS_PERMISSIONS
 			}
+			$scope.sampleGenotypesTab = {
+				name: 'Sample Genotypes',
+				state: 'sampleGenotypes',
+				hidden: true
+			}
 			$scope.inventoryTab = {
 				name: 'Inventory',
 				state: 'inventory',
@@ -370,6 +387,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				$scope.trialTabs.push($scope.analysisResultsTab);
 
 				loadCrossesAndSelectionsTab();
+				loadSampleGenotypesTab();
 				loadInventoryTab();
 				loadAnalysisResultsTab();
 
@@ -398,6 +416,11 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				loadCrossesAndSelectionsTab();
 			});
 
+			genotypesImportSavedRegister();
+			genotypesImportSavedRegister = $rootScope.$on("genotypesImportSaved", function () {
+				loadSampleGenotypesTab();
+			});
+
 			function loadCrossesAndSelectionsTab() {
 				germplasmStudySourceService.searchGermplasmStudySources({}, 0, 1).then((germplasmStudySourceTable) => {
 					if (germplasmStudySourceTable.length) {
@@ -407,6 +430,14 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 							$rootScope.navigateToTab($scope.tabSelected, {reload: true});
 
 						}
+					}
+				});
+			}
+
+			function loadSampleGenotypesTab() {
+				sampleGenotypeService.searchSampleGenotypes({}, 0, 1).then((sampleGenotypesTable) => {
+					if (sampleGenotypesTable.length) {
+						$scope.sampleGenotypesTab.hidden = false;
 					}
 				});
 			}
