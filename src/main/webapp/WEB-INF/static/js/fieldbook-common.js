@@ -951,7 +951,7 @@ function displaySampleList(id, listName, isPageLoading) {
 			var element = angular.element(document.getElementById("mainApp")).scope();
 			// To apply scope safely
 			element.safeApply(function () {
-				if (element.hasAnyAuthority(element.PERMISSIONS.VIEW_SAMPLE_LIST_PERMISSIONS)) {
+				if (element.hasAnyAuthority(element.PERMISSIONS.VIEW_SAMPLE_LISTS_PERMISSIONS)) {
 					element.addSampleTabData(id, html, listName, isPageLoading);
 				}
 			});
