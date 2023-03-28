@@ -672,19 +672,19 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			};
 
 			$scope.showPreparePlantingInventoryAction = function () {
-				return $scope.hasDesignGenerated && HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.PREPARE_PLANTING_PERMISSIONS);
+				return $scope.hasDesignGenerated && $scope.hasAnyAuthority(PERMISSIONS.PREPARE_PLANTING_PERMISSIONS);
 			}
 
 			$scope.showPrintingLabelsAction = function () {
-				return $scope.hasDesignGenerated && HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.CREATE_PLANTING_LABELS_PERMISSIONS);
+				return $scope.hasDesignGenerated && $scope.hasAnyAuthority(PERMISSIONS.CREATE_PLANTING_LABELS_PERMISSIONS);
 			}
 
 			$scope.showImportOwnDesignAction = function () {
-				return $scope.hasGermplasmListSelected() && HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.GENERATE_EXPERIMENTAL_DESIGN_PERMISSIONS);
+				return $scope.hasGermplasmListSelected() && $scope.hasAnyAuthority(PERMISSIONS.GENERATE_EXPERIMENTAL_DESIGN_PERMISSIONS);
 			}
 
 			$scope.showExportDesignTemplateAction = function () {
-				return HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.EXPORT_DESIGN_TEMPLATE_PERMISSIONS);
+				return $scope.hasAnyAuthority(PERMISSIONS.EXPORT_DESIGN_TEMPLATE_PERMISSIONS);
 			}
 
 			$scope.showLockStudyAction = function () {
@@ -704,11 +704,11 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 
 			$scope.showCreateLotsAction = function () {
 				return $scope.hasDesignGenerated &&
-					HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.CREATE_LOTS_PERMISSIONS);
+					$scope.hasAnyAuthority(PERMISSIONS.CREATE_LOTS_PERMISSIONS);
 			}
 
 			$scope.displayExecuteCalculatedVariableOnlyActions = function () {
-				return HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.EXECUTE_CALCULATED_VARIABLES_PERMISSIONS) && derivedVariableService.isStudyHasCalculatedVariables && $scope.hasDesignGenerated;
+				return $scope.hasAnyAuthority(PERMISSIONS.EXECUTE_CALCULATED_VARIABLES_PERMISSIONS) && derivedVariableService.isStudyHasCalculatedVariables && $scope.hasDesignGenerated;
 			};
 
 
