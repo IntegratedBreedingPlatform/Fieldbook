@@ -337,7 +337,8 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			$scope.sampleGenotypesTab = {
 				name: 'Sample Genotypes',
 				state: 'sampleGenotypes',
-				hidden: true
+				hidden: true,
+				permission: PERMISSIONS.VIEW_SAMPLE_GENOTYPES_PERMISSIONS
 			}
 			$scope.inventoryTab = {
 				name: 'Inventory',
