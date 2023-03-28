@@ -3,6 +3,7 @@ package com.efficio.fieldbook.web.common.controller;
 import com.efficio.fieldbook.web.common.bean.TableHeader;
 import org.apache.commons.lang3.StringUtils;
 import org.generationcp.commons.security.AuthorizationService;
+import org.generationcp.middleware.api.genotype.SampleGenotypeService;
 import org.generationcp.middleware.constant.ColumnLabels;
 import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.domain.sample.SampleDetailsDTO;
@@ -66,6 +67,9 @@ public class SampleListController {
 	@Autowired
 	protected AuthorizationService authorizationService;
 
+	@Resource
+	private SampleGenotypeService sampleGenotypeService;
+
 	@RequestMapping(value = "/sampleList/{listId}", method = RequestMethod.GET)
 	public String displaySampleList(@PathVariable final Integer listId, final HttpServletRequest req, final Model model) {
 		this.processSampleList(listId, req, model);
@@ -95,10 +99,11 @@ public class SampleListController {
 			model.addAttribute("listName", name);
 			model.addAttribute("listNotes", notes);
 			model.addAttribute("listType", type);
-
-			model.addAttribute("hasManageStudiesPermission",
-				this.authorizationService.isSuperAdminUser()
-					|| this.authorizationService.hasAnyAuthority(PermissionsEnum.MANAGE_STUDIES_PERMISSIONS));
+			final boolean hasManageStudiesPermission = this.authorizationService.isSuperAdminUser()
+				|| this.authorizationService.hasAnyAuthority(PermissionsEnum.MANAGE_STUDIES_PERMISSIONS);
+			model.addAttribute("hasManageStudiesPermission", hasManageStudiesPermission);
+			model.addAttribute("showImportGenotypes",
+				hasManageStudiesPermission && this.sampleGenotypeService.countSampleGenotypesBySampleList(listId) == 0l);
 		} catch (final MiddlewareQueryException e) {
 			SampleListController.LOG.error(e.getMessage(), e);
 		}

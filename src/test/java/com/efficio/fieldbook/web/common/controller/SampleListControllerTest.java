@@ -2,6 +2,7 @@ package com.efficio.fieldbook.web.common.controller;
 
 import com.efficio.fieldbook.web.common.bean.TableHeader;
 import org.generationcp.commons.security.AuthorizationService;
+import org.generationcp.middleware.api.genotype.SampleGenotypeService;
 import org.generationcp.middleware.domain.sample.SampleDetailsDTO;
 import org.generationcp.middleware.enumeration.SampleListType;
 import org.generationcp.middleware.manager.api.OntologyDataManager;
@@ -37,6 +38,9 @@ public class SampleListControllerTest {
 	private SampleListService sampleListService;
 
 	@Mock
+	private SampleGenotypeService sampleGenotypeService;
+
+	@Mock
 	private AuthorizationService authorizationService;
 
 	@InjectMocks
@@ -51,7 +55,7 @@ public class SampleListControllerTest {
 
 		Mockito.doReturn(sampleList).when(this.sampleListService).getSampleList(SampleListControllerTest.TEST_SAMPLE_LIST_ID);
 
-		final List<SampleDetailsDTO> sampleDetailsDTOs = buildSampleDetailsList(10);
+		final List<SampleDetailsDTO> sampleDetailsDTOs = this.buildSampleDetailsList(10);
 		Mockito.doReturn(sampleDetailsDTOs).when(this.sampleListService).getSampleDetailsDTOs(SampleListControllerTest.TEST_SAMPLE_LIST_ID);
 		Mockito.doReturn(true).when(this.authorizationService).isSuperAdminUser();
 
@@ -65,6 +69,7 @@ public class SampleListControllerTest {
 		Mockito.verify(model).addAttribute("listNotes", sampleList.getNotes());
 		Mockito.verify(model).addAttribute("listType", sampleList.getType().name());
 		Mockito.verify(model).addAttribute("hasManageStudiesPermission", true);
+		Mockito.verify(model).addAttribute("showImportGenotypes", true);
 	}
 
 	private List<SampleDetailsDTO> buildSampleDetailsList(final int numOfsamples) {

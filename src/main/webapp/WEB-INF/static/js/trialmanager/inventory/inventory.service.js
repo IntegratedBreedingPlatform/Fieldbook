@@ -28,7 +28,7 @@
 			};
 
 			service.searchStudyTransactions = function (searchRequest, page, pageSize) {
-				return $http.post(service.getSearchStudyTransactionsUrl() + ((page && pageSize) ? '?page=' + page + '&size=' + pageSize : ''), searchRequest)
+				return $http.post(service.getSearchStudyTransactionsUrl() + ((page !== undefined && pageSize !== undefined) ? '?page=' + page + '&size=' + pageSize : ''), searchRequest)
 					.then(successHandler, failureHandler);
 			}
 
