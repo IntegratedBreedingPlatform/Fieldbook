@@ -917,7 +917,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				} else if (!!$scope.subObservationTabs.length && $scope.hasAnyAuthority(PERMISSIONS.VIEW_OBSERVATIONS_PERMISSIONS)) {
 					$scope.isSettingsTab = false;
 					$scope.navigateToSubObsTab(studyContext.measurementDatasetId);
-				} else if (!!$scope.sampleTabsData.length && $scope.hasAnyAuthority(PERMISSIONS.VIEW_SAMPLE_LIST_PERMISSIONS)) {
+				} else if (!!$scope.sampleTabsData.length && $scope.hasAnyAuthority(PERMISSIONS.VIEW_SAMPLE_LISTS_PERMISSIONS)) {
 					$scope.tabSelected = $scope.sampleTabs[0].state;
 					$scope.isSettingsTab = false;
 					$scope.listTabChange($scope.sampleTabs[0].state);
