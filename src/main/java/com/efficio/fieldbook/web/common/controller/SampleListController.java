@@ -103,7 +103,9 @@ public class SampleListController {
 				this.authorizationService.hasAnyAuthority(PermissionsEnum.EXPORT_FILE_SAMPLE_LIST_PERMISSIONS));
 			model.addAttribute("hasDeleteSamplePermission",
 				this.authorizationService.hasAnyAuthority(PermissionsEnum.DELETE_SAMPLES_PERMISSIONS));
-			model.addAttribute("showImportGenotypes", this.sampleGenotypeService.countSampleGenotypesBySampleList(listId) == 0l);
+			model.addAttribute("showImportGenotypes",
+				this.authorizationService.hasAnyAuthority(PermissionsEnum.IMPORT_GENOTYPES_PERMISSIONS) &&
+				this.sampleGenotypeService.countSampleGenotypesBySampleList(listId) == 0l);
 		} catch (final MiddlewareQueryException e) {
 			SampleListController.LOG.error(e.getMessage(), e);
 		}
