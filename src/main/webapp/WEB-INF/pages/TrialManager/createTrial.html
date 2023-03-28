@@ -406,7 +406,7 @@
 			   ng-click="performFunctionOnTabChange(sampleGenotypesTab.state)">{{sampleGenotypesTab.name}}</a>
 		</li>
 		<li ng-repeat="tab in sampleTabs | orderObjectBy : 'id'  track by $index" ng-class="{active: tabSelected===tab.state}"
-			ng-show="hasAnyAuthority(PERMISSIONS.VIEW_SAMPLE_LIST_PERMISSIONS)" ng-click="listTabChange(tab.state)">
+			ng-show="hasAnyAuthority(PERMISSIONS.VIEW_SAMPLE_LISTS_PERMISSIONS)" ng-click="listTabChange(tab.state)">
 			<a tab-data='{{tab.id}}' ng-click="initSampleTab(tab)">{{tab.displayName}}
 				<i class="glyphicon glyphicon-remove fbk-close-tab" id="sampleListId" ng-click="closeSampleListTab(tab.state)" tab-data='{{tab.id}}'></i>
 			</a>
