@@ -323,6 +323,8 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			$scope.FEEDBACK_ENABLED = FEEDBACK_ENABLED;
 
 			$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
+			$scope.AsyncHasAnyAuthority = HasAnyAuthorityService.AsyncHasAnyAuthority;
+
 			$scope.PERMISSIONS = PERMISSIONS;
 			$scope.hasDesignGenerated = HAS_GENERATED_DESIGN;
 
@@ -424,21 +426,25 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 
 			function loadCrossesAndSelectionsTab() {
 				germplasmStudySourceService.searchGermplasmStudySources({}, 0, 1).then((germplasmStudySourceTable) => {
-					if (germplasmStudySourceTable.length) {
-						$scope.crossesAndSelectionsTab.hidden = false;
-						if ($scope.tabSelected === '' && $scope.hasAnyAuthority($scope.crossesAndSelectionsTab.permission)) {
-							$scope.tabSelected = $scope.crossesAndSelectionsTab.state;
-							$rootScope.navigateToTab($scope.tabSelected, {reload: true});
+					$scope.crossesAndSelectionsTab.hidden = !germplasmStudySourceTable.length;
+					if ($scope.tabSelected === '' &&
+						!$scope.crossesAndSelectionsTab.hidden &&
+						$scope.AsyncHasAnyAuthority($scope.crossesAndSelectionsTab.permission)) {
+						$scope.tabSelected = $scope.crossesAndSelectionsTab.state;
+						$rootScope.navigateToTab($scope.tabSelected, {reload: true});
 
-						}
 					}
 				});
 			}
 
 			function loadSampleGenotypesTab() {
 				sampleGenotypeService.searchSampleGenotypes({}, 0, 1).then((sampleGenotypesTable) => {
-					if (sampleGenotypesTable.length) {
-						$scope.sampleGenotypesTab.hidden = false;
+					$scope.sampleGenotypesTab.hidden = !sampleGenotypesTable.length;
+					if ($scope.tabSelected === '' &&
+						!$scope.sampleGenotypesTab.hidden &&
+						$scope.AsyncHasAnyAuthority($scope.sampleGenotypesTab.permission)) {
+						$scope.tabSelected = $scope.sampleGenotypesTab.state;
+						$rootScope.navigateToTab($scope.tabSelected, {reload: true});
 					}
 				});
 			}
@@ -452,7 +458,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 							$scope.navigateToSubObsTab(studyContext.measurementDatasetId);
 						} else if ($scope.tabSelected === '' &&
 							!$scope.inventoryTab.hidden &&
-							$scope.hasAnyAuthority($scope.inventoryTab.permission)) {
+							$scope.AsyncHasAnyAuthority($scope.inventoryTab.permission)) {
 							$scope.tabSelected = $scope.inventoryTab.state;
 							$rootScope.navigateToTab($scope.tabSelected, {reload: true});
 						}
@@ -465,7 +471,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 					$scope.analysisResultsTab.hidden = false;
 					if ($scope.tabSelected === '' &&
 						!$scope.analysisResultsTab.hidden &&
-						$scope.hasAnyAuthority($scope.analysisResultsTab.permission)) {
+						$scope.AsyncHasAnyAuthority($scope.analysisResultsTab.permission)) {
 						$scope.tabSelected = $scope.analysisResultsTab.state;
 						$rootScope.navigateToTab($scope.tabSelected, {reload: true});
 					}
