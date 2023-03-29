@@ -776,10 +776,16 @@ function openDeleteSampleEntryConfirmation(listId, listName) {
 	$('#listNameHidden').val(listName);
 }
 
-function importGenotypes(listId) {
+function importGenotypesFromFile(listId) {
 	'use strict';
 	const genotypeModalService = angular.element('#mainApp').injector().get('sampleGenotypeModalService');
-	genotypeModalService.openImportGenotypesModal(listId);
+	genotypeModalService.openImportGenotypes(listId, true);
+}
+
+function importGenotypesFromGigwa(listId) {
+	'use strict';
+	const genotypeModalService = angular.element('#mainApp').injector().get('sampleGenotypeModalService');
+	genotypeModalService.openImportGenotypes(listId, false);
 }
 
 function deleteSelectedSampleEntries () {
