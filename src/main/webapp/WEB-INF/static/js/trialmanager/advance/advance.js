@@ -3,8 +3,8 @@
 
 	const manageTrialApp = angular.module('manageTrialApp');
 
-	manageTrialApp.factory('advanceStudyModalService', ['$uibModal', 'studyService', 'studyContext',
-		function ($uibModal, studyService, studyContext) {
+	manageTrialApp.factory('advanceStudyModalService', ['$uibModal', 'studyService', 'studyContext', 'feedbackService',
+		function ($uibModal, studyService, studyContext, feedbackService) {
 
 			var advanceStudyModalService = {};
 
@@ -77,7 +77,8 @@
 				});
 			};
 
-			advanceStudyModalService.openAdvanceModal = function (selectedTrialInstances, advanceType, noOfReplications, selectedDatasetId) {
+			advanceStudyModalService.openAdvanceModal = function (selectedTrialInstances, advanceType, noOfReplications, selectedDatasetId,
+																  isFeedbackEnabled) {
 				$uibModal.open({
 					templateUrl: '/Fieldbook/static/js/trialmanager/advance/advanceIframeContainer.html',
 					controller: "AdvanceModalCtrl",
@@ -97,6 +98,7 @@
 						}
 					}
 				}).result.finally(function () {
+					openFeedbackSurvey(isFeedbackEnabled, 'ADVANCE_GERMPLASM', feedbackService);
 					$rootScope.navigateToTab('crossesAndSelectionsTab', {reload: true});
 				});
 			};
@@ -363,9 +365,9 @@
 	]);
 
 	manageTrialApp.controller('selectEnvironmentModalCtrl', ['$scope', '$uibModalInstance', 'TrialManagerDataService', 'studyInstanceService',
-		'$timeout', 'studyContext', 'datasetService', 'advanceStudyModalService', 'advanceType', 'isBeta', 'selectedDatasetId', 'DESIGN_TYPE',
+		'$timeout', 'studyContext', 'datasetService', 'advanceStudyModalService', 'advanceType', 'isBeta', 'selectedDatasetId', 'DESIGN_TYPE', 'FEEDBACK_ENABLED',
 		function ($scope, $uibModalInstance, TrialManagerDataService, studyInstanceService, $timeout, studyContext, datasetService,
-				  advanceStudyModalService, advanceType, isBeta, selectedDatasetId, DESIGN_TYPE) {
+				  advanceStudyModalService, advanceType, isBeta, selectedDatasetId, DESIGN_TYPE, FEEDBACK_ENABLED) {
 
 			$scope.settings = TrialManagerDataService.settings.environments;
 			if (Object.keys($scope.settings).length === 0) {
@@ -450,7 +452,8 @@
 					});
 
 					if ($scope.applicationData.advanceType === 'study' || $scope.applicationData.advanceType === 'samples') {
-						advanceStudyModalService.openAdvanceModal(selectedTrialInstances, $scope.applicationData.advanceType, $scope.noOfReplications, selectedDatasetId);
+						advanceStudyModalService.openAdvanceModal(selectedTrialInstances, $scope.applicationData.advanceType, $scope.noOfReplications,
+							selectedDatasetId, FEEDBACK_ENABLED);
 						$uibModalInstance.close();
 					} else {
 						advanceStudyModalService.openDeprecatedAdvanceStudyModal(selectedTrialInstances, $scope.noOfReplications, selectedLocationDetails,
