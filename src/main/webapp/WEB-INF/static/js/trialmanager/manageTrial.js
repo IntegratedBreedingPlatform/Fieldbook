@@ -1360,6 +1360,8 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 					$rootScope.$broadcast('createLotsFromSubObsRegister');
 				});
 			}
+
+			$scope.studyName = $scope.data.studyName;
 		}]);
 
 	manageTrialApp.factory('studyService', ['$http', '$q', 'studyContext', 'serviceUtilities',
