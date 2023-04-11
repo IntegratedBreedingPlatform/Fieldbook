@@ -427,25 +427,12 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			function loadCrossesAndSelectionsTab() {
 				germplasmStudySourceService.searchGermplasmStudySources({}, 0, 1).then((germplasmStudySourceTable) => {
 					$scope.crossesAndSelectionsTab.hidden = !germplasmStudySourceTable.length;
-					if ($scope.tabSelected === '' &&
-						!$scope.crossesAndSelectionsTab.hidden &&
-						$scope.AsyncHasAnyAuthority($scope.crossesAndSelectionsTab.permission)) {
-						$scope.tabSelected = $scope.crossesAndSelectionsTab.state;
-						$rootScope.navigateToTab($scope.tabSelected, {reload: true});
-
-					}
 				});
 			}
 
 			function loadSampleGenotypesTab() {
 				sampleGenotypeService.searchSampleGenotypes({}, 0, 1).then((sampleGenotypesTable) => {
 					$scope.sampleGenotypesTab.hidden = !sampleGenotypesTable.length;
-					if ($scope.tabSelected === '' &&
-						!$scope.sampleGenotypesTab.hidden &&
-						$scope.AsyncHasAnyAuthority($scope.sampleGenotypesTab.permission)) {
-						$scope.tabSelected = $scope.sampleGenotypesTab.state;
-						$rootScope.navigateToTab($scope.tabSelected, {reload: true});
-					}
 				});
 			}
 
@@ -916,22 +903,31 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 						})
 					});
 				});
-				const trialTabSelected =  $scope.trialTabs.find((tab) => !tab.hidden && $scope.hasAnyAuthority(tab.permission));
-				if (!!trialTabSelected) {
-					$scope.tabSelected = trialTabSelected.state
-					$scope.isSettingsTab = $scope.tabSelected === 'trialSettings';
-					$rootScope.navigateToTab($scope.tabSelected, {reload: true});
-				} else if (!!$scope.subObservationTabs.length && $scope.hasAnyAuthority(PERMISSIONS.VIEW_OBSERVATIONS_PERMISSIONS)) {
+
+				$scope.safeApply(function () {
+					const trialTabSelected = $scope.trialTabs.find((tab) => !tab.hidden && $scope.hasAnyAuthority(tab.permission));
 					$scope.isSettingsTab = false;
-					$scope.navigateToSubObsTab(studyContext.measurementDatasetId);
-				} else if (!!$scope.sampleTabsData.length && $scope.hasAnyAuthority(PERMISSIONS.VIEW_SAMPLE_LISTS_PERMISSIONS)) {
-					$scope.tabSelected = $scope.sampleTabs[0].state;
-					$scope.isSettingsTab = false;
-					$scope.listTabChange($scope.sampleTabs[0].state);
-					$timeout(function () {
-						$('#sample-list-' + $scope.sampleTabs[0].id).dataTable().fnAdjustColumnSizing();
-					}, 1);
-				}
+
+					if (!!trialTabSelected) {
+						$scope.tabSelected = trialTabSelected.state
+						$scope.isSettingsTab = $scope.tabSelected === 'trialSettings';
+						$rootScope.navigateToTab($scope.tabSelected, {reload: true});
+					} else if (!!$scope.subObservationTabs.length && $scope.hasAnyAuthority(PERMISSIONS.VIEW_OBSERVATIONS_PERMISSIONS)) {
+						$rootScope.navigateToSubObsTab(studyContext.measurementDatasetId);
+					} else if (!!$scope.sampleTabsData.length && $scope.hasAnyAuthority(PERMISSIONS.VIEW_SAMPLE_LISTS_PERMISSIONS)) {
+						$scope.tabSelected = $scope.sampleTabs[0].state;
+						$scope.listTabChange($scope.sampleTabs[0].state);
+						$timeout(function () {
+							$('#sample-list-' + $scope.sampleTabs[0].id).dataTable().fnAdjustColumnSizing();
+						}, 1);
+					} else if (!$scope.crossesAndSelectionsTab.hidden && $scope.hasAnyAuthority($scope.crossesAndSelectionsTab.permission)) {
+						$scope.tabSelected = $scope.crossesAndSelectionsTab.state;
+						$rootScope.navigateToTab($scope.tabSelected, {reload: true});
+					}else if (!$scope.sampleGenotypesTab.hidden && $scope.hasAnyAuthority($scope.sampleGenotypesTab.permission)) {
+						$scope.tabSelected = $scope.sampleGenotypesTab.state;
+						$rootScope.navigateToTab($scope.tabSelected, {reload: true});
+					}
+				});
 			}, function (response) {
 				if (response.errors[0] && response.errors[0].message) {
 					showErrorMessage('', response.errors[0].message);
@@ -987,21 +983,25 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			};
 
 			$scope.isSaveDisabled = function () {
-				return !$scope.hasAnyAuthority(PERMISSIONS.FULL_MANAGE_STUDIES_PERMISSIONS)
-				|| (!$scope.isSaveEnabled() && !studyStateService.hasUnsavedData());
-			};
+				return $scope.safeApply(function () {
+					!$scope.hasAnyAuthority(PERMISSIONS.FULL_MANAGE_STUDIES_PERMISSIONS) || //
+					(!$scope.isSaveEnabled() && !studyStateService.hasUnsavedData());
+				});
+			}
 
 			$scope.hasUnsavedData = function () {
 				return $scope.hasAnyAuthority(PERMISSIONS.FULL_MANAGE_STUDIES_PERMISSIONS) && studyStateService.hasUnsavedData();
 			}
 
 			$scope.isSaveEnabled = function () {
-				return $scope.hasAnyAuthority(PERMISSIONS.FULL_MANAGE_STUDIES_PERMISSIONS)
+				return $scope.safeApply(function () {
+					$scope.hasAnyAuthority(PERMISSIONS.FULL_MANAGE_STUDIES_PERMISSIONS)
 					&& $scope.tabSelected && ([
 						"trialSettings",
 						"treatment"
 					].indexOf($scope.tabSelected) >= 0) || !studyContext.studyId;
-			};
+				});
+			}
 
 			$scope.showCreateSubObservationUnitsAction = function () {
 				return $scope.hasAnyAuthority(PERMISSIONS.CREATE_SUB_OBSERVATION_UNITS_PERMISSIONS) && $scope.hasDesignGenerated;
