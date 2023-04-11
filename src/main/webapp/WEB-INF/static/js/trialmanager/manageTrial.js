@@ -310,8 +310,9 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 
 			$scope.trialTabs = [];
 			$scope.subObservationTabs = [];
-			$scope.tabSelected = '';
-			$scope.isSettingsTab = false;
+			$scope.tabSelected = 'trialSettings';
+			$scope.isSettingsTab = true;
+		 	$location.path('/trialSettings');
 			$scope.sampleTabsData = [];
 			$scope.sampleTabs = [];
 			$scope.isOpenStudy = TrialManagerDataService.isOpenStudy;
