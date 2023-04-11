@@ -14,19 +14,6 @@
 			 */
 			var hasAuthorityMap = {};
 
-			service.AsyncHasAnyAuthority = function (value) {
-				return AccountService.get().then((account) => {
-					if (!Object.keys(hasAuthorityMap).length && account && account.authorities && account.authorities.length) {
-						account.authorities.forEach((authority) => {
-							hasAuthorityMap[authority] = true;
-						});
-					}
-					const authorities = typeof value === 'string' ? [value] : value;
-					return authorities.some((authority) => hasAuthorityMap[authority]);
-				});
-
-			}
-
 			service.hasAnyAuthority = function (value) {
 				const authorities = typeof value === 'string' ? [value] : value;
 				return authorities.some((authority) => hasAuthorityMap[authority]);
