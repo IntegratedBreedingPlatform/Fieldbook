@@ -423,7 +423,7 @@
 			<div class="col-xs-12" ui-view="germplasmStudySource" ng-show="tabSelected==='germplasmStudySource'"></div>
 			<div class="col-xs-12" ui-view="genotype" ng-show="tabSelected==='sampleGenotypes'"></div>
 			<div class="col-xs-12" ui-view="inventory" ng-show="tabSelected==='inventory'"></div>
-			<div ng-if="hasAnyAuthority(PERMISSIONS.VIEW_OBSERVATIONS_PERMISSIONS)" class="col-xs-12" ui-view="subObservationTab" ng-show="tabSelected.indexOf('/subObservationTabs/') === 0"></div>
+			<div class="col-xs-12" ui-view="subObservationTab" ng-show="tabSelected.indexOf('/subObservationTabs/') === 0"></div>
 			<div class="col-xs-12" ui-view="analysisResults" ng-show="tabSelected==='analysisResults'"></div>
 			<div class="col-xs-12" ng-repeat="sampleListTab in sampleTabsData track by $index" id="{{sampleListTab.id}}"
 				 ng-show="tabSelected===sampleListTab.name">
