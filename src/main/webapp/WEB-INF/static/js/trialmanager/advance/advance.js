@@ -540,21 +540,20 @@
 
 				if (event.data.name === EVENTS.TREE_STATE_PERSISTED) {
 					$uibModalInstance.close(null);
-					if ($scope.hasAnyAuthority(PERMISSIONS.VIEW_CROSSES_AND_SELECTIONS_PERMISSIONS)) {
 						redirectToCrossesAndSelectionsTab();
-					}
 				}
 			}
 
 			function redirectToCrossesAndSelectionsTab() {
-				// Notify the application that germplasm has been saved. This will display the 'Crosses and Selections'
-				// tab if germplasm is already created within the study.
-				$rootScope.$broadcast('germplasmListSaved');
+				if ($scope.hasAnyAuthority(PERMISSIONS.VIEW_CROSSES_AND_SELECTIONS_PERMISSIONS)) {
+					// Notify the application that germplasm has been saved. This will display the 'Crosses and Selections'
+					// tab if germplasm is already created within the study.
+					$rootScope.$broadcast('germplasmListSaved');
 
-				// Refresh and show the 'Crosses and Selections' tab after saving the germplasm list
-				$rootScope.navigateToTab('germplasmStudySource', {reload: true});
+					// Refresh and show the 'Crosses and Selections' tab after saving the germplasm list
+					$rootScope.navigateToTab('germplasmStudySource', {reload: true});
+				}
 			}
-
 		}]);
 
 	manageTrialApp.controller('AdvanceSelectDatasetCtrl', ['$scope', '$uibModal', '$uibModalInstance', 'studyContext', 'advanceStudyModalService',
