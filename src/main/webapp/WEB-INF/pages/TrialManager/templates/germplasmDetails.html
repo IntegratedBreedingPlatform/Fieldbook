@@ -50,16 +50,16 @@
 						<span th:text="#{study.studydetails.actions}">Actions</span>
 					</button>
 					<ul class="dropdown-menu fbk-right-button-drop-down" role="menu">
-						<li ng-show="hasGermplasmListSelected() &amp;&amp; hasAnyAuthority(PERMISSIONS.REPLACE_GERMPLASM_PERMISSIONS)">
+						<li ng-show="ShowReplaceGermplasmAction()">
 							<a href="javascript: void(0)"  ng-click="validateGermplasmForReplacement()" th:text="#{replace.germplasm}">Replace Germplasm</a>
 						</li>
-						<li ng-show="hasAnyAuthority(PERMISSIONS.ADD_NEW_ENTRIES_PERMISSIONS)">
+						<li ng-show="ShowAddNewEntriesAction()">
 							<a href="javascript: void(0)" ng-click="showAddEntriesModal()" th:text="#{add.new.entries}" >Add New Entries</a>
 						</li>
-						<li ng-show="hasGermplasmListSelected() &amp;&amp; hasAnyAuthority(PERMISSIONS.IMPORT_ENTRY_DETAILS_PERMISSIONS)">
+						<li ng-show="ShowImportEntryDetailsAction()">
 							<a href="javascript: void(0)" ng-click="openImportEntryDetailsModal()" th:text="#{import.entry.details}" >Import Entry Details</a>
 						</li>
-						<li ng-show="!hasGeneratedDesign() &amp;&amp; hasAnyAuthority(PERMISSIONS.MODIFY_ENTRY_DETAILS_VALUES_PERMISSIONS)">
+						<li ng-show="ShowSetEntryTypeAction()">
 							<a href="javascript: void(0)" ng-click="setEntryTypeByBatch()" th:text="#{set.entry.type}" >Set Entry Type</a>
 						</li>
 					</ul>

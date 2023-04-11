@@ -1156,10 +1156,26 @@
 				}
 
 				$scope.hasAnyActionAvailable = function () {
-					return $scope.hasGermplasmListSelected() && $scope.hasAnyAuthority(PERMISSIONS.REPLACE_GERMPLASM_PERMISSIONS) || //
-						$scope.hasAnyAuthority(PERMISSIONS.ADD_NEW_ENTRIES_PERMISSIONS) || //
-						$scope.hasGermplasmListSelected() && $scope.hasAnyAuthority(PERMISSIONS.IMPORT_ENTRY_DETAILS_PERMISSIONS) || //
-						!$scope.hasGeneratedDesign() && $scope.hasAnyAuthority(PERMISSIONS.MODIFY_ENTRY_DETAILS_VALUES_PERMISSIONS);
+					return $scope.ShowReplaceGermplasmAction() || //
+						$scope.ShowAddNewEntriesAction() || //
+						$scope.ShowImportEntryDetailsAction() || //
+						$scope.ShowSetEntryTypeAction();
+				}
+
+				$scope.ShowReplaceGermplasmAction = function () {
+					return $scope.hasGermplasmListSelected() && $scope.hasAnyAuthority(PERMISSIONS.REPLACE_GERMPLASM_PERMISSIONS);
+				}
+
+				$scope.ShowAddNewEntriesAction = function () {
+					return $scope.hasGermplasmListSelected() && $scope.hasAnyAuthority(PERMISSIONS.ADD_NEW_ENTRIES_PERMISSIONS);
+				}
+
+				$scope.ShowImportEntryDetailsAction = function () {
+					return $scope.hasGermplasmListSelected() && $scope.hasAnyAuthority(PERMISSIONS.IMPORT_ENTRY_DETAILS_PERMISSIONS);
+				}
+
+				$scope.ShowSetEntryTypeAction = function () {
+					return $scope.hasGermplasmListSelected() && !$scope.hasGeneratedDesign() && $scope.hasAnyAuthority(PERMISSIONS.MODIFY_ENTRY_DETAILS_VALUES_PERMISSIONS);
 				}
 
 				TrialManagerDataService.registerSaveListener('germplasmUpdate', $scope.handleSaveEvent);
