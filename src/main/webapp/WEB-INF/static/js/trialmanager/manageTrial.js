@@ -942,7 +942,14 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			$scope.sampleList = TrialManagerDataService.settings.sampleList;
 
 			angular.forEach($scope.sampleList, function (value) {
-				displaySampleList(value.listId, value.listName, true);
+				$.ajax({
+					url: '/Fieldbook/sample/list/sampleList/' + value.listId,
+					type: 'GET',
+					cache: false,
+					success: function (html) {
+							$scope.addSampleTabData(value.listId, html, value.listName, true);
+					}
+				});
 			});
 
 			$scope.listTabChange = function (selectedTab) {
