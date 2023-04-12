@@ -37,7 +37,7 @@
 							   th:onclick="'javascript: ExportSampleList.exportFile('+ *{listId} + ',\'' + *{listName} + '\');'"
 							   th:text="#{export.sample.list}">
 								Export sample list</a>
-							<a th:if="*{hasDeleteSamplePermission}" href="javascript: void(0)"
+							<a th:if="*{hasDeleteSamplePermission}" href="javascript: void(0)"></a>
 						</li>
 						<li>
 							<a th:if="*{hasManageStudiesPermission}" href="javascript: void(0)"
@@ -63,7 +63,6 @@
 									</a>
 								</li>
 							</ul>
-
 						</li>
 					</ul>
 				</div>
