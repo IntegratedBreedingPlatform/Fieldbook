@@ -125,9 +125,7 @@ function openStudyNode() {
 function doStudyLazyLoad(node, preSelectId) {
 	'use strict';
 	var additionalUrl = '/0';
-	if (choosingType === 2) {
-		additionalUrl = '/1';
-	}
+
 	if (node.data.isFolder === true) {
 
 		node.appendAjax({
@@ -192,13 +190,7 @@ function displayStudyListTree(treeName, choosingTypeParam, selectStudyFunctionPa
 	choosingType = choosingTypeParam;
 	$('#choosingType').val(choosingType);
 	var additionalUrl = '/0';
-	if (choosingType === 2) {
-		// Hide Study Type filter when tree is meant to show only folders
-		$('#studyTypeDiv').hide();
-		additionalUrl = '/1';
-	} else {
-		$('#studyTypeDiv').show();
-	}
+	$('#studyTypeDiv').show();
 
 	url = url + additionalUrl;
 
