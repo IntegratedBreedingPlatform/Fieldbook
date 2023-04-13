@@ -324,7 +324,6 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			$scope.FEEDBACK_ENABLED = FEEDBACK_ENABLED;
 
 			$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
-
 			$scope.PERMISSIONS = PERMISSIONS;
 			$scope.hasDesignGenerated = HAS_GENERATED_DESIGN;
 
@@ -906,7 +905,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 
 				$scope.safeApply(function () {
 					const trialTabSelected = $scope.trialTabs.find((tab) => !tab.hidden && $scope.hasAnyAuthority(tab.permission));
-					$scope.isSettingsTab = false;
+
 
 					if (!!trialTabSelected) {
 						$scope.tabSelected = trialTabSelected.state
@@ -926,6 +925,9 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 					}else if (!$scope.sampleGenotypesTab.hidden && $scope.hasAnyAuthority($scope.sampleGenotypesTab.permission)) {
 						$scope.tabSelected = $scope.sampleGenotypesTab.state;
 						$rootScope.navigateToTab($scope.tabSelected, {reload: true});
+					} else {
+						$scope.isSettingsTab = false;
+						$scope.tabSelected = '';
 					}
 				});
 			}, function (response) {
