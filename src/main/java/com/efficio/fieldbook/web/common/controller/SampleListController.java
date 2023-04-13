@@ -104,8 +104,14 @@ public class SampleListController {
 			model.addAttribute("hasDeleteSamplePermission",
 				this.authorizationService.hasAnyAuthority(PermissionsEnum.DELETE_SAMPLES_PERMISSIONS));
 			model.addAttribute("showImportGenotypes",
-				this.authorizationService.hasAnyAuthority(PermissionsEnum.IMPORT_GENOTYPES_PERMISSIONS) &&
+				this.authorizationService.hasAnyAuthority(PermissionsEnum.IMPORT_GENOTYPES_OPTIONS_PERMISSIONS) &&
 				this.sampleGenotypeService.countSampleGenotypesBySampleList(listId) == 0l);
+			model.addAttribute("showImportGenotypesFromGigwa",
+				this.authorizationService.hasAnyAuthority(PermissionsEnum.IMPORT_GENOTYPES_FROM_GIGWA_PERMISSIONS) &&
+					this.sampleGenotypeService.countSampleGenotypesBySampleList(listId) == 0l);
+			model.addAttribute("showImportGenotypesFromFile",
+				this.authorizationService.hasAnyAuthority(PermissionsEnum.IMPORT_GENOTYPES_FROM_FILE_PERMISSIONS) &&
+					this.sampleGenotypeService.countSampleGenotypesBySampleList(listId) == 0l);
 		} catch (final MiddlewareQueryException e) {
 			SampleListController.LOG.error(e.getMessage(), e);
 		}

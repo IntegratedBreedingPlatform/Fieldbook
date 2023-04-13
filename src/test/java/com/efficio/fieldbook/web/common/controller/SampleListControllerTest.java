@@ -60,7 +60,7 @@ public class SampleListControllerTest {
 		Mockito.doReturn(sampleDetailsDTOs).when(this.sampleListService).getSampleDetailsDTOs(SampleListControllerTest.TEST_SAMPLE_LIST_ID);
 		Mockito.doReturn(true).when(this.authorizationService).hasAnyAuthority(PermissionsEnum.EXPORT_FILE_SAMPLE_LIST_PERMISSIONS);
 		Mockito.doReturn(true).when(this.authorizationService).hasAnyAuthority(PermissionsEnum.DELETE_SAMPLES_PERMISSIONS);
-		Mockito.doReturn(true).when(this.authorizationService).hasAnyAuthority(PermissionsEnum.IMPORT_GENOTYPES_PERMISSIONS);
+		Mockito.doReturn(true).when(this.authorizationService).hasAnyAuthority(PermissionsEnum.IMPORT_GENOTYPES_OPTIONS_PERMISSIONS);
 
 		final Model model = Mockito.mock(Model.class);
 		this.slc.displaySampleList(SampleListControllerTest.TEST_SAMPLE_LIST_ID, Mockito.mock(HttpServletRequest.class), model);
