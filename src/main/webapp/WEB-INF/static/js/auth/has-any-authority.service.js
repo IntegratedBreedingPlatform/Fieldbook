@@ -3,8 +3,8 @@
 
 	const module = angular.module('auth');
 
-	module.factory('HasAnyAuthorityService', ['PrincipalService','AccountService',
-		function (PrincipalService, AccountService) {
+	module.factory('HasAnyAuthorityService', ['PrincipalService',
+		function (PrincipalService) {
 
 			var service = {};
 
