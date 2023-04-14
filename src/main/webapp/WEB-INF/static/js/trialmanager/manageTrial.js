@@ -267,11 +267,11 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 		'$timeout', '_', '$localStorage', '$state', '$window', '$location', 'HasAnyAuthorityService', 'derivedVariableService', 'exportStudyModalService',
 		'importStudyModalService', 'createSampleModalService', 'derivedVariableModalService', '$uibModal', '$q', 'datasetService', 'InventoryService',
 		'studyContext', 'PERMISSIONS', 'LABEL_PRINTING_TYPE', 'HAS_LISTS_OR_SUB_OBS', 'HAS_GENERATED_DESIGN', 'germplasmStudySourceService', 'sampleGenotypeService',
-		'studyEntryService', 'HAS_MEANS_DATASET', 'advanceStudyModalService', 'STABRAPP_URL', 'DS_BRAPP_URL', 'FEEDBACK_ENABLED',
+		'studyEntryService', 'HAS_MEANS_DATASET', 'advanceStudyModalService', 'STABRAPP_URL', 'DS_BRAPP_URL', 'FEEDBACK_ENABLED', 'AccountService',
 		function ($scope, $rootScope, studyStateService, TrialManagerDataService, $http, $timeout, _, $localStorage, $state, $window, $location, HasAnyAuthorityService,
 				  derivedVariableService, exportStudyModalService, importStudyModalService, createSampleModalService, derivedVariableModalService, $uibModal, $q, datasetService, InventoryService,
 				  studyContext, PERMISSIONS, LABEL_PRINTING_TYPE, HAS_LISTS_OR_SUB_OBS, HAS_GENERATED_DESIGN, germplasmStudySourceService, sampleGenotypeService, studyEntryService, HAS_MEANS_DATASET, advanceStudyModalService,
-				  STABRAPP_URL, DS_BRAPP_URL, FEEDBACK_ENABLED) {
+				  STABRAPP_URL, DS_BRAPP_URL, FEEDBACK_ENABLED, AccountService) {
 
 			$scope.dsBrappURL = DS_BRAPP_URL;
 			$scope.staBrappURL = STABRAPP_URL;
@@ -903,33 +903,8 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 					});
 				});
 
-				$scope.safeApply(function () {
-					const trialTabSelected = $scope.trialTabs.find((tab) => !tab.hidden && $scope.hasAnyAuthority(tab.permission));
+				$scope.tabSelectorAvailable();
 
-
-					if (!!trialTabSelected) {
-						$scope.tabSelected = trialTabSelected.state
-						$scope.isSettingsTab = $scope.tabSelected === 'trialSettings';
-						$rootScope.navigateToTab($scope.tabSelected, {reload: true});
-					} else if (!!$scope.subObservationTabs.length && $scope.hasAnyAuthority(PERMISSIONS.VIEW_OBSERVATIONS_PERMISSIONS)) {
-						$rootScope.navigateToSubObsTab(studyContext.measurementDatasetId);
-					} else if (!!$scope.sampleTabsData.length && $scope.hasAnyAuthority(PERMISSIONS.VIEW_SAMPLE_LISTS_PERMISSIONS)) {
-						$scope.tabSelected = $scope.sampleTabs[0].state;
-						$scope.listTabChange($scope.sampleTabs[0].state);
-						$timeout(function () {
-							$('#sample-list-' + $scope.sampleTabs[0].id).dataTable().fnAdjustColumnSizing();
-						}, 1);
-					} else if (!$scope.crossesAndSelectionsTab.hidden && $scope.hasAnyAuthority($scope.crossesAndSelectionsTab.permission)) {
-						$scope.tabSelected = $scope.crossesAndSelectionsTab.state;
-						$rootScope.navigateToTab($scope.tabSelected, {reload: true});
-					}else if (!$scope.sampleGenotypesTab.hidden && $scope.hasAnyAuthority($scope.sampleGenotypesTab.permission)) {
-						$scope.tabSelected = $scope.sampleGenotypesTab.state;
-						$rootScope.navigateToTab($scope.tabSelected, {reload: true});
-					} else {
-						$scope.isSettingsTab = false;
-						$scope.tabSelected = '';
-					}
-				});
 			}, function (response) {
 				if (response.errors[0] && response.errors[0].message) {
 					showErrorMessage('', response.errors[0].message);
@@ -1357,6 +1332,48 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 					});
 				});
 			};
+
+			// FIXME: Workaround solution for define the first available tab.
+			//  Is there a better way?
+			$scope.tabSelectorAvailable = function () {
+				AccountService.get().then((account) => {
+					const hasAuthorityMap = {};
+					account.authorities.forEach((authority) => {
+						hasAuthorityMap[authority] = true;
+					});
+
+					const trialTabSelected = $scope.trialTabs.find((tab) => {
+						return !tab.hidden && tab.permission.some((authority) => hasAuthorityMap[authority]);
+					});
+
+					if (!!trialTabSelected) {
+						$scope.tabSelected = trialTabSelected.state
+						$scope.isSettingsTab = $scope.tabSelected === 'trialSettings';
+						if (!$scope.isSettingsTab) {
+							$rootScope.navigateToTab($scope.tabSelected, {reload: true});
+						}
+					} else if (!!$scope.subObservationTabs.length && PERMISSIONS.VIEW_OBSERVATIONS_PERMISSIONS.some((authority) => hasAuthorityMap[authority])) {
+						$rootScope.navigateToSubObsTab(studyContext.measurementDatasetId);
+					} else if (!!$scope.sampleTabsData.length && PERMISSIONS.VIEW_SAMPLE_LISTS_PERMISSIONS.some((authority) => hasAuthorityMap[authority])) {
+						$scope.tabSelected = $scope.sampleTabs[0].state;
+						$scope.listTabChange($scope.sampleTabs[0].state);
+						$timeout(function () {
+							$('#sample-list-' + $scope.sampleTabs[0].id).dataTable().fnAdjustColumnSizing();
+						}, 1);
+					} else if (!$scope.crossesAndSelectionsTab.hidden && $scope.crossesAndSelectionsTab.permission.some((authority) => hasAuthorityMap[authority])) {
+						$scope.tabSelected = $scope.crossesAndSelectionsTab.state;
+						$rootScope.navigateToTab($scope.tabSelected, {reload: true});
+					}else if (!$scope.sampleGenotypesTab.hidden && $scope.sampleGenotypesTab.permission.some((authority) => hasAuthorityMap[authority])) {
+						$scope.tabSelected = $scope.sampleGenotypesTab.state;
+						$rootScope.navigateToTab($scope.tabSelected, {reload: true});
+					} else {
+						$scope.isSettingsTab = false;
+						$scope.tabSelected = '';
+					}
+
+				});
+			}
+
 
 			$scope.init = function () {
 				derivedVariableService.displayExecuteCalculateVariableMenu();
