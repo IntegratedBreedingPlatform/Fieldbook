@@ -400,7 +400,8 @@
 			   ng-class="{active: tabSelected===crossesAndSelectionsTab.state}"
 			   ng-click="performFunctionOnTabChange(crossesAndSelectionsTab.state)">{{crossesAndSelectionsTab.name}}</a>
 		</li>
-		<li ng-class="{active: tabSelected===sampleGenotypesTab.state}" ng-show="!sampleGenotypesTab.hidden">
+		<li ng-class="{active: tabSelected===sampleGenotypesTab.state}"
+			ng-show="hasAnyAuthority(sampleGenotypesTab.permission) &amp;&amp; !sampleGenotypesTab.hidden">
 			<a ui-sref="{{sampleGenotypesTab.state}}"
 			   ng-class="{active: tabSelected===sampleGenotypesTab.state}"
 			   ng-click="performFunctionOnTabChange(sampleGenotypesTab.state)">{{sampleGenotypesTab.name}}</a>
