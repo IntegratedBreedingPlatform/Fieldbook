@@ -37,14 +37,32 @@
 							   th:onclick="'javascript: ExportSampleList.exportFile('+ *{listId} + ',\'' + *{listName} + '\');'"
 							   th:text="#{export.sample.list}">
 								Export sample list</a>
+						</li>
+						<li>
 							<a th:if="*{hasManageStudiesPermission}" href="javascript: void(0)"
 														 th:onclick="'openDeleteSampleEntryConfirmation('+ *{listId} + ',\'' + *{listName} + '\');'"
 														 th:text="#{delete.sample.list.entries}">
 							Delete selected samples</a>
-							<a th:if="*{showImportGenotypes}" th:id="*{'importGenotypesAction' + listId}" href="javascript: void(0)"
-							   th:onclick="'javascript: importGenotypes('+ *{listId} + ');'"
+						</li>
+						<li class="dropdown-submenu pull-left">
+							<a th:if="*{showImportGenotypes}" th:id="*{'importGenotypesAction' + listId}" href="#"
 							   th:text="#{sample.list.import.genotypes}">
-								Import file</a>
+								Import Genotypes</a>
+							<ul class="dropdown-menu" style="margin-left: -20px;">
+								<li>
+									<a href="javascript: void(0)" th:onclick="'javascript: importGenotypesFromGigwa('+ *{listId} + ');'"
+									   th:text="#{sample.list.import.from.gigwa}">
+										Import from Gigwa
+									</a>
+								</li>
+								<li>
+									<a href="javascript: void(0)" th:onclick="'javascript: importGenotypesFromFile('+ *{listId} + ');'"
+									   th:text="#{sample.list.import.from.file}">
+										Import from file
+									</a>
+								</li>
+							</ul>
+
 						</li>
 					</ul>
 				</div>

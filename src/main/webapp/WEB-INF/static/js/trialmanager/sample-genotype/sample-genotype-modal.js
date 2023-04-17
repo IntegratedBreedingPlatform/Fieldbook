@@ -3,10 +3,9 @@
 
 	const module = angular.module('manageTrialApp');
 
-	module.controller('SampleGenotypeImportController', ['$scope', '$rootScope', 'studyContext', '$uibModalInstance', 'studyStateService', 'listId',
-		function ($scope, $rootScope, studyContext, $uibModalInstance, studyStateService, listId) {
-
-			$scope.url = '/ibpworkbench/controller/jhipster#/genotype-import/' + listId + '?restartApplication' +
+	module.controller('SampleGenotypeImportController', ['$scope', '$rootScope', 'studyContext', '$uibModalInstance', 'studyStateService', 'listId', 'routeString',
+		function ($scope, $rootScope, studyContext, $uibModalInstance, studyStateService, listId, routeString) {
+			$scope.url = '/ibpworkbench/controller/jhipster#/' + routeString + '/' + listId + '?restartApplication' +
 				'&cropName=' + studyContext.cropName +
 				'&programUUID=' + studyContext.programId +
 				'&studyId=' + studyContext.studyId +
@@ -44,18 +43,38 @@
 
 			var genotypeModalService = {};
 
-			genotypeModalService.openImportGenotypesModal = function (listId) {
+			genotypeModalService.openImportGenotypesFromFile = function (listId) {
 				$uibModal.open({
 					templateUrl: '/Fieldbook/static/angular-templates/sample-genotype/sample-genotype-modal.html',
 					controller: "SampleGenotypeImportController",
 					size: 'lg',
 					resolve: {
+						routeString: function () {
+							return 'genotype-import-file';
+						},
 						listId: function () {
 							return listId;
 						}
 					},
 				});
 			};
+
+			genotypeModalService.openImportGenotypesFromGigwa = function (listId) {
+				$uibModal.open({
+					templateUrl: '/Fieldbook/static/angular-templates/sample-genotype/sample-genotype-modal.html',
+					controller: "SampleGenotypeImportController",
+					size: 'lg',
+					resolve: {
+						routeString: function () {
+							return 'genotype-import';
+						},
+						listId: function () {
+							return listId;
+						}
+					},
+				});
+			};
+
 			return genotypeModalService;
 
 		}]);
