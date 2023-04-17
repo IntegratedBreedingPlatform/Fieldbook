@@ -526,7 +526,6 @@
 				if (event.data.name === EVENTS.GERMPLASM_LIST_CREATED) {
 					$uibModalInstance.close(null);
 					showSuccessfulMessage('', saveListSuccessfullyMessage);
-
 					openFeedbackSurvey(FEEDBACK_ENABLED, 'ADVANCE_GERMPLASM', feedbackService);
 					redirectToCrossesAndSelectionsTab();
 				}
@@ -537,7 +536,7 @@
 
 				if (event.data.name === EVENTS.TREE_STATE_PERSISTED) {
 					$uibModalInstance.close(null);
-
+					openFeedbackSurvey(FEEDBACK_ENABLED, 'ADVANCE_GERMPLASM', feedbackService);
 					redirectToCrossesAndSelectionsTab();
 				}
 			}
