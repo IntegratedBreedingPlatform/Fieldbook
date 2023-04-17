@@ -24,7 +24,7 @@
 			<span class="control-label control-label-bold control-label-italic advance-list-size advanced-list-label numberOfSelected" th:id="'numberOfSelected-' + *{listId}">0</span>
 		</div>
 		<div class="pull-right" th:if="*{totalNumberOfGermplasms > 0}">
-			<div class="col-md-12" th:if="*{hasDeleteSamplePermission or hasExportSampleListPermission}">
+			<div class="col-md-12" th:if="*{hasDeleteSamplePermission or hasExportSampleListPermission or showImportGenotypes}">
 			<div class="btn-group">
 					<button type="button" th:id="*{'listActionButton' + listId}"
 						class="btn btn-info dropdown-toggle fbk-action-btn"
@@ -37,10 +37,9 @@
 							   th:onclick="'javascript: ExportSampleList.exportFile('+ *{listId} + ',\'' + *{listName} + '\');'"
 							   th:text="#{export.sample.list}">
 								Export sample list</a>
-							<a th:if="*{hasDeleteSamplePermission}" href="javascript: void(0)"></a>
 						</li>
 						<li>
-							<a th:if="*{hasManageStudiesPermission}" href="javascript: void(0)"
+							<a th:if="*{hasDeleteSamplePermission}" href="javascript: void(0)"
 														 th:onclick="'openDeleteSampleEntryConfirmation('+ *{listId} + ',\'' + *{listName} + '\');'"
 														 th:text="#{delete.sample.list.entries}">
 							Delete selected samples</a>
