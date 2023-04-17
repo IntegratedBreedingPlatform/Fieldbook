@@ -527,12 +527,12 @@
 					$uibModalInstance.close(null);
 					showSuccessfulMessage('', saveListSuccessfullyMessage);
 
+					openFeedbackSurvey(FEEDBACK_ENABLED, 'ADVANCE_GERMPLASM', feedbackService);
 					redirectToCrossesAndSelectionsTab();
 				}
 
 				if (event.data.name === EVENTS.ADVANCE_SUCCESS) {
 					$scope.advanceSuccess = true;
-					openFeedbackSurvey(FEEDBACK_ENABLED, 'ADVANCE_GERMPLASM', feedbackService);
 				}
 
 				if (event.data.name === EVENTS.TREE_STATE_PERSISTED) {
