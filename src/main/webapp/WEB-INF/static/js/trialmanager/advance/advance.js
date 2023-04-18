@@ -98,7 +98,6 @@
 						}
 					}
 				}).result.finally(function () {
-					openFeedbackSurvey(isFeedbackEnabled, 'ADVANCE_GERMPLASM', feedbackService);
 					$rootScope.navigateToTab('crossesAndSelectionsTab', {reload: true});
 				});
 			};
@@ -487,9 +486,9 @@
 		}]);
 
 	manageTrialApp.controller('AdvanceModalCtrl', ['$scope', '$q', 'studyContext', '$uibModalInstance', 'trialInstances', 'advanceType',
-		'noOfReplications', 'selectedDatasetId', 'advanceStudyModalService','$window', '$rootScope', 'EVENTS', 'HasAnyAuthorityService', 'PERMISSIONS',
+		'noOfReplications', 'selectedDatasetId', 'advanceStudyModalService','$window', '$rootScope', 'EVENTS', 'HasAnyAuthorityService', 'PERMISSIONS', 'FEEDBACK_ENABLED', 'feedbackService',
 		function ($scope, $q, studyContext, $uibModalInstance, trialInstances, advanceType, noOfReplications, selectedDatasetId,
-				  advanceStudyModalService, $window, $rootScope, EVENTS, HasAnyAuthorityService, PERMISSIONS) {
+				  advanceStudyModalService, $window, $rootScope, EVENTS, HasAnyAuthorityService, PERMISSIONS, FEEDBACK_ENABLED, feedbackService) {
 
 			$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
 			$scope.PERMISSIONS = PERMISSIONS;
@@ -512,6 +511,7 @@
 				$uibModalInstance.close(null);
 
 				if ($scope.advanceSuccess) {
+					openFeedbackSurvey(FEEDBACK_ENABLED, 'ADVANCE_GERMPLASM', feedbackService);
 					redirectToCrossesAndSelectionsTab();
 				}
 			};
@@ -530,7 +530,7 @@
 				if (event.data.name === EVENTS.GERMPLASM_LIST_CREATED) {
 					$uibModalInstance.close(null);
 					showSuccessfulMessage('', saveListSuccessfullyMessage);
-
+					openFeedbackSurvey(FEEDBACK_ENABLED, 'ADVANCE_GERMPLASM', feedbackService);
 					redirectToCrossesAndSelectionsTab();
 				}
 
@@ -540,7 +540,8 @@
 
 				if (event.data.name === EVENTS.TREE_STATE_PERSISTED) {
 					$uibModalInstance.close(null);
-						redirectToCrossesAndSelectionsTab();
+					openFeedbackSurvey(FEEDBACK_ENABLED, 'ADVANCE_GERMPLASM', feedbackService);
+					redirectToCrossesAndSelectionsTab();
 				}
 			}
 
@@ -554,6 +555,7 @@
 					$rootScope.navigateToTab('germplasmStudySource', {reload: true});
 				}
 			}
+
 		}]);
 
 	manageTrialApp.controller('AdvanceSelectDatasetCtrl', ['$scope', '$uibModal', '$uibModalInstance', 'studyContext', 'advanceStudyModalService',
