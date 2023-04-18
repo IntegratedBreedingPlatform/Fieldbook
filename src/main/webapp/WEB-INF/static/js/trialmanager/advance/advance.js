@@ -508,6 +508,7 @@
 				$uibModalInstance.close(null);
 
 				if ($scope.advanceSuccess) {
+					openFeedbackSurvey(FEEDBACK_ENABLED, 'ADVANCE_GERMPLASM', feedbackService);
 					redirectToCrossesAndSelectionsTab();
 				}
 			};
