@@ -98,7 +98,6 @@
 						}
 					}
 				}).result.finally(function () {
-					openFeedbackSurvey(isFeedbackEnabled, 'ADVANCE_GERMPLASM', feedbackService);
 					$rootScope.navigateToTab('crossesAndSelectionsTab', {reload: true});
 				});
 			};
@@ -487,9 +486,9 @@
 		}]);
 
 	manageTrialApp.controller('AdvanceModalCtrl', ['$scope', '$q', 'studyContext', '$uibModalInstance', 'trialInstances', 'advanceType',
-		'noOfReplications', 'selectedDatasetId', 'advanceStudyModalService','$window', '$rootScope', 'EVENTS',
+		'noOfReplications', 'selectedDatasetId', 'advanceStudyModalService','$window', '$rootScope', 'EVENTS', 'FEEDBACK_ENABLED', 'feedbackService',
 		function ($scope, $q, studyContext, $uibModalInstance, trialInstances, advanceType, noOfReplications, selectedDatasetId,
-				  advanceStudyModalService, $window, $rootScope, EVENTS) {
+				  advanceStudyModalService, $window, $rootScope, EVENTS, FEEDBACK_ENABLED, feedbackService) {
 
 			$scope.url = `/ibpworkbench/controller/jhipster#/advance-${advanceType}?restartApplication` +
 				'&cropName=' + studyContext.cropName +
@@ -509,6 +508,7 @@
 				$uibModalInstance.close(null);
 
 				if ($scope.advanceSuccess) {
+					openFeedbackSurvey(FEEDBACK_ENABLED, 'ADVANCE_GERMPLASM', feedbackService);
 					redirectToCrossesAndSelectionsTab();
 				}
 			};
@@ -527,7 +527,7 @@
 				if (event.data.name === EVENTS.GERMPLASM_LIST_CREATED) {
 					$uibModalInstance.close(null);
 					showSuccessfulMessage('', saveListSuccessfullyMessage);
-
+					openFeedbackSurvey(FEEDBACK_ENABLED, 'ADVANCE_GERMPLASM', feedbackService);
 					redirectToCrossesAndSelectionsTab();
 				}
 
@@ -537,7 +537,7 @@
 
 				if (event.data.name === EVENTS.TREE_STATE_PERSISTED) {
 					$uibModalInstance.close(null);
-
+					openFeedbackSurvey(FEEDBACK_ENABLED, 'ADVANCE_GERMPLASM', feedbackService);
 					redirectToCrossesAndSelectionsTab();
 				}
 			}
