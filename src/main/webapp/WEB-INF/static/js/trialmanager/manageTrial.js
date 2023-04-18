@@ -267,11 +267,11 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 		'$timeout', '_', '$localStorage', '$state', '$window', '$location', 'HasAnyAuthorityService', 'derivedVariableService', 'exportStudyModalService',
 		'importStudyModalService', 'createSampleModalService', 'derivedVariableModalService', '$uibModal', '$q', 'datasetService', 'InventoryService',
 		'studyContext', 'PERMISSIONS', 'LABEL_PRINTING_TYPE', 'HAS_LISTS_OR_SUB_OBS', 'HAS_GENERATED_DESIGN', 'germplasmStudySourceService', 'sampleGenotypeService',
-		'studyEntryService', 'HAS_MEANS_DATASET', 'advanceStudyModalService', 'STABRAPP_URL', 'DS_BRAPP_URL', 'FEEDBACK_ENABLED',
+		'studyEntryService', 'HAS_MEANS_DATASET', 'advanceStudyModalService', 'STABRAPP_URL', 'DS_BRAPP_URL', 'FEEDBACK_ENABLED', 'AccountService',
 		function ($scope, $rootScope, studyStateService, TrialManagerDataService, $http, $timeout, _, $localStorage, $state, $window, $location, HasAnyAuthorityService,
 				  derivedVariableService, exportStudyModalService, importStudyModalService, createSampleModalService, derivedVariableModalService, $uibModal, $q, datasetService, InventoryService,
 				  studyContext, PERMISSIONS, LABEL_PRINTING_TYPE, HAS_LISTS_OR_SUB_OBS, HAS_GENERATED_DESIGN, germplasmStudySourceService, sampleGenotypeService, studyEntryService, HAS_MEANS_DATASET, advanceStudyModalService,
-				  STABRAPP_URL, DS_BRAPP_URL, FEEDBACK_ENABLED) {
+				  STABRAPP_URL, DS_BRAPP_URL, FEEDBACK_ENABLED, AccountService) {
 
 			$scope.dsBrappURL = DS_BRAPP_URL;
 			$scope.staBrappURL = STABRAPP_URL;
@@ -308,38 +308,13 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				}
 			}
 
-			$scope.trialTabs = [
-				{
-					name: 'Settings',
-					state: 'trialSettings'
-				}
-			];
+			$scope.trialTabs = [];
 			$scope.subObservationTabs = [];
 			$scope.tabSelected = 'trialSettings';
 			$scope.isSettingsTab = true;
-			$location.path('/trialSettings');
+		 	$location.path('/trialSettings');
 			$scope.sampleTabsData = [];
 			$scope.sampleTabs = [];
-			$scope.crossesAndSelectionsTab = {
-				name: 'Crosses and Selections',
-				state: 'germplasmStudySource',
-				hidden: true
-			}
-			$scope.sampleGenotypesTab = {
-				name: 'Sample Genotypes',
-				state: 'sampleGenotypes',
-				hidden: true
-			}
-			$scope.inventoryTab = {
-				name: 'Inventory',
-				state: 'inventory',
-				hidden: true
-			};
-			$scope.analysisResultsTab = {
-				name: 'SSA Results',
-				state: 'analysisResults',
-				hidden: true
-			};
 			$scope.isOpenStudy = TrialManagerDataService.isOpenStudy;
 			$scope.isLockedStudy = TrialManagerDataService.isLockedStudy;
 			$scope.studyTypes = [];
@@ -350,38 +325,77 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 
 			$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
 			$scope.PERMISSIONS = PERMISSIONS;
+			$scope.hasDesignGenerated = HAS_GENERATED_DESIGN;
 
 			$scope.returnToManageStudiesURL = "/ibpworkbench/controller/jhipster#/study-manager?cropName=" + studyContext.cropName + "&programUUID=" + studyContext.programId;
+
+			$scope.crossesAndSelectionsTab = {
+				name: 'Crosses and Selections',
+				state: 'germplasmStudySource',
+				hidden: true,
+				permission: PERMISSIONS.VIEW_CROSSES_AND_SELECTIONS_PERMISSIONS
+			}
+			$scope.sampleGenotypesTab = {
+				name: 'Sample Genotypes',
+				state: 'sampleGenotypes',
+				hidden: true,
+				permission: PERMISSIONS.VIEW_SAMPLE_GENOTYPES_PERMISSIONS
+			}
+			$scope.inventoryTab = {
+				name: 'Inventory',
+				state: 'inventory',
+				hidden: true,
+				permission: PERMISSIONS.VIEW_INVENTORY_PERMISSIONS
+			};
+			$scope.analysisResultsTab = {
+				name: 'SSA Results',
+				state: 'analysisResults',
+				hidden: true,
+				permission: PERMISSIONS.VIEW_SINGLE_SITE_ANALYSIS_RESULTS_PERMISSIONS
+			};
+
+			$scope.trialTabs.push(
+				{
+					name: 'Settings',
+					state: 'trialSettings',
+					permission: PERMISSIONS.VIEW_STUDY_SETTINGS_PERMISSIONS
+				}
+			);
 
 			if ($scope.isOpenStudy()) {
 				$scope.trialTabs.push({
 					name: 'Germplasm & Checks',
-					state: 'germplasm'
+					state: 'germplasm',
+					permission: PERMISSIONS.VIEW_GERMPLASM_AND_CHECKS_PERMISSIONS
 
 				});
 				$scope.trialTabs.push({
 					name: 'Treatment Factors',
-					state: 'treatment'
+					state: 'treatment',
+					permission: PERMISSIONS.VIEW_TREATMENT_FACTORS_PERMISSIONS
 				});
 				$scope.trialTabs.push({
 					name: 'Environments',
-					state: 'environment'
+					state: 'environment',
+					permission: PERMISSIONS.VIEW_ENVIRONMENT_PERMISSIONS
 				});
 				$scope.trialTabs.push({
 					name: 'Experimental Design',
-					state: 'experimentalDesign'
+					state: 'experimentalDesign',
+					permission: PERMISSIONS.VIEW_EXPERIMENTAL_DESIGN_PERMISSIONS
 				});
 
 				$scope.trialTabs.push($scope.inventoryTab);
+				$scope.trialTabs.push($scope.analysisResultsTab);
 
 				loadCrossesAndSelectionsTab();
 				loadSampleGenotypesTab();
 				loadInventoryTab();
+				loadAnalysisResultsTab();
 
 				studyStateService.updateHasListsOrSubObs(HAS_LISTS_OR_SUB_OBS);
 				studyStateService.updateGeneratedDesign(HAS_GENERATED_DESIGN);
 				studyStateService.updateHasMeansDataset(HAS_MEANS_DATASET);
-				loadAnalysisResultsTab();
 
 				if (HAS_GENERATED_DESIGN) {
 					studyEntryService.getStudyEntriesMetadata().then(function (metadata) {
@@ -390,14 +404,13 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 						}
 					});
 				}
-				;
-
 			}
-			;
 
 			inventoryChangedDeRegister();
 			inventoryChangedDeRegister = $rootScope.$on("inventoryChanged", function () {
-				loadInventoryTab();
+				if ($scope.hasAnyAuthority(PERMISSIONS.VIEW_INVENTORY_PERMISSIONS)) {
+					loadInventoryTab();
+				}
 			});
 
 			germplasmListSavedRegister();
@@ -412,17 +425,13 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 
 			function loadCrossesAndSelectionsTab() {
 				germplasmStudySourceService.searchGermplasmStudySources({}, 0, 1).then((germplasmStudySourceTable) => {
-					if (germplasmStudySourceTable.length) {
-						$scope.crossesAndSelectionsTab.hidden = false;
-					}
+					$scope.crossesAndSelectionsTab.hidden = !germplasmStudySourceTable.length;
 				});
 			}
 
 			function loadSampleGenotypesTab() {
 				sampleGenotypeService.searchSampleGenotypes({}, 0, 1).then((sampleGenotypesTable) => {
-					if (sampleGenotypesTable.length) {
-						$scope.sampleGenotypesTab.hidden = false;
-					}
+					$scope.sampleGenotypesTab.hidden = !sampleGenotypesTable.length;
 				});
 			}
 
@@ -433,15 +442,25 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 						// If the Inventory tab becomes hidden, if no transactions left, navigate to Observations tab to show its content
 						if ($scope.inventoryTab.hidden && $scope.tabSelected === 'inventory') {
 							$scope.navigateToSubObsTab(studyContext.measurementDatasetId);
+						} else if ($scope.tabSelected === '' &&
+							!$scope.inventoryTab.hidden &&
+							$scope.hasAnyAuthority($scope.inventoryTab.permission)) {
+							$scope.tabSelected = $scope.inventoryTab.state;
+							$rootScope.navigateToTab($scope.tabSelected, {reload: true});
 						}
 					});
 				});
 			}
 
 			function loadAnalysisResultsTab() {
-				if(HAS_MEANS_DATASET) {
+				if (HAS_MEANS_DATASET) {
 					$scope.analysisResultsTab.hidden = false;
-					$scope.trialTabs.push($scope.analysisResultsTab);
+					if ($scope.tabSelected === '' &&
+						!$scope.analysisResultsTab.hidden &&
+						$scope.hasAnyAuthority($scope.analysisResultsTab.permission)) {
+						$scope.tabSelected = $scope.analysisResultsTab.state;
+						$rootScope.navigateToTab($scope.tabSelected, {reload: true});
+					}
 				}
 			}
 
@@ -645,34 +664,45 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			};
 
 			$scope.showPreparePlantingInventoryAction = function () {
-				return $scope.hasDesignGenerated && HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.PREPARE_PLANTING_PERMISSIONS);
+				return $scope.hasDesignGenerated && $scope.hasAnyAuthority(PERMISSIONS.PREPARE_PLANTING_PERMISSIONS);
+			}
+
+			$scope.showPrintingLabelsAction = function () {
+				return $scope.hasDesignGenerated && $scope.hasAnyAuthority(PERMISSIONS.CREATE_PLANTING_LABELS_PERMISSIONS);
+			}
+
+			$scope.showImportOwnDesignAction = function () {
+				return $scope.hasGermplasmListSelected() && $scope.hasAnyAuthority(PERMISSIONS.GENERATE_EXPERIMENTAL_DESIGN_PERMISSIONS);
+			}
+
+			$scope.showExportDesignTemplateAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.EXPORT_DESIGN_TEMPLATE_PERMISSIONS);
+			}
+
+			$scope.showLockStudyAction = function () {
+				return !$scope.isLockedStudy() && $scope.userHasLockPermission() && $scope.hasAnyAuthority(PERMISSIONS.LOCK_STUDY_PERMISSIONS);
+			}
+
+			$scope.showLockUnStudyAction = function () {
+				return $scope.isLockedStudy() && $scope.userHasLockPermission() && $scope.hasAnyAuthority(PERMISSIONS.LOCK_STUDY_PERMISSIONS);
 			}
 
 			$scope.showDesignAndPlanningOptions = function () {
-				return $scope.showPreparePlantingInventoryAction() || $scope.hasManageStudiesPermission;
+				return $scope.showExportDesignTemplateAction() || //
+					$scope.showImportOwnDesignAction() || //
+					$scope.showPrintingLabelsAction() || //
+					$scope.showPreparePlantingInventoryAction(); //
 			}
 
 			$scope.showCreateLotsAction = function () {
 				return $scope.hasDesignGenerated &&
-					HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.MS_CREATE_LOTS_PERMISSIONS);
+					$scope.hasAnyAuthority(PERMISSIONS.CREATE_LOTS_PERMISSIONS);
 			}
-
-			$scope.displayGermplasmOrMeasurmentOnlyActions = function () {
-				return studyStateService.hasGeneratedDesign() || ($scope.hasManageStudiesPermission && $scope.hasGermplasmListSelected());
-			};
 
 			$scope.displayExecuteCalculatedVariableOnlyActions = function () {
-				return $scope.hasManageStudiesPermission && derivedVariableService.isStudyHasCalculatedVariables && studyStateService.hasGeneratedDesign();
+				return $scope.hasAnyAuthority(PERMISSIONS.EXECUTE_CALCULATED_VARIABLES_PERMISSIONS) && derivedVariableService.isStudyHasCalculatedVariables && $scope.hasDesignGenerated;
 			};
 
-			$scope.reloadPermissions = function () {
-				$scope.hasManageStudiesPermission = $scope.hasAnyAuthority($scope.PERMISSIONS.MANAGE_STUDIES_PERMISSIONS);
-			}
-
-			$scope.reloadActionMenuConditions = function () {
-				$scope.reloadPermissions();
-				$scope.hasDesignGenerated = studyStateService.hasGeneratedDesign();
-			};
 
 			// Programatically navigate to specified tab state
 			$rootScope.navigateToTab = function (targetState, options) {
@@ -872,6 +902,9 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 						})
 					});
 				});
+
+				$scope.tabSelectorAvailable();
+
 			}, function (response) {
 				if (response.errors[0] && response.errors[0].message) {
 					showErrorMessage('', response.errors[0].message);
@@ -883,7 +916,14 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			$scope.sampleList = TrialManagerDataService.settings.sampleList;
 
 			angular.forEach($scope.sampleList, function (value) {
-				displaySampleList(value.listId, value.listName, true);
+				$.ajax({
+					url: '/Fieldbook/sample/list/sampleList/' + value.listId,
+					type: 'GET',
+					cache: false,
+					success: function (html) {
+							$scope.addSampleTabData(value.listId, html, value.listName, true);
+					}
+				});
 			});
 
 			$scope.listTabChange = function (selectedTab) {
@@ -920,24 +960,143 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			};
 
 			$scope.isSaveDisabled = function () {
-				return !$scope.hasAnyAuthority($scope.PERMISSIONS.MANAGE_STUDIES_PERMISSIONS)
-				|| (!$scope.isSaveEnabled() && !studyStateService.hasUnsavedData());
-			};
+				return $scope.safeApply(function () {
+					!$scope.hasAnyAuthority(PERMISSIONS.FULL_MANAGE_STUDIES_PERMISSIONS) || //
+					(!$scope.isSaveEnabled() && !studyStateService.hasUnsavedData());
+				});
+			}
 
 			$scope.hasUnsavedData = function () {
-				return $scope.hasAnyAuthority($scope.PERMISSIONS.MANAGE_STUDIES_PERMISSIONS) && studyStateService.hasUnsavedData();
+				return $scope.hasAnyAuthority(PERMISSIONS.FULL_MANAGE_STUDIES_PERMISSIONS) && studyStateService.hasUnsavedData();
 			}
 
 			$scope.isSaveEnabled = function () {
-				return $scope.hasAnyAuthority($scope.PERMISSIONS.MANAGE_STUDIES_PERMISSIONS)
+				return $scope.safeApply(function () {
+					$scope.hasAnyAuthority(PERMISSIONS.FULL_MANAGE_STUDIES_PERMISSIONS)
 					&& $scope.tabSelected && ([
 						"trialSettings",
 						"treatment"
-					].indexOf($scope.tabSelected) >= 0);
-			};
+					].indexOf($scope.tabSelected) >= 0) || !studyContext.studyId;
+				});
+			}
 
-			$scope.showManageStudiesAction = function () {
-				return $scope.hasManageStudiesPermission && $scope.hasDesignGenerated;
+			$scope.showCreateSubObservationUnitsAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.CREATE_SUB_OBSERVATION_UNITS_PERMISSIONS) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showChangePlotEntryAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.CHANGE_PLOT_ENTRY_PERMISSIONS) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showSubObservationUnitOptionsAction = function () {
+				return $scope.showCreateSubObservationUnitsAction() || $scope.showChangePlotEntryAction();
+			}
+
+			$scope.showExportStudyBookAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.EXPORT_STUDY_BOOK_PERMISSIONS) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showExportStudyEntriesAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.EXPORT_STUDY_ENTRIES_PERMISSIONS) && $scope.hasGermplasmListSelected();
+			}
+
+			$scope.showImportObservationsAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.MANAGE_PENDING_OBSERVATION_VALUES_PERMISSIONS) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showDataCollectionAction = function () {
+				return $scope.showExportStudyBookAction() || //
+					$scope.showImportObservationsAction() || //
+					$scope.showExportStudyEntriesAction(); //
+			}
+
+
+			$scope.showCreateGenotypingSamplesAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.CREATE_GENOTYPING_SAMPLES_PERMISSIONS) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showAdvancesAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.ADVANCES_PERMISSIONS) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showAdvanceStudyAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.ADVANCE_STUDY_PERMISSIONS) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showAdvanceStudyForPlantsAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.ADVANCE_STUDY_FOR_PLANTS_PERMISSIONS) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showAnalyzeWithStarBrappAction = function () {
+				return $scope.staBrappURL && $scope.hasAnyAuthority(PERMISSIONS.ANALYZE_WITH_STA_BRAPP_PERMISSIONS);
+			}
+
+			$scope.showAnalyzeWithDecisionSupportAction = function () {
+				return $scope.dsBrappURL && $scope.hasAnyAuthority(PERMISSIONS.ANALYZE_WITH_DECISION_SUPPORT_PERMISSIONS);
+			}
+
+			$scope.showFieldMapOptionsAction = function () {
+				return $scope.showMakeFieldMapAction() || //
+					$scope.showViewFieldMapAction() || //
+					$scope.showDeleteFieldMapAction() || //
+					$scope.showCreateGeoreferenceAction() || //
+					$scope.showEditGeoreferenceAction();
+			}
+
+			$scope.showMakeFieldMapAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.MAKE_FIELD_MAP_PERMSISSION) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showViewFieldMapAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.VIEW_FIELD_MAP_PERMSISSION) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showDeleteFieldMapAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.DELETE_FIELD_MAP_PERMSISSION) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showCreateGeoreferenceAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.CREATE_GEOREFERENCE_PERMSISSION) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showEditGeoreferenceAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.EDIT_GEOREFERENCE_PERMSISSION) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showCrossingOptionsAction = function () {
+				return $scope.showExportCrossingTemplateAction() ||
+					$scope.showImportCrossesAction() ||
+					$scope.showDesignNewCrossesAction();
+			}
+
+			$scope.showExportCrossingTemplateAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.EXPORT_CROSSING_TEMPLATE_PERMISSIONS) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showImportCrossesAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.IMPORT_CROSSES_PERMISSIONS) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showDesignNewCrossesAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.DESIGN_NEW_CROSSES_PERMISSIONS) && $scope.hasDesignGenerated;
+			}
+
+			$scope.showStudyAction = function () {
+				return $scope.hasAnyAuthority(PERMISSIONS.CLOSE_STUDY_PERMISSIONS) ||
+					$scope.hasAnyAuthority(PERMISSIONS.DELETE_STUDY_PERMISSIONS) ||
+					$scope.showDesignAndPlanningOptions() ||
+					$scope.showCrossingOptionsAction() ||
+					$scope.showSubObservationUnitOptionsAction() ||
+					$scope.showFieldMapOptionsAction() ||
+					$scope.showDataCollectionAction() ||
+					$scope.displayExecuteCalculatedVariableOnlyActions() ||
+					$scope.showCreateGenotypingSamplesAction() ||
+					$scope.showAdvancesAction() ||
+					$scope.showCreateLotsAction() ||
+					$scope.showLockStudyAction() ||
+					$scope.showLockUnStudyAction() ||
+					$scope.showAnalyzeWithStarBrappAction() ||
+					$scope.showAnalyzeWithDecisionSupportAction();
 			}
 
 			$('body').on('DO_AUTO_SAVE', function () {
@@ -1174,6 +1333,48 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				});
 			};
 
+			// FIXME: Workaround solution for define the first available tab.
+			//  Is there a better way?
+			$scope.tabSelectorAvailable = function () {
+				AccountService.get().then((account) => {
+					const hasAuthorityMap = {};
+					account.authorities.forEach((authority) => {
+						hasAuthorityMap[authority] = true;
+					});
+
+					const trialTabSelected = $scope.trialTabs.find((tab) => {
+						return !tab.hidden && tab.permission.some((authority) => hasAuthorityMap[authority]);
+					});
+
+					if (!!trialTabSelected) {
+						$scope.tabSelected = trialTabSelected.state
+						$scope.isSettingsTab = $scope.tabSelected === 'trialSettings';
+						if (!$scope.isSettingsTab) {
+							$rootScope.navigateToTab($scope.tabSelected, {reload: true});
+						}
+					} else if (!!$scope.subObservationTabs.length && PERMISSIONS.VIEW_OBSERVATIONS_PERMISSIONS.some((authority) => hasAuthorityMap[authority])) {
+						$rootScope.navigateToSubObsTab(studyContext.measurementDatasetId);
+					} else if (!!$scope.sampleTabsData.length && PERMISSIONS.VIEW_SAMPLE_LISTS_PERMISSIONS.some((authority) => hasAuthorityMap[authority])) {
+						$scope.tabSelected = $scope.sampleTabs[0].state;
+						$scope.listTabChange($scope.sampleTabs[0].state);
+						$timeout(function () {
+							$('#sample-list-' + $scope.sampleTabs[0].id).dataTable().fnAdjustColumnSizing();
+						}, 1);
+					} else if (!$scope.crossesAndSelectionsTab.hidden && $scope.crossesAndSelectionsTab.permission.some((authority) => hasAuthorityMap[authority])) {
+						$scope.tabSelected = $scope.crossesAndSelectionsTab.state;
+						$rootScope.navigateToTab($scope.tabSelected, {reload: true});
+					}else if (!$scope.sampleGenotypesTab.hidden && $scope.sampleGenotypesTab.permission.some((authority) => hasAuthorityMap[authority])) {
+						$scope.tabSelected = $scope.sampleGenotypesTab.state;
+						$rootScope.navigateToTab($scope.tabSelected, {reload: true});
+					} else {
+						$scope.isSettingsTab = false;
+						$scope.tabSelected = '';
+					}
+
+				});
+			}
+
+
 			$scope.init = function () {
 				derivedVariableService.displayExecuteCalculateVariableMenu();
 			}
@@ -1187,7 +1388,6 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			}
 
 			$scope.studyName = $scope.data.studyName;
-
 		}]);
 
 	manageTrialApp.factory('studyService', ['$http', '$q', 'studyContext', 'serviceUtilities',

@@ -84,6 +84,7 @@ public class SampleListController {
 			final String notes = sampleList.getNotes();
 			final String type = sampleList.getType().name();
 			final List<SampleDetailsDTO> sampleDetailsDTOs = this.sampleListService.getSampleDetailsDTOs(listId);
+			final boolean hasGenotypes = this.sampleGenotypeService.countSampleGenotypesBySampleList(listId) == 0l;
 			model.addAttribute(SampleListController.SAMPLE_LIST, sampleDetailsDTOs);
 			model.addAttribute(SampleListController.TOTAL_NUMBER_OF_GERMPLASMS, sampleDetailsDTOs.size());
 
@@ -99,11 +100,19 @@ public class SampleListController {
 			model.addAttribute("listName", name);
 			model.addAttribute("listNotes", notes);
 			model.addAttribute("listType", type);
-			final boolean hasManageStudiesPermission = this.authorizationService.isSuperAdminUser()
-				|| this.authorizationService.hasAnyAuthority(PermissionsEnum.MANAGE_STUDIES_PERMISSIONS);
-			model.addAttribute("hasManageStudiesPermission", hasManageStudiesPermission);
+			model.addAttribute("hasExportSampleListPermission",
+				this.authorizationService.hasAnyAuthority(PermissionsEnum.EXPORT_FILE_SAMPLE_LIST_PERMISSIONS));
+			model.addAttribute("hasDeleteSamplePermission",
+				this.authorizationService.hasAnyAuthority(PermissionsEnum.DELETE_SAMPLES_PERMISSIONS));
 			model.addAttribute("showImportGenotypes",
-				hasManageStudiesPermission && this.sampleGenotypeService.countSampleGenotypesBySampleList(listId) == 0l);
+				this.authorizationService.hasAnyAuthority(PermissionsEnum.IMPORT_GENOTYPES_OPTIONS_PERMISSIONS) &&
+					hasGenotypes);
+			model.addAttribute("showImportGenotypesFromGigwa",
+				this.authorizationService.hasAnyAuthority(PermissionsEnum.IMPORT_GENOTYPES_FROM_GIGWA_PERMISSIONS) &&
+					hasGenotypes);
+			model.addAttribute("showImportGenotypesFromFile",
+				this.authorizationService.hasAnyAuthority(PermissionsEnum.IMPORT_GENOTYPES_FROM_FILE_PERMISSIONS) &&
+					hasGenotypes);
 		} catch (final MiddlewareQueryException e) {
 			SampleListController.LOG.error(e.getMessage(), e);
 		}

@@ -30,13 +30,11 @@
 
 				var GID = 8240,
 					GROUPGID = 8330;
-				$scope.hasManageStudiesPermission = HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.MANAGE_STUDIES_PERMISSIONS);
 
+				$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
 				$scope.entryDetails = TrialManagerDataService.settings.entryDetails;
 				$scope.isLockedStudy = TrialManagerDataService.isLockedStudy;
 				$scope.trialMeasurement = {hasMeasurement: studyStateService.hasGeneratedDesign()};
-				$scope.addVariable = TrialManagerDataService.applicationData.germplasmListSelected && $scope.hasManageStudiesPermission;
-				$scope.showAddColumns = TrialManagerDataService.applicationData.germplasmListSelected;
 				$scope.selectedItems = [];
 				$scope.numberOfEntries = 0;
 
@@ -694,7 +692,7 @@
 						columnData.index = index;
 
 						function isObservationEditable() {
-							return columnData.termId !== 8230 &&
+							return columnData.termId !== 8230 && $scope.hasAnyAuthority(PERMISSIONS.MODIFY_ENTRY_DETAILS_VALUES_PERMISSIONS) &&
 								(!columnData.systemVariable || (columnData.systemVariable && !studyStateService.hasGeneratedDesign()));
 						}
 
@@ -1142,19 +1140,42 @@
 				};
 
 				$scope.showUpdateImportList = function () {
-					return $scope.hasManageStudiesPermission && $scope.showUpdateImportListButton;
+					return $scope.showUpdateImportListButton && $scope.hasAnyAuthority(PERMISSIONS.ADD_NEW_ENTRIES_PERMISSIONS);
 				};
 
 				$scope.showClearListButton = function () {
-					return $scope.hasManageStudiesPermission && $scope.showClearList;
+					return $scope.showClearList && $scope.hasAnyAuthority(PERMISSIONS.ADD_NEW_ENTRIES_PERMISSIONS);
 				}
 
 				$scope.showImportList = function () {
-					return $scope.hasManageStudiesPermission && $scope.showImportListBrowser;
+					return $scope.showImportListBrowser && $scope.hasAnyAuthority(PERMISSIONS.ADD_NEW_ENTRIES_PERMISSIONS);
 				};
 
 				$scope.showStudyTable = function () {
 					return $scope.showStudyEntriesTable;
+				}
+
+				$scope.hasAnyActionAvailable = function () {
+					return $scope.ShowReplaceGermplasmAction() || //
+						$scope.ShowAddNewEntriesAction() || //
+						$scope.ShowImportEntryDetailsAction() || //
+						$scope.ShowSetEntryTypeAction();
+				}
+
+				$scope.ShowReplaceGermplasmAction = function () {
+					return $scope.hasGermplasmListSelected() && $scope.hasAnyAuthority(PERMISSIONS.REPLACE_GERMPLASM_PERMISSIONS);
+				}
+
+				$scope.ShowAddNewEntriesAction = function () {
+					return $scope.hasGermplasmListSelected() && $scope.hasAnyAuthority(PERMISSIONS.ADD_NEW_ENTRIES_PERMISSIONS);
+				}
+
+				$scope.ShowImportEntryDetailsAction = function () {
+					return $scope.hasGermplasmListSelected() && $scope.hasAnyAuthority(PERMISSIONS.IMPORT_ENTRY_DETAILS_PERMISSIONS);
+				}
+
+				$scope.ShowSetEntryTypeAction = function () {
+					return $scope.hasGermplasmListSelected() && !$scope.hasGeneratedDesign() && $scope.hasAnyAuthority(PERMISSIONS.MODIFY_ENTRY_DETAILS_VALUES_PERMISSIONS);
 				}
 
 				TrialManagerDataService.registerSaveListener('germplasmUpdate', $scope.handleSaveEvent);
@@ -1273,7 +1294,7 @@
 						var deferred = $q.defer();
 						datasetService.getDatasets([4]).then(function (data) {
 							angular.forEach(data, function (dataset) {
-								datasetService.removeVariables(dataset.datasetId, variableIds).then(function () {
+								datasetService.removeVariables(dataset.datasetId, variableType, variableIds).then(function () {
 									deferred.resolve(true);
 									showSuccessfulMessage('', $.germplasmMessages.removeVariableSuccess);
 									$rootScope.navigateToTab('germplasm', {reload: true});
@@ -1318,7 +1339,7 @@
 					datasetService.getDatasets([DATASET_TYPES.PLOT_OBSERVATIONS]).then(function (data) {
 						angular.forEach(data, function (dataset) {
 							var variableName = variable.alias ? variable.alias : variable.name;
-							datasetService.addVariables(dataset.datasetId, {
+							datasetService.addEntryDetails(dataset.datasetId, {
 								variableTypeId: variableType,
 								variableId: variable.cvTermId,
 								studyAlias: variableName
@@ -1546,6 +1567,10 @@
 
 				function concatAllColumns() {
 					return [].concat($scope.germplasmDescriptorColumns, $scope.passportColumns, $scope.attributesColumns, $scope.namesColumns);
+				}
+
+				$scope.hasGermplasmListSelected = function () {
+					return TrialManagerDataService.applicationData.germplasmListSelected;
 				}
 
 			}]);

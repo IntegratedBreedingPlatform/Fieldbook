@@ -8,6 +8,8 @@
 	manageTrialApp.controller('TrialSettingsCtrl', ['$scope', 'TrialManagerDataService', '_', '$filter', 'studyStateService', 'HasAnyAuthorityService', 'PERMISSIONS',
 		function ($scope, TrialManagerDataService, _, $filter, studyStateService, HasAnyAuthorityService, PERMISSIONS) {
 
+		$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
+
 		$scope.data = TrialManagerDataService.currentData.trialSettings;
 		$scope.managementDetails = TrialManagerDataService.settings.trialSettings;
 
@@ -34,10 +36,6 @@
 				options.selectAll = false;
 				studyStateService.updateOccurred();
 			});
-		};
-
-		$scope.hasManageStudiesPermission = function () {
-			return HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.MANAGE_STUDIES_PERMISSIONS);
 		};
 
 		$scope.onLabelChange = function() {

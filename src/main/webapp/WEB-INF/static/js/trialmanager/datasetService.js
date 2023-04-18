@@ -3,8 +3,8 @@
 
 	var datasetsApiModule = angular.module('datasets-api', ['ui.bootstrap', 'datasets-api', 'datasetOptionModal', 'fieldbook-utils']);
 
-	datasetsApiModule.factory('datasetService', ['$http', '$q', 'studyContext', 'serviceUtilities', 'DATASET_TYPES', 'DATASET_TYPES_OBSERVATION_IDS',
-		function ($http, $q, studyContext, serviceUtilities, DATASET_TYPES, DATASET_TYPES_OBSERVATION_IDS) {
+	datasetsApiModule.factory('datasetService', ['$http', '$q', 'studyContext', 'serviceUtilities', 'DATASET_TYPES', 'DATASET_TYPES_OBSERVATION_IDS', 'VARIABLE_TYPES',
+		function ($http, $q, studyContext, serviceUtilities, DATASET_TYPES, DATASET_TYPES_OBSERVATION_IDS, VARIABLE_TYPES) {
 
 			var BASE_URL = '/bmsapi/crops/' + studyContext.cropName + '/programs/' + studyContext.programId + '/studies/';
 
@@ -117,7 +117,22 @@
 			};
 
 			datasetService.addVariables = function (datasetId, newVariable) {
-				var request = $http.put(BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/variables', newVariable);
+				let url = '';
+				if (newVariable.variableTypeId === VARIABLE_TYPES.TRAIT) {
+					url = BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/traits';
+				} else if (newVariable.variableTypeId === VARIABLE_TYPES.SELECTION_METHOD) {
+					url = BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/selections';
+				} else if (newVariable.variableTypeId === VARIABLE_TYPES.ENVIRONMENT_DETAIL) {
+					url = BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/environment-details';
+				} else if (newVariable.variableTypeId === VARIABLE_TYPES.STUDY_CONDITION) {
+					url = BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/enviromental-conditions';
+				}
+				var request = $http.put(url, newVariable);
+				return request.then(successHandler, failureHandler);
+			};
+
+			datasetService.addEntryDetails = function (datasetId, newVariable) {
+				var request = $http.put(BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/entry-details', newVariable);
 				return request.then(successHandler, failureHandler);
 			};
 
@@ -131,8 +146,20 @@
 				return request.then(successHandler, failureHandler);
 			};
 
-			datasetService.removeVariables = function (datasetId, variableIds) {
-				var request = $http.delete(BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/variables?', {
+			datasetService.removeVariables = function (datasetId, variableType, variableIds) {
+				let url = '';
+				if (variableType === VARIABLE_TYPES.TRAIT.toString()) {
+					url = BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/traits?';
+				} else if (variableType === VARIABLE_TYPES.SELECTION_METHOD.toString()) {
+					url = BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/selections?';
+				} else if (variableType === VARIABLE_TYPES.ENVIRONMENT_DETAIL.toString()) {
+					url = BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '//environment-details?';
+				} else if (variableType === VARIABLE_TYPES.STUDY_CONDITION.toString()) {
+					url = BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/enviromental-conditions?';
+				} else if (variableType === VARIABLE_TYPES.ENTRY_DETAIL.toString()) {
+					url = BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/entry-details?';
+				}
+				var request = $http.delete(url, {
 					params: {
 						variableIds: variableIds.join(",")
 					}

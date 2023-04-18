@@ -486,9 +486,12 @@
 		}]);
 
 	manageTrialApp.controller('AdvanceModalCtrl', ['$scope', '$q', 'studyContext', '$uibModalInstance', 'trialInstances', 'advanceType',
-		'noOfReplications', 'selectedDatasetId', 'advanceStudyModalService','$window', '$rootScope', 'EVENTS', 'FEEDBACK_ENABLED', 'feedbackService',
+		'noOfReplications', 'selectedDatasetId', 'advanceStudyModalService','$window', '$rootScope', 'EVENTS', 'HasAnyAuthorityService', 'PERMISSIONS', 'FEEDBACK_ENABLED', 'feedbackService',
 		function ($scope, $q, studyContext, $uibModalInstance, trialInstances, advanceType, noOfReplications, selectedDatasetId,
-				  advanceStudyModalService, $window, $rootScope, EVENTS, FEEDBACK_ENABLED, feedbackService) {
+				  advanceStudyModalService, $window, $rootScope, EVENTS, HasAnyAuthorityService, PERMISSIONS, FEEDBACK_ENABLED, feedbackService) {
+
+			$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
+			$scope.PERMISSIONS = PERMISSIONS;
 
 			$scope.url = `/ibpworkbench/controller/jhipster#/advance-${advanceType}?restartApplication` +
 				'&cropName=' + studyContext.cropName +
@@ -543,12 +546,14 @@
 			}
 
 			function redirectToCrossesAndSelectionsTab() {
-				// Notify the application that germplasm has been saved. This will display the 'Crosses and Selections'
-				// tab if germplasm is already created within the study.
-				$rootScope.$broadcast('germplasmListSaved');
+				if ($scope.hasAnyAuthority(PERMISSIONS.VIEW_CROSSES_AND_SELECTIONS_PERMISSIONS)) {
+					// Notify the application that germplasm has been saved. This will display the 'Crosses and Selections'
+					// tab if germplasm is already created within the study.
+					$rootScope.$broadcast('germplasmListSaved');
 
-				// Refresh and show the 'Crosses and Selections' tab after saving the germplasm list
-				$rootScope.navigateToTab('germplasmStudySource', {reload: true});
+					// Refresh and show the 'Crosses and Selections' tab after saving the germplasm list
+					$rootScope.navigateToTab('germplasmStudySource', {reload: true});
+				}
 			}
 
 		}]);

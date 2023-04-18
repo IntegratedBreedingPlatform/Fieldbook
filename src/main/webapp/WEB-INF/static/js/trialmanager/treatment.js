@@ -11,8 +11,9 @@
 
 	manageTrialApp.controller('TreatmentCtrl', ['$scope', 'TrialManagerDataService', '_', '$q', '$http', 'studyStateService', 'HasAnyAuthorityService', 'PERMISSIONS',
 		function($scope, TrialManagerDataService, _, $q, $http, studyStateService, HasAnyAuthorityService, PERMISSIONS) {
-			$scope.hasManageStudiesPermission = HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.MANAGE_STUDIES_PERMISSIONS);
-			$scope.disableTreatment = studyStateService.hasGeneratedDesign();
+
+			$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
+			$scope.study = {hasGeneratedDesign: studyStateService.hasGeneratedDesign()};
 
 			$scope.settings = TrialManagerDataService.settings.treatmentFactors;
 			$scope.data = TrialManagerDataService.currentData.treatmentFactors;
@@ -21,7 +22,6 @@
 			// use $watchCollection, for every added change we retrieve the 'AMOUNT' pairs dynamically. also create a
 			// store to $scope.currentData for the variable levels.
 
-			$scope.trialMeasurement = {hasMeasurement: studyStateService.hasGeneratedDesign()};
 			TrialManagerDataService.onUpdateSettings('treatmentFactors', function(newValue) {
 				TrialManagerDataService.specialSettings.treatmentLevelPairs = $scope.settings.treatmentLevelPairs;
 			});

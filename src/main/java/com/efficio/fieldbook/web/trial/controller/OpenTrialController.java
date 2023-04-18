@@ -227,7 +227,6 @@ public class OpenTrialController extends BaseTrialController {
 		@RequestParam(value = "crosseslistid", required = false) final String crossesListId) {
 
 		model.addAttribute("createdCrossesListId", crossesListId);
-		model.addAttribute("hasManageStudiesPermission", this.authorizationService.hasAnyAuthority(PermissionsEnum.MANAGE_STUDIES_PERMISSIONS));
 
 		this.clearSessionData(session);
 		session.setAttribute("createdCrossesListId", crossesListId);

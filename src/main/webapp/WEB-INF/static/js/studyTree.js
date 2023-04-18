@@ -312,7 +312,7 @@ function displayStudyListTree(treeName, choosingTypeParam, selectStudyFunctionPa
 				 */
 				if (sourceNode.hasChildren()) {
 					showErrorMessage('page-study-tree-message-modal', cannotMove + ' ' + sourceNode.data.title + ' ' + hasChildrenString);
-				} else if (!hasManageStudiesPermission) {
+				} else if (!userHasStudyEditionPermission()) {
 					showErrorMessage('page-study-tree-message-modal', noPermissionToMoveStudyError);
 				} else if (sourceNode.data.isFolder === false && userLacksPermissionForStudy(sourceNode)) { 
 					showStudyIsLockedError(sourceNode);
@@ -404,6 +404,11 @@ function hideRenameStudySection() {
 
 function userLacksPermissionForStudy(node) {
 	return node.data.isLocked && parseInt(node.data.ownerId) !== currentCropUserId && !isSuperAdmin;
+}
+
+function userHasStudyEditionPermission() {
+	var element = angular.element(document.getElementById("mainApp")).scope();
+		return element.hasAnyAuthority(element.PERMISSIONS.FULL_MANAGE_STUDIES_PERMISSIONS);
 }
 
 function showStudyIsLockedError(node) {

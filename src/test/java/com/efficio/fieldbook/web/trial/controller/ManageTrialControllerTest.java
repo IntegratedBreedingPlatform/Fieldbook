@@ -77,7 +77,6 @@ public class ManageTrialControllerTest {
 				.andExpect(MockMvcResultMatchers.model().attributeExists("preloadSummaryName"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("studyTypes"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("isSuperAdmin"))
-				.andExpect(MockMvcResultMatchers.model().attributeExists("hasManageStudiesPermission"))
 				.andExpect(MockMvcResultMatchers.model().attribute(AbstractBaseFieldbookController.TEMPLATE_NAME_ATTRIBUTE, "Common/manageStudy"));
 
 		// Used ModelAttribute annotation for this so cannot assert above so verify mock interaction instead

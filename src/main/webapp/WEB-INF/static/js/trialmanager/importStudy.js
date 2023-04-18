@@ -88,9 +88,8 @@
 
 		}]);
 
-	importStudyModule.controller('importStudyCtrl', ['datasetId', '$scope', '$rootScope', '$uibModalInstance', 'datasetService', 'importStudyModalService',
-		'TrialManagerDataService',
-		function (datasetId, $scope, $rootScope, $uibModalInstance, datasetService, importStudyModalService) {
+	importStudyModule.controller('importStudyCtrl', ['datasetId', '$scope', '$rootScope', '$uibModalInstance', 'datasetService', 'importStudyModalService', 'HasAnyAuthorityService', 'PERMISSIONS',
+		function (datasetId, $scope, $rootScope, $uibModalInstance, datasetService, importStudyModalService, HasAnyAuthorityService, PERMISSIONS) {
 
 			$scope.modalTitle = 'Import observations';
 			$scope.file = null;
@@ -125,6 +124,11 @@
 				$scope.validateNewVariables().then(function (result) {
 					$rootScope.importedData  = $scope.importedData;
 					if (result.length > 0) {
+						if (!HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.ADD_OBSERVATION_TRAIT_VARIABLES_PERMISSIONS) ||
+							!HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.ADD_OBSERVATION_SELECTION_VARIABLES_PERMISSIONS)) {
+							$uibModalInstance.close();
+							showErrorMessage('', messagerErrorImportObservationWithVariables);
+						}
 						ctrl.showAddVariableConfirmModal(result, datasetId);
 					} else {
 						$scope.importObservations(true);

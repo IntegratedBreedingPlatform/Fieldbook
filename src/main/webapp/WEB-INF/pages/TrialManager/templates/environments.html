@@ -6,19 +6,28 @@
 				<div class="row">
 					<div class="col-xs-6 col-md-6">
 						<section-container icon="bms-mgt-details"
-										   th:attr="heading=#{study.managesettings.environment.management.details}" help-tool-type="MANAGE_STUDIES_ENVIRONMENT"
-										   add-variable="true" hide-variable="hasManageStudiesPermission" model-data="settings.managementDetails"
-										   variable-type="1806" callback="onAddVariable(result, 1806)">
-							<display-settings hide-delete="!hasManageStudiesPermission" name="content" predelete-function="onRemoveVariable" settings="settings.managementDetails"
+							th:attr="heading=#{study.managesettings.environment.management.details}" help-tool-type="MANAGE_STUDIES_ENVIRONMENT"
+							add-variable="hasAnyAuthority(PERMISSIONS.ADD_ENVIRONMENT_DETAILS_VARIABLES_PERMISSIONS)"
+							hide-variable="hasAnyAuthority(PERMISSIONS.ADD_ENVIRONMENT_DETAILS_VARIABLES_PERMISSIONS)" model-data="settings.managementDetails"
+							variable-type="1806" callback="onAddVariable(result, 1806)">
+							<display-settings
+								hide-delete="!hasAnyAuthority(PERMISSIONS.ADD_ENVIRONMENT_DETAILS_VARIABLES_PERMISSIONS)"
+								name="content" predelete-function="onRemoveVariable"
+								settings="settings.managementDetails"
 											  variable-type="1806"></display-settings>
 						</section-container>
 					</div>
 					<div class="col-xs-6 col-md-6">
 						<section-container
 							th:attr="heading=#{study.managesettings.environment.condition.details},help-tooltip=#{study.managesettings.conditions.tooltip},icon-img=@{/static/svg/conditions.svg}"
-							icon-size="22" add-variable="true" hide-variable="hasManageStudiesPermission" model-data="settings.trialConditionDetails"
+							icon-size="22" add-variable="hasAnyAuthority(PERMISSIONS.ADD_ENVIRONMENTAL_CONDITIONS_VARIABLES_PERMISSIONS)"
+							hide-variable="hasAnyAuthority(PERMISSIONS.ADD_ENVIRONMENTAL_CONDITIONS_VARIABLES_PERMISSIONS)"
+							model-data="settings.trialConditionDetails"
 							variable-type="1802" callback="onAddVariable(result, 1802)">
-							<display-settings hide-delete="!hasManageStudiesPermission" name="content" predelete-function="onRemoveVariable" settings="settings.trialConditionDetails"
+							<display-settings
+								hide-delete="!hasAnyAuthority(PERMISSIONS.ADD_ENVIRONMENTAL_CONDITIONS_VARIABLES_PERMISSIONS)"
+								name="content" predelete-function="onRemoveVariable"
+								settings="settings.trialConditionDetails"
 											  variable-type="1802"></display-settings>
 						</section-container>
 					</div>
@@ -32,16 +41,16 @@
 								<label class="control-label label-bold add_top_padding col-xs-7" style="text-align: left" th:text="#{study.managesettings.environment.specify.level.no}">Specify the number of environments for this study:</label>
 								<div class="col-xs-4">
 									<div class="input-group">
-										<input maxlength="3" valid-number="" class="form-control input-sm" ng-model="temp.numberOfInstances" ng-disabled="!hasManageStudiesPermission || isDesignAlreadyGenerated()"/>
+										<input maxlength="3" valid-number="" class="form-control input-sm" ng-model="temp.numberOfInstances" ng-disabled="!hasAnyAuthority(PERMISSIONS.MODIFY_NUMBER_OF_ENVIRONMENT_PERMISSIONS) || isDesignAlreadyGenerated()"/>
 										<span class="input-group-btn">
-                                              <input ng-click="updateInstanceCount()" ng-hide="!hasManageStudiesPermission || isDesignAlreadyGenerated()" class="btn btn-info btn-sm"
+                                              <input ng-click="updateInstanceCount()" ng-hide="!hasAnyAuthority(PERMISSIONS.MODIFY_NUMBER_OF_ENVIRONMENT_PERMISSIONS) || isDesignAlreadyGenerated()" class="btn btn-info btn-sm"
 													 style="padding: 6px 10px 5px; font-size: 11px;" type="button" value="Ok"/>
                                         </span>
 									</div><!-- /input-group -->
 								</div>
 								<div class="col-xs-offset-0">
 									<div class="input-group">
-										<span ng-show="hasManageStudiesPermission &amp;&amp; isDesignAlreadyGenerated()" class="glyphicon glyphicon-plus-sign fbk-add-sign" ng-click="(isDisableAddInstance) || addInstance()"></span>
+										<span ng-show="hasAnyAuthority(PERMISSIONS.MODIFY_NUMBER_OF_ENVIRONMENT_PERMISSIONS) &amp;&amp; isDesignAlreadyGenerated()" class="glyphicon glyphicon-plus-sign fbk-add-sign" ng-click="(isDisableAddInstance) || addInstance()"></span>
 									</div>
 								</div>
 							</div>
@@ -77,7 +86,7 @@
 				<tbody>
 				<tr ng-repeat="instance in instanceInfo.instances track by $index" ng-class="{even : $even, odd : $odd}">
 					<td class="fbk-delete-link fbk-table-delete-link">
-                        <span ng-click="deleteInstance($index, instance.instanceId)" ng-show="instanceInfo.numberOfInstances > 1"
+                        <span ng-click="deleteInstance($index, instance.instanceId)" ng-show="instanceInfo.numberOfInstances > 1 &amp;&amp; hasAnyAuthority(PERMISSIONS.MODIFY_NUMBER_OF_ENVIRONMENT_PERMISSIONS)"
 							  class="glyphicon glyphicon-minus-sign fbk-delete-sign" ng-model-options="{ debounce: 500 }">&nbsp;</span>
 					</td>
 					<td ng-show="isFileStorageConfigured">
@@ -90,14 +99,14 @@
 						</div>
 					</td>
 					<td>{{instance.managementDetailValues[TRIAL_INSTANCE_NO_INDEX]}}</td>
-					<td class="instance-editable-cell" ng-repeat="key in settings.managementDetails.keys() track by $index" ng-hide="settings.managementDetails.val(key).hidden">
+					<td ng-class="hasAnyAuthority(PERMISSIONS.MODIFY_ENVIRONMENT_VALUES_PERMISSIONS) ? 'instance-editable-cell' : ''" ng-repeat="key in settings.managementDetails.keys() track by $index" ng-hide="settings.managementDetails.val(key).hidden">
 						{{renderDisplayValue(settings.managementDetails.val(key), instance.managementDetailValues[key])}}
 						<i ng-show="showFileIcon(instance.fileVariableIds, settings.managementDetails.val(key).variable.cvTermId)"
 						   ng-click="showFiles(instance.instanceId, settings.managementDetails.val(key).variable.name)"
 							class="glyphicon glyphicon-duplicate text-info"	title="click to see associated files"
 							style="font-size: 1.2em; margin-left: 10px; cursor: pointer"></i>
 					</td>
-					<td class="instance-editable-cell" ng-repeat="key in settings.trialConditionDetails.keys() track by $index">
+					<td ng-class="hasAnyAuthority(PERMISSIONS.MODIFY_ENVIRONMENT_VALUES_PERMISSIONS) ? 'instance-editable-cell' : ''" ng-repeat="key in settings.trialConditionDetails.keys() track by $index">
 						{{renderDisplayValue(settings.trialConditionDetails.val(key), instance.trialDetailValues[key])}}
 						<i ng-show="showFileIcon(instance.fileVariableIds, settings.trialConditionDetails.val(key).variable.cvTermId)"
 						   ng-click="showFiles(instance.instanceId, settings.trialConditionDetails.val(key).variable.name)"
