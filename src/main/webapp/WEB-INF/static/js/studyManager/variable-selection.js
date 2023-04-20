@@ -226,6 +226,20 @@ BMS.NurseryManager.VariableSelection = (function($) {
 		this._onHideCallback = groupData.onHideCallback;
 		this._excludedProperties = groupData.excludedProperties || [];
 		this._preventAddSystemVariable = groupData.preventAddSystemVariable;
+		var allVariables = new Set();
+
+		if (properties) {
+			properties.forEach(function (property) {
+				if (property.standardVariables) {
+					property.standardVariables.forEach(function (variable) {
+						allVariables.add(variable.alias);
+						allVariables.add(variable.name);
+					});
+				}
+			});
+		}
+
+		this._allVariables = allVariables;
 
 		if (groupData.options) {
 			var options = groupData.options;
@@ -681,6 +695,12 @@ BMS.NurseryManager.VariableSelection = (function($) {
 			});
 
 			if (notUnique) {
+				showErrorMessage(null, this._translations.uniqueVariableError);
+				return false;
+			}
+
+			// Validate alias is unique among ALL variables' name or alias
+			if (this._allVariables.has(alias)) {
 				showErrorMessage(null, this._translations.uniqueVariableError);
 				return false;
 			}
