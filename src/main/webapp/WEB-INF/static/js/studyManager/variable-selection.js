@@ -700,7 +700,7 @@ BMS.NurseryManager.VariableSelection = (function($) {
 			}
 
 			// Validate alias is unique among ALL variables' name or alias
-			if (this._allVariables.has(alias)) {
+			if (this._allVariables && this._allVariables.has(alias)) {
 				showErrorMessage(null, this._translations.uniqueVariableError);
 				return false;
 			}

@@ -341,8 +341,10 @@
 				}, function (response) {
 					if (response.errors && response.errors.length) {
 						showErrorMessage('', response.errors[0].message);
+						reloadDataset();
 					} else {
 						showErrorMessage('', ajaxGenericErrorMsg);
+						reloadDataset();
 					}
 				});
 			};
