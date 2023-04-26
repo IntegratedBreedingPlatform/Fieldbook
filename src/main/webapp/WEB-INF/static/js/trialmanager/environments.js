@@ -4,9 +4,9 @@
 
 	angular.module('manageTrialApp').controller('EnvironmentCtrl', ['$scope', '$q', 'TrialManagerDataService', '$uibModal', '$stateParams',
 		'$http', 'DTOptionsBuilder', 'LOCATION_ID', 'PROGRAM_DEFAULT_LOCATION_ID', '$timeout', 'studyInstanceService', 'studyStateService', 'derivedVariableService', 'studyContext',
-		'datasetService', '$compile', 'fileService', 'HasAnyAuthorityService', 'PERMISSIONS',
+		'datasetService', '$compile', 'fileService', 'HasAnyAuthorityService', 'PERMISSIONS', 'TrialSettingsManager', '$rootScope',
 		function ($scope, $q, TrialManagerDataService, $uibModal, $stateParams, $http, DTOptionsBuilder, LOCATION_ID, PROGRAM_DEFAULT_LOCATION_ID, $timeout, studyInstanceService,
-				  studyStateService, derivedVariableService, studyContext, datasetService, $compile, fileService, HasAnyAuthorityService, PERMISSIONS) {
+				  studyStateService, derivedVariableService, studyContext, datasetService, $compile, fileService, HasAnyAuthorityService, PERMISSIONS, TrialSettingsManager, $rootScope) {
 
 			var ctrl = this;
 			var tableId = '#environment-table';
@@ -48,8 +48,17 @@
 					variableId: variable.cvTermId,
 					studyAlias: variable.alias ? variable.alias : variable.name
 				}).then(function () {
+					TrialSettingsManager.getCurrentModal().disableItem(variable);
 					$scope.nested.dataTable.rerender();
 					ctrl.initializePossibleValuesMap();
+				}, function (response) {
+					if (response.errors && response.errors.length) {
+						showErrorMessage('', response.errors[0].message);
+					} else {
+						showErrorMessage('', ajaxGenericErrorMsg);
+					}
+
+					TrialSettingsManager.getCurrentModal().triggerUndoAddVariable(variable);
 				});
 			};
 

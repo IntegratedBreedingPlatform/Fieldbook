@@ -9,8 +9,9 @@
 
 	var manageTrialApp = angular.module('manageTrialApp');
 
-	manageTrialApp.controller('TreatmentCtrl', ['$scope', 'TrialManagerDataService', '_', '$q', '$http', 'studyStateService', 'HasAnyAuthorityService', 'PERMISSIONS',
-		function($scope, TrialManagerDataService, _, $q, $http, studyStateService, HasAnyAuthorityService, PERMISSIONS) {
+	manageTrialApp.controller('TreatmentCtrl', ['$scope', 'TrialManagerDataService', '_', '$q', '$http', 'studyStateService', 'HasAnyAuthorityService',
+		'PERMISSIONS', 'TrialSettingsManager',
+		function($scope, TrialManagerDataService, _, $q, $http, studyStateService, HasAnyAuthorityService, PERMISSIONS, TrialSettingsManager) {
 
 			$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
 			$scope.study = {hasGeneratedDesign: studyStateService.hasGeneratedDesign()};
@@ -44,7 +45,11 @@
 			};
 
 			$scope.onAddVariable = function(result) {
-
+				var variable = undefined;
+				angular.forEach(result, function (val) {
+					variable = val.variable;
+				});
+				TrialSettingsManager.getCurrentModal().disableItem(variable);
 				angular.forEach(result, function(val, key) {
 					// there's no existing treatmentLevelPair
 					if (!$scope.settings.treatmentLevelPairs[key]) {

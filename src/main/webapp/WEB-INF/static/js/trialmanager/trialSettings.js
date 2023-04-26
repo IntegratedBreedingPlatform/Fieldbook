@@ -5,8 +5,9 @@
 
 	var manageTrialApp = angular.module('manageTrialApp');
 
-	manageTrialApp.controller('TrialSettingsCtrl', ['$scope', 'TrialManagerDataService', '_', '$filter', 'studyStateService', 'HasAnyAuthorityService', 'PERMISSIONS',
-		function ($scope, TrialManagerDataService, _, $filter, studyStateService, HasAnyAuthorityService, PERMISSIONS) {
+	manageTrialApp.controller('TrialSettingsCtrl', ['$scope', 'TrialManagerDataService', '_', '$filter', 'studyStateService', 'HasAnyAuthorityService',
+		'PERMISSIONS', 'TrialSettingsManager',
+		function ($scope, TrialManagerDataService, _, $filter, studyStateService, HasAnyAuthorityService, PERMISSIONS, TrialSettingsManager) {
 
 		$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
 
@@ -25,6 +26,14 @@
                 variables.val(cvTermID).isChecked = options.selectAll;
 			});
 
+		};
+
+		$scope.onAddVariable = function(result) {
+			var variable = undefined;
+			angular.forEach(result, function (val) {
+				variable = val.variable;
+			});
+			TrialSettingsManager.getCurrentModal().disableItem(variable);
 		};
 
 		$scope.removeSettings = function (variableType, variables, options) {

@@ -7,7 +7,8 @@
                            show-reminder="managementDetails.keys().length &lt;= 0"
                            add-variable="hasAnyAuthority(PERMISSIONS.ADD_STUDY_SETTINGS_VARIABLES_PERMISSIONS)"
                            hide-variable="hasAnyAuthority(PERMISSIONS.ADD_STUDY_SETTINGS_VARIABLES_PERMISSIONS)"
-                           model-data="managementDetails" variable-type="1805" help-tool-type="MANAGE_STUDIES_SETTINGS">
+                           model-data="managementDetails" variable-type="1805" help-tool-type="MANAGE_STUDIES_SETTINGS"
+                           callback="onAddVariable(result, 1805)">
             <div name="content">
                 <div class="row form-group" ng-repeat="key in filteredKeys = ( managementDetails.keys() | removeHiddenVariableFilter: managementDetails.vals() ) track by key">
                     <div class="col-xs-5 1st">

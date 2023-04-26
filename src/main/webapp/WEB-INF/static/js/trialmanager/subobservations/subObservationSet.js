@@ -342,13 +342,11 @@
 				}, function (response) {
 					if (response.errors && response.errors.length) {
 						showErrorMessage('', response.errors[0].message);
-						TrialSettingsManager.getCurrentModal().triggerUndoAddVariable(variable);
-						reloadDataset();
 					} else {
 						showErrorMessage('', ajaxGenericErrorMsg);
-						TrialSettingsManager.getCurrentModal().triggerUndoAddVariable(variable);
-						reloadDataset();
 					}
+					TrialSettingsManager.getCurrentModal().triggerUndoAddVariable(variable);
+					reloadDataset();
 				});
 			};
 
