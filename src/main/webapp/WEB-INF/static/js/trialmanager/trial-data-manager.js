@@ -914,10 +914,14 @@
 		.service('TrialSettingsManager', ['TRIAL_VARIABLE_SELECTION_LABELS', function(TRIAL_VARIABLE_SELECTION_LABELS) {
 			var TrialSettingsManager = window.TrialSettingsManager;
 			var settingsManager = new TrialSettingsManager(TRIAL_VARIABLE_SELECTION_LABELS);
+			var currentModal;
 
 			return {
+				getCurrentModal: function() {
+					return currentModal;
+				},
 				openVariableSelectionDialog: function(params) {
-					settingsManager._openVariableSelectionDialog(params);
+					currentModal = settingsManager._openVariableSelectionDialog(params);
 				},
 
 				// @param = this map contains variables of the pair that will be filtered

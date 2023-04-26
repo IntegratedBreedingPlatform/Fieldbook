@@ -438,6 +438,7 @@ BMS.NurseryManager.VariableSelection = (function($) {
 			variableId,
 			callback = this._callback,
 			preventAddSystemVariable = this._preventAddSystemVariable;
+		this._currentlySelectedButton = selectButton;
 
 		// If the user is in the middle of entering an alias, close that before proceeding
 		if (container.find(aliasVariableInputSelector).length) {
@@ -510,26 +511,6 @@ BMS.NurseryManager.VariableSelection = (function($) {
 			});
 		}
 		promise.done($.proxy(function (data) {
-
-			// remove the click functionality to avoid selecting twice
-			selectButton.off('click');
-			selectButton.on('click', function () {
-				showAlertMessage('', variableSelectedMessage);
-			});
-			selectButton.attr('title', variableSelectedMessage);
-			selectButton.removeClass('vs-variable-select');
-			selectButton.addClass('vs-variable-button');
-
-			// Prevent this variable from being selected again
-			this._currentlySelectedVariables[selectedVariable.id] = selectedVariable.alias || selectedVariable.name;
-
-			// Remove the edit button
-			selectButton.parents('.vs-variable').find(aliasVariableButtonSelector).remove();
-
-			// Change the add button to a tick to indicate success
-			iconContainer.removeClass('glyphicon-plus').addClass('glyphicon-ok');
-			selectButton.children('.vs-variable-select-label').text('');
-
 			/**
 			 * Variable select event.
 			 *
@@ -544,41 +525,76 @@ BMS.NurseryManager.VariableSelection = (function($) {
 				group: this._group,
 				responseData: data
 			});
-
-			/**
-			 * Remove variable from VariableCache
-			 * across all BMS applications
-			 * It's straightforward to do this here
-			 * while doing it at the moment of saving
-			 * could be a bit more tricky
-			 *
-			 */
-			var authParams =
-				'&selectedProjectId=' + selectedProjectId
-				+ '&loggedInUserId=' + loggedInUserId;
-
-			var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
-
-			$.each(
-				['/bmsapi/crops/' + cropName + '/variable-cache/' + variableId + '?programUUID=' + currentProgramId,
-					'/ibpworkbench/controller/' + 'variableCache/' + variableId + '?' + authParams],
-				function (i, v) {
-					$.ajax({
-						url: v,
-						type: 'DELETE',
-						beforeSend: function(xhr) {
-							xhr.setRequestHeader('X-Auth-Token', xAuthToken);
-						},
-						error: function(jqxhr, textStatus, error) {
-							if (jqxhr.status == 401) {
-								bmsAuth.handleReAuthentication();
-							}
-						}
-					});
-				});
 		}, this));
 
 	};
+
+	VariableSelection.prototype.triggerUndoAddVariable = function (selectedVariable) {
+		var variableInfo = _findVariableByName(selectedVariable.name, this._selectedProperty.standardVariables);
+		var index = variableInfo.index;
+
+		this._selectedProperty.standardVariables[index].alias = null;
+		this._selectedProperty.standardVariables[index].name = this._selectedProperty.standardVariables[index].originalVariableName;
+		_renderVariableName(this._selectedProperty.standardVariables[index], this._currentVariableContainer);
+	}
+
+	VariableSelection.prototype.disableItem = function (selectedVariable) {
+		var iconContainer = this._currentlySelectedButton.children('.glyphicon'),
+			variableSelectedMessage = this._translations.variableSelectedMessage,
+			variableId = _convertVariableId(selectedVariable.id);;
+
+		// remove the click functionality to avoid selecting twice
+		this._currentlySelectedButton.off('click');
+		this._currentlySelectedButton.on('click', function () {
+			showAlertMessage('', variableSelectedMessage);
+		});
+		this._currentlySelectedButton.attr('title', variableSelectedMessage);
+		this._currentlySelectedButton.removeClass('vs-variable-select');
+		this._currentlySelectedButton.addClass('vs-variable-button');
+
+		// Prevent this variable from being selected again
+		this._currentlySelectedVariables[selectedVariable.id] = selectedVariable.alias || selectedVariable.name;
+
+		// Remove the edit button
+		this._currentlySelectedButton.parents('.vs-variable').find(aliasVariableButtonSelector).remove();
+
+		// Change the add button to a tick to indicate success
+		iconContainer.removeClass('glyphicon-plus').addClass('glyphicon-ok');
+		this._currentlySelectedButton.children('.vs-variable-select-label').text('');
+
+
+		/**
+		 * Remove variable from VariableCache
+		 * across all BMS applications
+		 * It's straightforward to do this here
+		 * while doing it at the moment of saving
+		 * could be a bit more tricky
+		 *
+		 */
+		var authParams =
+			'&selectedProjectId=' + selectedProjectId
+			+ '&loggedInUserId=' + loggedInUserId;
+
+		var xAuthToken = JSON.parse(localStorage["bms.xAuthToken"]).token;
+
+		$.each(
+			['/bmsapi/crops/' + cropName + '/variable-cache/' + variableId + '?programUUID=' + currentProgramId,
+				'/ibpworkbench/controller/' + 'variableCache/' + variableId + '?' + authParams],
+			function (i, v) {
+				$.ajax({
+					url: v,
+					type: 'DELETE',
+					beforeSend: function(xhr) {
+						xhr.setRequestHeader('X-Auth-Token', xAuthToken);
+					},
+					error: function(jqxhr, textStatus, error) {
+						if (jqxhr.status == 401) {
+							bmsAuth.handleReAuthentication();
+						}
+					}
+				});
+			});
+	}
 
 	/*
 	 * Handles a variable alias event. Allows the user to provide an alias for a variable name.
@@ -586,6 +602,7 @@ BMS.NurseryManager.VariableSelection = (function($) {
 	 * @param {JQuery} container the container of the variable to be aliased
 	 */
 	VariableSelection.prototype._aliasVariableButton = function(container) {
+		this._currentVariableContainer = container;
 
 		var variableName = $(container.children('.vs-variable-name')[0]).text(),
 			generalErrorMessage = this._translations.generalAjaxError,
@@ -601,6 +618,7 @@ BMS.NurseryManager.VariableSelection = (function($) {
 			}
 		}
 
+		this._selectedProperty.standardVariables[variableInfo.index].originalVariableName = variableName;
 		// Remove the display of the name and edit button, and render the input and save/ cancel buttons
 		container.empty();
 		container.append(generateVariableAlias({
@@ -665,7 +683,6 @@ BMS.NurseryManager.VariableSelection = (function($) {
 			// Store the alias
 			this._selectedProperty.standardVariables[index].alias = alias;
 		}
-
 		_renderVariableName(this._selectedProperty.standardVariables[index], container);
 
 		// Select this variable. It's unlikely the user wanted to add an alias but not use the variable.

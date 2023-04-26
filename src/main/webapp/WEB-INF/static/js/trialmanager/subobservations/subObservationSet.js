@@ -29,10 +29,10 @@
 	subObservationModule.controller('SubObservationSetCtrl', ['$scope', '$rootScope', 'TrialManagerDataService', '$stateParams',
 		'DTOptionsBuilder', 'DTColumnBuilder', '$http', '$q', '$compile', 'studyInstanceService', 'datasetService',
 		'derivedVariableService', 'fileService', '$timeout', '$uibModal', 'visualizationModalService', 'studyContext', 'germplasmDetailsModalService',
-		'SEARCH_ORIGIN', 'HasAnyAuthorityService', 'PERMISSIONS',
+		'SEARCH_ORIGIN', 'HasAnyAuthorityService', 'PERMISSIONS', 'TrialSettingsManager',
 		function ($scope, $rootScope, TrialManagerDataService, $stateParams, DTOptionsBuilder, DTColumnBuilder, $http, $q, $compile,
 				  studyInstanceService, datasetService, derivedVariableService, fileService, $timeout, $uibModal, visualizationModalService,
-				  studyContext, germplasmDetailsModalService, SEARCH_ORIGIN, HasAnyAuthorityService, PERMISSIONS
+				  studyContext, germplasmDetailsModalService, SEARCH_ORIGIN, HasAnyAuthorityService, PERMISSIONS, TrialSettingsManager
 		) {
 
 			$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
@@ -333,6 +333,7 @@
 					studyAlias: variable.name
 				}).then(function () {
 					$scope.subObservationSet.dataset.variables.push(variable);
+					TrialSettingsManager.getCurrentModal().disableItem(variable);
 					if ($scope.hasInstances) {
 						loadTable();
 						derivedVariableService.displayExecuteCalculateVariableMenu();
@@ -341,9 +342,11 @@
 				}, function (response) {
 					if (response.errors && response.errors.length) {
 						showErrorMessage('', response.errors[0].message);
+						TrialSettingsManager.getCurrentModal().triggerUndoAddVariable(variable);
 						reloadDataset();
 					} else {
 						showErrorMessage('', ajaxGenericErrorMsg);
+						TrialSettingsManager.getCurrentModal().triggerUndoAddVariable(variable);
 						reloadDataset();
 					}
 				});

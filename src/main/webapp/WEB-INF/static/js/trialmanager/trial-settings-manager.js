@@ -329,6 +329,8 @@ window.TrialSettingsManager = (function() {
 				preventAddSystemVariable: params.preventAddSystemVariable
 			});
 		}
+
+		return this._variableSelection;
 	};
 
 	return TrialSettingsManager;
