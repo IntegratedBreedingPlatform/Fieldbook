@@ -20,6 +20,9 @@
 				if (response.data && response.data.inputMissingData) {
 					showAlertMessage('', response.data.inputMissingData, 15000);
 				}
+				if (response.data && response.data.inputDataArithmeticWarning) {
+					showAlertMessage('', response.data.inputDataArithmeticWarning, 15000);
+				}
 				return response;
 
 			};
