@@ -59,8 +59,17 @@
 					}
 
 					TrialSettingsManager.getCurrentModal().triggerUndoAddVariable(variable);
+					$scope.reloadEnvironment();
 				});
 			};
+
+			$scope.reloadEnvironment = function () {
+				$http.get('/Fieldbook/TrialManager/createTrial/useExistingStudy?studyId=' + studyContext.studyId).success(function (data) {
+					TrialManagerDataService.updateSettings('environments', TrialManagerDataService.extractSettings(
+						data.environmentData));
+				});
+				$scope.nested.dataTable.rerender();
+			}
 
 			$scope.checkVariableIsUsedInCalculatedVariable = function (variableType ,deleteVariables) {
 				var deferred = $q.defer();
