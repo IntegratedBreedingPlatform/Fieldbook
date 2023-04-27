@@ -31,7 +31,6 @@ import org.generationcp.middleware.manager.ontology.api.TermDataManager;
 import org.generationcp.middleware.pojos.CropParameter;
 import org.generationcp.middleware.pojos.UserDefinedField;
 import org.generationcp.middleware.pojos.dms.DmsProject;
-import org.generationcp.middleware.pojos.workbench.PermissionsEnum;
 import org.generationcp.middleware.pojos.workbench.settings.Dataset;
 import org.generationcp.middleware.service.api.SampleListService;
 import org.generationcp.middleware.service.api.dataset.DatasetService;
@@ -68,6 +67,7 @@ import java.util.Optional;
 @RequestMapping(OpenTrialController.URL)
 @Transactional
 public class OpenTrialController extends BaseTrialController {
+
 	static final String TRIAL_SETTINGS_DATA = "trialSettingsData";
 	private static final String TRIAL_INSTANCE = "TRIAL_INSTANCE";
 	private static final String TRIAL = "TRIAL";
@@ -83,6 +83,9 @@ public class OpenTrialController extends BaseTrialController {
 
 	@Value("${feedback.enabled}")
 	private boolean feedbackEnabled;
+
+	@Value("${old.advancing.options.enabled}")
+	private boolean oldAdvancingOptionsEnabled;
 
 	@Resource
 	private ErrorHandlerService errorHandlerService;
@@ -116,13 +119,13 @@ public class OpenTrialController extends BaseTrialController {
 	@ModelAttribute("staBrappUrl")
 	public String getStaBrappUrl() {
 		final Optional<CropParameter> staBrappUrl = this.cropParameterService.getCropParameter(CropParameterEnum.STA_BRAPP_URL);
-		return staBrappUrl.isPresent()? staBrappUrl.get().getValue(): null;
+		return staBrappUrl.isPresent() ? staBrappUrl.get().getValue() : null;
 	}
 
 	@ModelAttribute("dsBrappUrl")
 	public String getDsBrappUrl() {
 		final Optional<CropParameter> dsBrappUrl = this.cropParameterService.getCropParameter(CropParameterEnum.DS_BRAPP_URL);
-		return dsBrappUrl.isPresent()? dsBrappUrl.get().getValue(): null;
+		return dsBrappUrl.isPresent() ? dsBrappUrl.get().getValue() : null;
 	}
 
 	@ModelAttribute("projectID")
@@ -183,6 +186,11 @@ public class OpenTrialController extends BaseTrialController {
 	@ModelAttribute("feedbackEnabled")
 	public boolean isFeedbackEnabled() {
 		return this.feedbackEnabled;
+	}
+
+	@ModelAttribute("oldAdvancingOptionsEnabled")
+	public boolean isOldAdvancingOptionsEnabled() {
+		return this.oldAdvancingOptionsEnabled;
 	}
 
 	@RequestMapping(value = "/trialSettings", method = RequestMethod.GET)
@@ -329,18 +337,17 @@ public class OpenTrialController extends BaseTrialController {
 		model.addAttribute("measurementDatasetId", trialWorkbook.getMeasurementDatesetId());
 		model.addAttribute("trialDatasetId", trialWorkbook.getTrialDatasetId());
 		model.addAttribute(OpenTrialController.HAS_MEANS_DATASET, hasMeansDataset);
-		if(hasMeansDataset) {
+		if (hasMeansDataset) {
 			final List<DatasetDTO> analysisResultsDTOs = this.datasetService.getDatasets(trialId,
 				new HashSet<>(DatasetTypeEnum.ANALYSIS_RESULTS_DATASET_IDS));
-			for(final DatasetDTO datasetDTO: analysisResultsDTOs) {
-				if(datasetDTO.getDatasetTypeId().equals(DatasetTypeEnum.MEANS_DATA.getId())) {
+			for (final DatasetDTO datasetDTO : analysisResultsDTOs) {
+				if (datasetDTO.getDatasetTypeId().equals(DatasetTypeEnum.MEANS_DATA.getId())) {
 					model.addAttribute("meansDatasetId", datasetDTO.getDatasetId());
-				} else if(datasetDTO.getDatasetTypeId().equals(DatasetTypeEnum.SUMMARY_STATISTICS_DATA.getId())) {
+				} else if (datasetDTO.getDatasetTypeId().equals(DatasetTypeEnum.SUMMARY_STATISTICS_DATA.getId())) {
 					model.addAttribute("summaryStatisticsDatasetId", datasetDTO.getDatasetId());
 				}
 			}
 		}
-
 
 		this.setIsSuperAdminAttribute(model);
 	}
@@ -367,7 +374,7 @@ public class OpenTrialController extends BaseTrialController {
 		final StudyDetailsDTO studyDetails = this.studyService
 			.getStudyDetails(this.contextUtil.getCurrentProgramUUID(), studyId);
 		if (!studyDetails.getName().equals(data.getBasicDetails().getStudyName())) {
-			try{
+			try {
 				this.studyDataManager.renameStudy(data.getBasicDetails().getStudyName(), studyId, this.contextUtil.getCurrentProgramUUID());
 			} catch (Exception e) {
 				throw new FieldbookRequestValidationException("study.name.not-unique", new Object[] {});
@@ -457,8 +464,8 @@ public class OpenTrialController extends BaseTrialController {
 	}
 
 	void setNonStudyVariablesOperationToNull(final List<MeasurementVariable> variables) {
-		for(final MeasurementVariable measurementVariable: variables) {
-			if(!PhenotypicType.STUDY.equals(measurementVariable.getRole())) {
+		for (final MeasurementVariable measurementVariable : variables) {
+			if (!PhenotypicType.STUDY.equals(measurementVariable.getRole())) {
 				measurementVariable.setOperation(null);
 			}
 		}
