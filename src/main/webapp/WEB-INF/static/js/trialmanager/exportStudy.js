@@ -148,6 +148,7 @@
 			};
 
 			ctrl.export = function (instanceIds) {
+				ctrl.singleFile = ctrl.selectedExportFormatId === 'csv' ? ctrl.singleFile : false;
 				datasetService.exportDataset(datasetId, instanceIds, ctrl.selectedCollectionOrderId, ctrl.singleFile, ctrl.selectedExportFormatId, ctrl.includeSampleGenotypeValues).then(function (response) {
 					var fileName = fileDownloadHelper.getFileNameFromResponseContentDisposition(response);
 					fileDownloadHelper.save(response.data, fileName);
