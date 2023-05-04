@@ -333,7 +333,6 @@
 					studyAlias: variable.name
 				}).then(function () {
 					$scope.subObservationSet.dataset.variables.push(variable);
-					TrialSettingsManager.getCurrentModal().disableItem(variable);
 					if ($scope.hasInstances) {
 						loadTable();
 						derivedVariableService.displayExecuteCalculateVariableMenu();
@@ -345,8 +344,6 @@
 					} else {
 						showErrorMessage('', ajaxGenericErrorMsg);
 					}
-					TrialSettingsManager.getCurrentModal().triggerUndoAddVariable(variable);
-					reloadDataset();
 				});
 			};
 

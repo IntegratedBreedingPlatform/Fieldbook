@@ -1345,15 +1345,12 @@
 								studyAlias: variableName
 							}).then(function () {
 								showSuccessfulMessage('', $.germplasmMessages.addVariableSuccess.replace("{0}", variableName));
-								TrialSettingsManager.getCurrentModal().disableItem(variable);
 							}, function (response) {
 								if (response.errors && response.errors.length) {
 									showErrorMessage('', response.errors[0].message);
 								} else {
 									showErrorMessage('', ajaxGenericErrorMsg);
 								}
-								TrialSettingsManager.getCurrentModal().triggerUndoAddVariable(variable);
-								$scope.reloadStudyEntryTableData();
 							});
 						});
 					});

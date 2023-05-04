@@ -28,14 +28,6 @@
 
 		};
 
-		$scope.onAddVariable = function(result) {
-			var variable = undefined;
-			angular.forEach(result, function (val) {
-				variable = val.variable;
-			});
-			TrialSettingsManager.getCurrentModal().disableItem(variable);
-		};
-
 		$scope.removeSettings = function (variableType, variables, options) {
 			TrialManagerDataService.removeSettings(variableType, variables).then(function (data) {
 				_(data).each(function (ids) {

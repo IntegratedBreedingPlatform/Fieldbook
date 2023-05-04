@@ -48,7 +48,6 @@
 					variableId: variable.cvTermId,
 					studyAlias: variable.alias ? variable.alias : variable.name
 				}).then(function () {
-					TrialSettingsManager.getCurrentModal().disableItem(variable);
 					$scope.nested.dataTable.rerender();
 					ctrl.initializePossibleValuesMap();
 				}, function (response) {
@@ -57,19 +56,8 @@
 					} else {
 						showErrorMessage('', ajaxGenericErrorMsg);
 					}
-
-					TrialSettingsManager.getCurrentModal().triggerUndoAddVariable(variable);
-					$scope.reloadEnvironment();
 				});
 			};
-
-			$scope.reloadEnvironment = function () {
-				$http.get('/Fieldbook/TrialManager/createTrial/useExistingStudy?studyId=' + studyContext.studyId).success(function (data) {
-					TrialManagerDataService.updateSettings('environments', TrialManagerDataService.extractSettings(
-						data.environmentData));
-				});
-				$scope.nested.dataTable.rerender();
-			}
 
 			$scope.checkVariableIsUsedInCalculatedVariable = function (variableType ,deleteVariables) {
 				var deferred = $q.defer();

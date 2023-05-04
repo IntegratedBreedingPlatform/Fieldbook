@@ -45,11 +45,6 @@
 			};
 
 			$scope.onAddVariable = function(result) {
-				var variable = undefined;
-				angular.forEach(result, function (val) {
-					variable = val.variable;
-				});
-				TrialSettingsManager.getCurrentModal().disableItem(variable);
 				angular.forEach(result, function(val, key) {
 					// there's no existing treatmentLevelPair
 					if (!$scope.settings.treatmentLevelPairs[key]) {
