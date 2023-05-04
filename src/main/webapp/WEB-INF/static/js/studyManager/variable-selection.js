@@ -107,6 +107,24 @@ BMS.NurseryManager.VariableSelection = (function($) {
 		variableContainer.append(generateVariableName(variable));
 	}
 
+	/*
+	 * Call API to  check alias input against ALL existing variable names and alias regardless of type.
+	 *
+	 * @param {string} alias input
+	 * @param {number} selected variable ID
+	 */
+	function _validateAliasAgainstAllVariableTypes (alias, variableId) {
+		// Validate alias is unique among ALL variables' name or alias
+		return $.ajax({
+			url: '/bmsapi/crops/' + cropName + '/programs/' + currentProgramId + '/variable/' +
+				variableId + '/validate-alias?alias=' + alias,
+			type: 'POST',
+			beforeSend: function(xhr) {
+				xhr.setRequestHeader('X-Auth-Token', JSON.parse(localStorage["bms.xAuthToken"]).token);
+			}
+		});
+	}
+
 	/* Constructs a new property dropdown.
 	 *
 	 * @param {string} placeholder the placeholder to use in the select
@@ -680,15 +698,18 @@ BMS.NurseryManager.VariableSelection = (function($) {
 				return null;
 			}
 
-			// Store the alias
-			this._selectedProperty.standardVariables[index].alias = alias;
+			var uniqueVariableErrorMsg = this._translations.uniqueVariableError;
+			_validateAliasAgainstAllVariableTypes(alias, this._selectedProperty.standardVariables[index].id).then(function (data) {
+				if (data) {
+					return this._processValidAlias(index, alias, container);
+				} else {
+					showErrorMessage(null, uniqueVariableErrorMsg);
+					return null;
+				}
+			}.bind(this));
+		} else {
+			return this._processValidAlias(index, alias, container);
 		}
-		_renderVariableName(this._selectedProperty.standardVariables[index], container);
-
-		// Select this variable. It's unlikely the user wanted to add an alias but not use the variable.
-		this._selectVariable(container.next(addVariableButtonSelector));
-
-		return alias || this._selectedProperty.standardVariables[index].name;
 	};
 
 	VariableSelection.prototype._validateAlias = function (alias) {
@@ -716,7 +737,7 @@ BMS.NurseryManager.VariableSelection = (function($) {
 				return false;
 			}
 
-			// Validate alias is unique among ALL variables' name or alias
+			// Validate alias is unique among variables' name or alias of the same type
 			if (this._allVariables && this._allVariables.has(alias)) {
 				showErrorMessage(null, this._translations.uniqueVariableError);
 				return false;
@@ -772,6 +793,21 @@ BMS.NurseryManager.VariableSelection = (function($) {
 		this._selectedProperty = property;
 		this._loadVariablesAndRelatedProperties();
 	};
+
+	/*
+	 * Callback after successful alias validation
+	 */
+	VariableSelection.prototype._processValidAlias = function(index, alias, container) {
+		// Store the alias
+		this._selectedProperty.standardVariables[index].alias = alias;
+
+		_renderVariableName(this._selectedProperty.standardVariables[index], container);
+
+		// Select this variable. It's unlikely the user wanted to add an alias but not use the variable.
+		this._selectVariable(container.next(addVariableButtonSelector));
+
+		return alias || this._selectedProperty.standardVariables[index].name;
+	}
 
 	/*
 	 * Clears out data from the dialog.
