@@ -23,10 +23,10 @@
 	manageTrialAppModule.controller('GermplasmCtrl',
 		['$scope', '$rootScope', '$q', '$compile', 'TrialManagerDataService', 'DTOptionsBuilder', 'studyStateService', 'studyEntryService', 'germplasmStudySourceService',
 			'datasetService', '$timeout', '$uibModal', 'germplasmDetailsModalService', 'studyEntryObservationService', 'feedbackService', 'DATASET_TYPES', 'VARIABLE_TYPES',
-			'$http', 'studyContext', 'breedingMethodModalService', 'HasAnyAuthorityService', 'PERMISSIONS', 'TrialSettingsManager',
+			'$http', 'studyContext', 'breedingMethodModalService', 'HasAnyAuthorityService', 'PERMISSIONS',
 			function ($scope, $rootScope, $q, $compile, TrialManagerDataService, DTOptionsBuilder, studyStateService, studyEntryService, germplasmStudySourceService,
 					  datasetService, $timeout, $uibModal, germplasmDetailsModalService, studyEntryObservationService, feedbackService, DATASET_TYPES, VARIABLE_TYPES,
-					  $http, studyContext, breedingMethodModalService, HasAnyAuthorityService, PERMISSIONS, TrialSettingsManager) {
+					  $http, studyContext, breedingMethodModalService, HasAnyAuthorityService, PERMISSIONS) {
 
 				var GID = 8240,
 					GROUPGID = 8330;

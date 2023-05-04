@@ -4,9 +4,9 @@
 
 	angular.module('manageTrialApp').controller('EnvironmentCtrl', ['$scope', '$q', 'TrialManagerDataService', '$uibModal', '$stateParams',
 		'$http', 'DTOptionsBuilder', 'LOCATION_ID', 'PROGRAM_DEFAULT_LOCATION_ID', '$timeout', 'studyInstanceService', 'studyStateService', 'derivedVariableService', 'studyContext',
-		'datasetService', '$compile', 'fileService', 'HasAnyAuthorityService', 'PERMISSIONS', 'TrialSettingsManager', '$rootScope',
+		'datasetService', '$compile', 'fileService', 'HasAnyAuthorityService', 'PERMISSIONS',
 		function ($scope, $q, TrialManagerDataService, $uibModal, $stateParams, $http, DTOptionsBuilder, LOCATION_ID, PROGRAM_DEFAULT_LOCATION_ID, $timeout, studyInstanceService,
-				  studyStateService, derivedVariableService, studyContext, datasetService, $compile, fileService, HasAnyAuthorityService, PERMISSIONS, TrialSettingsManager, $rootScope) {
+				  studyStateService, derivedVariableService, studyContext, datasetService, $compile, fileService, HasAnyAuthorityService, PERMISSIONS) {
 
 			var ctrl = this;
 			var tableId = '#environment-table';

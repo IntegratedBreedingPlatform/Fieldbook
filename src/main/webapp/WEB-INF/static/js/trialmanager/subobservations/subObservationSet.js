@@ -29,10 +29,10 @@
 	subObservationModule.controller('SubObservationSetCtrl', ['$scope', '$rootScope', 'TrialManagerDataService', '$stateParams',
 		'DTOptionsBuilder', 'DTColumnBuilder', '$http', '$q', '$compile', 'studyInstanceService', 'datasetService',
 		'derivedVariableService', 'fileService', '$timeout', '$uibModal', 'visualizationModalService', 'studyContext', 'germplasmDetailsModalService',
-		'SEARCH_ORIGIN', 'HasAnyAuthorityService', 'PERMISSIONS', 'TrialSettingsManager',
+		'SEARCH_ORIGIN', 'HasAnyAuthorityService', 'PERMISSIONS',
 		function ($scope, $rootScope, TrialManagerDataService, $stateParams, DTOptionsBuilder, DTColumnBuilder, $http, $q, $compile,
 				  studyInstanceService, datasetService, derivedVariableService, fileService, $timeout, $uibModal, visualizationModalService,
-				  studyContext, germplasmDetailsModalService, SEARCH_ORIGIN, HasAnyAuthorityService, PERMISSIONS, TrialSettingsManager
+				  studyContext, germplasmDetailsModalService, SEARCH_ORIGIN, HasAnyAuthorityService, PERMISSIONS
 		) {
 
 			$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
