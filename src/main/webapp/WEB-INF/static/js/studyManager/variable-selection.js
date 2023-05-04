@@ -479,11 +479,6 @@ BMS.NurseryManager.VariableSelection = (function($) {
 			return;
 		}
 
-		// validate alias that come from ontology too
-		if (!this._validateAlias(selectedVariable.alias)) {
-			return;
-		}
-
 		variableId = _convertVariableId(selectedVariable.id);
 
 		var promise;
@@ -619,17 +614,17 @@ BMS.NurseryManager.VariableSelection = (function($) {
 			}
 		}
 
-		this._selectedProperty.standardVariables[variableInfo.index].originalVariableName = variableName;
+		var originalVariableAlias = variableInfo.variable.alias;
 		// Remove the display of the name and edit button, and render the input and save/ cancel buttons
 		container.empty();
 		container.append(generateVariableAlias({
 			index: variableInfo.index,
-			alias: variableInfo.variable.alias || ''
+			alias: originalVariableAlias || ''
 		}));
 
 		container.on('click', '.vs-alias-save', {}, $.proxy(function(e) {
 			e.preventDefault();
-			this._saveAlias($(e.currentTarget).parent(variableNameContainerSelector));
+			this._saveAlias($(e.currentTarget).parent(variableNameContainerSelector), originalVariableAlias);
 		}, this));
 
 		container.on('click', '.vs-alias-cancel', {}, $.proxy(function(e) {
@@ -645,7 +640,7 @@ BMS.NurseryManager.VariableSelection = (function($) {
 				case 13:
 					// Save on enter
 					e.preventDefault();
-					this._saveAlias(container);
+					this._saveAlias(container, originalVariableAlias);
 					break;
 				case 27:
 					// Cancel on escape - this is actually being trapped by the escape to escape from
@@ -669,13 +664,12 @@ BMS.NurseryManager.VariableSelection = (function($) {
 	 * @returns {string} the new variable name (which will be the alias or the variable name if the alias was empty), or null if an error
 	 * occurred
 	 */
-	VariableSelection.prototype._saveAlias = function(container) {
-
+	VariableSelection.prototype._saveAlias = function(container, originalVariableAlias) {
 		var input = container.find(aliasVariableInputSelector),
 			alias = input.val(),
 			index = input.data('index');
 
-		if (alias) {
+		if (alias && alias != originalVariableAlias) { //skip validation on aliases from ontology
 			if (!this._validateAlias(alias)) {
 				// Don't close the input before returning
 				return null;
@@ -696,7 +690,6 @@ BMS.NurseryManager.VariableSelection = (function($) {
 	};
 
 	VariableSelection.prototype._validateAlias = function (alias) {
-
 		var aliasValidation = new RegExp(/^[a-zA-Z_%]{1}[a-zA-Z_%0-9]{0,31}$/);
 
 		if (alias) {
