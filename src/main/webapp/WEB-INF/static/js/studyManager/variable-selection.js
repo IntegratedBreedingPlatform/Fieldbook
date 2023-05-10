@@ -113,11 +113,16 @@ BMS.NurseryManager.VariableSelection = (function($) {
 	 * @param {string} alias input
 	 * @param {number} selected variable ID
 	 */
-	function _validateAliasAgainstAllVariableTypes (alias, variableId) {
+	function _validateAliasAgainstAllVariableTypes (alias) {
+		var params = {
+			nameOrAlias: alias
+		};
+
 		// Validate alias is unique among ALL variables' name or alias
 		return $.ajax({
-			url: '/bmsapi/crops/' + cropName + '/programs/' + currentProgramId + '/variable/' +
-				variableId + '/validate-alias?alias=' + alias,
+			url: '/bmsapi/crops/' + cropName + '/programs/' + currentProgramId + '/variables/search' ,
+			data: JSON.stringify(params),
+			contentType: 'application/json',
 			type: 'POST',
 			beforeSend: function(xhr) {
 				xhr.setRequestHeader('X-Auth-Token', JSON.parse(localStorage["bms.xAuthToken"]).token);
@@ -676,12 +681,13 @@ BMS.NurseryManager.VariableSelection = (function($) {
 			}
 
 			var uniqueVariableErrorMsg = this._translations.uniqueVariableError;
-			_validateAliasAgainstAllVariableTypes(alias, this._selectedProperty.standardVariables[index].id).then(function (data) {
-				if (data) {
-					return this._processValidAlias(index, alias, container);
-				} else {
+			var variableId = this._selectedProperty.standardVariables[index].id;
+			_validateAliasAgainstAllVariableTypes(alias).then(function (data) {
+				if (data && data.length > 0 && data[0].id != variableId) {
 					showErrorMessage(null, uniqueVariableErrorMsg);
 					return null;
+				} else {
+					return this._processValidAlias(index, alias, container);
 				}
 			}.bind(this));
 		} else {
