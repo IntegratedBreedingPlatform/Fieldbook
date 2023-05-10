@@ -84,7 +84,6 @@ public class SampleListController {
 			final String notes = sampleList.getNotes();
 			final String type = sampleList.getType().name();
 			final List<SampleDetailsDTO> sampleDetailsDTOs = this.sampleListService.getSampleDetailsDTOs(listId);
-			final boolean hasGenotypes = this.sampleGenotypeService.countSampleGenotypesBySampleList(listId) == 0l;
 			model.addAttribute(SampleListController.SAMPLE_LIST, sampleDetailsDTOs);
 			model.addAttribute(SampleListController.TOTAL_NUMBER_OF_GERMPLASMS, sampleDetailsDTOs.size());
 
@@ -105,14 +104,11 @@ public class SampleListController {
 			model.addAttribute("hasDeleteSamplePermission",
 				this.authorizationService.hasAnyAuthority(PermissionsEnum.DELETE_SAMPLES_PERMISSIONS));
 			model.addAttribute("showImportGenotypes",
-				this.authorizationService.hasAnyAuthority(PermissionsEnum.IMPORT_GENOTYPES_OPTIONS_PERMISSIONS) &&
-					hasGenotypes);
+				this.authorizationService.hasAnyAuthority(PermissionsEnum.IMPORT_GENOTYPES_OPTIONS_PERMISSIONS));
 			model.addAttribute("showImportGenotypesFromGigwa",
-				this.authorizationService.hasAnyAuthority(PermissionsEnum.IMPORT_GENOTYPES_FROM_GIGWA_PERMISSIONS) &&
-					hasGenotypes);
+				this.authorizationService.hasAnyAuthority(PermissionsEnum.IMPORT_GENOTYPES_FROM_GIGWA_PERMISSIONS));
 			model.addAttribute("showImportGenotypesFromFile",
-				this.authorizationService.hasAnyAuthority(PermissionsEnum.IMPORT_GENOTYPES_FROM_FILE_PERMISSIONS) &&
-					hasGenotypes);
+				this.authorizationService.hasAnyAuthority(PermissionsEnum.IMPORT_GENOTYPES_FROM_FILE_PERMISSIONS));
 		} catch (final MiddlewareQueryException e) {
 			SampleListController.LOG.error(e.getMessage(), e);
 		}
