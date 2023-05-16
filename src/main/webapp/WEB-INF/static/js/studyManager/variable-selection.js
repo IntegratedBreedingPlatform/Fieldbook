@@ -255,8 +255,12 @@ BMS.NurseryManager.VariableSelection = (function($) {
 			properties.forEach(function (property) {
 				if (property.standardVariables) {
 					property.standardVariables.forEach(function (variable) {
-						allVariables.add(variable.alias);
-						allVariables.add(variable.name);
+						if (variable.alias) {
+							allVariables.add(variable.alias.toLowerCase());
+						}
+						if (variable.name) {
+							allVariables.add(variable.name.toLowerCase());
+						}
 					});
 				}
 			});
@@ -700,7 +704,7 @@ BMS.NurseryManager.VariableSelection = (function($) {
 
 		if (alias) {
 
-			alias = alias.trim();
+			alias = alias.trim().toLowerCase();
 
 			// Validate alias has no more than 32 characters, starts with a letter, underscore or % sign, and only contains
 			// numbers, letters, _ or %
@@ -711,7 +715,7 @@ BMS.NurseryManager.VariableSelection = (function($) {
 
 			// Validate alias is unique among selected variables
 			var notUnique = Object.values(this._currentlySelectedVariables).some(function (variableName) {
-				return alias === variableName;
+				return alias === variableName.toLowerCase();
 			});
 
 			if (notUnique) {
