@@ -50,6 +50,12 @@
 				}).then(function () {
 					$scope.nested.dataTable.rerender();
 					ctrl.initializePossibleValuesMap();
+				}, function (response) {
+					if (response.errors && response.errors.length) {
+						showErrorMessage('', response.errors[0].message);
+					} else {
+						showErrorMessage('', ajaxGenericErrorMsg);
+					}
 				});
 			};
 

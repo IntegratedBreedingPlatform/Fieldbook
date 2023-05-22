@@ -52,6 +52,7 @@
 							$scope.data.currentData[key] = {
 								levels: 0,
 								labels: [],
+								alias: val.variable.name,
 								variableId: 0
 							};
 						});
@@ -59,6 +60,7 @@
 						$scope.data.currentData[key] = {
 							levels: 0,
 							labels: [],
+							alias: val.variable.name,
 							variableId: 0
 						};
 					}

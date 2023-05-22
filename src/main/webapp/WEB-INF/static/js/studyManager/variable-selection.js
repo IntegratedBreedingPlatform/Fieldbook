@@ -107,6 +107,29 @@ BMS.NurseryManager.VariableSelection = (function($) {
 		variableContainer.append(generateVariableName(variable));
 	}
 
+	/*
+	 * Call API to  check alias input against ALL existing variable names and alias regardless of type.
+	 *
+	 * @param {string} alias input
+	 * @param {number} selected variable ID
+	 */
+	function _validateAliasAgainstAllVariableTypes (alias, variableId) {
+		var params = {
+			nameOrAlias: alias
+		};
+
+		// Validate alias is unique among ALL names or alias regardless of variable type (including study aliases)
+		return $.ajax({
+			url: '/bmsapi/crops/' + cropName + '/programs/' + currentProgramId + '/studies/' +
+				studyId + '/variable/' + variableId + '/validate-alias?alias=' + alias,
+			contentType: 'application/json',
+			type: 'POST',
+			beforeSend: function(xhr) {
+				xhr.setRequestHeader('X-Auth-Token', JSON.parse(localStorage["bms.xAuthToken"]).token);
+			}
+		});
+	}
+
 	/* Constructs a new property dropdown.
 	 *
 	 * @param {string} placeholder the placeholder to use in the select
@@ -226,6 +249,24 @@ BMS.NurseryManager.VariableSelection = (function($) {
 		this._onHideCallback = groupData.onHideCallback;
 		this._excludedProperties = groupData.excludedProperties || [];
 		this._preventAddSystemVariable = groupData.preventAddSystemVariable;
+		var allVariables = new Set();
+
+		if (properties) {
+			properties.forEach(function (property) {
+				if (property.standardVariables) {
+					property.standardVariables.forEach(function (variable) {
+						if (variable.alias) {
+							allVariables.add(variable.alias.toLowerCase());
+						}
+						if (variable.name) {
+							allVariables.add(variable.name.toLowerCase());
+						}
+					});
+				}
+			});
+		}
+
+		this._allVariables = allVariables;
 
 		if (groupData.options) {
 			var options = groupData.options;
@@ -447,11 +488,6 @@ BMS.NurseryManager.VariableSelection = (function($) {
 			return;
 		}
 
-		// validate alias that come from ontology too
-		if (!this._validateAlias(selectedVariable.alias)) {
-			return;
-		}
-
 		variableId = _convertVariableId(selectedVariable.id);
 
 		var promise;
@@ -587,16 +623,17 @@ BMS.NurseryManager.VariableSelection = (function($) {
 			}
 		}
 
+		var originalVariableAlias = variableInfo.variable.alias;
 		// Remove the display of the name and edit button, and render the input and save/ cancel buttons
 		container.empty();
 		container.append(generateVariableAlias({
 			index: variableInfo.index,
-			alias: variableInfo.variable.alias || ''
+			alias: originalVariableAlias || ''
 		}));
 
 		container.on('click', '.vs-alias-save', {}, $.proxy(function(e) {
 			e.preventDefault();
-			this._saveAlias($(e.currentTarget).parent(variableNameContainerSelector));
+			this._saveAlias($(e.currentTarget).parent(variableNameContainerSelector), originalVariableAlias);
 		}, this));
 
 		container.on('click', '.vs-alias-cancel', {}, $.proxy(function(e) {
@@ -612,7 +649,7 @@ BMS.NurseryManager.VariableSelection = (function($) {
 				case 13:
 					// Save on enter
 					e.preventDefault();
-					this._saveAlias(container);
+					this._saveAlias(container, originalVariableAlias);
 					break;
 				case 27:
 					// Cancel on escape - this is actually being trapped by the escape to escape from
@@ -636,37 +673,37 @@ BMS.NurseryManager.VariableSelection = (function($) {
 	 * @returns {string} the new variable name (which will be the alias or the variable name if the alias was empty), or null if an error
 	 * occurred
 	 */
-	VariableSelection.prototype._saveAlias = function(container) {
-
+	VariableSelection.prototype._saveAlias = function(container, originalVariableAlias) {
 		var input = container.find(aliasVariableInputSelector),
 			alias = input.val(),
 			index = input.data('index');
 
-		if (alias) {
+		if (alias && alias != originalVariableAlias) { //skip validation on aliases from ontology
 			if (!this._validateAlias(alias)) {
 				// Don't close the input before returning
 				return null;
 			}
 
-			// Store the alias
-			this._selectedProperty.standardVariables[index].alias = alias;
+			var uniqueVariableErrorMsg = this._translations.uniqueVariableError;
+			_validateAliasAgainstAllVariableTypes(alias, this._selectedProperty.standardVariables[index].id).then(function (data) {
+				if (data) {
+					return this._processValidAlias(index, alias, container);
+				} else {
+					showErrorMessage(null, uniqueVariableErrorMsg);
+					return null;
+				}
+			}.bind(this));
+		} else {
+			return this._processValidAlias(index, alias, container);
 		}
-
-		_renderVariableName(this._selectedProperty.standardVariables[index], container);
-
-		// Select this variable. It's unlikely the user wanted to add an alias but not use the variable.
-		this._selectVariable(container.next(addVariableButtonSelector));
-
-		return alias || this._selectedProperty.standardVariables[index].name;
 	};
 
 	VariableSelection.prototype._validateAlias = function (alias) {
-
 		var aliasValidation = new RegExp(/^[a-zA-Z_%]{1}[a-zA-Z_%0-9]{0,31}$/);
 
 		if (alias) {
 
-			alias = alias.trim();
+			alias = alias.trim().toLowerCase();
 
 			// Validate alias has no more than 32 characters, starts with a letter, underscore or % sign, and only contains
 			// numbers, letters, _ or %
@@ -677,10 +714,16 @@ BMS.NurseryManager.VariableSelection = (function($) {
 
 			// Validate alias is unique among selected variables
 			var notUnique = Object.values(this._currentlySelectedVariables).some(function (variableName) {
-				return alias === variableName;
+				return alias === variableName.toLowerCase();
 			});
 
 			if (notUnique) {
+				showErrorMessage(null, this._translations.uniqueVariableError);
+				return false;
+			}
+
+			// Validate alias is unique among variables' name or alias of the same type
+			if (this._allVariables && this._allVariables.has(alias)) {
 				showErrorMessage(null, this._translations.uniqueVariableError);
 				return false;
 			}
@@ -735,6 +778,21 @@ BMS.NurseryManager.VariableSelection = (function($) {
 		this._selectedProperty = property;
 		this._loadVariablesAndRelatedProperties();
 	};
+
+	/*
+	 * Callback after successful alias validation
+	 */
+	VariableSelection.prototype._processValidAlias = function(index, alias, container) {
+		// Store the alias
+		this._selectedProperty.standardVariables[index].alias = alias;
+
+		_renderVariableName(this._selectedProperty.standardVariables[index], container);
+
+		// Select this variable. It's unlikely the user wanted to add an alias but not use the variable.
+		this._selectVariable(container.next(addVariableButtonSelector));
+
+		return alias || this._selectedProperty.standardVariables[index].name;
+	}
 
 	/*
 	 * Clears out data from the dialog.
