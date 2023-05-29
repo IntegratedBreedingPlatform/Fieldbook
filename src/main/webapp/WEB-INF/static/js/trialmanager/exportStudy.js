@@ -72,7 +72,7 @@
 			ctrl.selectedCollectionOrderId = '1';
 			ctrl.singleFile = true;
 			ctrl.includeSampleGenotypeValues = false;
-			ctrl.isEnvironmentsExport = studyContext.trialDatasetId === $scope.selected.datasetId;
+			ctrl.isEnvironmentsExport = studyContext.trialDatasetId === datasetId;
 			$scope.exportFormats = [
 				{key: 'csv', name: 'CSV'},
 				{key: 'xls', name: 'Excel'}
