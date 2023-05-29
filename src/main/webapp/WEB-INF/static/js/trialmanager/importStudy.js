@@ -13,8 +13,8 @@
 
 			importStudyModalService.openDatasetOptionModal = function () {
 				$uibModal.open({
-					template: '<dataset-option-modal modal-title="modalTitle" message="message"' +
-						'selected="selected" on-continue="showImportOptions()"></dataset-option-modal>',
+					template: '<dataset-option-modal modal-title="modalTitle" message="message" selected="selected"' +
+						' supported-dataset-types="supportedDatasetTypes" on-continue="showImportOptions()"></dataset-option-modal>',
 					controller: 'importDatasetOptionCtrl',
 					size: 'md'
 				});
@@ -74,13 +74,15 @@
 
 		}]);
 
-	importStudyModule.controller('importDatasetOptionCtrl', ['$scope', '$uibModal', '$uibModalInstance', 'studyContext', 'importStudyModalService',
-		function ($scope, $uibModal, $uibModalInstance, studyContext, importStudyModalService) {
+	importStudyModule.controller('importDatasetOptionCtrl', ['$scope', '$uibModal', '$uibModalInstance', 'studyContext', 'importStudyModalService', 'DATASET_TYPES_OBSERVATION_IDS',
+		'DATASET_TYPES', function ($scope, $uibModal, $uibModalInstance, studyContext, importStudyModalService, DATASET_TYPES_OBSERVATION_IDS, DATASET_TYPES) {
 
 			$scope.modalTitle = 'Import observations';
 			$scope.message = 'Please choose the dataset you would like to import:';
 			$scope.measurementDatasetId = studyContext.measurementDatasetId;
 			$scope.selected = {datasetId: $scope.measurementDatasetId};
+			$scope.supportedDatasetTypes = DATASET_TYPES_OBSERVATION_IDS;
+			$scope.supportedDatasetTypes.push(DATASET_TYPES.SUMMARY_DATA);
 
 			$scope.showImportOptions = function () {
 				importStudyModalService.openImportStudyModal($scope.selected.datasetId);
@@ -89,12 +91,13 @@
 		}]);
 
 	importStudyModule.controller('importStudyCtrl', ['datasetId', '$scope', '$rootScope', '$uibModalInstance', 'datasetService', 'importStudyModalService', 'HasAnyAuthorityService', 'PERMISSIONS',
-		function (datasetId, $scope, $rootScope, $uibModalInstance, datasetService, importStudyModalService, HasAnyAuthorityService, PERMISSIONS) {
+		'studyContext', function (datasetId, $scope, $rootScope, $uibModalInstance, datasetService, importStudyModalService, HasAnyAuthorityService, PERMISSIONS, studyContext) {
 
 			$scope.modalTitle = 'Import observations';
 			$scope.file = null;
 			$scope.importedData = null;
 			var ctrl = this;
+			ctrl.isEnvironmentsExport = studyContext.trialDatasetId === datasetId;
 
 			// Deregister previously create listeners
 			importObservationAfterMappingVariateGroupDeRegister();
@@ -106,9 +109,11 @@
 			ctrl.importFormats = [
 				{name: 'CSV', extension: '.csv'}, //
 				{name: 'Excel', extension: '.xls,.xlsx'}, //
-				{name: 'KSU fieldbook CSV', extension: '.csv'}, //
-				{name: 'KSU fieldbook Excel', extension: '.xls,.xlsx'} //
 			];
+			if (!ctrl.isEnvironmentsExport) {
+				ctrl.importFormats.push({name: 'KSU fieldbook CSV', extension: '.csv'});
+				ctrl.importFormats.push({name: 'KSU fieldbook Excel', extension: '.xls,.xlsx'})
+			}
 
 			$scope.backToDatasetOptionModal = function () {
 				$uibModalInstance.close();
