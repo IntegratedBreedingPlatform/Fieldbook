@@ -77,7 +77,7 @@
 	importStudyModule.controller('importDatasetOptionCtrl', ['$scope', '$uibModal', '$uibModalInstance', 'studyContext', 'importStudyModalService', 'DATASET_TYPES_OBSERVATION_IDS',
 		'DATASET_TYPES', function ($scope, $uibModal, $uibModalInstance, studyContext, importStudyModalService, DATASET_TYPES_OBSERVATION_IDS, DATASET_TYPES) {
 
-			$scope.modalTitle = 'Import observations';
+			$scope.modalTitle = 'Import Study Book';
 			$scope.message = 'Please choose the dataset you would like to import:';
 			$scope.measurementDatasetId = studyContext.measurementDatasetId;
 			$scope.selected = {datasetId: $scope.measurementDatasetId};
@@ -93,11 +93,11 @@
 	importStudyModule.controller('importStudyCtrl', ['datasetId', '$scope', '$rootScope', '$uibModalInstance', 'datasetService', 'importStudyModalService', 'HasAnyAuthorityService', 'PERMISSIONS',
 		'studyContext', function (datasetId, $scope, $rootScope, $uibModalInstance, datasetService, importStudyModalService, HasAnyAuthorityService, PERMISSIONS, studyContext) {
 
-			$scope.modalTitle = 'Import observations';
+			$scope.modalTitle = 'Import Study Book';
 			$scope.file = null;
 			$scope.importedData = null;
 			var ctrl = this;
-			ctrl.isEnvironmentsExport = studyContext.trialDatasetId === datasetId;
+			ctrl.isEnvironmentsImport = studyContext.trialDatasetId === datasetId;
 
 			// Deregister previously create listeners
 			importObservationAfterMappingVariateGroupDeRegister();
@@ -110,7 +110,7 @@
 				{name: 'CSV', extension: '.csv'}, //
 				{name: 'Excel', extension: '.xls,.xlsx'}, //
 			];
-			if (!ctrl.isEnvironmentsExport) {
+			if (!ctrl.isEnvironmentsImport) {
 				ctrl.importFormats.push({name: 'KSU fieldbook CSV', extension: '.csv'});
 				ctrl.importFormats.push({name: 'KSU fieldbook Excel', extension: '.xls,.xlsx'})
 			}
@@ -136,7 +136,11 @@
 						}
 						ctrl.showAddVariableConfirmModal(result, datasetId);
 					} else {
-						$scope.importObservations(true);
+						if (ctrl.isEnvironmentsImport) {
+							$scope.importEnvironmentVariableValues();
+						} else {
+							$scope.importObservations(true);
+						}
 					}
 				});
 			};
@@ -208,6 +212,20 @@
 						showErrorMessage('', response.data.errors[0].message);
 					} else if (response.status == 412) {
 						ctrl.showConfirmModal(response.data.errors);
+					} else {
+						showErrorMessage('', ajaxGenericErrorMsg);
+					}
+				});
+			};
+
+			$scope.importEnvironmentVariableValues = function () {
+				datasetService.importEnvironmentVariableValues(datasetId, $rootScope.importedData).then(function () {
+					displaySaveSuccessMessage('page-message', 'Your data was successfully imported.');
+					$rootScope.navigateToTab('environment', {reload: true});
+					$scope.close();
+				}, function (response) {
+					if (response.status == 400 || response.status == 412) {
+						showErrorMessage('', response.data.errors[0].message);
 					} else {
 						showErrorMessage('', ajaxGenericErrorMsg);
 					}
