@@ -500,7 +500,7 @@
 					}
 					if (promise) {
 						promise.then(function () {
-							reloadDataset();
+							$scope.checkPendingDataAndReload();
 							derivedVariableService.showWarningIfCalculatedVariablesAreOutOfSync();
 							showSuccessfulMessage('', importAccepDataSuccessMessage + '</b>' + getSelectedEnvironmentName() + '</b>.');
 						}, function (response) {
@@ -520,7 +520,7 @@
 				confirmModal.result.then(function (doContinue) {
 					if (doContinue) {
 						datasetService.rejectDraftData($scope.subObservationSet.dataset.datasetId, getInstanceIds()).then(function () {
-							reloadDataset();
+							$scope.checkPendingDataAndReload();
 						}, function (response) {
 							if (response.errors && response.errors.length) {
 								showErrorMessage('', response.errors[0].message);
@@ -563,6 +563,24 @@
 				resetChecksStatus();
 				table().ajax.reload();
 			};
+
+			$scope.checkPendingDataAndReload = function () {
+				// If the dataset has no pending data, reload the whole dataset tab
+				datasetService.getDataset(subObservationSet.id).then(function (dataset) {
+					if (!dataset.hasPendingData) {
+						reloadDataset();
+					} else {
+						// If the dataset has pending data, reload only the table
+						table().ajax.reload();
+					}
+				}, function (response) {
+					if (response.errors && response.errors.length) {
+						showErrorMessage('', response.errors[0].message);
+					} else {
+						showErrorMessage('', ajaxGenericErrorMsg);
+					}
+				});
+			}
 
 			$scope.changeStatusFilter = function () {
 				resetChecksStatus();
