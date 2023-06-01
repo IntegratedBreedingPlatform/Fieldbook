@@ -127,6 +127,8 @@
 					instanceNumber: null,
 					locationName: 'All environments'
 				}].concat(dataset.instances);
+				// Select the Environment 1 by default
+				$scope.nested.selectedEnvironment = $scope.environments[1];
 
 				subObservationSet.hasPendingData = subObservationTab.hasPendingData = dataset.hasPendingData;
 				// we set pending view unless we are specifically told not to
@@ -492,14 +494,15 @@
 					var promise;
 
 					if (result === true || result === "1") {
-						promise = datasetService.acceptDraftData($scope.subObservationSet.dataset.datasetId).then();
+						promise = datasetService.acceptDraftData($scope.subObservationSet.dataset.datasetId, getInstanceIds()).then();
 					} else if (result === "2") {
-						promise = datasetService.setAsMissingDraftData($scope.subObservationSet.dataset.datasetId).then();
+						promise = datasetService.setAsMissingDraftData($scope.subObservationSet.dataset.datasetId, getInstanceIds()).then();
 					}
 					if (promise) {
 						promise.then(function () {
 							reloadDataset();
 							derivedVariableService.showWarningIfCalculatedVariablesAreOutOfSync();
+							showSuccessfulMessage('', importAccepDataSuccessMessage + getSelectedEnvironmentName() + '.');
 						}, function (response) {
 							if (response.errors && response.errors.length) {
 								showErrorMessage('', response.errors[0].message);
@@ -512,10 +515,11 @@
 			};
 
 			$scope.rejectDraftData = function () {
-				var confirmModal = $scope.openConfirmModal(importDiscardDataWarningMessage);
+				var warningMessage = importDiscardDataWarningMessage + getSelectedEnvironmentName() + '?';
+				var confirmModal = $scope.openConfirmModal(warningMessage);
 				confirmModal.result.then(function (doContinue) {
 					if (doContinue) {
-						datasetService.rejectDraftData($scope.subObservationSet.dataset.datasetId).then(function () {
+						datasetService.rejectDraftData($scope.subObservationSet.dataset.datasetId, getInstanceIds()).then(function () {
 							reloadDataset();
 						}, function (response) {
 							if (response.errors && response.errors.length) {
@@ -587,7 +591,7 @@
 				}
 			};
 
-			$scope.showBatchActions = function() {
+			$scope.showBatchActions = function () {
 				return $scope.isPendingView && ($scope.hasAnyAuthority(PERMISSIONS.MANAGE_PENDING_OBSERVATION_VALUES_PERMISSIONS) || $scope.hasAnyAuthority(PERMISSIONS.MANAGE_ACCEPT_PENDING_OBSERVATION_VALUES_PERMISSIONS)) ||
 					!$scope.isPendingView && $scope.hasAnyAuthority(PERMISSIONS.MANAGE_CONFIRMED_OBSERVATION_VALUES_PERMISSIONS)
 			}
@@ -790,12 +794,6 @@
 
 			function doPendingViewActions() {
 				$scope.toggleSection = $scope.isPendingView;
-
-				if ($scope.isPendingView) {
-					$scope.nested.selectedEnvironment = $scope.environments[0];
-				} else {
-					$scope.nested.selectedEnvironment = $scope.environments[1];
-				}
 			}
 
 			function applyNewValue() {
@@ -1117,7 +1115,7 @@
 				if ($scope.isPendingView && $scope.hasAnyAuthority(PERMISSIONS.MANAGE_PENDING_OBSERVATION_VALUES_PERMISSIONS) ||
 					!$scope.isPendingView && $scope.hasAnyAuthority(PERMISSIONS.MANAGE_CONFIRMED_OBSERVATION_VALUES_PERMISSIONS)) {
 					addCellClickHandler();
-				}else{
+				} else {
 					var $table = angular.element(tableId);
 					$table.off('click');
 				}
@@ -1844,7 +1842,7 @@
 							render: function (data, type, full, meta) {
 								return '<a class="gid-link" href="javascript: void(0)" ' +
 									'onclick="openObservationDetailsPopup(\'' +
-									data.value + '\',' + $scope.subObservationSet.id +')">' + EscapeHTML.escape(data.value) + '</a>';
+									data.value + '\',' + $scope.subObservationSet.id + ')">' + EscapeHTML.escape(data.value) + '</a>';
 							}
 						});
 					} else if (!columnData.factor) { // variates
@@ -2095,6 +2093,10 @@
 
 			function getInstanceIds() {
 				return $scope.nested.selectedEnvironment.instanceId ? [$scope.nested.selectedEnvironment.instanceId] : undefined;
+			}
+
+			function getSelectedEnvironmentName() {
+				return ($scope.nested.selectedEnvironment.instanceId ? $scope.nested.selectedEnvironment.locationName : 'all environments')
 			}
 
 		}])
