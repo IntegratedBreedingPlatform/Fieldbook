@@ -502,7 +502,7 @@
 						promise.then(function () {
 							reloadDataset();
 							derivedVariableService.showWarningIfCalculatedVariablesAreOutOfSync();
-							showSuccessfulMessage('', importAccepDataSuccessMessage + getSelectedEnvironmentName() + '.');
+							showSuccessfulMessage('', importAccepDataSuccessMessage + '</b>' + getSelectedEnvironmentName() + '</b>.');
 						}, function (response) {
 							if (response.errors && response.errors.length) {
 								showErrorMessage('', response.errors[0].message);
@@ -515,7 +515,7 @@
 			};
 
 			$scope.rejectDraftData = function () {
-				var warningMessage = importDiscardDataWarningMessage + getSelectedEnvironmentName() + '?';
+				var warningMessage = importDiscardDataWarningMessage + '<b>' + getSelectedEnvironmentName() + '</b>?';
 				var confirmModal = $scope.openConfirmModal(warningMessage);
 				confirmModal.result.then(function (doContinue) {
 					if (doContinue) {
@@ -2096,7 +2096,7 @@
 			}
 
 			function getSelectedEnvironmentName() {
-				return ($scope.nested.selectedEnvironment.instanceId ? $scope.nested.selectedEnvironment.locationName : 'all environments')
+				return ($scope.nested.selectedEnvironment.instanceId ? $scope.nested.selectedEnvironment.instanceNumber + ' - ' + $scope.nested.selectedEnvironment.locationName : 'all environments')
 			}
 
 		}])
