@@ -6,7 +6,7 @@ import com.efficio.fieldbook.web.common.bean.UserSelection;
 import com.efficio.fieldbook.web.common.exception.DesignValidationException;
 import com.efficio.fieldbook.web.importdesign.service.DesignImportService;
 import com.efficio.fieldbook.web.study.germplasm.StudyEntryTransformer;
-import com.mysql.jdbc.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
 import org.generationcp.middleware.domain.dms.PhenotypicType;
 import org.generationcp.middleware.domain.dms.StandardVariable;
@@ -142,7 +142,7 @@ public class DesignImportValidator {
 		while (iterator.hasNext()) {
 			final String value = iterator.next().getValue().get(plotNoHeaderItem.getColumnIndex());
 
-			if (!StringUtils.isNullOrEmpty(value)) {
+			if (StringUtils.isNotBlank(value)) {
 				if (set.contains(value)) {
 					throw new DesignValidationException(
 						this.messageSource.getMessage("design.import.error.plot.number.must.be.unique", null, Locale.ENGLISH));
