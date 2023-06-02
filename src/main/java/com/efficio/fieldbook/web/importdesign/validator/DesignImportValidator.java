@@ -136,7 +136,7 @@ public class DesignImportValidator {
 	protected void validatePlotNumberMustBeUnique(final DesignHeaderItem plotNoHeaderItem, final Map<Integer, List<String>> csvMap)
 		throws DesignValidationException {
 
-		final Set<String> set = new HashSet<String>();
+		final Set<String> set = new HashSet<>();
 
 		final Iterator<Entry<Integer, List<String>>> iterator = csvMap.entrySet().iterator();
 		while (iterator.hasNext()) {
@@ -178,7 +178,7 @@ public class DesignImportValidator {
 		final Map<PhenotypicType, List<DesignHeaderItem>> mappedHeaders,
 		final int variableDataType) {
 
-		final List<DesignHeaderItem> designHeaderItems = new ArrayList<DesignHeaderItem>();
+		final List<DesignHeaderItem> designHeaderItems = new ArrayList<>();
 
 		for (final List<DesignHeaderItem> mappedHeader : mappedHeaders.values()) {
 			for (final DesignHeaderItem header : mappedHeader) {
@@ -198,7 +198,7 @@ public class DesignImportValidator {
 		final int variableDataType) throws DesignValidationException {
 
 		// remove the header rows
-		final Map<Integer, List<String>> csvRowData = new LinkedHashMap<Integer, List<String>>(csvData);
+		final Map<Integer, List<String>> csvRowData = new LinkedHashMap<>(csvData);
 		csvRowData.remove(0);
 
 		for (final DesignHeaderItem headerItem : designHeaderItems) {
