@@ -103,10 +103,10 @@
 			<div class="row add_top_padding" ng-if="isPendingView">
 				<div class="col-xs-12" ng-show="hasAnyAuthority(PERMISSIONS.MANAGE_ACCEPT_PENDING_OBSERVATION_VALUES_PERMISSIONS)">
 					<div class="btn-group" role="group" style="float: right; margin-left: 5px">
-						<button type="button" class="btn btn-default" ng-click="rejectDraftData()">Discard</button>
+						<button type="button" class="btn btn-default" ng-disabled="!hasDataFiltered()" ng-click="rejectDraftData()">Discard</button>
 					</div>
 					<div class="btn-group" role="group" style="float: right">
-						<button type="button" class="btn btn-info" ng-click="acceptDraftData()">Accept</button>
+						<button type="button" class="btn btn-info" ng-disabled="!hasDataFiltered()" ng-click="acceptDraftData()">Accept</button>
 					</div>
 				</div>
 			</div>
