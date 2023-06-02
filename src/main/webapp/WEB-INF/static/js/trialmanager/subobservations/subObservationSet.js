@@ -127,6 +127,8 @@
 					instanceNumber: null,
 					locationName: 'All environments'
 				}].concat(dataset.instances);
+				// Select the Environment 1 by default
+				$scope.nested.selectedEnvironment = $scope.environments[1];
 
 				subObservationSet.hasPendingData = subObservationTab.hasPendingData = dataset.hasPendingData;
 				// we set pending view unless we are specifically told not to
@@ -492,14 +494,15 @@
 					var promise;
 
 					if (result === true || result === "1") {
-						promise = datasetService.acceptDraftData($scope.subObservationSet.dataset.datasetId).then();
+						promise = datasetService.acceptDraftData($scope.subObservationSet.dataset.datasetId, getInstanceIds()).then();
 					} else if (result === "2") {
-						promise = datasetService.setAsMissingDraftData($scope.subObservationSet.dataset.datasetId).then();
+						promise = datasetService.setAsMissingDraftData($scope.subObservationSet.dataset.datasetId, getInstanceIds()).then();
 					}
 					if (promise) {
 						promise.then(function () {
-							reloadDataset();
+							$scope.checkPendingDataAndReload();
 							derivedVariableService.showWarningIfCalculatedVariablesAreOutOfSync();
+							showSuccessfulMessage('', importAccepDataSuccessMessage + '</b>' + getSelectedEnvironmentName() + '</b>.');
 						}, function (response) {
 							if (response.errors && response.errors.length) {
 								showErrorMessage('', response.errors[0].message);
@@ -512,11 +515,12 @@
 			};
 
 			$scope.rejectDraftData = function () {
-				var confirmModal = $scope.openConfirmModal(importDiscardDataWarningMessage);
+				var warningMessage = importDiscardDataWarningMessage + '<b>' + getSelectedEnvironmentName() + '</b>?';
+				var confirmModal = $scope.openConfirmModal(warningMessage);
 				confirmModal.result.then(function (doContinue) {
 					if (doContinue) {
-						datasetService.rejectDraftData($scope.subObservationSet.dataset.datasetId).then(function () {
-							reloadDataset();
+						datasetService.rejectDraftData($scope.subObservationSet.dataset.datasetId, getInstanceIds()).then(function () {
+							$scope.checkPendingDataAndReload();
 						}, function (response) {
 							if (response.errors && response.errors.length) {
 								showErrorMessage('', response.errors[0].message);
@@ -560,6 +564,24 @@
 				table().ajax.reload();
 			};
 
+			$scope.checkPendingDataAndReload = function () {
+				// If the dataset has no pending data, reload the whole dataset tab
+				datasetService.getDataset(subObservationSet.id).then(function (dataset) {
+					if (!dataset.hasPendingData) {
+						reloadDataset();
+					} else {
+						// If the dataset has pending data, reload only the table
+						table().ajax.reload();
+					}
+				}, function (response) {
+					if (response.errors && response.errors.length) {
+						showErrorMessage('', response.errors[0].message);
+					} else {
+						showErrorMessage('', ajaxGenericErrorMsg);
+					}
+				});
+			}
+
 			$scope.changeStatusFilter = function () {
 				resetChecksStatus();
 				table().ajax.reload();
@@ -587,7 +609,7 @@
 				}
 			};
 
-			$scope.showBatchActions = function() {
+			$scope.showBatchActions = function () {
 				return $scope.isPendingView && ($scope.hasAnyAuthority(PERMISSIONS.MANAGE_PENDING_OBSERVATION_VALUES_PERMISSIONS) || $scope.hasAnyAuthority(PERMISSIONS.MANAGE_ACCEPT_PENDING_OBSERVATION_VALUES_PERMISSIONS)) ||
 					!$scope.isPendingView && $scope.hasAnyAuthority(PERMISSIONS.MANAGE_CONFIRMED_OBSERVATION_VALUES_PERMISSIONS)
 			}
@@ -790,12 +812,6 @@
 
 			function doPendingViewActions() {
 				$scope.toggleSection = $scope.isPendingView;
-
-				if ($scope.isPendingView) {
-					$scope.nested.selectedEnvironment = $scope.environments[0];
-				} else {
-					$scope.nested.selectedEnvironment = $scope.environments[1];
-				}
 			}
 
 			function applyNewValue() {
@@ -1117,7 +1133,7 @@
 				if ($scope.isPendingView && $scope.hasAnyAuthority(PERMISSIONS.MANAGE_PENDING_OBSERVATION_VALUES_PERMISSIONS) ||
 					!$scope.isPendingView && $scope.hasAnyAuthority(PERMISSIONS.MANAGE_CONFIRMED_OBSERVATION_VALUES_PERMISSIONS)) {
 					addCellClickHandler();
-				}else{
+				} else {
 					var $table = angular.element(tableId);
 					$table.off('click');
 				}
@@ -1844,7 +1860,7 @@
 							render: function (data, type, full, meta) {
 								return '<a class="gid-link" href="javascript: void(0)" ' +
 									'onclick="openObservationDetailsPopup(\'' +
-									data.value + '\',' + $scope.subObservationSet.id +')">' + EscapeHTML.escape(data.value) + '</a>';
+									data.value + '\',' + $scope.subObservationSet.id + ')">' + EscapeHTML.escape(data.value) + '</a>';
 							}
 						});
 					} else if (!columnData.factor) { // variates
@@ -2095,6 +2111,10 @@
 
 			function getInstanceIds() {
 				return $scope.nested.selectedEnvironment.instanceId ? [$scope.nested.selectedEnvironment.instanceId] : undefined;
+			}
+
+			function getSelectedEnvironmentName() {
+				return ($scope.nested.selectedEnvironment.instanceId ? $scope.nested.selectedEnvironment.instanceNumber + ' - ' + $scope.nested.selectedEnvironment.locationName : 'all environments')
 			}
 
 		}])
