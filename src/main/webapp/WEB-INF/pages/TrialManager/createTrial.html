@@ -460,10 +460,6 @@
 	</div>
 
 	<div class="row">
-		<div th:include="/Common/includes/advanceGermplasmChangeConfirmation"></div>
-	</div>
-
-	<div class="row">
 		<div class="col-xs-12 col-md-12">
 			<div id="sub-observation-unit-dataset-builder" th:include="/TrialManager/templates/SubObservationUnitDatasetBuilder"></div>
 		</div>
@@ -636,7 +632,6 @@
 			oldLineSelected = '',
 			oldMethodSelected = '',
 
-			listShouldNotBeEmptyError = /*[[#{study.save.advance.error.row.list.empty}]]*/ '',
 			locationTooltipMessage = /*[[#{advance.study.location.tooltip.message} + ' ']]*/ '',
 			messagerErrorImportObservationWithVariables = /*[[#{error.import.observations.with.variables}]]*/ '';
 

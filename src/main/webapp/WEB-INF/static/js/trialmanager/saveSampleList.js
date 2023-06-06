@@ -1,5 +1,5 @@
 /*globals displaySampleListTree, changeBrowseSampleButtonBehavior,saveGermplasmReviewError */
-/*globals $,showErrorMessage, showInvalidInputMessage, getDisplayedTreeName, listShouldNotBeEmptyError, getJquerySafeId,
+/*globals $,showErrorMessage, showInvalidInputMessage, getDisplayedTreeName, getJquerySafeId,
  validateAllDates, saveSampleListSuccessfullyMessage */
 /*globals listParentFolderRequired, listNameRequired */
 /*globals listDateRequired, listTypeRequired, moveToTopScreen */
