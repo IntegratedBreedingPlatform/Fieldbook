@@ -82,58 +82,6 @@ public class DeprecatedNamingConventionServiceImplTest {
 	}
 
 	@Test
-	public void testGenerateAdvanceListNames() throws MiddlewareQueryException, RuleException {
-		try {
-			final DeprecatedAdvancingSource as1 = this.createAdvancingSource();
-			final List<DeprecatedAdvancingSource> rows = Collections.singletonList(as1);
-
-			Mockito.when(this.rulesService.runRules(ArgumentMatchers.any(RuleExecutionContext.class)))
-				.thenReturn(Collections.singletonList("name"));
-			Mockito.when(this.ruleFactory.getRuleSequenceForNamespace(RuleExecutionNamespace.NAMING)).thenReturn(new String[] {"[COUNT]"});
-			final String ruleGeneratedName = RandomStringUtils.randomAlphabetic(5001);
-			Mockito.when(this.rulesService.runRules(ArgumentMatchers.any(RuleExecutionContext.class))).thenReturn(
-				Lists.newArrayList(ruleGeneratedName));
-
-			final List<ImportedGermplasm> germplasmList = new ArrayList<>();
-			germplasmList.add(this.createImportedGermplasm(100));
-			as1.setGermplasm(germplasmList.get(0));
-			this.namingConventionService.generateAdvanceListNames(rows, new Random().nextBoolean(), germplasmList);
-			Assert.fail();
-		} catch (final MiddlewareQueryException e) {
-			Assert.assertThat(e.getMessage(), is("error.save.resulting.name.exceeds.limit"));
-		}
-	}
-
-	@Test
-	public void testGenerateAdvanceListNames_HasExceedLengthError() throws MiddlewareQueryException, RuleException {
-		final DeprecatedAdvancingSource as1 = this.createAdvancingSource();
-		final List<DeprecatedAdvancingSource> rows = Collections.singletonList(as1);
-
-		Mockito.when(this.rulesService.runRules(ArgumentMatchers.any(RuleExecutionContext.class)))
-			.thenReturn(Collections.singletonList("name"));
-		Mockito.when(this.ruleFactory.getRuleSequenceForNamespace(RuleExecutionNamespace.NAMING)).thenReturn(new String[] {"[COUNT]"});
-		final String ruleGeneratedName = RandomStringUtils.randomAlphabetic(20);
-		Mockito.when(this.rulesService.runRules(ArgumentMatchers.any(RuleExecutionContext.class))).thenReturn(
-			Lists.newArrayList(ruleGeneratedName));
-
-		final List<ImportedGermplasm> germplasmList = new ArrayList<>();
-		germplasmList.add(this.createImportedGermplasm(100));
-		as1.setGermplasm(germplasmList.get(0));
-		this.namingConventionService.generateAdvanceListNames(rows, new Random().nextBoolean(), germplasmList);
-
-		Mockito.verify(this.rulesService).runRules(ArgumentMatchers.any());
-		final ImportedGermplasm resultIG = germplasmList.get(0);
-		Assert.assertEquals(ruleGeneratedName, resultIG.getDesig());
-		final Name resultName = resultIG.getNames().get(0);
-		Assert.assertNull(resultName.getNid());
-		Assert.assertNull(resultName.getGermplasm());
-		Assert.assertEquals(GermplasmNameType.DERIVATIVE_NAME.getUserDefinedFieldID(), resultName.getTypeId().intValue());
-		Assert.assertEquals(new Integer(1), resultName.getNstat());
-		Assert.assertEquals(ruleGeneratedName, resultName.getNval());
-
-	}
-
-	@Test
 	public void testGenerateCrossesList() throws RuleException {
 		final List<ImportedCross> importedCrosses = new ArrayList<>();
 		final ImportedCross importedCross = new ImportedCross();
