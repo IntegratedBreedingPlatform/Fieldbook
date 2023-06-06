@@ -965,29 +965,6 @@ function displaySampleList(id, listName, isPageLoading) {
 	});
 }
 
-function validateBreedingMethodValues(id) {
-	var valid = true;
-	var trialInstances = $('#selectedTrialInstances').val();
-	$.ajax({
-		url: '/Fieldbook/StudyManager/advance/study/checkForNonMaintenanceAndDerivativeMethods/' + id
-			+ '?trialInstances=' + encodeURIComponent(trialInstances),
-		type: 'GET',
-		cache: false,
-		async: false,
-		success: function (data) {
-			if (data.errors) {
-				showErrorMessage('page-advance-modal-message', data.errors);
-				valid = false;
-			}
-
-		},
-		error: function (jqXHR, textStatus, errorThrown) {
-			console.log('The following error occured: ' + textStatus, errorThrown);
-		}
-	});
-	return valid;
-}
-
 function showBaselineTraitDetailsModal(id) {
 	'use strict';
 

@@ -170,12 +170,6 @@
 		<aop:scoped-proxy />
 	</bean>
 
-	<bean id="paginationListSelection"
-		class="com.efficio.fieldbook.web.common.bean.PaginationListSelection"
-		scope="session">
-		<aop:scoped-proxy />
-	</bean>
-
 	<bean id="possibleValuesCache"
 		class="com.efficio.fieldbook.web.trial.bean.PossibleValuesCache"
 		scope="session">
@@ -686,7 +680,6 @@
 
 	<bean id="advancingController"
 		  class="com.efficio.fieldbook.web.trial.controller.AdvancingController">
-		<property name="advanceLinesThreshold" value="${advancing.lines.warning.threshold}"/>
 	</bean>
 
 	<bean id="cropService"
