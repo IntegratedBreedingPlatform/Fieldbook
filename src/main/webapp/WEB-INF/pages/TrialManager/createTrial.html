@@ -180,23 +180,13 @@
 							<li ng-show="showAdvancesAction()" class="dropdown-submenu pull-left">
 								<a tabindex="-1" href="#">Advance study options</a>
 								<ul class="dropdown-menu" style="margin-left: -103px; width: 270px;">
-									<!-- Deprecated -->
-									<li ng-show="showAdvanceStudyAction() &amp;&amp; isOldAdvancingOptionsEnabled()">
-										<a ng-click="selectEnvironment('trial', false)" id="deprecated-advance-trial-link"
-										   th:text="#{study.studydetails.action.deprecated.advance.study}">Advance Study</a>
-									</li>
 									<li ng-show="showAdvanceStudyAction()">
-										<a ng-click="selectDataset('study', true)" id="advance-trial-link"
-										   th:text="#{study.studydetails.action.advance.study}">Advance Study (Beta)</a>
-									</li>
-									<!-- Deprecated -->
-									<li ng-show="showAdvanceStudyForPlantsAction() &amp;&amp; isOldAdvancingOptionsEnabled()">
-										<a ng-click="selectEnvironment('deprecatedSample', false)" id="deprecated-advance-sample-link"
-										   th:text="#{study.studydetails.action.deprecated.advance.sample}">Advance Sampled plants</a>
+										<a ng-click="selectDataset('study')" id="advance-trial-link"
+										   th:text="#{study.studydetails.action.advance.study}">Advance Study</a>
 									</li>
 									<li ng-show="showAdvanceStudyForPlantsAction()">
-										<a ng-click="selectEnvironment('samples', true)" id="advance-sample-link"
-										   th:text="#{study.studydetails.action.advance.sample}">Advance Sampled plants from plots (Beta)</a>
+										<a ng-click="selectEnvironment('samples')" id="advance-sample-link"
+										   th:text="#{study.studydetails.action.advance.sample}">Advance Sampled plants from plots</a>
 									</li>
 								</ul>
                             </li>
@@ -735,7 +725,6 @@
 			).constant('STABRAPP_URL', /*[[${staBrappUrl}]]*/ ''
 			).constant('DS_BRAPP_URL', /*[[${dsBrappUrl}]]*/ ''
 			).constant('FEEDBACK_ENABLED', /*[[${feedbackEnabled}]]*/ ''
-			).constant('OLD_ADVANCING_OPTIONS_ENABLED', /*[[${oldAdvancingOptionsEnabled}]]*/ ''
 			).constant('DESIGN_TYPE',
 				{
 					RANDOMIZED_COMPLETE_BLOCK: /*[[${T(org.generationcp.middleware.domain.dms.ExperimentDesignType).RANDOMIZED_COMPLETE_BLOCK.getId()}]]*/ 0
