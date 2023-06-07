@@ -18,13 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-@RequestMapping(AdvancingController.URL)
 public class AdvancingController extends AbstractBaseFieldbookController {
-
-	/**
-	 * The Constant URL.
-	 */
-	protected static final String URL = "/StudyManager/advance/study";
 
 	@Override
 	public String getContentName() {
@@ -32,7 +26,7 @@ public class AdvancingController extends AbstractBaseFieldbookController {
 	}
 
 	// FIXME: De-thymeleaf this page
-	@RequestMapping(value = "/selectEnvironmentModal", method = RequestMethod.GET)
+	@RequestMapping(value = "/StudyManager/advance/study/selectEnvironmentModal", method = RequestMethod.GET)
 	public String selectEnvironmentModal(final Model model) {
 		return super.showAjaxPage(model, "StudyManager/selectEnvironmentModal");
 	}

@@ -29,14 +29,12 @@ import org.generationcp.commons.parsing.pojo.ImportedCrossesList;
 import org.generationcp.commons.pojo.treeview.TreeTableNode;
 import org.generationcp.commons.util.DateUtil;
 import org.generationcp.commons.util.TreeViewUtil;
-import org.generationcp.middleware.api.germplasm.GermplasmService;
 import org.generationcp.middleware.domain.etl.Workbook;
 import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.exceptions.MiddlewareException;
 import org.generationcp.middleware.exceptions.MiddlewareQueryException;
 import org.generationcp.middleware.manager.api.GermplasmDataManager;
 import org.generationcp.middleware.manager.api.GermplasmListManager;
-import org.generationcp.middleware.manager.api.OntologyDataManager;
 import org.generationcp.middleware.pojos.Germplasm;
 import org.generationcp.middleware.pojos.GermplasmList;
 import org.generationcp.middleware.pojos.GermplasmListData;
@@ -50,7 +48,6 @@ import org.generationcp.middleware.ruleengine.namingdeprecated.service.Deprecate
 import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
 import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSourceList;
 import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
-import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
 import org.generationcp.middleware.ruleengine.settings.CrossSetting;
 import org.generationcp.middleware.service.api.FieldbookService;
 import org.generationcp.middleware.service.api.dataset.DatasetService;
@@ -74,7 +71,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -105,12 +101,7 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 	protected static final String PROGRAM_LISTS = "LISTS";
 	protected static final String CROP_LISTS = "CROPLISTS";
 
-	public static final String GERMPLASM_LIST_TYPE_ADVANCE = "advance";
 	public static final String GERMPLASM_LIST_TYPE_CROSS = "cross";
-	/**
-	 * The Constant BATCH_SIZE.
-	 */
-	public static final String DATE_TIME_FORMAT = "yyyyMMdd";
 
 	/**
 	 * The germplasm list manager.
@@ -133,9 +124,6 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 	@Resource
 	private DatasetService datasetService;
 
-	@Resource
-	private GermplasmService germplasmService;
-
 	static final String NAME_NOT_UNIQUE = "Name not unique";
 
 	static final String IS_SUCCESS = "isSuccess";
@@ -150,9 +138,6 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 
 	@Resource
 	private GermplasmDataManager germplasmDataManager;
-
-	@Resource
-	private OntologyDataManager ontologyDataManager;
 
 	/**
 	 * Load initial germplasm tree.
@@ -297,30 +282,6 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 
 		} else {
 			throw new IllegalArgumentException("Unknown germplasm list type supplied when saving germplasm list");
-		}
-
-	}
-
-	void createGermplasmStudySourcesFromSavedAdvanceListEntries(final List<ImportedGermplasm> listEntries,
-		final List<Pair<Germplasm, GermplasmListData>> savedListDataItems, final List<GermplasmStudySourceInput> germplasmStudySourceList) {
-		final Integer studyId = this.userSelection.getWorkbook().getStudyDetails().getId();
-		final ListIterator<Pair<Germplasm, GermplasmListData>> listDataIterator = savedListDataItems.listIterator();
-		final ListIterator<ImportedGermplasm> listEntriesIterator = listEntries.listIterator();
-		final Set<Integer> sourcePlotNumbers =
-			listEntries.stream().map(g -> Integer.valueOf(g.getPlotNumber())).collect(Collectors.toSet());
-		final Set<Integer> trialInstances =
-			listEntries.stream().map(g -> Integer.valueOf(g.getTrialInstanceNumber())).collect(Collectors.toSet());
-		final Table<Integer, Integer, Integer> observationUnitIdsTable =
-			this.datasetService.getTrialNumberPlotNumberObservationUnitIdTable(this.userSelection.getWorkbook().getMeasurementDatesetId(),
-				trialInstances, sourcePlotNumbers);
-		while (listEntriesIterator.hasNext()) {
-			final ImportedGermplasm advanceEntry = listEntriesIterator.next();
-			final GermplasmListData listData = listDataIterator.next().getRight();
-			final Integer plotNumber = Integer.valueOf(advanceEntry.getPlotNumber());
-			final Integer trialInstance = Integer.valueOf(advanceEntry.getTrialInstanceNumber());
-			germplasmStudySourceList.add(
-				new GermplasmStudySourceInput(listData.getGid(), studyId, observationUnitIdsTable.get(trialInstance, plotNumber),
-					GermplasmStudySourceType.ADVANCE));
 		}
 
 	}
@@ -589,12 +550,6 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 			localRecordId, notes, crossingDate);
 	}
 
-	@ResponseBody
-	@RequestMapping(value = "/getPreferredName/{gid}", method = RequestMethod.GET)
-	public String getPreferredName(@PathVariable final String gid) {
-		return this.germplasmDataManager.getPreferredNameValueByGID(Integer.valueOf(gid));
-	}
-
 	/**
 	 * Load initial germplasm tree table.
 	 *
@@ -737,18 +692,6 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 	@Override
 	public String getContentName() {
 		return null;
-	}
-
-	protected void setFieldbookMiddlewareService(final FieldbookService fieldbookMiddlewareService) {
-		this.fieldbookMiddlewareService = fieldbookMiddlewareService;
-	}
-
-	protected void setUserSelection(final UserSelection userSelection) {
-		this.userSelection = userSelection;
-	}
-
-	void setGermplasmDataManager(final GermplasmDataManager germplasmDataManager) {
-		this.germplasmDataManager = germplasmDataManager;
 	}
 
 	protected void setGermplasmListManager(final GermplasmListManager germplasmListManager) {

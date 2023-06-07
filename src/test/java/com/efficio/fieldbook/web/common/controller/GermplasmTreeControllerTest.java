@@ -191,14 +191,6 @@ public class GermplasmTreeControllerTest {
 	}
 
 	@Test
-	public void testGetPreferredName() {
-		final String name = "name";
-		Mockito.when(this.germplasmDataManager.getPreferredNameValueByGID(1)).thenReturn(name);
-		final String preferredName = this.controller.getPreferredName("1");
-		Assert.assertEquals(name, preferredName);
-	}
-
-	@Test
 	public void testSaveCrossesListPostSuccessful() {
 		final SaveListForm form = this.createSaveListForm();
 		form.setGermplasmListType(GermplasmTreeController.GERMPLASM_LIST_TYPE_CROSS);
