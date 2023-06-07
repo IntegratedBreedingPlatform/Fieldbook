@@ -352,8 +352,9 @@ public class OpenTrialController extends BaseTrialController {
 		}
 
 		final WorkbenchUser user = this.contextUtil.getCurrentWorkbenchUser();
+		final String cropName = (String) model.asMap().get("cropName");
 		model.addAttribute(
-			OpenTrialController.HAS_ONLY_PROGRAM_ROLES, user.hasOnlyProgramRoles(this.getCropName()));
+			OpenTrialController.HAS_ONLY_PROGRAM_ROLES, user.hasOnlyProgramRoles(cropName));
 		this.setIsSuperAdminAttribute(model);
 	}
 
