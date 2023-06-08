@@ -205,7 +205,7 @@
 					});
 				return request.then(successHandler, failureHandler);
 			};
-
+			
 			datasetService.importEnvironmentVariableValues = function (datasetId, observationList) {
 				if (!studyContext.studyId) {
 					return $q.resolve([]);
@@ -217,10 +217,9 @@
 				return request.then(successHandler, failureHandler);
 			};
 
-			datasetService.acceptDraftData = function (datasetId) {
-				var request = $http.post(BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/observation-units/drafts/acceptance');
+			datasetService.acceptDraftData = function (datasetId, instanceIds) {
+				var request = $http.post(BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/observation-units/drafts/acceptance' + (instanceIds ? '?instanceIds=' + instanceIds.join(",") : ''));
 				return request.then(successHandler, failureHandler);
-
 			};
 
 			datasetService.checkOutOfBoundDraftData = function (datasetId) {
@@ -229,14 +228,14 @@
 
 			};
 
-			datasetService.rejectDraftData = function (datasetId) {
-				var request = $http.post(BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/observation-units/drafts/rejection');
+			datasetService.rejectDraftData = function (datasetId, instanceIds) {
+				var request = $http.post(BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/observation-units/drafts/rejection' + (instanceIds ? '?instanceIds=' + instanceIds.join(",") : ''));
 				return request.then(successHandler, failureHandler);
 
 			};
 
-			datasetService.setAsMissingDraftData = function (datasetId) {
-				var request = $http.post(BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/observation-units/drafts/set-as-missing');
+			datasetService.setAsMissingDraftData = function (datasetId, instanceIds) {
+				var request = $http.post(BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/observation-units/drafts/set-as-missing' + (instanceIds ? '?instanceIds=' + instanceIds.join(",") : ''));
 				return request.then(successHandler, failureHandler);
 
 			};

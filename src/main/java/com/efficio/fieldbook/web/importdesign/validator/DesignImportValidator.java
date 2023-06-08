@@ -6,7 +6,7 @@ import com.efficio.fieldbook.web.common.bean.UserSelection;
 import com.efficio.fieldbook.web.common.exception.DesignValidationException;
 import com.efficio.fieldbook.web.importdesign.service.DesignImportService;
 import com.efficio.fieldbook.web.study.germplasm.StudyEntryTransformer;
-import com.mysql.jdbc.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
 import org.generationcp.middleware.domain.dms.PhenotypicType;
 import org.generationcp.middleware.domain.dms.StandardVariable;
@@ -136,13 +136,13 @@ public class DesignImportValidator {
 	protected void validatePlotNumberMustBeUnique(final DesignHeaderItem plotNoHeaderItem, final Map<Integer, List<String>> csvMap)
 		throws DesignValidationException {
 
-		final Set<String> set = new HashSet<String>();
+		final Set<String> set = new HashSet<>();
 
 		final Iterator<Entry<Integer, List<String>>> iterator = csvMap.entrySet().iterator();
 		while (iterator.hasNext()) {
 			final String value = iterator.next().getValue().get(plotNoHeaderItem.getColumnIndex());
 
-			if (!StringUtils.isNullOrEmpty(value)) {
+			if (StringUtils.isNotBlank(value)) {
 				if (set.contains(value)) {
 					throw new DesignValidationException(
 						this.messageSource.getMessage("design.import.error.plot.number.must.be.unique", null, Locale.ENGLISH));
@@ -178,7 +178,7 @@ public class DesignImportValidator {
 		final Map<PhenotypicType, List<DesignHeaderItem>> mappedHeaders,
 		final int variableDataType) {
 
-		final List<DesignHeaderItem> designHeaderItems = new ArrayList<DesignHeaderItem>();
+		final List<DesignHeaderItem> designHeaderItems = new ArrayList<>();
 
 		for (final List<DesignHeaderItem> mappedHeader : mappedHeaders.values()) {
 			for (final DesignHeaderItem header : mappedHeader) {
@@ -198,7 +198,7 @@ public class DesignImportValidator {
 		final int variableDataType) throws DesignValidationException {
 
 		// remove the header rows
-		final Map<Integer, List<String>> csvRowData = new LinkedHashMap<Integer, List<String>>(csvData);
+		final Map<Integer, List<String>> csvRowData = new LinkedHashMap<>(csvData);
 		csvRowData.remove(0);
 
 		for (final DesignHeaderItem headerItem : designHeaderItems) {
