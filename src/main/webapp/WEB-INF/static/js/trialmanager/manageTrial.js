@@ -993,7 +993,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			}
 
 			$scope.showExportStudyBookAction = function () {
-				return $scope.hasAnyAuthority(PERMISSIONS.EXPORT_STUDY_BOOK_PERMISSIONS) && $scope.hasDesignGenerated;
+				return $scope.hasAnyAuthority(PERMISSIONS.EXPORT_STUDY_BOOK_PERMISSIONS)
 			}
 
 			$scope.showExportStudyEntriesAction = function () {

@@ -75,14 +75,17 @@
 		}]);
 
 	importStudyModule.controller('importDatasetOptionCtrl', ['$scope', '$uibModal', '$uibModalInstance', 'studyContext', 'importStudyModalService', 'DATASET_TYPES_OBSERVATION_IDS',
-		'DATASET_TYPES', function ($scope, $uibModal, $uibModalInstance, studyContext, importStudyModalService, DATASET_TYPES_OBSERVATION_IDS, DATASET_TYPES) {
+		'DATASET_TYPES', 'HAS_GENERATED_DESIGN', function ($scope, $uibModal, $uibModalInstance, studyContext, importStudyModalService, DATASET_TYPES_OBSERVATION_IDS, DATASET_TYPES, HAS_GENERATED_DESIGN) {
 
 			$scope.modalTitle = 'Import Study Book';
 			$scope.message = 'Please choose the dataset you would like to import:';
 			$scope.measurementDatasetId = studyContext.measurementDatasetId;
-			$scope.selected = {datasetId: $scope.measurementDatasetId};
-			$scope.supportedDatasetTypes = DATASET_TYPES_OBSERVATION_IDS;
-			$scope.supportedDatasetTypes.push(DATASET_TYPES.SUMMARY_DATA);
+			$scope.supportedDatasetTypes = [DATASET_TYPES.SUMMARY_DATA];
+			$scope.selected = {datasetId: studyContext.trialDatasetId};
+			if (HAS_GENERATED_DESIGN) {
+				$scope.selected = {datasetId: $scope.measurementDatasetId};
+				$scope.supportedDatasetTypes.push(...DATASET_TYPES_OBSERVATION_IDS);
+			}
 
 			$scope.showImportOptions = function () {
 				importStudyModalService.openImportStudyModal($scope.selected.datasetId);
@@ -103,7 +106,11 @@
 			importObservationAfterMappingVariateGroupDeRegister();
 
 			importObservationAfterMappingVariateGroupDeRegister = $rootScope.$on('importObservationAfterMappingVariateGroup', function (event) {
-				$scope.importObservations(true);
+				if (ctrl.isEnvironmentsImport) {
+					$scope.importEnvironmentVariableValues();
+				} else {
+					$scope.importObservations(true);
+				}
 			});
 
 			ctrl.importFormats = [
@@ -186,12 +193,13 @@
 				var myService = injector.get('ImportMappingService');
 
 				myService.datasetId = datasetId;
+				myService.isEnvironmentsImportBoolean = ctrl.isEnvironmentsImport;
 
 				var scope = elem.scope();
 				scope.datasetId = myService.datasetId;
 
 				// retrieve initial data from the service
-				$.getJSON('/Fieldbook/etl/workbook/importObservations/getMappingData/' + result ).done(
+				$.getJSON('/Fieldbook/etl/workbook/importObservations/getMappingData/' + result + '/isEnvironmentsImport/' + ctrl.isEnvironmentsImport).done(
 					function(data) {
 
 						myService.data = data;
@@ -270,7 +278,11 @@
 					if (shouldContinue) {
 						ctrl.showDesignMapPopup(result, datasetId);
 					} else {
-						$scope.importObservations(true);
+						if (ctrl.isEnvironmentsImport) {
+							$scope.importEnvironmentVariableValues();
+						} else {
+							$scope.importObservations(true);
+						}
 					}
 				});
 			};

@@ -42,14 +42,17 @@
 		}]);
 
 	exportStudyModule.controller('exportDatasetOptionCtrl', ['$scope', '$uibModal', '$uibModalInstance', 'studyContext', 'exportStudyModalService', 'DATASET_TYPES_OBSERVATION_IDS',
-		'DATASET_TYPES', function ($scope, $uibModal, $uibModalInstance, studyContext, exportStudyModalService, DATASET_TYPES_OBSERVATION_IDS, DATASET_TYPES) {
+		'DATASET_TYPES', 'HAS_GENERATED_DESIGN', function ($scope, $uibModal, $uibModalInstance, studyContext, exportStudyModalService, DATASET_TYPES_OBSERVATION_IDS, DATASET_TYPES, HAS_GENERATED_DESIGN) {
 
 			$scope.modalTitle = 'Export study book';
 			$scope.message = 'Please choose the dataset you would like to export:';
 			$scope.measurementDatasetId = studyContext.measurementDatasetId;
-			$scope.selected = {datasetId: $scope.measurementDatasetId};
-			$scope.supportedDatasetTypes = DATASET_TYPES_OBSERVATION_IDS;
-			$scope.supportedDatasetTypes.push(DATASET_TYPES.SUMMARY_DATA);
+			$scope.supportedDatasetTypes = [DATASET_TYPES.SUMMARY_DATA];
+			$scope.selected = {datasetId: studyContext.trialDatasetId};
+			if (HAS_GENERATED_DESIGN) {
+				$scope.selected = {datasetId: $scope.measurementDatasetId};
+				$scope.supportedDatasetTypes.push(...DATASET_TYPES_OBSERVATION_IDS);
+			}
 
 			$scope.showExportOptions = function () {
 				exportStudyModalService.openExportStudyModal($scope.selected.datasetId);
