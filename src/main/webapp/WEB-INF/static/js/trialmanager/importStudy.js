@@ -136,10 +136,14 @@
 				$scope.validateNewVariables().then(function (result) {
 					$rootScope.importedData  = $scope.importedData;
 					if (result.length > 0) {
-						if (!HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.ADD_OBSERVATION_TRAIT_VARIABLES_PERMISSIONS) ||
-							!HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.ADD_OBSERVATION_SELECTION_VARIABLES_PERMISSIONS)) {
+						if (!ctrl.isEnvironmentsImport && (!HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.ADD_OBSERVATION_TRAIT_VARIABLES_PERMISSIONS) ||
+							!HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.ADD_OBSERVATION_SELECTION_VARIABLES_PERMISSIONS))) {
 							$uibModalInstance.close();
 							showErrorMessage('', messagerErrorImportObservationWithVariables);
+						} else if (ctrl.isEnvironmentsImport && (!HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.ADD_ENVIRONMENT_DETAILS_VARIABLES_PERMISSIONS) ||
+							!HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.ADD_ENVIRONMENTAL_CONDITIONS_VARIABLES_PERMISSIONS))) {
+							$uibModalInstance.close();
+							showErrorMessage('', messagerErrorImportEnvironmentsWithVariables);
 						}
 						ctrl.showAddVariableConfirmModal(result, datasetId);
 					} else {
