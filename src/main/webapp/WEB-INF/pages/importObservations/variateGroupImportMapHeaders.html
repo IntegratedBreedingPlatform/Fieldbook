@@ -5,7 +5,7 @@
 			<div class="modal-content" ng-controller="importObservationsCtrl">
 				<div class="modal-header">
 					<button type="button" class="close closeTrigger" ng:click="cancelMapping()" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h4 class="modal-title" th:text="#{form.import.observations.text}">Import Observations</h4>
+					<h4 class="modal-title" th:text="#{form.import.observations.text}">Import Study Book</h4>
 				</div>
 				<section class="modal-body" style="height:450pt; overflow-y: auto">
 					<div class="col-md-12">
@@ -46,7 +46,9 @@
 							</div>
 						</div>
 						<div class="col-sm-8">
-						<mapping-variate-group th:attr="name=#{import.add.variable.variate.group}" data="data.mappedTraits" variable-type="1043">
+						<mapping-variate-group ng:show="!isEnvironmentsImport()" th:attr="name=#{import.add.variable.variate.group}" data="data.mappedTraits" variable-type="1043">
+						</mapping-variate-group>
+						<mapping-variate-group ng:show="isEnvironmentsImport()" th:attr="name=#{import.add.variable.environment.group}" is-environments-import="isEnvironmentsImport()" data="data.mappedTraits" variable-type="1020">
 						</mapping-variate-group>
 						</div>
 					</div>

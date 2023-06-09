@@ -15,7 +15,6 @@
 			$scope.Messages = Messages;
 			$scope.data = ImportMappingService.data;
 			$scope.datasetId = ImportMappingService.datasetId;
-
 			$scope.advancedOptions = {
 				showAdvancedOptions: false,
 				maintainHeaderNaming: false,
@@ -24,6 +23,10 @@
 			$scope.toggleAdvancedOptions = function () {
 				$scope.advancedOptions.showAdvancedOptions = !$scope.advancedOptions.showAdvancedOptions;
 			};
+
+			$scope.isEnvironmentsImport = function () {
+				return ImportMappingService.isEnvironmentsImport();
+			}
 
 			$scope.cancelMapping = function () {
 				//Should continue with the import?
@@ -60,7 +63,7 @@
 					}
 
 					var msg = 'Please choose a mapping for all variables that you wish to import in the study.';
-					createErrorNotification('Import Observations Mapping Error', msg);
+					createErrorNotification('Import Study Book Mapping Error', msg);
 
 				});
 
@@ -123,7 +126,8 @@
 			restrict: 'E',
 			scope: {
 				name: '@',
-				mappingData: '=data'
+				mappingData: '=data',
+				isEnvironmentsImport: '='
 			},
 			templateUrl: '/Fieldbook/static/angular-templates/importObservations/importMappingGroup.html',
 			controller: ['$scope', '$attrs', function ($scope, $attrs) {
@@ -169,14 +173,15 @@
 		};
 	}]);
 
-	app.directive('importMapVariableSelection', ['VARIABLE_SELECTION_MODAL_SELECTOR', 'VARIABLE_SELECTED_EVENT_TYPE', 'DesignOntologyService', 'Messages',
-		function (VARIABLE_SELECTION_MODAL_SELECTOR, VARIABLE_SELECTED_EVENT_TYPE, DesignOntologyService, Messages) {
+	app.directive('importMapVariableSelection', ['VARIABLE_SELECTION_MODAL_SELECTOR', 'VARIABLE_SELECTED_EVENT_TYPE', 'DesignOntologyService', 'Messages', 'ImportMappingService',
+		function (VARIABLE_SELECTION_MODAL_SELECTOR, VARIABLE_SELECTED_EVENT_TYPE, DesignOntologyService, ImportMappingService, Messages) {
 			return {
 				restrict: 'A',
 				scope: {
 					modeldata: '=',
 					callback: '&',
-					mappedheader: '=mappedData'
+					mappedheader: '=mappedData',
+					isEnvironmentsImport: '='
 				},
 
 				link: function (scope, elem, attrs) {
@@ -202,8 +207,9 @@
 					elem.on('click', function () {
 						// temporarily close the current modal
 						var $importMapModal = $('#importMapModal');
+						const variableType = scope.isEnvironmentsImport ? '1020' : '1043';
 						var params = {
-							variableType: '1043',
+							variableType: variableType,
 							retrieveSelectedVariableFunction: function () {
 								return {};
 							},
@@ -213,7 +219,7 @@
 									$importMapModal.modal('show');
 								}, 200);
 							},
-							apiUrl: '/Fieldbook/manageSettings/settings/role/1043',
+							apiUrl: '/Fieldbook/manageSettings/settings/role/' + variableType,
 							options: {
 								variableSelectBtnName: Messages.SELECT_TEXT,
 								variableSelectBtnIco: 'glyphicon-chevron-right',
@@ -247,8 +253,8 @@
 		}
 	]);
 
-	app.service('ImportMappingService', ['$http', '$rootScope', '$q', '_', 'Messages', 'datasetService', function ($http, $rootScope, $q,
-		_, Messages, datasetService) {
+	app.service('ImportMappingService', ['$http', '$rootScope', '$q', '_', 'Messages', 'datasetService',
+		function ($http, $rootScope, $q, _, Messages, datasetService) {
 
 		function validateMappingAndSave(maintainHeaderNaming) {
 
@@ -257,6 +263,9 @@
 			var allMapped = true;
 			var deferred = $q.defer();
 
+			const isEnvironmentsImport = service.isEnvironmentsImport();
+
+			const variableDataTypeIds = isEnvironmentsImport ?  [1806, 1802] : [1807, 1808]
 			delete postData.unmappedHeaders;
 
 			_.forIn(postData, function (value) {
@@ -284,9 +293,10 @@
 					return;
 				}
 
+
 				$q.all([
-					datasetService.getVariables(datasetId, 1807), // selections
-					datasetService.getVariables(datasetId, 1808) // traits
+					datasetService.getVariables(datasetId, variableDataTypeIds[0]),
+					datasetService.getVariables(datasetId, variableDataTypeIds[1])
 				]).then(function (data) {
 					_.forEach(data[0], function (selections) {
 						output.push(selections.name)
@@ -309,10 +319,18 @@
 							}
 
 							if (!output.includes(value[i].name) && !output.includes(value[i].variable.name)) {
-								if (value[i].variable.variableTypes.includes('TRAIT')) {
-									variableTypeId = 1808;
+								if (isEnvironmentsImport) {
+									if (value[i].variable.variableTypes.includes('ENVIRONMENT_DETAIL')) {
+										variableTypeId = 1806;
+									} else {
+										variableTypeId = 1802;
+									}
 								} else {
-									variableTypeId = 1807;
+									if (value[i].variable.variableTypes.includes('TRAIT')) {
+										variableTypeId = 1808;
+									} else {
+										variableTypeId = 1807;
+									}
 								}
 								addVariablesPromises.push(datasetService.addVariables(datasetId, {
 									variableTypeId: variableTypeId,
@@ -346,6 +364,10 @@
 			});
 
 			return deferred.promise;
+		}
+
+		function isEnvironmentsImport() {
+			return service.isEnvironmentsImportBoolean;
 		}
 
 		function showConfirmIfHasUnmapped() {
@@ -389,7 +411,8 @@
 				mappedTraits: []
 			},
 			validateMappingAndSave: validateMappingAndSave,
-			showConfirmIfHasUnmapped: showConfirmIfHasUnmapped
+			showConfirmIfHasUnmapped: showConfirmIfHasUnmapped,
+			isEnvironmentsImport: isEnvironmentsImport
 		};
 
 		return service;

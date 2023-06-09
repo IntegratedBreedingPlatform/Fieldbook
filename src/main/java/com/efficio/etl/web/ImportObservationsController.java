@@ -217,14 +217,15 @@ public class ImportObservationsController extends AbstractBaseETLController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/getMappingData/{newVariables}", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
-	public Map<String, List<DesignHeaderItem>> getMappingData(@PathVariable final List<String> newVariables) {
+	@RequestMapping(value = "/getMappingData/{newVariables}/isEnvironmentsImport/{isEnvironmentsImport}", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+	public Map<String, List<DesignHeaderItem>> getMappingData(@PathVariable final List<String> newVariables,
+															  @PathVariable final boolean isEnvironmentsImport) {
 		final Map<String, List<DesignHeaderItem>> mappingData = new HashMap<>();
 
 		final List<DesignHeaderItem> listNewVariables = this.createDesignHeaderItemList(newVariables);
 
 		final List<DesignHeaderItem> newVariablesMapped = new ArrayList<DesignHeaderItem>();
-		final List<DesignHeaderItem> updatedNewVariables = this.updateMapping(listNewVariables);
+		final List<DesignHeaderItem> updatedNewVariables = this.updateMapping(listNewVariables, isEnvironmentsImport);
 		newVariablesMapped.addAll(CollectionUtils.subtract(listNewVariables, updatedNewVariables));
 
 		mappingData.put(
@@ -249,19 +250,25 @@ public class ImportObservationsController extends AbstractBaseETLController {
 		return listNewVariables;
 	}
 
-	protected List<DesignHeaderItem> updateMapping(final List<DesignHeaderItem> mappedHeaders) {
+	protected List<DesignHeaderItem> updateMapping(final List<DesignHeaderItem> mappedHeaders, final boolean isEnvironmentsImport) {
 		final List<DesignHeaderItem> newMappingResults = new ArrayList<>();
 
 		for (final DesignHeaderItem item : mappedHeaders) {
 			final StandardVariable stdVar =
 				this.fieldbookService.getStandardVariableByName(item.getName(), this.contextUtil.getCurrentProgramUUID());
 
-			if (stdVar != null &&
-				(stdVar.getVariableTypes().contains(VariableType.TRAIT) ||
-					stdVar.getVariableTypes().contains(VariableType.SELECTION_METHOD))) {
-				stdVar.setPhenotypicType(PhenotypicType.VARIATE);
-				item.setVariable(stdVar);
-				newMappingResults.add(item);
+			if (stdVar != null){
+				if (isEnvironmentsImport && (stdVar.getVariableTypes().contains(VariableType.ENVIRONMENT_CONDITION) ||
+						stdVar.getVariableTypes().contains(VariableType.ENVIRONMENT_DETAIL))) {
+					stdVar.setPhenotypicType(PhenotypicType.TRIAL_ENVIRONMENT);
+					item.setVariable(stdVar);
+					newMappingResults.add(item);
+				} else if (!isEnvironmentsImport && (stdVar.getVariableTypes().contains(VariableType.TRAIT) ||
+						stdVar.getVariableTypes().contains(VariableType.SELECTION_METHOD))) {
+					stdVar.setPhenotypicType(PhenotypicType.VARIATE);
+					item.setVariable(stdVar);
+					newMappingResults.add(item);
+				}
 			}
 		}
 
