@@ -12,7 +12,6 @@
 package com.efficio.fieldbook.web;
 
 import com.efficio.fieldbook.service.api.FieldbookService;
-import com.efficio.fieldbook.web.common.bean.PaginationListSelection;
 import com.efficio.fieldbook.web.util.FieldbookProperties;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.generationcp.commons.security.AuthorizationService;
@@ -51,9 +50,6 @@ public abstract class AbstractBaseFieldbookController {
 
 	@Resource
 	protected FieldbookProperties fieldbookProperties;
-
-	@Resource
-	private PaginationListSelection paginationListSelection;
 
 	@Resource
 	protected OntologyVariableDataManager variableDataManager;
@@ -162,14 +158,6 @@ public abstract class AbstractBaseFieldbookController {
 			}
 		}
 		return "[]";
-	}
-
-	public PaginationListSelection getPaginationListSelection() {
-		return this.paginationListSelection;
-	}
-
-	public void setPaginationListSelection(final PaginationListSelection paginationListSelection) {
-		this.paginationListSelection = paginationListSelection;
 	}
 
 	protected Integer getProgramDefaultLocationId() {

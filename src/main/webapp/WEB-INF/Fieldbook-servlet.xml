@@ -170,12 +170,6 @@
 		<aop:scoped-proxy />
 	</bean>
 
-	<bean id="paginationListSelection"
-		class="com.efficio.fieldbook.web.common.bean.PaginationListSelection"
-		scope="session">
-		<aop:scoped-proxy />
-	</bean>
-
 	<bean id="possibleValuesCache"
 		class="com.efficio.fieldbook.web.trial.bean.PossibleValuesCache"
 		scope="session">
@@ -391,20 +385,6 @@
 			</map>
 		</property>
 	</bean>
-
-    <!--
-        The post processor factory will automatically generate a bean post processor that will handle the
-        automatic registration of component-scanned classes into a target factory / registry instead of having
-        to have a separate class for each bean post processor
-        -->
-    <bean id="postProcessorFactory" class="org.generationcp.middleware.spring.util.ComponentPostProcessorFactory"/>
-
-    <bean id="dataProcessorFactory" class="com.efficio.fieldbook.web.naming.expression.dataprocessor.ExpressionDataProcessorFactory"/>
-
-    <bean factory-bean="postProcessorFactory" factory-method="generatePostProcessorFactory">
-        <constructor-arg name="componentClass" type="java.lang.Class" value="com.efficio.fieldbook.web.naming.expression.dataprocessor.ExpressionDataProcessor"/>
-        <constructor-arg name="factoryInstance" ref="dataProcessorFactory"/>
-    </bean>
 
 	<bean id="germplasmNamingService" class="org.generationcp.middleware.ruleengine.namingdeprecated.impl.DeprecatedGermplasmNamingServiceImpl" />
 
@@ -686,7 +666,6 @@
 
 	<bean id="advancingController"
 		  class="com.efficio.fieldbook.web.trial.controller.AdvancingController">
-		<property name="advanceLinesThreshold" value="${advancing.lines.warning.threshold}"/>
 	</bean>
 
 	<bean id="cropService"

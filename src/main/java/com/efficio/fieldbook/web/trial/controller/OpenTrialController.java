@@ -86,9 +86,6 @@ public class OpenTrialController extends BaseTrialController {
 	@Value("${feedback.enabled}")
 	private boolean feedbackEnabled;
 
-	@Value("${old.advancing.options.enabled}")
-	private boolean oldAdvancingOptionsEnabled;
-
 	@Resource
 	private ErrorHandlerService errorHandlerService;
 
@@ -188,11 +185,6 @@ public class OpenTrialController extends BaseTrialController {
 	@ModelAttribute("feedbackEnabled")
 	public boolean isFeedbackEnabled() {
 		return this.feedbackEnabled;
-	}
-
-	@ModelAttribute("oldAdvancingOptionsEnabled")
-	public boolean isOldAdvancingOptionsEnabled() {
-		return this.oldAdvancingOptionsEnabled;
 	}
 
 	@RequestMapping(value = "/trialSettings", method = RequestMethod.GET)
