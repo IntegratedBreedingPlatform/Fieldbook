@@ -124,7 +124,7 @@ describe('Export Study', function () {
 				var capturedArgument = $uibModal.open.calls.mostRecent().args[0];
 
 				expect(capturedArgument.template).toEqual('<dataset-option-modal modal-title="modalTitle" message="message"' +
-					'selected="selected" on-continue="showExportOptions()"></dataset-option-modal>');
+					'selected="selected" supported-dataset-types="supportedDatasetTypes" on-continue="showExportOptions()"></dataset-option-modal>');
 				expect(capturedArgument.controller).toEqual('exportDatasetOptionCtrl');
 				expect(capturedArgument.size).toEqual('md');
 
