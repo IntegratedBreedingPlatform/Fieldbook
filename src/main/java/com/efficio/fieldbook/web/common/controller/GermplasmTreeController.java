@@ -17,10 +17,7 @@ import com.efficio.fieldbook.web.common.bean.UserSelection;
 import com.efficio.fieldbook.web.common.form.SaveListForm;
 import com.efficio.fieldbook.web.common.service.CrossingService;
 import com.efficio.fieldbook.web.common.service.impl.CrossingServiceImpl;
-import org.generationcp.middleware.ruleengine.namingdeprecated.service.DeprecatedNamingConventionService;
-import com.efficio.fieldbook.web.trial.form.AdvancingStudyForm;
 import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Table;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -28,28 +25,16 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.generationcp.commons.constant.AppConstants;
-import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
 import org.generationcp.commons.parsing.pojo.ImportedCrossesList;
-import org.generationcp.middleware.ruleengine.pojo.ImportedGermplasm;
-import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
-import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSourceList;
 import org.generationcp.commons.pojo.treeview.TreeTableNode;
-import org.generationcp.middleware.ruleengine.RuleException;
-import org.generationcp.middleware.ruleengine.RulesNotConfiguredException;
-import org.generationcp.middleware.ruleengine.settings.CrossSetting;
 import org.generationcp.commons.util.DateUtil;
 import org.generationcp.commons.util.TreeViewUtil;
-import org.generationcp.middleware.api.germplasm.GermplasmService;
 import org.generationcp.middleware.domain.etl.Workbook;
-import org.generationcp.middleware.domain.oms.CvId;
 import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.exceptions.MiddlewareException;
 import org.generationcp.middleware.exceptions.MiddlewareQueryException;
-import org.generationcp.middleware.manager.GermplasmNameType;
 import org.generationcp.middleware.manager.api.GermplasmDataManager;
 import org.generationcp.middleware.manager.api.GermplasmListManager;
-import org.generationcp.middleware.manager.api.OntologyDataManager;
-import org.generationcp.middleware.pojos.Attribute;
 import org.generationcp.middleware.pojos.Germplasm;
 import org.generationcp.middleware.pojos.GermplasmList;
 import org.generationcp.middleware.pojos.GermplasmListData;
@@ -57,6 +42,13 @@ import org.generationcp.middleware.pojos.GermplasmStudySourceType;
 import org.generationcp.middleware.pojos.Method;
 import org.generationcp.middleware.pojos.Name;
 import org.generationcp.middleware.pojos.UserDefinedField;
+import org.generationcp.middleware.ruleengine.RuleException;
+import org.generationcp.middleware.ruleengine.RulesNotConfiguredException;
+import org.generationcp.middleware.ruleengine.namingdeprecated.service.DeprecatedNamingConventionService;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSource;
+import org.generationcp.middleware.ruleengine.pojo.DeprecatedAdvancingSourceList;
+import org.generationcp.middleware.ruleengine.pojo.ImportedCross;
+import org.generationcp.middleware.ruleengine.settings.CrossSetting;
 import org.generationcp.middleware.service.api.FieldbookService;
 import org.generationcp.middleware.service.api.dataset.DatasetService;
 import org.generationcp.middleware.service.api.study.germplasm.source.GermplasmStudySourceInput;
@@ -75,13 +67,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -112,12 +101,7 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 	protected static final String PROGRAM_LISTS = "LISTS";
 	protected static final String CROP_LISTS = "CROPLISTS";
 
-	public static final String GERMPLASM_LIST_TYPE_ADVANCE = "advance";
 	public static final String GERMPLASM_LIST_TYPE_CROSS = "cross";
-	/**
-	 * The Constant BATCH_SIZE.
-	 */
-	public static final String DATE_TIME_FORMAT = "yyyyMMdd";
 
 	/**
 	 * The germplasm list manager.
@@ -140,9 +124,6 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 	@Resource
 	private DatasetService datasetService;
 
-	@Resource
-	private GermplasmService germplasmService;
-
 	static final String NAME_NOT_UNIQUE = "Name not unique";
 
 	static final String IS_SUCCESS = "isSuccess";
@@ -157,9 +138,6 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 
 	@Resource
 	private GermplasmDataManager germplasmDataManager;
-
-	@Resource
-	private OntologyDataManager ontologyDataManager;
 
 	/**
 	 * Load initial germplasm tree.
@@ -281,23 +259,7 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 		final Integer currentUserId = this.getCurrentIbdbUserId();
 		final GermplasmList germplasmList = this.createGermplasmList(form, currentUserId);
 
-		if (GermplasmTreeController.GERMPLASM_LIST_TYPE_ADVANCE.equals(form.getGermplasmListType())) {
-			final AdvancingStudyForm advancingStudyForm = this.getPaginationListSelection().getAdvanceDetails(form.getListIdentifier());
-			final List<Pair<Germplasm, List<Name>>> germplasms = new ArrayList<>();
-			final List<Pair<Germplasm, List<Attribute>>> germplasmAttributes = new ArrayList<>();
-
-			final boolean isNamesChanged =
-				this.populateGermplasmListDataFromAdvanced(germplasmList, advancingStudyForm, germplasms, listDataItems,
-					germplasmAttributes);
-			final Integer germplasmListId = this.fieldbookMiddlewareService
-				.saveNurseryAdvanceGermplasmList(germplasms, listDataItems, germplasmList, germplasmAttributes,
-					this.contextUtil.getProjectInContext().getCropType());
-			this.createGermplasmStudySourcesFromSavedAdvanceListEntries(advancingStudyForm.getGermplasmList(), listDataItems,
-				germplasmStudySourceList);
-
-			return new GermplasmListResult().withGermplasmListId(germplasmListId).withIsTrimmed(false).withNamesChanged(isNamesChanged);
-
-		} else if (GermplasmTreeController.GERMPLASM_LIST_TYPE_CROSS.equals(form.getGermplasmListType())) {
+		if (GermplasmTreeController.GERMPLASM_LIST_TYPE_CROSS.equals(form.getGermplasmListType())) {
 			final CrossSetting crossSetting = this.userSelection.getCrossSettings();
 			final ImportedCrossesList importedCrossesList = this.userSelection.getImportedCrossesList();
 
@@ -320,30 +282,6 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 
 		} else {
 			throw new IllegalArgumentException("Unknown germplasm list type supplied when saving germplasm list");
-		}
-
-	}
-
-	void createGermplasmStudySourcesFromSavedAdvanceListEntries(final List<ImportedGermplasm> listEntries,
-		final List<Pair<Germplasm, GermplasmListData>> savedListDataItems, final List<GermplasmStudySourceInput> germplasmStudySourceList) {
-		final Integer studyId = this.userSelection.getWorkbook().getStudyDetails().getId();
-		final ListIterator<Pair<Germplasm, GermplasmListData>> listDataIterator = savedListDataItems.listIterator();
-		final ListIterator<ImportedGermplasm> listEntriesIterator = listEntries.listIterator();
-		final Set<Integer> sourcePlotNumbers =
-			listEntries.stream().map(g -> Integer.valueOf(g.getPlotNumber())).collect(Collectors.toSet());
-		final Set<Integer> trialInstances =
-			listEntries.stream().map(g -> Integer.valueOf(g.getTrialInstanceNumber())).collect(Collectors.toSet());
-		final Table<Integer, Integer, Integer> observationUnitIdsTable =
-			this.datasetService.getTrialNumberPlotNumberObservationUnitIdTable(this.userSelection.getWorkbook().getMeasurementDatesetId(),
-				trialInstances, sourcePlotNumbers);
-		while (listEntriesIterator.hasNext()) {
-			final ImportedGermplasm advanceEntry = listEntriesIterator.next();
-			final GermplasmListData listData = listDataIterator.next().getRight();
-			final Integer plotNumber = Integer.valueOf(advanceEntry.getPlotNumber());
-			final Integer trialInstance = Integer.valueOf(advanceEntry.getTrialInstanceNumber());
-			germplasmStudySourceList.add(
-				new GermplasmStudySourceInput(listData.getGid(), studyId, observationUnitIdsTable.get(trialInstance, plotNumber),
-					GermplasmStudySourceType.ADVANCE));
 		}
 
 	}
@@ -613,155 +551,6 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 	}
 
 	/**
-	 * Creates the nursery advance germplasm list.
-	 *
-	 * @param form          the form
-	 * @param germplasms    the germplasms
-	 * @param listDataItems the list data items
-	 * @return true if any of the final names generated have changed from the previewed ones
-	 */
-
-	Boolean populateGermplasmListDataFromAdvanced(final GermplasmList germplasmList, final AdvancingStudyForm form,
-		final List<Pair<Germplasm, List<Name>>> germplasms, final List<Pair<Germplasm, GermplasmListData>> listDataItems,
-		final List<Pair<Germplasm, List<Attribute>>> germplasmAttributes) throws RuleException {
-		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIME_FORMAT);
-		final String harvestDate = LocalDate.now().format(formatter);
-
-		// Common germplasm fields
-		final Integer gDate = DateUtil.getCurrentDateAsIntegerValue();
-
-		// Common germplasm list data fields
-		final Integer listDataId = null;
-
-		// Common name fields
-		final Integer nRef = 0;
-
-		final Integer plotCodeVariableId = this.germplasmService.getPlotCodeField().getId();
-		final Integer plotNumberVariableId = this.getVariableId("PLOT_NUMBER_AP_text");
-		final Integer trialInstanceVariableId = this.getVariableId("INSTANCE_NUMBER_AP_text");
-		final Integer repNumberVariableId = this.getVariableId("REP_NUMBER_AP_text");
-		final Integer plantNumberVariableId = this.getVariableId("PLANT_NUMBER_AP_text");
-
-		final List<ImportedGermplasm> advanceItems = form.getGermplasmList();
-		// Save the previewed names, then recompute names (the sequences might have moved from the time of preview)
-		final List<String> previewedNamesList = advanceItems.stream().map(ImportedGermplasm::getDesig).collect(Collectors.toList());
-		form.getAdvancingSourceItems().forEach(item -> item.setDesignationIsPreviewOnly(false));
-		this.namingConventionService.generateAdvanceListNames(form.getAdvancingSourceItems(), false, advanceItems);
-
-		// Create germplasms to save - Map<Germplasm, List<Name>>
-		for (final ImportedGermplasm importedGermplasm : advanceItems) {
-			Integer gid = null;
-
-			if (importedGermplasm.getGid() != null) {
-				gid = Integer.valueOf(importedGermplasm.getGid());
-			}
-
-			Integer locationId = 0;
-			// old manage nursery used to have an input to specify harvest location
-			// we are keeping this in case that functionality is added again
-			if (!StringUtils.isBlank(form.getHarvestLocationId())) {
-				locationId = Integer.valueOf(form.getHarvestLocationId());
-			}
-			if (locationId == 0 && importedGermplasm.getLocationId() != null) {
-				locationId = importedGermplasm.getLocationId();
-			}
-
-			final List<Name> names = importedGermplasm.getNames();
-			Name preferredName = names.get(0);
-
-			for (final Name name : names) {
-
-				name.setLocationId(locationId);
-				name.setNdate(gDate);
-				name.setReferenceId(nRef);
-
-				// If crop == CIMMYT WHEAT (crop with more than one name saved)
-				// Germplasm name is the Names entry with NType = 1027, NVal =
-				// table.desig, NStat = 0
-				if (name.getNstat() == 0 && name.getTypeId() == GermplasmNameType.UNRESOLVED_NAME.getUserDefinedFieldID()) {
-					preferredName = name;
-				}
-			}
-
-			final Integer trueGdate = !"".equals(harvestDate.trim()) ? Integer.valueOf(harvestDate) : gDate;
-			final Germplasm germplasm;
-			germplasm = new Germplasm(gid, importedGermplasm.getGnpgs(), importedGermplasm.getGpid1(), importedGermplasm.getGpid2(), locationId,
-			trueGdate, 0, 0, 0, preferredName, null, new Method(importedGermplasm.getBreedingMethodId()));
-			final Integer mgid = importedGermplasm.getMgid() == null ? 0 : importedGermplasm.getMgid();
-			germplasm.setMgid(mgid);
-			germplasms.add(new ImmutablePair<>(germplasm, names));
-
-			// Create list data items to save - Map<Germplasm, GermplasmListData>
-			final String groupName = importedGermplasm.getCross() != null ? importedGermplasm.getCross() : "-";
-
-			final GermplasmListData listData =
-				new GermplasmListData(listDataId, germplasmList, gid, importedGermplasm.getEntryNumber(),
-					importedGermplasm.getSource(), groupName, 0, 0);
-
-			listDataItems.add(new ImmutablePair<>(germplasm, listData));
-
-			final List<Attribute> attributesPerGermplasm = Lists.newArrayList();
-			// Add the seed source/origin attribute (which is generated based on
-			// format strings configured in crossing.properties) to the
-			// originAttribute gid will be set when saving once gid is known
-			final Attribute originAttribute =
-				this.createAttributeObject(importedGermplasm.getSource(), plotCodeVariableId, locationId, gDate);
-			attributesPerGermplasm.add(originAttribute);
-
-			final String plotNumberString = importedGermplasm.getPlotNumber();
-			final Attribute plotNumberAttribute =
-				this.createAttributeObject(plotNumberString, plotNumberVariableId, locationId, gDate);
-			attributesPerGermplasm.add(plotNumberAttribute);
-
-			// Adding Instance number and replication number as
-			// attributes of germplasm for trial advancing
-			final String replicationNumber = importedGermplasm.getReplicationNumber();
-			if (StringUtils.isNotBlank(replicationNumber)) {
-				final Attribute repNoAttribute = this.createAttributeObject(replicationNumber, repNumberVariableId, locationId, gDate);
-				attributesPerGermplasm.add(repNoAttribute);
-			}
-
-			final Attribute instanceNoAttribute =
-				this.createAttributeObject(importedGermplasm.getTrialInstanceNumber(), trialInstanceVariableId, locationId,
-					gDate);
-			attributesPerGermplasm.add(instanceNoAttribute);
-
-			if (importedGermplasm.getPlantNumber() != null) {
-				final Attribute plantNoAttribute =
-					this.createAttributeObject(importedGermplasm.getPlantNumber(), plantNumberVariableId, locationId, gDate);
-				attributesPerGermplasm.add(plantNoAttribute);
-			}
-
-			germplasmAttributes.add(new ImmutablePair<>(germplasm, Lists.newArrayList(attributesPerGermplasm)));
-		}
-
-		// Check if any of the names have changed from the previewed names
-		final List<String> finalNamesList = advanceItems.stream().map(ImportedGermplasm::getDesig).collect(Collectors.toList());
-		return !previewedNamesList.equals(finalNamesList);
-	}
-
-	private Integer getVariableId(final String name) {
-		//FIXME Handle NPE, as of now we are hardcoding that the required variables cant be edited, so it should never get NPE
-		return this.ontologyDataManager.findTermByName(name, CvId.VARIABLES.getId()).getId();
-	}
-
-	private Attribute createAttributeObject(final String attributeValue, final Integer typeId,
-		final Integer locationId, final Integer gDate) {
-		final Attribute originAttribute = new Attribute();
-		originAttribute.setAval(attributeValue);
-		originAttribute.setTypeId(typeId);
-		originAttribute.setAdate(gDate);
-		originAttribute.setLocationId(locationId);
-		return originAttribute;
-	}
-
-	@ResponseBody
-	@RequestMapping(value = "/getPreferredName/{gid}", method = RequestMethod.GET)
-	public String getPreferredName(@PathVariable final String gid) {
-		return this.germplasmDataManager.getPreferredNameValueByGID(Integer.valueOf(gid));
-	}
-
-	/**
 	 * Load initial germplasm tree table.
 	 *
 	 * @return the string
@@ -903,18 +692,6 @@ public class GermplasmTreeController extends AbstractBaseFieldbookController {
 	@Override
 	public String getContentName() {
 		return null;
-	}
-
-	protected void setFieldbookMiddlewareService(final FieldbookService fieldbookMiddlewareService) {
-		this.fieldbookMiddlewareService = fieldbookMiddlewareService;
-	}
-
-	protected void setUserSelection(final UserSelection userSelection) {
-		this.userSelection = userSelection;
-	}
-
-	void setGermplasmDataManager(final GermplasmDataManager germplasmDataManager) {
-		this.germplasmDataManager = germplasmDataManager;
 	}
 
 	protected void setGermplasmListManager(final GermplasmListManager germplasmListManager) {

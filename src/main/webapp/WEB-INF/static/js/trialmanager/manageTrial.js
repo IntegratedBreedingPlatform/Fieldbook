@@ -34,8 +34,6 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 	manageTrialApp.config(function ($translateProvider) {
 		$translateProvider.useSanitizeValueStrategy('sanitize');
 		$translateProvider.translations('en', {
-			'study.studydetails.action.deprecated.advance.sample': 'Advance sampled plants from plots',
-			'study.studydetails.action.deprecated.advance.study': 'Advance study',
 			'study.studydetails.action.new.advance.study': 'New Advance Study',
 			'advancing.study.mandatory.fields': 'indicates a mandatory field',
 			'advancing.study.method': 'METHODS',
@@ -267,11 +265,11 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 		'$timeout', '_', '$localStorage', '$state', '$window', '$location', 'HasAnyAuthorityService', 'derivedVariableService', 'exportStudyModalService',
 		'importStudyModalService', 'createSampleModalService', 'derivedVariableModalService', '$uibModal', '$q', 'datasetService', 'InventoryService',
 		'studyContext', 'PERMISSIONS', 'LABEL_PRINTING_TYPE', 'HAS_LISTS_OR_SUB_OBS', 'HAS_GENERATED_DESIGN', 'germplasmStudySourceService', 'sampleGenotypeService',
-		'studyEntryService', 'HAS_MEANS_DATASET', 'advanceStudyModalService', 'STABRAPP_URL', 'DS_BRAPP_URL', 'FEEDBACK_ENABLED', 'OLD_ADVANCING_OPTIONS_ENABLED', 'AccountService',
+		'studyEntryService', 'HAS_MEANS_DATASET', 'advanceStudyModalService', 'STABRAPP_URL', 'DS_BRAPP_URL', 'FEEDBACK_ENABLED', 'AccountService', 'HAS_ONLY_PROGRAM_ROLES',
 		function ($scope, $rootScope, studyStateService, TrialManagerDataService, $http, $timeout, _, $localStorage, $state, $window, $location, HasAnyAuthorityService,
 				  derivedVariableService, exportStudyModalService, importStudyModalService, createSampleModalService, derivedVariableModalService, $uibModal, $q, datasetService, InventoryService,
 				  studyContext, PERMISSIONS, LABEL_PRINTING_TYPE, HAS_LISTS_OR_SUB_OBS, HAS_GENERATED_DESIGN, germplasmStudySourceService, sampleGenotypeService, studyEntryService, HAS_MEANS_DATASET, advanceStudyModalService,
-				  STABRAPP_URL, DS_BRAPP_URL, FEEDBACK_ENABLED, OLD_ADVANCING_OPTIONS_ENABLED, AccountService) {
+				  STABRAPP_URL, DS_BRAPP_URL, FEEDBACK_ENABLED, AccountService, HAS_ONLY_PROGRAM_ROLES) {
 
 			$scope.dsBrappURL = DS_BRAPP_URL;
 			$scope.staBrappURL = STABRAPP_URL;
@@ -1001,7 +999,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			}
 
 			$scope.showImportObservationsAction = function () {
-				return $scope.hasAnyAuthority(PERMISSIONS.MANAGE_PENDING_OBSERVATION_VALUES_PERMISSIONS) && $scope.hasDesignGenerated;
+				return $scope.hasAnyAuthority(PERMISSIONS.MANAGE_PENDING_OBSERVATION_VALUES_PERMISSIONS);
 			}
 
 			$scope.showDataCollectionAction = function () {
@@ -1023,20 +1021,16 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				return $scope.hasAnyAuthority(PERMISSIONS.ADVANCE_STUDY_PERMISSIONS) && $scope.hasDesignGenerated;
 			}
 
-			$scope.isOldAdvancingOptionsEnabled = function () {
-				return OLD_ADVANCING_OPTIONS_ENABLED;
-			}
-
 			$scope.showAdvanceStudyForPlantsAction = function () {
 				return $scope.hasAnyAuthority(PERMISSIONS.ADVANCE_STUDY_FOR_PLANTS_PERMISSIONS) && $scope.hasDesignGenerated;
 			}
 
 			$scope.showAnalyzeWithStarBrappAction = function () {
-				return $scope.staBrappURL && $scope.hasAnyAuthority(PERMISSIONS.ANALYZE_WITH_STA_BRAPP_PERMISSIONS);
+				return $scope.staBrappURL && !HAS_ONLY_PROGRAM_ROLES && $scope.hasAnyAuthority(PERMISSIONS.ANALYZE_WITH_STA_BRAPP_PERMISSIONS);
 			}
 
 			$scope.showAnalyzeWithDecisionSupportAction = function () {
-				return $scope.dsBrappURL && $scope.hasAnyAuthority(PERMISSIONS.ANALYZE_WITH_DECISION_SUPPORT_PERMISSIONS);
+				return $scope.dsBrappURL && !HAS_ONLY_PROGRAM_ROLES && $scope.hasAnyAuthority(PERMISSIONS.ANALYZE_WITH_DECISION_SUPPORT_PERMISSIONS);
 			}
 
 			$scope.showFieldMapOptionsAction = function () {
@@ -1060,11 +1054,11 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			}
 
 			$scope.showCreateGeoreferenceAction = function () {
-				return $scope.hasAnyAuthority(PERMISSIONS.CREATE_GEOREFERENCE_PERMSISSION) && $scope.hasDesignGenerated;
+				return !HAS_ONLY_PROGRAM_ROLES && $scope.hasAnyAuthority(PERMISSIONS.CREATE_GEOREFERENCE_PERMSISSION) && $scope.hasDesignGenerated;
 			}
 
 			$scope.showEditGeoreferenceAction = function () {
-				return $scope.hasAnyAuthority(PERMISSIONS.EDIT_GEOREFERENCE_PERMSISSION) && $scope.hasDesignGenerated;
+				return !HAS_ONLY_PROGRAM_ROLES && $scope.hasAnyAuthority(PERMISSIONS.EDIT_GEOREFERENCE_PERMSISSION) && $scope.hasDesignGenerated;
 			}
 
 			$scope.showCrossingOptionsAction = function () {
@@ -1296,8 +1290,8 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				advanceStudyModalService.openSelectDatasetModal();
 			}
 
-			$scope.selectEnvironment = function (advanceType, isBeta) {
-				advanceStudyModalService.selectEnvironment(advanceType, isBeta, null);
+			$scope.selectEnvironment = function (advanceType) {
+				advanceStudyModalService.selectEnvironment(advanceType, null);
 			}
 
 			$scope.analyzeWithBrapp = function (brappURL) {

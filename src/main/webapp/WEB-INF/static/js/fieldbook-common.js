@@ -965,29 +965,6 @@ function displaySampleList(id, listName, isPageLoading) {
 	});
 }
 
-function validateBreedingMethodValues(id) {
-	var valid = true;
-	var trialInstances = $('#selectedTrialInstances').val();
-	$.ajax({
-		url: '/Fieldbook/StudyManager/advance/study/checkForNonMaintenanceAndDerivativeMethods/' + id
-			+ '?trialInstances=' + encodeURIComponent(trialInstances),
-		type: 'GET',
-		cache: false,
-		async: false,
-		success: function (data) {
-			if (data.errors) {
-				showErrorMessage('page-advance-modal-message', data.errors);
-				valid = false;
-			}
-
-		},
-		error: function (jqXHR, textStatus, errorThrown) {
-			console.log('The following error occured: ' + textStatus, errorThrown);
-		}
-	});
-	return valid;
-}
-
 function showBaselineTraitDetailsModal(id) {
 	'use strict';
 
@@ -1394,63 +1371,6 @@ function openStudyTree(type, selectStudyFunction, isPreSelect) {
 	TreePersist.preLoadStudyTreeState('#studyTree');
 }
 
-function makeGermplasmListDraggable(isDraggable) {
-	'use strict';
-	// isDraggable is always false, analyze to refactor or remove this
-	isDraggable = isDraggable
-		&& (($('#chooseGermplasmAndChecks').data('replace') && parseInt($('#chooseGermplasmAndChecks').data('replace')) === 1
-			|| ($('#studyId').length === 0 && false))
-			|| $('#studyId').length > 0 && false && !hasGeneratedDesign());
-	if (isDraggable) {
-		$('.germplasm-list-items tbody  tr').draggable({
-
-			helper: function (/*event, ui*/) {
-				var width = $(this)[0].offsetWidth,
-					selected = $('.germplasm-list-items tr.germplasmSelectedRow'),
-					container;
-
-				if (selected.length === 0) {
-					selected = $(this).addClass('germplasmSelectedRow');
-				}
-
-				container = $('<table style="width:' + width + 'px; background-color:green;" />').attr('id', 'draggingContainer');
-				container.append(selected.clone().removeClass('germplasmSelectedRow'));
-
-				return container;
-			},
-
-			revert: 'invalid',
-
-			start: function (/*event, ui*/) {
-				var selected = $('.germplasm-list-items tr.germplasmSelectedRow');
-			},
-
-			stop: function (/*event, ui*/) {
-				var selected = $('.germplasm-list-items tr.germplasmSelectedRow');
-				$(selected).css('opacity', '1');
-			},
-
-			zIndex: 9999,
-
-			appendTo: '#chooseGermplasmAndChecks'
-		});
-
-		$('.germplasm-list-items tbody tr').off('click').on('click', function () {
-			$(this).toggleClass('germplasmSelectedRow');
-		});
-
-	} else {
-		if ($('.germplasm-list-items .ui-draggable').length !== 0) {
-			$('.germplasm-list-items tbody  tr').draggable('destroy');
-		}
-		$('.germplasm-list-items tbody tr').off('click');
-	}
-
-	SaveAdvanceList.setSelectedEntries();
-	// Change background of selected rows
-	$('.germplasm-list-items tr.germplasmSelectedRow').removeClass('germplasmSelectedRow');
-}
-
 function isOpenStudy() {
 	'use strict';
 	var trialStatus = $('body').data('trialStatus');
@@ -1644,12 +1564,6 @@ function validateLocationMatch() {
 	});
 	return isMatched;
 }
-
-function showAdvanceStudyModal(trialInstances, noOfReplications, locationsSelected, advanceType, values) {
-	'use strict';
-	return angular.element('#mainApp').injector().get('advanceStudyModalService').openDeprecatedAdvanceStudyModal(trialInstances, noOfReplications, locationsSelected, advanceType, values);
-}
-
 function openFeedbackSurvey(feedbackEnabled, feature, feedbackService) {
 	if (feedbackEnabled && feature) {
 		feedbackService.shouldShowFeedback(feature).then((shouldShow) => {

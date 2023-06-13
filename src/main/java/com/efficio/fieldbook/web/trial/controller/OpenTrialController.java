@@ -31,6 +31,7 @@ import org.generationcp.middleware.manager.ontology.api.TermDataManager;
 import org.generationcp.middleware.pojos.CropParameter;
 import org.generationcp.middleware.pojos.UserDefinedField;
 import org.generationcp.middleware.pojos.dms.DmsProject;
+import org.generationcp.middleware.pojos.workbench.WorkbenchUser;
 import org.generationcp.middleware.pojos.workbench.settings.Dataset;
 import org.generationcp.middleware.service.api.SampleListService;
 import org.generationcp.middleware.service.api.dataset.DatasetService;
@@ -80,12 +81,10 @@ public class OpenTrialController extends BaseTrialController {
 	private static final String IS_DELETED_ENVIRONMENT = "0";
 	private static final String IS_PREVIEW_EDITABLE = "0";
 	private static final String REDIRECT = "redirect:";
+	private static final String HAS_ONLY_PROGRAM_ROLES = "hasOnlyProgramRoles";
 
 	@Value("${feedback.enabled}")
 	private boolean feedbackEnabled;
-
-	@Value("${old.advancing.options.enabled}")
-	private boolean oldAdvancingOptionsEnabled;
 
 	@Resource
 	private ErrorHandlerService errorHandlerService;
@@ -186,11 +185,6 @@ public class OpenTrialController extends BaseTrialController {
 	@ModelAttribute("feedbackEnabled")
 	public boolean isFeedbackEnabled() {
 		return this.feedbackEnabled;
-	}
-
-	@ModelAttribute("oldAdvancingOptionsEnabled")
-	public boolean isOldAdvancingOptionsEnabled() {
-		return this.oldAdvancingOptionsEnabled;
 	}
 
 	@RequestMapping(value = "/trialSettings", method = RequestMethod.GET)
@@ -349,6 +343,10 @@ public class OpenTrialController extends BaseTrialController {
 			}
 		}
 
+		final WorkbenchUser user = this.contextUtil.getCurrentWorkbenchUser();
+		final String cropName = (String) model.asMap().get("cropName");
+		model.addAttribute(
+			OpenTrialController.HAS_ONLY_PROGRAM_ROLES, user.hasOnlyProgramRoles(cropName));
 		this.setIsSuperAdminAttribute(model);
 	}
 
