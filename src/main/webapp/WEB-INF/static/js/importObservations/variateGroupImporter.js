@@ -207,9 +207,9 @@
 					elem.on('click', function () {
 						// temporarily close the current modal
 						var $importMapModal = $('#importMapModal');
-						const variableType = scope.isEnvironmentsImport ? '1020' : '1043';
+						const variableTypes = scope.isEnvironmentsImport ? ['1802', '1806'] : ['1808', '1807'];
 						var params = {
-							variableType: variableType,
+							variableType: scope.isEnvironmentsImport? '1020': '1043',
 							retrieveSelectedVariableFunction: function () {
 								return {};
 							},
@@ -219,7 +219,7 @@
 									$importMapModal.modal('show');
 								}, 200);
 							},
-							apiUrl: '/Fieldbook/manageSettings/settings/role/' + variableType,
+							apiUrl: '/Fieldbook/manageSettings/settings/properties?type=' + variableTypes,
 							options: {
 								variableSelectBtnName: Messages.SELECT_TEXT,
 								variableSelectBtnIco: 'glyphicon-chevron-right',
