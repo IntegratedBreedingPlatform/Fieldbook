@@ -59,6 +59,9 @@ describe('Export Study', function () {
 			$provide.value("datasetId", datasetId);
 			$provide.value("fileDownloadHelper", fileDownloadHelper);
 			$provide.value("TrialManagerDataService", trialDataManagerService);
+			$provide.value("DATASET_TYPES_OBSERVATION_IDS", [4, 5, 6, 7, 8]);
+			$provide.value("HAS_GENERATED_DESIGN", true);
+			$provide.value("DATASET_TYPES", {});
 		});
 	});
 
