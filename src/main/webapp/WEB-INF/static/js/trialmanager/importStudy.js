@@ -233,8 +233,7 @@
 			$scope.importEnvironmentVariableValues = function () {
 				datasetService.importEnvironmentVariableValues(datasetId, $rootScope.importedData).then(function () {
 					displaySaveSuccessMessage('page-message', 'Your data was successfully imported.');
-					$rootScope.navigateToTab('environment', {reload: true});
-					$scope.close();
+					window.location = '/Fieldbook/TrialManager/openTrial/' + studyContext.studyId;
 				}, function (response) {
 					if (response.status == 400 || response.status == 412) {
 						showErrorMessage('', response.data.errors[0].message);
