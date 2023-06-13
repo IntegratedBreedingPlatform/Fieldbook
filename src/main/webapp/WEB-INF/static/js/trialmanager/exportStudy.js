@@ -77,14 +77,11 @@
 			ctrl.includeSampleGenotypeValues = false;
 			ctrl.isEnvironmentsExport = studyContext.trialDatasetId === datasetId;
 			$scope.exportFormats = [
-				{key: 'csv', name: 'CSV'},
-				{key: 'xls', name: 'Excel'}
+				{key: 'csv', name: 'CSV', isVisible: true},
+				{key: 'xls', name: 'Excel', isVisible: true},
+				{key: 'ksu_csv', name: 'KSU Fieldbook CSV', isVisible: !ctrl.isEnvironmentsExport},
+				{key: 'ksu_xls', name: 'KSU Fieldbook Excel', isVisible: !ctrl.isEnvironmentsExport}
 			];
-
-			if (!ctrl.isEnvironmentsExport) {
-				$scope.exportFormats.push({key: 'ksu_csv', name: 'KSU Fieldbook CSV'});
-				$scope.exportFormats.push({key: 'ksu_xls', name: 'KSU Fieldbook Excel'});
-			}
 
 			$scope.collectionOrders = [
 				{itemId: PLOT_ORDER, name: 'Plot Order'},

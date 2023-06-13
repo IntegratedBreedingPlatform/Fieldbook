@@ -28,7 +28,9 @@
 		<div class="report-type-section col-xs-6 col-md-6">
 			<ui-select ng-model="ctrl.selectedExportFormatId" theme="select2" search-enabled="false" style="min-width: 200px;">
 				<ui-select-match placeholder="Choose an export type">{{$select.selected.name}}</ui-select-match>
-				<ui-select-choices repeat="format.key as format in exportFormats">{{format.name}}</ui-select-choices>
+				<ui-select-choices repeat="format.key as format in exportFormats | filter: { isVisible: true }">
+					{{format.name}}
+				</ui-select-choices>
 			</ui-select>
 		</div>
 	</div>

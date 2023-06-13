@@ -114,13 +114,11 @@
 			});
 
 			ctrl.importFormats = [
-				{name: 'CSV', extension: '.csv'}, //
-				{name: 'Excel', extension: '.xls,.xlsx'}, //
+				{name: 'CSV', extension: '.csv', isVisible: true},
+				{name: 'Excel', extension: '.xls,.xlsx', isVisible: true},
+				{name: 'KSU fieldbook CSV', extension: '.csv', isVisible: !ctrl.isEnvironmentsImport},
+				{name: 'KSU fieldbook Excel', extension: '.xls,.xlsx', isVisible: !ctrl.isEnvironmentsImport}
 			];
-			if (!ctrl.isEnvironmentsImport) {
-				ctrl.importFormats.push({name: 'KSU fieldbook CSV', extension: '.csv'});
-				ctrl.importFormats.push({name: 'KSU fieldbook Excel', extension: '.xls,.xlsx'})
-			}
 
 			$scope.backToDatasetOptionModal = function () {
 				$uibModalInstance.close();
