@@ -5,6 +5,7 @@ describe('Export Study', function () {
 	var exportStudyModalService, $httpBackend, $q, serviceUtilities;
 	var exportDatasetOptionCtrl, exportDatasetOptionCtrlScope;
 	var exportStudyCtrl, exportStudyCtrlScope;
+	var DATASET_TYPES_OBSERVATION_IDS, DATASET_TYPES, HAS_GENERATED_DESIGN;
 	var $rootScope = jasmine.createSpyObj('$rootScope', ['openConfirmModal']);
 	var trialDataManagerService = {
 		currentData: {
@@ -65,6 +66,9 @@ describe('Export Study', function () {
 		inject(function ($injector) {
 			exportStudyModalService = $injector.get('exportStudyModalService');
 			datasetService = $injector.get('datasetService');
+			DATASET_TYPES_OBSERVATION_IDS = $injector.get('DATASET_TYPES_OBSERVATION_IDS');
+			DATASET_TYPES = $injector.get('DATASET_TYPES');
+			HAS_GENERATED_DESIGN = $injector.get('HAS_GENERATED_DESIGN');
 			$httpBackend = $injector.get('$httpBackend');
 			$uibModal = $injector.get('$uibModal');
 			$uibModalInstance = $injector.get('$uibModalInstance');
@@ -84,7 +88,10 @@ describe('Export Study', function () {
 				$uibModal: $uibModal,
 				$uibModalInstance: $uibModalInstance,
 				exportStudyModalService: exportStudyModalService,
-				datasetService: datasetService
+				datasetService: datasetService,
+				DATASET_TYPES_OBSERVATION_IDS: DATASET_TYPES_OBSERVATION_IDS,
+				DATASET_TYPES: DATASET_TYPES,
+				HAS_GENERATED_DESIGN: HAS_GENERATED_DESIGN
 			});
 
 			exportStudyCtrlScope = $injector.get('$rootScope').$new();
