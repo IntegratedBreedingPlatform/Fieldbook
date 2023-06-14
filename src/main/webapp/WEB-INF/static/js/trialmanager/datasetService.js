@@ -205,11 +205,21 @@
 					});
 				return request.then(successHandler, failureHandler);
 			};
+			
+			datasetService.importEnvironmentVariableValues = function (datasetId, observationList) {
+				if (!studyContext.studyId) {
+					return $q.resolve([]);
+				}
+				var request = $http.put(BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/environment-variables/values',
+					{
+						data: observationList
+					});
+				return request.then(successHandler, failureHandler);
+			};
 
 			datasetService.acceptDraftData = function (datasetId, instanceIds) {
 				var request = $http.post(BASE_URL + studyContext.studyId + '/datasets/' + datasetId + '/observation-units/drafts/acceptance' + (instanceIds ? '?instanceIds=' + instanceIds.join(",") : ''));
 				return request.then(successHandler, failureHandler);
-
 			};
 
 			datasetService.checkOutOfBoundDraftData = function (datasetId) {

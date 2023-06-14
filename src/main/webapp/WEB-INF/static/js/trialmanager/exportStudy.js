@@ -12,7 +12,7 @@
 			exportStudyModalService.openDatasetOptionModal = function () {
 				$uibModal.open({
 					template: '<dataset-option-modal modal-title="modalTitle" message="message"' +
-					'selected="selected" on-continue="showExportOptions()"></dataset-option-modal>',
+					'selected="selected" supported-dataset-types="supportedDatasetTypes" on-continue="showExportOptions()"></dataset-option-modal>',
 					controller: 'exportDatasetOptionCtrl',
 					size: 'md'
 				});
@@ -41,13 +41,18 @@
 
 		}]);
 
-	exportStudyModule.controller('exportDatasetOptionCtrl', ['$scope', '$uibModal', '$uibModalInstance', 'studyContext', 'exportStudyModalService',
-		function ($scope, $uibModal, $uibModalInstance, studyContext, exportStudyModalService) {
+	exportStudyModule.controller('exportDatasetOptionCtrl', ['$scope', '$uibModal', '$uibModalInstance', 'studyContext', 'exportStudyModalService', 'DATASET_TYPES_OBSERVATION_IDS',
+		'DATASET_TYPES', 'HAS_GENERATED_DESIGN', function ($scope, $uibModal, $uibModalInstance, studyContext, exportStudyModalService, DATASET_TYPES_OBSERVATION_IDS, DATASET_TYPES, HAS_GENERATED_DESIGN) {
 
 			$scope.modalTitle = 'Export study book';
 			$scope.message = 'Please choose the dataset you would like to export:';
 			$scope.measurementDatasetId = studyContext.measurementDatasetId;
-			$scope.selected = {datasetId: $scope.measurementDatasetId};
+			$scope.supportedDatasetTypes = [DATASET_TYPES.SUMMARY_DATA];
+			$scope.selected = {datasetId: studyContext.trialDatasetId};
+			if (HAS_GENERATED_DESIGN) {
+				$scope.selected = {datasetId: $scope.measurementDatasetId};
+				$scope.supportedDatasetTypes.push(...DATASET_TYPES_OBSERVATION_IDS);
+			}
 
 			$scope.showExportOptions = function () {
 				exportStudyModalService.openExportStudyModal($scope.selected.datasetId);
@@ -56,8 +61,8 @@
 		}]);
 
 	exportStudyModule.controller('exportStudyCtrl', ['datasetId', '$scope', '$rootScope', '$uibModalInstance', 'datasetService', 'exportStudyModalService',
-		'TrialManagerDataService', 'fileDownloadHelper',
-		function (datasetId, $scope, $rootScope, $uibModalInstance, datasetService, exportStudyModalService, TrialManagerDataService, fileDownloadHelper) {
+		'TrialManagerDataService', 'fileDownloadHelper', 'studyContext',
+		function (datasetId, $scope, $rootScope, $uibModalInstance, datasetService, exportStudyModalService, TrialManagerDataService, fileDownloadHelper, studyContext ) {
 
 
 			var PLOT_ORDER = '1';
@@ -70,12 +75,12 @@
 			ctrl.selectedCollectionOrderId = '1';
 			ctrl.singleFile = true;
 			ctrl.includeSampleGenotypeValues = false;
-
+			ctrl.isEnvironmentsExport = studyContext.trialDatasetId === datasetId;
 			$scope.exportFormats = [
-				{key: 'csv', name: 'CSV'},
-				{key: 'xls', name: 'Excel'},
-				{key: 'ksu_csv', name: 'KSU Fieldbook CSV'},
-				{key: 'ksu_xls', name: 'KSU Fieldbook Excel'}
+				{key: 'csv', name: 'CSV', isVisible: true},
+				{key: 'xls', name: 'Excel', isVisible: true},
+				{key: 'ksu_csv', name: 'KSU Fieldbook CSV', isVisible: !ctrl.isEnvironmentsExport},
+				{key: 'ksu_xls', name: 'KSU Fieldbook Excel', isVisible: !ctrl.isEnvironmentsExport}
 			];
 
 			$scope.collectionOrders = [
@@ -149,6 +154,7 @@
 
 			ctrl.export = function (instanceIds) {
 				ctrl.singleFile = ctrl.selectedExportFormatId === 'csv' ? ctrl.singleFile : false;
+				ctrl.singleFile = ctrl.isEnvironmentsExport ? true : ctrl.singleFile;
 				datasetService.exportDataset(datasetId, instanceIds, ctrl.selectedCollectionOrderId, ctrl.singleFile, ctrl.selectedExportFormatId, ctrl.includeSampleGenotypeValues).then(function (response) {
 					var fileName = fileDownloadHelper.getFileNameFromResponseContentDisposition(response);
 					fileDownloadHelper.save(response.data, fileName);

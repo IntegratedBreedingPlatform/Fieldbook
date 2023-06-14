@@ -991,7 +991,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			}
 
 			$scope.showExportStudyBookAction = function () {
-				return $scope.hasAnyAuthority(PERMISSIONS.EXPORT_STUDY_BOOK_PERMISSIONS) && $scope.hasDesignGenerated;
+				return $scope.hasAnyAuthority(PERMISSIONS.EXPORT_STUDY_BOOK_PERMISSIONS)
 			}
 
 			$scope.showExportStudyEntriesAction = function () {
@@ -999,7 +999,7 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 			}
 
 			$scope.showImportObservationsAction = function () {
-				return $scope.hasAnyAuthority(PERMISSIONS.MANAGE_PENDING_OBSERVATION_VALUES_PERMISSIONS) && $scope.hasDesignGenerated;
+				return $scope.hasAnyAuthority(PERMISSIONS.MANAGE_PENDING_OBSERVATION_VALUES_PERMISSIONS);
 			}
 
 			$scope.showDataCollectionAction = function () {

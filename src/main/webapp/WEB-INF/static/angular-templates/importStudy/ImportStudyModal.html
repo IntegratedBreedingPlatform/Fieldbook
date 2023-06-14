@@ -30,7 +30,9 @@
 		<div class="col-xs-3 col-md-4" style="padding-left: 0px;">
 			<ui-select ng-model="ctrl.format.selected" theme="select2" search-enabled="false">
 				<ui-select-match placeholder="Choose an import type">{{$select.selected.name}}</ui-select-match>
-				<ui-select-choices repeat="format.name as format in ctrl.importFormats ">{{format.name}}</ui-select-choices>
+				<ui-select-choices repeat="format.name as format in ctrl.importFormats | filter: { isVisible: true }">
+					{{format.name}}
+				</ui-select-choices>
 			</ui-select>
 		</div>
 	</div>

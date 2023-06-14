@@ -13,8 +13,8 @@
 
 			importStudyModalService.openDatasetOptionModal = function () {
 				$uibModal.open({
-					template: '<dataset-option-modal modal-title="modalTitle" message="message"' +
-						'selected="selected" on-continue="showImportOptions()"></dataset-option-modal>',
+					template: '<dataset-option-modal modal-title="modalTitle" message="message" selected="selected"' +
+						' supported-dataset-types="supportedDatasetTypes" on-continue="showImportOptions()"></dataset-option-modal>',
 					controller: 'importDatasetOptionCtrl',
 					size: 'md'
 				});
@@ -74,13 +74,18 @@
 
 		}]);
 
-	importStudyModule.controller('importDatasetOptionCtrl', ['$scope', '$uibModal', '$uibModalInstance', 'studyContext', 'importStudyModalService',
-		function ($scope, $uibModal, $uibModalInstance, studyContext, importStudyModalService) {
+	importStudyModule.controller('importDatasetOptionCtrl', ['$scope', '$uibModal', '$uibModalInstance', 'studyContext', 'importStudyModalService', 'DATASET_TYPES_OBSERVATION_IDS',
+		'DATASET_TYPES', 'HAS_GENERATED_DESIGN', function ($scope, $uibModal, $uibModalInstance, studyContext, importStudyModalService, DATASET_TYPES_OBSERVATION_IDS, DATASET_TYPES, HAS_GENERATED_DESIGN) {
 
-			$scope.modalTitle = 'Import observations';
+			$scope.modalTitle = 'Import Study Book';
 			$scope.message = 'Please choose the dataset you would like to import:';
 			$scope.measurementDatasetId = studyContext.measurementDatasetId;
-			$scope.selected = {datasetId: $scope.measurementDatasetId};
+			$scope.supportedDatasetTypes = [DATASET_TYPES.SUMMARY_DATA];
+			$scope.selected = {datasetId: studyContext.trialDatasetId};
+			if (HAS_GENERATED_DESIGN) {
+				$scope.selected = {datasetId: $scope.measurementDatasetId};
+				$scope.supportedDatasetTypes.push(...DATASET_TYPES_OBSERVATION_IDS);
+			}
 
 			$scope.showImportOptions = function () {
 				importStudyModalService.openImportStudyModal($scope.selected.datasetId);
@@ -89,25 +94,30 @@
 		}]);
 
 	importStudyModule.controller('importStudyCtrl', ['datasetId', '$scope', '$rootScope', '$uibModalInstance', 'datasetService', 'importStudyModalService', 'HasAnyAuthorityService', 'PERMISSIONS',
-		function (datasetId, $scope, $rootScope, $uibModalInstance, datasetService, importStudyModalService, HasAnyAuthorityService, PERMISSIONS) {
+		'studyContext', function (datasetId, $scope, $rootScope, $uibModalInstance, datasetService, importStudyModalService, HasAnyAuthorityService, PERMISSIONS, studyContext) {
 
-			$scope.modalTitle = 'Import observations';
+			$scope.modalTitle = 'Import Study Book';
 			$scope.file = null;
 			$scope.importedData = null;
 			var ctrl = this;
+			ctrl.isEnvironmentsImport = studyContext.trialDatasetId === datasetId;
 
 			// Deregister previously create listeners
 			importObservationAfterMappingVariateGroupDeRegister();
 
 			importObservationAfterMappingVariateGroupDeRegister = $rootScope.$on('importObservationAfterMappingVariateGroup', function (event) {
-				$scope.importObservations(true);
+				if (ctrl.isEnvironmentsImport) {
+					$scope.importEnvironmentVariableValues();
+				} else {
+					$scope.importObservations(true);
+				}
 			});
 
 			ctrl.importFormats = [
-				{name: 'CSV', extension: '.csv'}, //
-				{name: 'Excel', extension: '.xls,.xlsx'}, //
-				{name: 'KSU fieldbook CSV', extension: '.csv'}, //
-				{name: 'KSU fieldbook Excel', extension: '.xls,.xlsx'} //
+				{name: 'CSV', extension: '.csv', isVisible: true},
+				{name: 'Excel', extension: '.xls,.xlsx', isVisible: true},
+				{name: 'KSU fieldbook CSV', extension: '.csv', isVisible: !ctrl.isEnvironmentsImport},
+				{name: 'KSU fieldbook Excel', extension: '.xls,.xlsx', isVisible: !ctrl.isEnvironmentsImport}
 			];
 
 			$scope.backToDatasetOptionModal = function () {
@@ -124,14 +134,22 @@
 				$scope.validateNewVariables().then(function (result) {
 					$rootScope.importedData  = $scope.importedData;
 					if (result.length > 0) {
-						if (!HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.ADD_OBSERVATION_TRAIT_VARIABLES_PERMISSIONS) ||
-							!HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.ADD_OBSERVATION_SELECTION_VARIABLES_PERMISSIONS)) {
+						if (!ctrl.isEnvironmentsImport && (!HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.ADD_OBSERVATION_TRAIT_VARIABLES_PERMISSIONS) ||
+							!HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.ADD_OBSERVATION_SELECTION_VARIABLES_PERMISSIONS))) {
 							$uibModalInstance.close();
 							showErrorMessage('', messagerErrorImportObservationWithVariables);
+						} else if (ctrl.isEnvironmentsImport && (!HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.ADD_ENVIRONMENT_DETAILS_VARIABLES_PERMISSIONS) ||
+							!HasAnyAuthorityService.hasAnyAuthority(PERMISSIONS.ADD_ENVIRONMENTAL_CONDITIONS_VARIABLES_PERMISSIONS))) {
+							$uibModalInstance.close();
+							showErrorMessage('', messagerErrorImportEnvironmentsWithVariables);
 						}
 						ctrl.showAddVariableConfirmModal(result, datasetId);
 					} else {
-						$scope.importObservations(true);
+						if (ctrl.isEnvironmentsImport) {
+							$scope.importEnvironmentVariableValues();
+						} else {
+							$scope.importObservations(true);
+						}
 					}
 				});
 			};
@@ -177,12 +195,13 @@
 				var myService = injector.get('ImportMappingService');
 
 				myService.datasetId = datasetId;
+				myService.isEnvironmentsImportBoolean = ctrl.isEnvironmentsImport;
 
 				var scope = elem.scope();
 				scope.datasetId = myService.datasetId;
 
 				// retrieve initial data from the service
-				$.getJSON('/Fieldbook/etl/workbook/importObservations/getMappingData/' + result ).done(
+				$.getJSON('/Fieldbook/etl/workbook/importObservations/getMappingData/' + result + '/isEnvironmentsImport/' + ctrl.isEnvironmentsImport).done(
 					function(data) {
 
 						myService.data = data;
@@ -203,6 +222,19 @@
 						showErrorMessage('', response.data.errors[0].message);
 					} else if (response.status == 412) {
 						ctrl.showConfirmModal(response.data.errors);
+					} else {
+						showErrorMessage('', ajaxGenericErrorMsg);
+					}
+				});
+			};
+
+			$scope.importEnvironmentVariableValues = function () {
+				datasetService.importEnvironmentVariableValues(datasetId, $rootScope.importedData).then(function () {
+					displaySaveSuccessMessage('page-message', 'Your data was successfully imported.');
+					window.location = '/Fieldbook/TrialManager/openTrial/' + studyContext.studyId;
+				}, function (response) {
+					if (response.status == 400 || response.status == 412) {
+						showErrorMessage('', response.data.errors[0].message);
 					} else {
 						showErrorMessage('', ajaxGenericErrorMsg);
 					}
@@ -247,7 +279,11 @@
 					if (shouldContinue) {
 						ctrl.showDesignMapPopup(result, datasetId);
 					} else {
-						$scope.importObservations(true);
+						if (ctrl.isEnvironmentsImport) {
+							$scope.importEnvironmentVariableValues();
+						} else {
+							$scope.importObservations(true);
+						}
 					}
 				});
 			};

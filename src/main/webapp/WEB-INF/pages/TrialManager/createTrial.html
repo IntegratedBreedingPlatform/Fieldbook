@@ -158,7 +158,7 @@
 									<li ng-show="showImportObservationsAction()">
 										<a href="" style="display: none" id="open-study-url"></a>
 										<a ng-click="showImportStudyModal()" id="open-study-url-link"
-										   th:text="#{study.studydetails.action.import.study}">Import Observations</a>
+										   th:text="#{study.studydetails.action.import.study}">Import Study Book</a>
 									</li>
 									<li ng-show="showExportStudyEntriesAction()">
 										<a ng-click="exportStudyEntriesPrintingLabels()" id="export-germplasm-link"
@@ -633,7 +633,9 @@
 			oldMethodSelected = '',
 
 			locationTooltipMessage = /*[[#{advance.study.location.tooltip.message} + ' ']]*/ '',
-			messagerErrorImportObservationWithVariables = /*[[#{error.import.observations.with.variables}]]*/ '';
+
+			messagerErrorImportObservationWithVariables = /*[[#{error.import.observations.with.variables}]]*/ '',
+			messagerErrorImportEnvironmentsWithVariables = /*[[#{error.import.environments.with.variables}]]*/ '';
 
 		var translations = {
 			/*TRIAL SETTINGS*/
@@ -742,6 +744,7 @@
 				}
 			).constant('DATASET_TYPES', {
 				PLOT_OBSERVATIONS: /*[[${T(org.generationcp.middleware.enumeration.DatasetTypeEnum).PLOT_DATA.getId()}]]*/ null,
+				SUMMARY_DATA: /*[[${T(org.generationcp.middleware.enumeration.DatasetTypeEnum).SUMMARY_DATA.getId()}]]*/ null,
 				PLANT_SUBOBSERVATIONS: /*[[${T(org.generationcp.middleware.enumeration.DatasetTypeEnum).PLANT_SUBOBSERVATIONS.getId()}]]*/ null,
 				QUADRAT_SUBOBSERVATIONS: /*[[${T(org.generationcp.middleware.enumeration.DatasetTypeEnum).QUADRAT_SUBOBSERVATIONS.getId()}]]*/ null,
 				TIME_SERIES_SUBOBSERVATIONS: /*[[${T(org.generationcp.middleware.enumeration.DatasetTypeEnum).TIME_SERIES_SUBOBSERVATIONS.getId()}]]*/ null,

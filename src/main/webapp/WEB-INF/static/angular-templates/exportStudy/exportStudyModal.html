@@ -28,17 +28,19 @@
 		<div class="report-type-section col-xs-6 col-md-6">
 			<ui-select ng-model="ctrl.selectedExportFormatId" theme="select2" search-enabled="false" style="min-width: 200px;">
 				<ui-select-match placeholder="Choose an export type">{{$select.selected.name}}</ui-select-match>
-				<ui-select-choices repeat="format.key as format in exportFormats">{{format.name}}</ui-select-choices>
+				<ui-select-choices repeat="format.key as format in exportFormats | filter: { isVisible: true }">
+					{{format.name}}
+				</ui-select-choices>
 			</ui-select>
 		</div>
 	</div>
 	<div class="row  form-group">&nbsp;</div>
-	<div class="row form-group data-collection-section">
+	<div class="row form-group data-collection-section" ng-show="!ctrl.isEnvironmentsExport">
 		<div class="col-xs-12 col-md-12">
 			<label class="control-label h4 label-bold">DATA COLLECTION ORDER</label>
 		</div>
 	</div>
-	<div class="row form-group data-collection-section">
+	<div class="row form-group data-collection-section" ng-show="!ctrl.isEnvironmentsExport">
 		<div class="col-xs-5 col-md-5">
 			<label class="control-label add_top_padding label-bold">Choose a data collection order</label> <span class="required">*</span>
 		</div>
@@ -65,8 +67,8 @@
 		<div class="col-xs-12 col-md-12">&nbsp;</div>
 		<div class="col-xs-12 col-md-12">
 			<label class="control-label label-bold">Choose the study environment you would like to export: <span class="required">*</span></label><br>
-			<label style="padding-left: 10px;" ng-show="ctrl.selectedExportFormatId==='csv' || ctrl.selectedExportFormatId==='xls'"><input type="checkbox" ng-model="ctrl.includeSampleGenotypeValues"><span> Include Sample Genotype values</span></label><br>
-			<label style="padding-left: 10px;" ng-show="ctrl.selectedExportFormatId==='csv'"><input type="checkbox" ng-model="ctrl.singleFile"><span> All instances in one file</span></label>
+			<label style="padding-left: 10px;" ng-show="(ctrl.selectedExportFormatId==='csv' || ctrl.selectedExportFormatId==='xls') && !ctrl.isEnvironmentsExport"><input type="checkbox" ng-model="ctrl.includeSampleGenotypeValues"><span> Include Sample Genotype values</span></label><br>
+			<label style="padding-left: 10px;" ng-show="ctrl.selectedExportFormatId==='csv' && !ctrl.isEnvironmentsExport"><input type="checkbox" ng-model="ctrl.singleFile"><span> All instances in one file</span></label>
 		</div>
 		<div class="col-xs-12 col-md-12">&nbsp;</div>
 		<div class="col-xs-12 col-md-12">
