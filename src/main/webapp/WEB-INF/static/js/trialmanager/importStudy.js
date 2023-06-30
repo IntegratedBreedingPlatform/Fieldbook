@@ -330,13 +330,11 @@
 							var isTransposed = false;
 							if (wsname === 'Observation' && isImportedFileTransposed(workbook)) {
 								parseData = parseFile(workbook, wsname);
-								console.log(parseData);
 								isTransposed = true;
 
 								var hasFileIssues = false;
 								var errorMessage = '';
 								parseData = reverseTransposedData(parseData, hasFileIssues, errorMessage);
-								console.log(parseData);
 								if (hasFileIssues) {
 									showErrorMessage('', errorMessage);
 									return;
