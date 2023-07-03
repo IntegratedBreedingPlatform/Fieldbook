@@ -74,8 +74,10 @@
 			ctrl.selectedExportFormatId = 'xls';
 			ctrl.selectedCollectionOrderId = '1';
 			ctrl.singleFile = true;
+			ctrl.tranposeByPlot = false;
 			ctrl.includeSampleGenotypeValues = false;
 			ctrl.isEnvironmentsExport = studyContext.trialDatasetId === datasetId;
+			ctrl.isSubObservationType = studyContext.trialDatasetId !== datasetId && studyContext.measurementDatasetId !== datasetId;
 			$scope.exportFormats = [
 				{key: 'csv', name: 'CSV', isVisible: true},
 				{key: 'xls', name: 'Excel', isVisible: true},
@@ -155,7 +157,9 @@
 			ctrl.export = function (instanceIds) {
 				ctrl.singleFile = ctrl.selectedExportFormatId === 'csv' ? ctrl.singleFile : false;
 				ctrl.singleFile = ctrl.isEnvironmentsExport ? true : ctrl.singleFile;
-				datasetService.exportDataset(datasetId, instanceIds, ctrl.selectedCollectionOrderId, ctrl.singleFile, ctrl.selectedExportFormatId, ctrl.includeSampleGenotypeValues).then(function (response) {
+				ctrl.tranposeByPlot = ctrl.selectedExportFormatId === 'xls' ? ctrl.tranposeByPlot : false;
+				datasetService.exportDataset(datasetId, instanceIds, ctrl.selectedCollectionOrderId, ctrl.singleFile, ctrl.selectedExportFormatId, ctrl.includeSampleGenotypeValues, ctrl.tranposeByPlot)
+					.then(function (response) {
 					var fileName = fileDownloadHelper.getFileNameFromResponseContentDisposition(response);
 					fileDownloadHelper.save(response.data, fileName);
 					$uibModalInstance.close();

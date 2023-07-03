@@ -323,17 +323,33 @@
 									return;
 								}
 							}
-							var ws = wb.Sheets[wsname];
 
-							/* grab first row and generate column headers */
-							var aoa = XLSX.utils.sheet_to_json(ws, {header: 1, raw: false, defval: ""});
+							// read imported file with raw parameter set to false(default) to correctly check if imported file is transposed
+							var workbook = XLSX.read(bstr, {type: 'binary'});
+							var parseData;
+							var isTransposed = false;
+							if (wsname === 'Observation' && isImportedFileTransposed(workbook)) {
+								parseData = parseFile(workbook, wsname);
+								isTransposed = true;
+
+								var hasFileIssues = false;
+								var errorMessage = '';
+								parseData = reverseTransposedData(parseData, hasFileIssues, errorMessage);
+								if (hasFileIssues) {
+									showErrorMessage('', errorMessage);
+									return;
+								}
+							} else {
+								parseData = parseFile(wb, wsname);
+							}
 
 							/* update scope */
 							scope.$apply(function () {
 								var length = 20;
-								scope.importedData = aoa;
+								scope.importedData = parseData;
 								scope.importedFile = changeEvent.target.files[0];
 								scope.importedFile.abbrName = scope.importedFile.name;
+								scope.isTransposed = isTransposed;
 
 								if (scope.importedFile.name.length > length) {
 									scope.importedFile.abbrName = scope.importedFile.abbrName.substring(0, length) + '...';
@@ -342,8 +358,81 @@
 								var fileElement = angular.element('#file_upload');
 								angular.element(fileElement).val(null);
 							});
+
 						};
 						reader.readAsBinaryString(changeEvent.target.files[0]);
+
+						function parseFile(wb, wsname) {
+							var ws = wb.Sheets[wsname];
+							/* grab first row and generate column headers */
+							return  XLSX.utils.sheet_to_json(ws, {header: 1, raw: false, defval: ""});
+						};
+
+						function isImportedFileTransposed(wb) {
+							var worksheet = wb.Sheets['Observation'];
+							return worksheet['!merges'];
+						};
+
+						function reverseTransposedData(parsedData, hasFileIssues, errorMessage) {
+							const reversedData = [];
+							if (parsedData.length < 2) {
+								hasFileIssues = true;
+								errorMessage = 'Invalid Transposed file headers - please remedy in spreadsheet and try again';
+							}
+
+							var observationUnitVarIndex = parsedData[1].findIndex((element) => {
+									return element !== null && element !== '';
+								}) - 1;
+							reversedData.push(parseHeaders(parsedData, observationUnitVarIndex));
+							parseObservations(reversedData, parsedData, observationUnitVarIndex);
+							return reversedData;
+						}
+
+						function parseHeaders(parsedData, observationUnitVarIndex) {
+							const headers = [];
+							headers.push(...parsedData[0].slice(0, observationUnitVarIndex + 1));
+							const nonFactorHeaders = getNonFactorHeaders(parsedData);
+							if(nonFactorHeaders.length > 0) {
+								headers.push(...nonFactorHeaders);
+							}
+							return headers;
+						}
+
+						function parseObservations(reversedData, parsedData, observationUnitVarIndex) {
+							var subObservationsPerPlot = getSubObservationsPerPlot(parsedData[0]);
+							const numberOfSubObsPerPlot =  parseInt(subObservationsPerPlot);
+							var numberOfObservations = parsedData.length;
+							const numberOfNonFactors = getNonFactorHeaders(parsedData).length;
+							for (let i=2; i<numberOfObservations; i++) {
+								const factorsValues = parsedData[i].slice(0, observationUnitVarIndex);
+								for(let observationUnitValue =  1; observationUnitValue<= numberOfSubObsPerPlot; observationUnitValue++) {
+									const observationDataRow = [...factorsValues];
+									observationDataRow.push(observationUnitValue.toString());
+									if (numberOfNonFactors > 0) {
+										const startOfValuesForSubOs = observationUnitVarIndex + 1 + ((observationUnitValue-1)*numberOfNonFactors);
+										const endOfValuesForSubOs = numberOfNonFactors + startOfValuesForSubOs;
+										const nonFactorValues = parsedData[i].slice(startOfValuesForSubOs, endOfValuesForSubOs);
+										observationDataRow.push(...nonFactorValues);
+									}
+									reversedData.push(observationDataRow);
+								}
+							}
+
+						};
+
+						function getNonFactorHeaders(parsedData) {
+							return parsedData[1].filter((element, index, array) => {
+								return element !== '' && array.indexOf(element) === index;
+							});
+						}
+
+						function getSubObservationsPerPlot(headers) {
+							for (let i = headers.length - 1; i >= 0; i--) {
+								if (headers[i] !== null && headers[i] !== '') {
+									return headers[i];
+								}
+							}
+						}
 					});
 				}
 			};
