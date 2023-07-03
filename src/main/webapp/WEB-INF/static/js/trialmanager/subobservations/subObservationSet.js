@@ -1766,7 +1766,7 @@
 								)($scope));
 							}
 						});
-					} else if (columnData.termId === 8240 || columnData.termId === 8250) {
+					} else if ((columnData.termId === 8240 || columnData.termId === 8250) && $scope.hasAnyAuthority(PERMISSIONS.VIEW_GERMPLASM_DETAILS)) {
 						// GID or DESIGNATION
 						columnsDef.push({
 							targets: columns.length - 1,
@@ -1777,7 +1777,7 @@
 									full.gid + '\')">' + EscapeHTML.escape(data.value) + '</a>';
 							}
 						});
-					} else if (columnData.termId === 8342 || columnData.termId === 8343) {
+					} else if ((columnData.termId === 8342 || columnData.termId === 8343) && $scope.hasAnyAuthority(PERMISSIONS.VIEW_GERMPLASM_DETAILS)) {
 						// FEMALE_PARENT_GID or FEMALE_PARENT_NAME
 						columnsDef.push({
 							targets: columns.length - 1,
@@ -1798,7 +1798,7 @@
 								return '';
 							}
 						});
-					} else if (columnData.termId === 8345 || columnData.termId === 8346) {
+					} else if ((columnData.termId === 8345 || columnData.termId === 8346) && $scope.hasAnyAuthority(PERMISSIONS.VIEW_GERMPLASM_DETAILS)) {
 						// MALE_PARENT_GID or MALE_PARENT_NAME
 						columnsDef.push({
 							targets: columns.length - 1,

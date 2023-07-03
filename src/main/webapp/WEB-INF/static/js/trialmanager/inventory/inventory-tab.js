@@ -424,9 +424,13 @@
 				{
 					targets: "germplasm-link-column",
 					createdCell: function (td, cellData, rowData) {
-						$(td).html($compile('<a class="gid-link" href="javascript: void(0)"'
-							+ ` ng-click="openGermplasmDetailsModal('${rowData.lot.gid}')">`
-							+ EscapeHTML.escape(cellData) + '</a>')($scope));
+						if ($scope.hasAnyAuthority(PERMISSIONS.VIEW_GERMPLASM_DETAILS)) {
+							$(td).html($compile('<a class="gid-link" href="javascript: void(0)"'
+								+ ` ng-click="openGermplasmDetailsModal('${rowData.lot.gid}')">`
+								+ EscapeHTML.escape(cellData) + '</a>')($scope));
+						} else {
+							$(td).append('<span>' + EscapeHTML.escape(cellData) + '</span>');
+						}
 					}
 				},
 				{

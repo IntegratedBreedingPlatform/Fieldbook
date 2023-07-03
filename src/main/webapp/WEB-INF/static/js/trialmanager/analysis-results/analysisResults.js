@@ -381,7 +381,7 @@
 								columnData: columnData
 							});
 
-							if (columnData.termId === 8240 || columnData.termId === 8250) {
+							if ((columnData.termId === 8240 || columnData.termId === 8250) && $scope.hasAnyAuthority(PERMISSIONS.VIEW_GERMPLASM_DETAILS)) {
 								// GID or DESIGNATION
 								columnsDef.push({
 									targets: columns.length - 1,

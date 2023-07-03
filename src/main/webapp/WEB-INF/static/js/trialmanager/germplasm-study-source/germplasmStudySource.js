@@ -322,9 +322,13 @@
 					{
 						targets: "germplasm-link-column",
 						render: function (data, type, rowData, meta) {
-							return '<a class="gid-link" href="javascript: void(0)"'
-								+ ` onclick="openGermplasmDetailsPopup('${rowData.gid}')">`
-								+ EscapeHTML.escape(data) + '</a>';
+							if ($scope.hasAnyAuthority(PERMISSIONS.VIEW_GERMPLASM_DETAILS)) {
+								return '<a class="gid-link" href="javascript: void(0)"'
+									+ ` onclick="openGermplasmDetailsPopup('${rowData.gid}')">`
+									+ EscapeHTML.escape(data) + '</a>';
+							} else {
+								return '<span>' + EscapeHTML.escape(data) + '</span>';
+							}
 						}
 					},
 					{
