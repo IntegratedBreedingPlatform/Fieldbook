@@ -14,6 +14,8 @@ describe('ChangePlotEntryModalCtrl:', function () {
 			cropName: 'maize',
 			measurementDatasetId: 2009
 		},
+		HasAnyAuthorityServiceMock = jasmine.createSpyObj('HasAnyAuthorityService', ['hasAnyAuthority']),
+		PERMISSIONSMock = {},
 		uibModalInstanceMock = {
 			close: jasmine.createSpy('close'),
 			dismiss: jasmine.createSpy('dismiss'),
@@ -614,7 +616,9 @@ describe('ChangePlotEntryModalCtrl:', function () {
 				ChangePlotEntryService: ChangePlotEntryServiceMock,
 				$compile: $compileMock,
 				$timeout: $timeout,
-				studyContext: studyContextMock
+				studyContext: studyContextMock,
+				HasAnyAuthorityService: HasAnyAuthorityServiceMock,
+				PERMISSIONS: PERMISSIONSMock
 			});
 
 			scope.initPromise.then(function () {
