@@ -15,6 +15,7 @@
 
 			$scope.PERMISSIONS = PERMISSIONS;
 			$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
+			const hasViewGermplasmDetailsPermission = $scope.hasAnyAuthority(PERMISSIONS.VIEW_GERMPLASM_DETAILS);
 
 			const dtOptionsDeferred = $q.defer();
 			$scope.dtOptions = dtOptionsDeferred.promise;
@@ -424,7 +425,7 @@
 				{
 					targets: "germplasm-link-column",
 					createdCell: function (td, cellData, rowData) {
-						if ($scope.hasAnyAuthority(PERMISSIONS.VIEW_GERMPLASM_DETAILS)) {
+						if (hasViewGermplasmDetailsPermission) {
 							$(td).html($compile('<a class="gid-link" href="javascript: void(0)"'
 								+ ` ng-click="openGermplasmDetailsModal('${rowData.lot.gid}')">`
 								+ EscapeHTML.escape(cellData) + '</a>')($scope));

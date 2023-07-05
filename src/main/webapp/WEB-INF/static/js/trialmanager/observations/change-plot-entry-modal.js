@@ -27,6 +27,7 @@
 			$scope.numberOfInstances = $scope.$resolve.numberOfInstances;
 			$scope.numberOfPlots = $scope.$resolve.numberOfPlots;
 			$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
+			const hasViewGermplasmDetailsPermission = $scope.hasAnyAuthority(PERMISSIONS.VIEW_GERMPLASM_DETAILS);
 
 			var dtColumnsPromise = $q.defer();
 			var dtColumnDefsPromise = $q.defer();
@@ -272,7 +273,7 @@
 								$(td).append($compile('<span><input type="radio" name="rowData.entryId" ng-model="selected.entryId" value=' + rowData.entryId + '></span>')($scope));
 							}
 						});
-					} else if ((columnData.termId === GID || columnData.termId === DESIGNATION) && $scope.hasAnyAuthority(PERMISSIONS.VIEW_GERMPLASM_DETAILS)) {
+					} else if ((columnData.termId === GID || columnData.termId === DESIGNATION) && hasViewGermplasmDetailsPermission) {
 						// GID or DESIGNATION
 						columnsDef.push({
 							targets: columns.length - 1,

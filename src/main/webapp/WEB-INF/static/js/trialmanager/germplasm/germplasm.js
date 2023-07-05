@@ -32,6 +32,7 @@
 					GROUPGID = 8330;
 
 				$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
+				const hasViewGermplasmDetailsPermission = $scope.hasAnyAuthority(PERMISSIONS.VIEW_GERMPLASM_DETAILS);
 				$scope.entryDetails = TrialManagerDataService.settings.entryDetails;
 				$scope.isLockedStudy = TrialManagerDataService.isLockedStudy;
 				$scope.trialMeasurement = {hasMeasurement: studyStateService.hasGeneratedDesign()};
@@ -736,7 +737,7 @@
 									$(td).append($compile('<span><input type="checkbox" ng-click="toggleSelect(' + rowData.entryId + ')"></span>')($scope));
 								}
 							});
-						} else if ((columnData.termId === GID || columnData.termId === DESIGNATION) && $scope.hasAnyAuthority(PERMISSIONS.VIEW_GERMPLASM_DETAILS)) {
+						} else if ((columnData.termId === GID || columnData.termId === DESIGNATION) && hasViewGermplasmDetailsPermission) {
 							// GID or DESIGNATION
 							columnsDef.push({
 								targets: columns.length - 1,
@@ -751,7 +752,7 @@
 									return '';
 								}
 							});
-						} else if ((columnData.termId === FEMALE_PARENT_GID || columnData.termId === FEMALE_PARENT_NAME) && $scope.hasAnyAuthority(PERMISSIONS.VIEW_GERMPLASM_DETAILS)) {
+						} else if ((columnData.termId === FEMALE_PARENT_GID || columnData.termId === FEMALE_PARENT_NAME) && hasViewGermplasmDetailsPermission) {
 							// FEMALE_PARENT_GID or FEMALE_PARENT_NAME
 							columnsDef.push({
 								targets: columns.length - 1,
@@ -777,7 +778,7 @@
 									return '';
 								}
 							});
-						} else if ((columnData.termId === MALE_PARENT_GID || columnData.termId === MALE_PARENT_NAME) && $scope.hasAnyAuthority(PERMISSIONS.VIEW_GERMPLASM_DETAILS)) {
+						} else if ((columnData.termId === MALE_PARENT_GID || columnData.termId === MALE_PARENT_NAME) && hasViewGermplasmDetailsPermission) {
 							// MALE_PARENT_GID or MALE_PARENT_NAME
 							columnsDef.push({
 								targets: columns.length - 1,
