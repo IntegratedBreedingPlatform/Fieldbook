@@ -186,7 +186,8 @@ BMS.Fieldbook.PreviewCrossesDataTable = (function($) {
 	 */
 	var dataTableConstructor = function PreviewCrossesDataTable(tableIdentifier, dataList, tableHeaderList, isImport, checkExistingCrosses) {
 		'use strict';
-
+		const mainApp = angular.element(document.getElementById("mainApp")).scope();
+		const hasViewGermplasmDetailsPermission = mainApp.hasAnyAuthority(mainApp.PERMISSIONS.VIEW_GERMPLASM_DETAILS);
 		var columns = [],
 
 			/*Column defs for female plot,male plot,crossing date,notes, breeding method,male nursery name(hide if cross is created)
@@ -229,9 +230,13 @@ BMS.Fieldbook.PreviewCrossesDataTable = (function($) {
 					targets: index,
 					width: '100px',
 					render: function(data, type, row) {
-						return '<a class="gid-link" href="javascript: void(0)" ' +
-							'onclick="ImportCrosses.openGermplasmModal(&quot;' + row.FGID + '&quot;)">' +
-							row['FEMALE_PARENT'] + '</a>';
+						if (hasViewGermplasmDetailsPermission) {
+							return '<a class="gid-link" href="javascript: void(0)" ' +
+								'onclick="ImportCrosses.openGermplasmModal(&quot;' + row.FGID + '&quot;)">' +
+								row['FEMALE_PARENT'] + '</a>';
+						} else {
+							return '<span>' + row['FEMALE_PARENT'] + '</span>';
+						}
 					}
 				});
 
@@ -248,9 +253,13 @@ BMS.Fieldbook.PreviewCrossesDataTable = (function($) {
 						var size = row.MGID.length;
 						var str = size > 1 ? '[':'';
 						$.each(row.MGID, function( index, value ) {
-							str += '<a class="gid-link" href="javascript: void(0)" ' +
-								'onclick="ImportCrosses.openGermplasmModal(&quot;' + row.MGID[index] + '&quot;)">' +
-								row['MALE_PARENT'][index] + '</a>'
+							if (hasViewGermplasmDetailsPermission) {
+								str += '<a class="gid-link" href="javascript: void(0)" ' +
+									'onclick="ImportCrosses.openGermplasmModal(&quot;' + row.MGID[index] + '&quot;)">' +
+									row['MALE_PARENT'][index] + '</a>'
+							} else {
+								return '<span>' + row['MALE_PARENT'][index] + '</span>';
+							}
 							if (index < (size-1)) {
 								str += ", ";
 							}
@@ -793,6 +802,8 @@ BMS.Fieldbook.ExistingCrossesDataTable = (function($) {
 	 */
 	var dataTableConstructor = function ExistingCrossesDataTable(tableIdentifier, dataList, tableHeaderList) {
 		'use strict';
+		const mainApp = angular.element(document.getElementById("mainApp")).scope();
+		const hasViewGermplasmDetailsPermission = mainApp.hasAnyAuthority(mainApp.PERMISSIONS.VIEW_GERMPLASM_DETAILS);
 
 		var columns = [],
 			columnsDef = [],
@@ -811,9 +822,13 @@ BMS.Fieldbook.ExistingCrossesDataTable = (function($) {
 					targets: index,
 					width: '100px',
 					render: function(data, type, row) {
-						return '<a class="gid-link" href="javascript: void(0)" ' +
-							'onclick="ImportCrosses.openGermplasmModalFromExistingCrossesView(&quot;' + row.GID + '&quot;)">' +
-							row['GID'] + '</a>';
+						if (hasViewGermplasmDetailsPermission) {
+							return '<a class="gid-link" href="javascript: void(0)" ' +
+								'onclick="ImportCrosses.openGermplasmModalFromExistingCrossesView(&quot;' + row.GID + '&quot;)">' +
+								row['GID'] + '</a>';
+						} else {
+							return '<span>' + row['GID'] + '</span>';
+						}
 					}
 				});
 

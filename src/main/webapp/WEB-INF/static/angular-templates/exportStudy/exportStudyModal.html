@@ -69,6 +69,7 @@
 			<label class="control-label label-bold">Choose the study environment you would like to export: <span class="required">*</span></label><br>
 			<label style="padding-left: 10px;" ng-show="(ctrl.selectedExportFormatId==='csv' || ctrl.selectedExportFormatId==='xls') && !ctrl.isEnvironmentsExport"><input type="checkbox" ng-model="ctrl.includeSampleGenotypeValues"><span> Include Sample Genotype values</span></label><br>
 			<label style="padding-left: 10px;" ng-show="ctrl.selectedExportFormatId==='csv' && !ctrl.isEnvironmentsExport"><input type="checkbox" ng-model="ctrl.singleFile"><span> All instances in one file</span></label>
+			<label style="padding-left: 10px;" ng-show="ctrl.selectedExportFormatId==='xls' && ctrl.isSubObservationType"><input type="checkbox" ng-model="ctrl.tranposeByPlot"><span> Transpose by Plot</span></label>
 		</div>
 		<div class="col-xs-12 col-md-12">&nbsp;</div>
 		<div class="col-xs-12 col-md-12">
