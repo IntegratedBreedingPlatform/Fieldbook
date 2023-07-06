@@ -11,6 +11,7 @@
 
 				$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
 				$scope.PERMISSIONS = PERMISSIONS;
+				const hasViewGermplasmDetailsPermission = $scope.hasAnyAuthority(PERMISSIONS.VIEW_GERMPLASM_DETAILS);
 
 				$scope.nested = {};
 				$scope.nested.dtInstance = null;
@@ -322,9 +323,13 @@
 					{
 						targets: "germplasm-link-column",
 						render: function (data, type, rowData, meta) {
-							return '<a class="gid-link" href="javascript: void(0)"'
-								+ ` onclick="openGermplasmDetailsPopup('${rowData.gid}')">`
-								+ EscapeHTML.escape(data) + '</a>';
+							if (hasViewGermplasmDetailsPermission) {
+								return '<a class="gid-link" href="javascript: void(0)"'
+									+ ` onclick="openGermplasmDetailsPopup('${rowData.gid}')">`
+									+ EscapeHTML.escape(data) + '</a>';
+							} else {
+								return '<span>' + EscapeHTML.escape(data) + '</span>';
+							}
 						}
 					},
 					{

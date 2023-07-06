@@ -14,8 +14,9 @@
 		UNITS = -5;
 
 	module.controller('ChangePlotEntryModalCtrl', ['$scope', '$rootScope', 'studyContext', '$uibModalInstance', 'DTOptionsBuilder', 'DTColumnBuilder',
-		'$timeout', '$q', '$compile', 'ChangePlotEntryService', 'germplasmDetailsModalService',
-		function ($scope, $rootScope, studyContext, $uibModalInstance, DTOptionsBuilder, DTColumnBuilder, $timeout, $q, $compile, ChangePlotEntryService, germplasmDetailsModalService) {
+		'$timeout', '$q', '$compile', 'ChangePlotEntryService', 'germplasmDetailsModalService', 'HasAnyAuthorityService', 'PERMISSIONS',
+		function ($scope, $rootScope, studyContext, $uibModalInstance, DTOptionsBuilder, DTColumnBuilder, $timeout, $q, $compile, ChangePlotEntryService, germplasmDetailsModalService,
+				  HasAnyAuthorityService, PERMISSIONS) {
 
 			var initResolve;
 			$scope.initPromise = new Promise(function (resolve) {
@@ -25,6 +26,8 @@
 			$scope.selected = {entryId: ''};
 			$scope.numberOfInstances = $scope.$resolve.numberOfInstances;
 			$scope.numberOfPlots = $scope.$resolve.numberOfPlots;
+			$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
+			const hasViewGermplasmDetailsPermission = $scope.hasAnyAuthority(PERMISSIONS.VIEW_GERMPLASM_DETAILS);
 
 			var dtColumnsPromise = $q.defer();
 			var dtColumnDefsPromise = $q.defer();
@@ -270,7 +273,7 @@
 								$(td).append($compile('<span><input type="radio" name="rowData.entryId" ng-model="selected.entryId" value=' + rowData.entryId + '></span>')($scope));
 							}
 						});
-					} else if (columnData.termId === GID || columnData.termId === DESIGNATION) {
+					} else if ((columnData.termId === GID || columnData.termId === DESIGNATION) && hasViewGermplasmDetailsPermission) {
 						// GID or DESIGNATION
 						columnsDef.push({
 							targets: columns.length - 1,

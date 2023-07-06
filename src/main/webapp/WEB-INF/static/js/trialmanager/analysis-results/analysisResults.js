@@ -10,6 +10,7 @@
 			function ($scope, DTOptionsBuilder, $q, $compile, datasetService, $timeout, studyContext, germplasmDetailsModalService, HasAnyAuthorityService, PERMISSIONS) {
 
 				$scope.hasAnyAuthority = HasAnyAuthorityService.hasAnyAuthority;
+				const hasViewGermplasmDetailsPermission = $scope.hasAnyAuthority(PERMISSIONS.VIEW_GERMPLASM_DETAILS);
 
 				// used also in tests - to call $rootScope.$apply()
 				var tableLoadedResolve;
@@ -381,7 +382,7 @@
 								columnData: columnData
 							});
 
-							if (columnData.termId === 8240 || columnData.termId === 8250) {
+							if ((columnData.termId === 8240 || columnData.termId === 8250) && hasViewGermplasmDetailsPermission) {
 								// GID or DESIGNATION
 								columnsDef.push({
 									targets: columns.length - 1,

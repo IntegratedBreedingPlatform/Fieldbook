@@ -109,6 +109,8 @@ public class SampleListController {
 				this.authorizationService.hasAnyAuthority(PermissionsEnum.IMPORT_GENOTYPES_FROM_GIGWA_PERMISSIONS));
 			model.addAttribute("showImportGenotypesFromFile",
 				this.authorizationService.hasAnyAuthority(PermissionsEnum.IMPORT_GENOTYPES_FROM_FILE_PERMISSIONS));
+			model.addAttribute("hasViewGermplasmDetailsPermission",
+					this.authorizationService.hasAnyAuthority(PermissionsEnum.VIEW_GERMPLASM_DETAILS_PERMISSIONS));
 		} catch (final MiddlewareQueryException e) {
 			SampleListController.LOG.error(e.getMessage(), e);
 		}
