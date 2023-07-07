@@ -10,12 +10,7 @@ import com.efficio.fieldbook.web.common.bean.UserSelection;
 import com.efficio.fieldbook.web.data.initializer.DesignImportTestDataInitializer;
 import com.efficio.fieldbook.web.study.germplasm.StudyEntryTransformer;
 import com.efficio.fieldbook.web.trial.TestDataHelper;
-import com.efficio.fieldbook.web.trial.bean.BasicDetails;
-import com.efficio.fieldbook.web.trial.bean.ExpDesignParameterUi;
-import com.efficio.fieldbook.web.trial.bean.TabInfo;
-import com.efficio.fieldbook.web.trial.bean.TreatmentFactorTabBean;
-import com.efficio.fieldbook.web.trial.bean.TrialData;
-import com.efficio.fieldbook.web.trial.bean.TrialSettingsBean;
+import com.efficio.fieldbook.web.trial.bean.*;
 import com.efficio.fieldbook.web.trial.form.CreateTrialForm;
 import com.efficio.fieldbook.web.util.SessionUtility;
 import com.efficio.fieldbook.web.util.SettingsUtil;
@@ -27,24 +22,13 @@ import org.generationcp.commons.constant.AppConstants;
 import org.generationcp.commons.security.AuthorizationService;
 import org.generationcp.commons.spring.util.ContextUtil;
 import org.generationcp.middleware.api.file.FileMetadataService;
-import org.generationcp.middleware.api.role.RoleService;
 import org.generationcp.middleware.api.study.StudyDetailsDTO;
 import org.generationcp.middleware.data.initializer.MeasurementDataTestDataInitializer;
 import org.generationcp.middleware.data.initializer.MeasurementVariableTestDataInitializer;
 import org.generationcp.middleware.data.initializer.StandardVariableTestDataInitializer;
 import org.generationcp.middleware.data.initializer.WorkbookTestDataInitializer;
-import org.generationcp.middleware.domain.dms.DMSVariableType;
-import org.generationcp.middleware.domain.dms.DatasetDTO;
-import org.generationcp.middleware.domain.dms.ExperimentDesignType;
-import org.generationcp.middleware.domain.dms.PhenotypicType;
-import org.generationcp.middleware.domain.dms.StandardVariable;
-import org.generationcp.middleware.domain.dms.Study;
-import org.generationcp.middleware.domain.dms.VariableTypeList;
-import org.generationcp.middleware.domain.etl.MeasurementData;
-import org.generationcp.middleware.domain.etl.MeasurementRow;
-import org.generationcp.middleware.domain.etl.MeasurementVariable;
-import org.generationcp.middleware.domain.etl.StudyDetails;
-import org.generationcp.middleware.domain.etl.Workbook;
+import org.generationcp.middleware.domain.dms.*;
+import org.generationcp.middleware.domain.etl.*;
 import org.generationcp.middleware.domain.oms.Term;
 import org.generationcp.middleware.domain.oms.TermId;
 import org.generationcp.middleware.domain.ontology.Variable;
@@ -57,11 +41,11 @@ import org.generationcp.middleware.exceptions.MiddlewareQueryException;
 import org.generationcp.middleware.manager.Operation;
 import org.generationcp.middleware.manager.api.InventoryDataManager;
 import org.generationcp.middleware.manager.api.StudyDataManager;
+import org.generationcp.middleware.api.role.RoleService;
 import org.generationcp.middleware.manager.ontology.api.OntologyVariableDataManager;
 import org.generationcp.middleware.manager.ontology.api.TermDataManager;
 import org.generationcp.middleware.pojos.dms.DmsProject;
 import org.generationcp.middleware.pojos.dms.StudyType;
-import org.generationcp.middleware.pojos.workbench.WorkbenchUser;
 import org.generationcp.middleware.service.api.FieldbookService;
 import org.generationcp.middleware.service.api.SampleListService;
 import org.generationcp.middleware.service.api.dataset.DatasetService;
@@ -75,11 +59,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatchers;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.ui.ExtendedModelMap;
@@ -89,13 +69,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OpenTrialControllerTest {
@@ -236,9 +210,6 @@ public class OpenTrialControllerTest {
 		Mockito.when(this.fieldbookMiddlewareService.getStudyDataSet(OpenTrialControllerTest.STUDY_ID)).thenReturn(workbook);
 		Mockito.when(this.studyService.studyHasGivenDatasetType(Mockito.anyInt(), Mockito.anyInt())).thenReturn(false);
 
-		final WorkbenchUser user = new WorkbenchUser();
-		Mockito.when(this.contextUtil.getCurrentWorkbenchUser()).thenReturn(user);
-
 		final Study study = new Study();
 		study.setStudyType(StudyTypeDto.getTrialDto());
 
@@ -287,10 +258,6 @@ public class OpenTrialControllerTest {
 			Mockito.when(this.fieldbookMiddlewareService.getStudyDataSet(ArgumentMatchers.anyInt())).thenReturn(workbook);
 			this.mockStandardVariables(workbook.getAllVariables());
 			Mockito.when(this.studyService.studyHasGivenDatasetType(Mockito.anyInt(), Mockito.anyInt())).thenReturn(false);
-
-			final WorkbenchUser user = new WorkbenchUser();
-			Mockito.when(this.contextUtil.getCurrentWorkbenchUser()).thenReturn(user);
-
 			this.openTrialController.openTrial(new CreateTrialForm(), OpenTrialControllerTest.STUDY_ID, new ExtendedModelMap(), mockSession,
 				Mockito.mock(RedirectAttributes.class), null);
 		} catch (final MiddlewareException e) {
@@ -322,9 +289,6 @@ public class OpenTrialControllerTest {
 			Mockito.when(this.fieldbookMiddlewareService.getStudyDataSet(ArgumentMatchers.anyInt())).thenReturn(workbook);
 			this.mockStandardVariables(workbook.getAllVariables());
 			Mockito.when(this.studyService.studyHasGivenDatasetType(Mockito.anyInt(), Mockito.anyInt())).thenReturn(false);
-
-			final WorkbenchUser user = new WorkbenchUser();
-			Mockito.when(this.contextUtil.getCurrentWorkbenchUser()).thenReturn(user);
 
 			this.openTrialController.openTrial(new CreateTrialForm(), OpenTrialControllerTest.STUDY_ID, model, new MockHttpSession(),
 				Mockito.mock(RedirectAttributes.class), null);
@@ -1162,9 +1126,6 @@ public class OpenTrialControllerTest {
 		summaryStatisticsDataset.setDatasetTypeId(DatasetTypeEnum.SUMMARY_STATISTICS_DATA.getId());
 		Mockito.when(this.datasetService.getDatasets(trialId, new HashSet<>(DatasetTypeEnum.ANALYSIS_RESULTS_DATASET_IDS)))
 			.thenReturn(Arrays.asList(meansDataset, summaryStatisticsDataset));
-
-		final WorkbenchUser user = new WorkbenchUser();
-		Mockito.when(this.contextUtil.getCurrentWorkbenchUser()).thenReturn(user);
 		this.openTrialController.setModelAttributes(this.createTrialForm, trialId, this.model, testWorkbook);
 		Mockito.verify(this.model).addAttribute(ArgumentMatchers.eq("basicDetailsData"), ArgumentMatchers.any(TabInfo.class));
 		Mockito.verify(this.model).addAttribute(ArgumentMatchers.eq("germplasmData"), ArgumentMatchers.any(TabInfo.class));
