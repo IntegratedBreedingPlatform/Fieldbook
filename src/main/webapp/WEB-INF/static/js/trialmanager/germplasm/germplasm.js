@@ -1400,6 +1400,19 @@
 
 				};
 
+				$scope.addNewEntries = function () {
+					if (studyStateService.hasGeneratedDesign()) {
+						var modalConfirmAddNewEntries = $scope.openConfirmModal($.germplasmMessages.addNewEntriesWarning, 'Yes', 'No');
+						modalConfirmAddNewEntries.result.then(function (shouldContinue) {
+							if (shouldContinue) {
+								$scope.showAddEntriesModal();
+							}
+						});
+					} else {
+						$scope.showAddEntriesModal();
+					}
+				}
+
 				$scope.openImportEntryDetailsModal = function() {
 					$uibModal.open({
 						templateUrl: '/Fieldbook/static/angular-templates/germplasm/importEntryDetailsModal.html',
