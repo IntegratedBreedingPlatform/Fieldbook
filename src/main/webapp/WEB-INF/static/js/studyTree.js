@@ -310,9 +310,7 @@ function displayStudyListTree(treeName, choosingTypeParam, selectStudyFunctionPa
 				/** This function MUST be defined to enable dropping of items on
 				 * the tree.
 				 */
-				if (sourceNode.hasChildren()) {
-					showErrorMessage('page-study-tree-message-modal', cannotMove + ' ' + sourceNode.data.title + ' ' + hasChildrenString);
-				} else if (!userHasStudyEditionPermission()) {
+				if (!userHasStudyEditionPermission()) {
 					showErrorMessage('page-study-tree-message-modal', noPermissionToMoveStudyError);
 				} else if (sourceNode.data.isFolder === false && userLacksPermissionForStudy(sourceNode)) { 
 					showStudyIsLockedError(sourceNode);
@@ -325,12 +323,7 @@ function displayStudyListTree(treeName, choosingTypeParam, selectStudyFunctionPa
 						cache: false,
 						aysnc: false,
 						success: function (data) {
-							var childCount = $.parseJSON(data).length;
-							if (childCount === 0) {
-								moveStudy(sourceNode, node);
-							} else {
-								showErrorMessage('page-study-tree-message-modal', cannotMove + ' ' + sourceNode.data.title + ' ' + hasChildrenString);
-							}
+							moveStudy(sourceNode, node);
 						}
 					});
 				}
