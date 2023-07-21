@@ -310,7 +310,10 @@ function displayStudyListTree(treeName, choosingTypeParam, selectStudyFunctionPa
 				/** This function MUST be defined to enable dropping of items on
 				 * the tree.
 				 */
-				if (!userHasStudyEditionPermission()) {
+				if (node.isDescendantOf(sourceNode)) {
+					// Prevent dropping of parent folder onto its own child/descendant.
+					return;
+				} else if (!userHasStudyEditionPermission()) {
 					showErrorMessage('page-study-tree-message-modal', noPermissionToMoveStudyError);
 				} else if (sourceNode.data.isFolder === false && userLacksPermissionForStudy(sourceNode)) { 
 					showStudyIsLockedError(sourceNode);
