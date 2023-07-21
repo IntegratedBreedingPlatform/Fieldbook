@@ -379,12 +379,14 @@
 			});
 
 			InventoryService.queryTransactionTypes().then((transactionTypes) => {
-				$scope.columns.transactionType.filter.options = transactionTypes.map((transactionType) => {
-					return {
-						name: transactionType.value,
-						id: transactionType.id
-					}
-				});
+				$scope.columns.transactionType.filter.options = transactionTypes
+					.filter((transactionType) => transactionType.id != 2 && transactionType.id != 3)
+					.map((transactionType) => {
+						return {
+							name: transactionType.value,
+							id: transactionType.id
+						}
+					});
 			});
 
 			InventoryService.queryTransactionStatusTypes().then((statusTypes) => {
@@ -435,6 +437,14 @@
 					}
 				},
 				{
+					targets: "transaction-link-column",
+					createdCell: function (td, cellData, rowData) {
+						$(td).html($compile('<a class="txn-link" href="javascript: void(0)"'
+							+ ` ng-click="openTransactionDetailsModal('${rowData.lot.gid}','${rowData.lot.lotId}')">`
+							+ EscapeHTML.escape(cellData) + '</a>')($scope));
+					}
+				},
+				{
 					targets: "_all",
 					orderable: false,
 					defaultContent: ''
@@ -444,6 +454,7 @@
 			$scope.openGermplasmDetailsModal = function (gid) {
 				germplasmDetailsModalService.openGermplasmDetailsModal(gid, null);
 			}
+
 
 			$scope.openInfoModal = function (rowIndex) {
 				$uibModal.open({

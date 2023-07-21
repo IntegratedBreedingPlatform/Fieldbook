@@ -3,7 +3,7 @@
 
 	const module = angular.module('manageTrialApp');
 
-	module.controller('InventoryDetailsCtrl', ['$scope', '$q', 'studyContext', '$uibModalInstance', 'gid','lotId',
+	module.controller('TransactionDetailsCtrl', ['$scope', '$q', 'studyContext', '$uibModalInstance', 'gid','lotId',
 		function ($scope, $q, studyContext, $uibModalInstance, gid,lotId) {
 
 			$scope.url = '/ibpworkbench/controller/jhipster#/transaction-details-dialog?restartApplication' +
