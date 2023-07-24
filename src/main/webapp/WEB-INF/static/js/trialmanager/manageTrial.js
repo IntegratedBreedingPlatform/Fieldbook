@@ -1278,6 +1278,23 @@ showAlertMessage,showMeasurementsPreview,createErrorNotification,errorMsgHeader,
 				});
 			}
 
+			$rootScope.openTransactionDetailsModal = function (gid, lotId) {
+
+				$uibModal.open({
+					templateUrl: '/Fieldbook/static/js/trialmanager/inventory/transaction-details/transaction-details-modal.html',
+					controller: 'TransactionDetailsCtrl',
+					windowClass: 'modal-very-huge',
+					resolve: {
+						gid: function () {
+							return gid;
+						},
+						lotId: function () {
+							return lotId;
+						}
+					}
+				});
+			}
+
 			$scope.showCreateSampleListModal = function () {
 				createSampleModalService.openDatasetOptionModal();
 			}
