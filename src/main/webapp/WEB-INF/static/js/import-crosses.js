@@ -3,7 +3,6 @@ getJquerySafeId, SaveAdvanceList, BreedingMethodsFunctions */
 var ImportCrosses = {
 	CROSSES_URL: '/Fieldbook/crosses',
 	showFavoriteLocationsOnly: true,
-	preservePlotDuplicates: false,
 	isFileCrossesImport: true,
 	hasHybridMethod: false,
 	hybridMethods: null,
@@ -34,7 +33,6 @@ var ImportCrosses = {
 				createWarningNotification(warningMsgHeader, resp.warnings.join('<br/>'), 10000);
 			}
 
-			ImportCrosses.preservePlotDuplicates = false;
 			$('.import-crosses-section .modal').modal('hide');
 			$('#openCrossesListModal').data('hasPlotDuplicate', resp.hasPlotDuplicate);
 			// show review crosses page
@@ -257,7 +255,6 @@ var ImportCrosses = {
 		'use strict';
 		if (ImportCrosses.hasPlotDuplicate()) {
 			/** Palliative for BMS-3514 **/
-			ImportCrosses.preservePlotDuplicates = true;
 			ImportCrosses.openBreedingModal();
 			/** End Palliative **/
 		} else {
