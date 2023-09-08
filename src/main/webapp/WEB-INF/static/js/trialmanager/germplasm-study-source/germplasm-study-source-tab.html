@@ -70,7 +70,7 @@
 											  column-name="designation"
 											  filter-helper="filterHelper"/>
 				</th>
-				<th>CROSS</th>
+				<th ng-show="hasAnyAuthority(PERMISSIONS.VIEW_PEDIGREE_INFORMATION_PERMISSIONS)">CROSS</th>
 				<th>LOTS
 					<study-column-filter-icon study-column-filter-popover-template="studyColumnFilterList.html"
 											  filter="columns.numberOfLots.filter"
